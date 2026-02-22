@@ -1,24 +1,39 @@
 {
-    "name": "sekkei-skills",
-    "version": "1.0.0",
-    "description": "Claude Code skills for Sekkei AI Documentation Agent",
-    "type": "module",
-    "bin": {
-        "sekkei-skills": "./bin/install.js"
-    },
-    "scripts": {
-        "build": "echo 'No build needed for skills'"
-    },
-    "files": [
-        "bin/",
-        "content/"
-    ],
-    "keywords": [
-        "claude",
-        "skills",
-        "sekkei",
-        "japanese",
-        "documentation"
-    ],
-    "license": "MIT"
+  "name": "sekkei-skills",
+  "version": "1.0.0",
+  "description": "Claude Code skills for generating Japanese specification documents (設計書)",
+  "type": "module",
+  "bin": {
+    "sekkei-skills": "./bin/install.js"
+  },
+  "scripts": {
+    "build": "echo 'No build needed for skills'"
+  },
+  "files": [
+    "bin/",
+    "content/"
+  ],
+  "keywords": [
+    "sekkei",
+    "claude-code",
+    "skills",
+    "japanese",
+    "specification",
+    "設計書",
+    "mcp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bienhoang/sekkei-ai-agents.git",
+    "directory": "packages/skills"
+  },
+  "homepage": "https://github.com/bienhoang/sekkei-ai-agents/tree/main/packages/skills",
+  "bugs": "https://github.com/bienhoang/sekkei-ai-agents/issues",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT"
 }

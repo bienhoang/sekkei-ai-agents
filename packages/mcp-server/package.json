@@ -58,7 +58,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bienhoang/sekkei.git"
+    "url": "https://github.com/bienhoang/sekkei-ai-agents.git",
+    "directory": "packages/mcp-server"
   },
+  "homepage": "https://github.com/bienhoang/sekkei-ai-agents/tree/main/packages/mcp-server",
+  "bugs": "https://github.com/bienhoang/sekkei-ai-agents/issues",
   "license": "MIT"
 }

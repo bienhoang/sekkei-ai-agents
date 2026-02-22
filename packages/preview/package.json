@@ -40,5 +40,15 @@
     "japanese",
     "specification"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bienhoang/sekkei-ai-agents.git",
+    "directory": "packages/preview"
+  },
+  "homepage": "https://github.com/bienhoang/sekkei-ai-agents/tree/main/packages/preview",
+  "bugs": "https://github.com/bienhoang/sekkei-ai-agents/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT"
 }
