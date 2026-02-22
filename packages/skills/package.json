@@ -1,0 +1,24 @@
+{
+    "name": "sekkei-skills",
+    "version": "1.0.0",
+    "description": "Claude Code skills for Sekkei AI Documentation Agent",
+    "type": "module",
+    "bin": {
+        "sekkei-skills": "./bin/install.js"
+    },
+    "scripts": {
+        "build": "echo 'No build needed for skills'"
+    },
+    "files": [
+        "bin/",
+        "content/"
+    ],
+    "keywords": [
+        "claude",
+        "skills",
+        "sekkei",
+        "japanese",
+        "documentation"
+    ],
+    "license": "MIT"
+}

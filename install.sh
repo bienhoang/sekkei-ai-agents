@@ -23,7 +23,7 @@ step() { echo -e "\n${BOLD}▸ $1${RESET}"; }
 # ── Resolve paths ───────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 MCP_DIR="$SCRIPT_DIR/packages/mcp-server"
-SKILL_SRC="$SCRIPT_DIR/skills/sekkei"
+SKILL_SRC="$SCRIPT_DIR/packages/skills/content"
 TEMPLATES_DIR="$SCRIPT_DIR/packages/mcp-server/templates"
 PYTHON_DIR="$SCRIPT_DIR/packages/mcp-server/python"
 

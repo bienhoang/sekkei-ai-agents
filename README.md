@@ -18,12 +18,14 @@ RFP → 機能一覧 → 要件定義書 → 基本設計書 → 詳細設計書
 
 ```bash
 npm install -g sekkei-mcp-server
+npx sekkei-skills # Install Claude Code skills
 ```
 
 Or use directly with npx:
 
 ```bash
 npx sekkei-mcp-server
+npx sekkei-skills
 ```
 
 ### 2. Setup
@@ -49,7 +51,7 @@ Auto-detects your editor (Claude Code, Cursor, VS Code/Copilot) and configures M
 Copy the skill to your Claude Code skills folder:
 
 ```bash
-cp -r skills/sekkei ~/.claude/skills/
+cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 ```
 
 Add MCP server to `~/.claude/settings.json`:
@@ -201,14 +203,13 @@ sekkei/
 │   │   ├── bin/setup.js     # Setup script (npx sekkei-setup)
 │   │   ├── adapters/        # Platform-specific configs
 │   │   └── tests/
-│   └── preview/             # sekkei-preview (npm)
-│       ├── src/             # CLI, VitePress config generator
-│       ├── theme/           # Custom VitePress theme + Vue
-│       └── plugins/         # VitePress plugins
-├── skills/                  # Claude Code skills
-│   └── sekkei/
-│       ├── SKILL.md         # Skill definition (12 sub-commands)
-│       └── references/      # Reference docs
+│   ├── preview/             # sekkei-preview (npm)
+│   │   ├── src/             # CLI, VitePress config generator
+│   │   ├── theme/           # Custom VitePress theme + Vue
+│   │   └── plugins/         # VitePress plugins
+│   └── skills/              # sekkei-skills (npm)
+│       ├── bin/install.js   # Install script (npx sekkei-skills)
+│       └── content/         # SKILL.md and references
 └── sekkei.config.example.yaml
 ```
 

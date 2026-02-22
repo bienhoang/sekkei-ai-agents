@@ -37,3 +37,8 @@ jobs:
         run: npm publish --workspace=packages/preview --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          
+      - name: Publish Skills
+        run: npm publish --workspace=packages/skills --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
