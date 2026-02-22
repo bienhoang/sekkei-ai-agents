@@ -105,6 +105,8 @@ export interface ProjectConfig {
   output: {
     directory: string;
   };
+  /** Auto-commit generated documents to git. Default: false */
+  autoCommit?: boolean;
   chain: {
     rfp: string;
     overview: ChainEntry;
@@ -165,5 +167,28 @@ export interface Manifest {
   documents: Record<string, ManifestDocument>;
   translations?: { lang: string; manifest: string }[];
   source_language?: Language;
+}
+
+// --- Cross-Reference Linker Types ---
+
+export interface TraceabilityEntry {
+  id: string;
+  doc_type: string;
+  downstream_refs: string[];
+}
+
+export interface ChainLinkReport {
+  upstream: string;
+  downstream: string;
+  orphaned_ids: string[];  // defined in upstream but not referenced in downstream
+  missing_ids: string[];   // referenced in downstream but not defined in upstream
+}
+
+export interface ChainRefReport {
+  links: ChainLinkReport[];
+  orphaned_ids: { id: string; defined_in: string; expected_in: string }[];
+  missing_ids: { id: string; referenced_in: string; expected_from: string }[];
+  traceability_matrix: TraceabilityEntry[];
+  suggestions: string[];
 }
 

@@ -7,9 +7,10 @@ import type { DocType, KeigoLevel, Manifest } from "../types/documents.js";
 import { extractIds, extractIdsByType } from "./id-extractor.js";
 import { SekkeiError } from "./errors.js";
 import { validateKeigoComprehensive } from "./keigo-validator.js";
+import { CONTENT_DEPTH_RULES } from "./completeness-rules.js";
 
 export interface ValidationIssue {
-  type: "missing_section" | "missing_id" | "orphaned_id" | "missing_column" | "keigo_violation";
+  type: "missing_section" | "missing_id" | "orphaned_id" | "missing_column" | "keigo_violation" | "completeness";
   message: string;
   severity?: "error" | "warning";
 }
@@ -198,6 +199,22 @@ export function validateKeigo(
   return validateKeigoComprehensive(content, docType);
 }
 
+/** Check content depth: required ID patterns and table rows per doc type */
+export function validateContentDepth(
+  content: string,
+  docType: DocType
+): ValidationIssue[] {
+  const rules = CONTENT_DEPTH_RULES[docType];
+  if (!rules) return [];
+  const issues: ValidationIssue[] = [];
+  for (const rule of rules) {
+    if (!rule.test(content)) {
+      issues.push({ type: "completeness", severity: "warning", message: rule.message });
+    }
+  }
+  return issues;
+}
+
 /** Check YAML frontmatter for required lifecycle status field */
 function validateFrontmatterStatus(content: string): ValidationIssue[] {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
@@ -218,7 +235,8 @@ function validateFrontmatterStatus(content: string): ValidationIssue[] {
 export function validateDocument(
   content: string,
   docType: DocType,
-  upstreamContent?: string
+  upstreamContent?: string,
+  options?: { check_completeness?: boolean }
 ): ValidationResult {
   const issues: ValidationIssue[] = [
     ...validateFrontmatterStatus(content),
@@ -226,6 +244,10 @@ export function validateDocument(
     ...validateTableStructure(content, docType),
     ...validateKeigo(content, docType),
   ];
+
+  if (options?.check_completeness === true) {
+    issues.push(...validateContentDepth(content, docType));
+  }
 
   let cross_ref_report: CrossRefReport | undefined;
   if (upstreamContent) {
@@ -238,8 +260,9 @@ export function validateDocument(
     }
   }
 
+  const hasErrors = issues.some((i) => !i.severity || i.severity === "error");
   return {
-    valid: issues.length === 0,
+    valid: !hasErrors,
     issues,
     cross_ref_report,
   };

@@ -10,3 +10,4 @@ dist/
 .idea/
 mcp-server/coverage/
 .agent/
+__pycache__/

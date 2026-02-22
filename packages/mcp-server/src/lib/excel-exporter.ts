@@ -1,10 +1,12 @@
 /**
  * Node.js Excel exporter using ExcelJS. Converts Markdown to .xlsx without Python.
+ * If template_path is provided, delegates to excel-template-filler instead.
  */
 import ExcelJS from "exceljs";
 import { parse as parseYaml } from "yaml";
 import { stat } from "node:fs/promises";
 import { resolve } from "node:path";
+import { fillTemplate } from "./excel-template-filler.js";
 
 export interface ExcelExportInput {
   content: string;
@@ -190,11 +192,25 @@ function addMatrixSheet(wb: ExcelJS.Workbook, content: string): void {
 }
 
 export async function exportToExcel(input: ExcelExportInput): Promise<ExcelExportResult> {
-  const { content, output_path, project_name, isMatrix } = input;
+  const { content, output_path, project_name, template_path, isMatrix } = input;
   // Prevent path traversal
   if (resolve(output_path) !== output_path && output_path.includes("..")) {
     throw new Error("output_path must not contain path traversal");
   }
+
+  // Branch: fill existing template if provided
+  if (template_path) {
+    const { meta } = parseFrontmatter(content);
+    const data: Record<string, string> = {
+      PROJECT_NAME: project_name ?? String(meta["project"] ?? ""),
+      DOC_TYPE: input.doc_type,
+      DATE: String(meta["date"] ?? new Date().toISOString().slice(0, 10)),
+      VERSION: String(meta["version"] ?? "1.0"),
+      CONTENT: content,
+    };
+    return fillTemplate({ template_path, output_path, data });
+  }
+
   const { meta, body } = parseFrontmatter(content);
   const pName = project_name ?? String(meta["project"] ?? "");
 
@@ -212,4 +228,56 @@ export async function exportToExcel(input: ExcelExportInput): Promise<ExcelExpor
   await wb.xlsx.writeFile(output_path);
   const { size } = await stat(output_path);
   return { file_path: output_path, file_size: size };
+}
+
+/**
+ * Apply 朱書き (redline) diff highlighting to an existing Excel file.
+ * Additions → green fill; deletions → red fill + strikethrough font.
+ * Operates on all sheets that contain diff-annotated rows.
+ *
+ * @param excelPath - Path to the .xlsx file to modify in-place
+ * @param diff - Diff result from diff_analyzer.py (PythonResult shape)
+ */
+export async function applyDiffHighlighting(
+  excelPath: string,
+  diff: Record<string, unknown>
+): Promise<void> {
+  const wb = new ExcelJS.Workbook();
+  await wb.xlsx.readFile(excelPath);
+
+  // diff_analyzer.py returns { changes: Array<{ type: "add"|"delete"|"equal", lines: string[] }> }
+  const changes = Array.isArray(diff["changes"]) ? diff["changes"] as Array<{ type: string; lines?: string[] }> : [];
+  if (changes.length === 0) {
+    return; // No diff info — leave file unchanged
+  }
+
+  // Build a line-level lookup: line content → diff type
+  const lineTypes = new Map<string, "add" | "delete">();
+  for (const change of changes) {
+    if (change.type === "add" || change.type === "delete") {
+      const lines = Array.isArray(change.lines) ? change.lines : [];
+      for (const line of lines) {
+        lineTypes.set(String(line).trim(), change.type);
+      }
+    }
+  }
+
+  wb.eachSheet((sheet) => {
+    sheet.eachRow((row) => {
+      const cellValue = String(row.getCell(1).value ?? "").trim();
+      const diffType = lineTypes.get(cellValue);
+      if (diffType === "add") {
+        row.eachCell((cell) => {
+          cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF92D050" } };
+        });
+      } else if (diffType === "delete") {
+        row.eachCell((cell) => {
+          cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFF0000" } };
+          cell.font = { ...((cell.font as ExcelJS.Font | undefined) ?? {}), strike: true };
+        });
+      }
+    });
+  });
+
+  await wb.xlsx.writeFile(excelPath);
 }

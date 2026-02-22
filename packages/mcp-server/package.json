@@ -7,7 +7,8 @@
   "bin": {
     "sekkei-mcp": "dist/index.js",
     "sekkei-setup": "bin/setup.js",
-    "sekkei-init": "bin/init.js"
+    "sekkei-init": "bin/init.js",
+    "sekkei": "bin/cli.js"
   },
   "files": [
     "dist/",
@@ -29,6 +30,8 @@
   "dependencies": {
     "@clack/prompts": "^1.0.1",
     "@modelcontextprotocol/sdk": "^1.12.0",
+    "citty": "^0.2.1",
+    "docx": "^9.5.3",
     "exceljs": "^4.4.0",
     "handlebars": "^4.7.8",
     "marked": "^17.0.3",

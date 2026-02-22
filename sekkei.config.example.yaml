@@ -16,6 +16,9 @@ project:
 output:
   directory: ./docs/   # User-named during init (default: docs/)
 
+export:
+  excel_template: ""   # Optional: path to company .xlsx template (e.g. "./templates/company.xlsx")
+
 chain:
   rfp: ""
   overview:         { status: pending, output: "01-overview.md" }

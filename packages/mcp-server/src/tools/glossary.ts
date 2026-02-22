@@ -28,39 +28,57 @@ const inputSchema = {
   industry: z.enum(INDUSTRIES).optional().describe("Industry glossary to import (for import action)"),
 };
 
+export interface GlossaryArgs {
+  action: "add" | "list" | "find" | "export" | "import";
+  project_path: string;
+  ja?: string;
+  en?: string;
+  vi?: string;
+  context?: string;
+  query?: string;
+  industry?: string;
+}
+
+export async function handleGlossary(
+  args: GlossaryArgs
+): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
+  const { action, project_path, ja, en, vi, context, query, industry } = args;
+  try {
+    logger.info({ action, project_path }, "Managing glossary");
+
+    const result = await callPython("glossary", {
+      action,
+      project_path,
+      ja: ja ?? "",
+      en: en ?? "",
+      vi: vi ?? "",
+      context: context ?? "",
+      query: query ?? "",
+      industry: industry ?? "",
+    });
+
+    let text: string;
+    if (action === "export" && result.content) {
+      text = result.content as string;
+    } else {
+      text = JSON.stringify(result, null, 2);
+    }
+
+    return { content: [{ type: "text", text }] };
+  } catch (err) {
+    const message = err instanceof SekkeiError ? err.toClientMessage() : "Glossary operation failed";
+    logger.error({ err, action }, "manage_glossary failed");
+    return { content: [{ type: "text", text: message }], isError: true };
+  }
+}
+
 export function registerGlossaryTool(server: McpServer): void {
   server.tool(
     "manage_glossary",
     "Manage project terminology glossary (add, list, find, export terms)",
     inputSchema,
     async ({ action, project_path, ja, en, vi, context, query, industry }) => {
-      try {
-        logger.info({ action, project_path }, "Managing glossary");
-
-        const result = await callPython("glossary", {
-          action,
-          project_path,
-          ja: ja ?? "",
-          en: en ?? "",
-          vi: vi ?? "",
-          context: context ?? "",
-          query: query ?? "",
-          industry: industry ?? "",
-        });
-
-        let text: string;
-        if (action === "export" && result.content) {
-          text = result.content as string;
-        } else {
-          text = JSON.stringify(result, null, 2);
-        }
-
-        return { content: [{ type: "text", text }] };
-      } catch (err) {
-        const message = err instanceof SekkeiError ? err.toClientMessage() : "Glossary operation failed";
-        logger.error({ err, action }, "manage_glossary failed");
-        return { content: [{ type: "text", text: message }], isError: true };
-      }
+      return handleGlossary({ action, project_path, ja, en, vi, context, query, industry });
     }
   );
 }

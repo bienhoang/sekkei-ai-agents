@@ -5,8 +5,9 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { callPython } from "../lib/python-bridge.js";
-import { exportToExcel } from "../lib/excel-exporter.js";
+import { exportToExcel, applyDiffHighlighting } from "../lib/excel-exporter.js";
 import { exportToPdf } from "../lib/pdf-exporter.js";
+import { exportToDocx } from "../lib/docx-exporter.js";
 import { loadConfig } from "../config.js";
 import { DOC_TYPES } from "../types/documents.js";
 import { SekkeiError } from "../lib/errors.js";
@@ -31,100 +32,153 @@ const inputSchema = {
     .describe("Path to _index.yaml manifest (required when source=manifest)"),
   feature_name: z.string().regex(/^[a-z][a-z0-9-]{1,49}$/).optional()
     .describe("Feature folder name (kebab-case) to export a single feature"),
+  template_path: z.string().max(500).optional()
+    .refine((p) => !p || p.toLowerCase().endsWith(".xlsx"), {
+      message: "template_path must end with .xlsx",
+    })
+    .describe("Path to an existing .xlsx template to fill instead of generating from scratch"),
+  diff_mode: z.boolean().optional()
+    .describe("Enable 朱書き (redline) diff highlighting in Excel: additions=green, deletions=red+strikethrough"),
+  old_path: z.string().max(500).optional()
+    .describe("Path to the previous version file (required when diff_mode=true)"),
 };
+
+export interface ExportDocumentArgs {
+  content?: string;
+  doc_type: string;
+  format: "xlsx" | "pdf" | "docx";
+  output_path: string;
+  project_name?: string;
+  source?: "file" | "manifest";
+  manifest_path?: string;
+  feature_name?: string;
+  template_path?: string;
+  diff_mode?: boolean;
+  old_path?: string;
+}
+
+export async function handleExportDocument(
+  args: ExportDocumentArgs
+): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
+  const { content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path } = args;
+  try {
+    logger.info({ doc_type, format, output_path, source, diff_mode }, "Exporting document");
+
+    let exportContent: string;
+
+    if (source === "manifest") {
+      if (!manifest_path) {
+        return {
+          content: [{ type: "text", text: "[MANIFEST_ERROR] manifest_path required when source=manifest" }],
+          isError: true,
+        };
+      }
+      const manifest = await readManifest(manifest_path);
+      exportContent = await mergeFromManifest(manifest_path, manifest, doc_type as Parameters<typeof mergeFromManifest>[2], feature_name);
+    } else {
+      if (!content) {
+        return {
+          content: [{ type: "text", text: "[VALIDATION_FAILED] content required when source=file" }],
+          isError: true,
+        };
+      }
+      exportContent = content;
+    }
+
+    const isMatrix = doc_type === "crud-matrix" || doc_type === "traceability-matrix";
+    const { exportEngine } = loadConfig();
+
+    let result: { file_path: unknown; file_size: unknown };
+
+    if (exportEngine === "node" && (format === "xlsx" || isMatrix)) {
+      result = await exportToExcel({
+        content: exportContent,
+        doc_type,
+        output_path,
+        project_name: project_name ?? "",
+        template_path,
+        isMatrix,
+      });
+    } else if (exportEngine === "node" && format === "pdf") {
+      result = await exportToPdf({
+        content: exportContent,
+        doc_type,
+        output_path,
+        project_name: project_name ?? "",
+      });
+    } else if (exportEngine === "node" && format === "docx") {
+      result = await exportToDocx({
+        content: exportContent,
+        doc_type,
+        output_path,
+        project_name: project_name ?? "",
+      });
+    } else {
+      let action: string;
+      let pythonInput: Record<string, unknown>;
+
+      if (isMatrix) {
+        action = "export-matrix";
+        pythonInput = {
+          content: exportContent,
+          matrix_type: doc_type,
+          output_path,
+          project_name: project_name ?? "",
+        };
+      } else {
+        action = format === "pdf" ? "export-pdf" : "export-docx";
+        pythonInput = {
+          content: exportContent,
+          doc_type,
+          output_path,
+          project_name: project_name ?? "",
+        };
+      }
+
+      result = await callPython(action, pythonInput) as { file_path: unknown; file_size: unknown };
+    }
+
+    if (diff_mode === true && format === "xlsx" && old_path) {
+      try {
+        const diffResult = await callPython("diff", {
+          old_path,
+          new_path: output_path,
+          output_path,
+        });
+        await applyDiffHighlighting(output_path, diffResult);
+        logger.info({ output_path }, "Applied 朱書き diff highlighting");
+      } catch (diffErr) {
+        logger.warn({ diffErr, output_path }, "Diff highlighting failed — returning plain export");
+      }
+    }
+
+    return {
+      content: [{
+        type: "text",
+        text: [
+          `# Export Complete`,
+          ``,
+          `**Format:** ${format}`,
+          `**File:** ${result.file_path}`,
+          `**Size:** ${result.file_size} bytes`,
+          ...(diff_mode === true ? [`**Diff mode:** 朱書き highlighting applied`] : []),
+        ].join("\n"),
+      }],
+    };
+  } catch (err) {
+    const message = err instanceof SekkeiError ? err.toClientMessage() : "Export failed";
+    logger.error({ err, doc_type, format }, "export_document failed");
+    return { content: [{ type: "text", text: message }], isError: true };
+  }
+}
 
 export function registerExportDocumentTool(server: McpServer): void {
   server.tool(
     "export_document",
     "Export a Markdown specification document to Excel (.xlsx), PDF, or Word (.docx)",
     inputSchema,
-    async ({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name }) => {
-      try {
-        logger.info({ doc_type, format, output_path, source }, "Exporting document");
-
-        let exportContent: string;
-
-        if (source === "manifest") {
-          if (!manifest_path) {
-            return {
-              content: [{ type: "text", text: "[MANIFEST_ERROR] manifest_path required when source=manifest" }],
-              isError: true,
-            };
-          }
-          const manifest = await readManifest(manifest_path);
-          exportContent = await mergeFromManifest(manifest_path, manifest, doc_type, feature_name);
-        } else {
-          if (!content) {
-            return {
-              content: [{ type: "text", text: "[VALIDATION_FAILED] content required when source=file" }],
-              isError: true,
-            };
-          }
-          exportContent = content;
-        }
-
-        const isMatrix = doc_type === "crud-matrix" || doc_type === "traceability-matrix";
-        const { exportEngine } = loadConfig();
-
-        let result: { file_path: unknown; file_size: unknown };
-
-        if (exportEngine === "node" && (format === "xlsx" || isMatrix)) {
-          result = await exportToExcel({
-            content: exportContent,
-            doc_type,
-            output_path,
-            project_name: project_name ?? "",
-            isMatrix,
-          });
-        } else if (exportEngine === "node" && format === "pdf") {
-          result = await exportToPdf({
-            content: exportContent,
-            doc_type,
-            output_path,
-            project_name: project_name ?? "",
-          });
-        } else {
-          let action: string;
-          let pythonInput: Record<string, unknown>;
-
-          if (isMatrix) {
-            action = "export-matrix";
-            pythonInput = {
-              content: exportContent,
-              matrix_type: doc_type,
-              output_path,
-              project_name: project_name ?? "",
-            };
-          } else {
-            action = format === "pdf" ? "export-pdf" : "export-docx";
-            pythonInput = {
-              content: exportContent,
-              doc_type,
-              output_path,
-              project_name: project_name ?? "",
-            };
-          }
-
-          result = await callPython(action, pythonInput) as { file_path: unknown; file_size: unknown };
-        }
-
-        return {
-          content: [{
-            type: "text",
-            text: [
-              `# Export Complete`,
-              ``,
-              `**Format:** ${format}`,
-              `**File:** ${result.file_path}`,
-              `**Size:** ${result.file_size} bytes`,
-            ].join("\n"),
-          }],
-        };
-      } catch (err) {
-        const message = err instanceof SekkeiError ? err.toClientMessage() : "Export failed";
-        logger.error({ err, doc_type, format }, "export_document failed");
-        return { content: [{ type: "text", text: message }], isError: true };
-      }
+    async ({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path }) => {
+      return handleExportDocument({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path });
     }
   );
 }
