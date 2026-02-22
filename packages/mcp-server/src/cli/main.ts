@@ -8,6 +8,7 @@ import { validateCommand } from "./commands/validate.js";
 import { exportCommand } from "./commands/export-cmd.js";
 import { statusCommand } from "./commands/status.js";
 import { glossaryCommand } from "./commands/glossary.js";
+import { watchCommand } from "./commands/watch.js";
 
 const main = defineCommand({
   meta: {
@@ -21,6 +22,7 @@ const main = defineCommand({
     export: exportCommand,
     status: statusCommand,
     glossary: glossaryCommand,
+    watch: watchCommand,
   },
 });
 

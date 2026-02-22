@@ -22,6 +22,10 @@ const inputSchema = {
     .describe("Path to output directory for numbered structure validation"),
   check_completeness: z.boolean().optional()
     .describe("Run content depth checks (required ID patterns, table rows per doc type)"),
+  check_structure_rules: z.boolean().optional()
+    .describe("Check document structure against template rules (section ordering, required fields)"),
+  preset: z.enum(["enterprise", "standard", "agile"]).optional()
+    .describe("Strictness preset (default: standard)"),
 };
 
 export interface ValidateDocumentArgs {
@@ -31,12 +35,14 @@ export interface ValidateDocumentArgs {
   manifest_path?: string;
   structure_path?: string;
   check_completeness?: boolean;
+  check_structure_rules?: boolean;
+  preset?: "enterprise" | "standard" | "agile";
 }
 
 export async function handleValidateDocument(
   args: ValidateDocumentArgs
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
-  const { content, doc_type, upstream_content, manifest_path, structure_path, check_completeness } = args;
+  const { content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset } = args;
   logger.info({ doc_type, hasUpstream: !!upstream_content, hasManifest: !!manifest_path, hasStructure: !!structure_path }, "Validating document");
 
   if (structure_path) {
@@ -67,6 +73,56 @@ export async function handleValidateDocument(
     } else {
       lines.push(`All structure rules pass.`);
     }
+    return { content: [{ type: "text", text: lines.join("\n") }] };
+  }
+
+  if (check_structure_rules && content && doc_type) {
+    const { checkStructureRules, extractFrontmatter } = await import("../lib/structure-rules.js");
+    const { loadTemplate } = await import("../lib/template-loader.js");
+    const { loadConfig } = await import("../config.js");
+
+    let templateSections: string[] = [];
+    try {
+      const cfg = loadConfig();
+      const template = await loadTemplate(cfg.templateDir, doc_type as Parameters<typeof loadTemplate>[1], "ja");
+      templateSections = template.metadata.sections ?? [];
+    } catch {
+      logger.warn("Could not load template for structure rules — using empty sections");
+    }
+
+    const frontmatter = extractFrontmatter(content);
+    const violations = checkStructureRules({
+      content,
+      docType: doc_type,
+      templateSections,
+      preset: preset ?? "standard",
+      frontmatter: frontmatter ?? undefined,
+    });
+
+    const errors = violations.filter(v => v.severity === "error");
+    const warnings = violations.filter(v => v.severity === "warning");
+    const infos = violations.filter(v => v.severity === "info");
+
+    const lines = [
+      `# Structure Rules Validation`,
+      ``,
+      `**Document Type:** ${doc_type}`,
+      `**Preset:** ${preset ?? "standard"}`,
+      `**Violations:** ${violations.length} (${errors.length} errors, ${warnings.length} warnings, ${infos.length} info)`,
+      `**Valid:** ${errors.length === 0 ? "Yes" : "No"}`,
+      ``,
+    ];
+
+    if (violations.length > 0) {
+      lines.push(`## Violations`, ``);
+      for (const v of violations) {
+        const loc = v.line ? ` (line ${v.line})` : "";
+        lines.push(`- [${v.severity.toUpperCase()}] ${v.rule}: ${v.message}${loc}`);
+      }
+    } else {
+      lines.push(`All structure rules pass.`);
+    }
+
     return { content: [{ type: "text", text: lines.join("\n") }] };
   }
 
@@ -175,8 +231,8 @@ export function registerValidateDocumentTool(server: McpServer): void {
     "validate_document",
     "Validate a Japanese specification document for completeness and cross-references",
     inputSchema,
-    async ({ content, doc_type, upstream_content, manifest_path, structure_path, check_completeness }) => {
-      return handleValidateDocument({ content, doc_type, upstream_content, manifest_path, structure_path, check_completeness });
+    async ({ content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset }) => {
+      return handleValidateDocument({ content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset });
     }
   );
 }

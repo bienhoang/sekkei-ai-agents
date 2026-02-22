@@ -15,15 +15,18 @@ import { logger } from "../lib/logger.js";
 import { readManifest } from "../lib/manifest-manager.js";
 import { mergeFromManifest } from "../lib/merge-documents.js";
 
-const EXPORT_FORMATS = ["xlsx", "pdf", "docx"] as const;
+const EXPORT_FORMATS = ["xlsx", "pdf", "docx", "gsheet"] as const;
 
 const inputSchema = {
   content: z.string().max(500_000).optional().describe("Markdown document content to export"),
   doc_type: z.enum(DOC_TYPES).describe("Document type"),
-  format: z.enum(EXPORT_FORMATS).describe("Export format: xlsx or pdf"),
-  output_path: z.string().max(500)
-    .refine((p) => /\.(xlsx|pdf|docx)$/i.test(p), { message: "output_path must end with .xlsx, .pdf, or .docx" })
-    .describe("Output file path"),
+  format: z.enum(EXPORT_FORMATS).describe("Export format: xlsx, pdf, docx, gsheet"),
+  output_path: z.string().max(500).optional()
+    .refine((p) => !p || /\.(xlsx|pdf|docx)$/i.test(p), { message: "output_path must end with .xlsx, .pdf, or .docx (not needed for gsheet)" })
+    .describe("Output file path (not needed for gsheet format)"),
+  config_path: z.string().max(500).optional()
+    .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "config_path must be .yaml/.yml" })
+    .describe("Path to sekkei.config.yaml (required for Google export to load credentials)"),
   project_name: z.string().optional().describe("Project name for cover page"),
   source: z.enum(["file", "manifest"]).default("file")
     .describe("Content source: direct file content or manifest-based merge"),
@@ -46,8 +49,8 @@ const inputSchema = {
 export interface ExportDocumentArgs {
   content?: string;
   doc_type: string;
-  format: "xlsx" | "pdf" | "docx";
-  output_path: string;
+  format: "xlsx" | "pdf" | "docx" | "gsheet";
+  output_path?: string;
   project_name?: string;
   source?: "file" | "manifest";
   manifest_path?: string;
@@ -55,14 +58,91 @@ export interface ExportDocumentArgs {
   template_path?: string;
   diff_mode?: boolean;
   old_path?: string;
+  config_path?: string;
 }
 
 export async function handleExportDocument(
   args: ExportDocumentArgs
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
-  const { content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path } = args;
+  const { content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path } = args;
   try {
     logger.info({ doc_type, format, output_path, source, diff_mode }, "Exporting document");
+
+    // gsheet format: handled separately, does not use output_path
+    if (format === "gsheet") {
+      if (!config_path) {
+        return {
+          content: [{ type: "text", text: "[GOOGLE_EXPORT_FAILED] config_path required for Google Sheets export" }],
+          isError: true,
+        };
+      }
+      let exportContent: string;
+      if (source === "manifest") {
+        if (!manifest_path) {
+          return {
+            content: [{ type: "text", text: "[MANIFEST_ERROR] manifest_path required when source=manifest" }],
+            isError: true,
+          };
+        }
+        const manifest = await readManifest(manifest_path);
+        exportContent = await mergeFromManifest(manifest_path, manifest, doc_type as Parameters<typeof mergeFromManifest>[2], feature_name);
+      } else {
+        if (!content) {
+          return {
+            content: [{ type: "text", text: "[VALIDATION_FAILED] content required when source=file" }],
+            isError: true,
+          };
+        }
+        exportContent = content;
+      }
+      try {
+        const { readFile } = await import("node:fs/promises");
+        const { parse: parseYaml } = await import("yaml");
+        const raw = await readFile(config_path, "utf-8");
+        const projectCfg = parseYaml(raw) as import("../types/documents.js").ProjectConfig;
+        if (!projectCfg?.google) {
+          return {
+            content: [{ type: "text", text: "[GOOGLE_EXPORT_FAILED] google section missing from config" }],
+            isError: true,
+          };
+        }
+        const { getGoogleAuthClient } = await import("../lib/google-auth.js");
+        const { exportToGoogleSheets } = await import("../lib/google-sheets-exporter.js");
+        const authClient = await getGoogleAuthClient(projectCfg.google);
+        const result = await exportToGoogleSheets({
+          content: exportContent,
+          docType: doc_type,
+          projectName: project_name ?? "Unnamed",
+          authClient,
+          folderId: projectCfg.google.folder_id,
+        });
+        return {
+          content: [{
+            type: "text",
+            text: [
+              `# Google Sheets Export Complete`,
+              ``,
+              `**Format:** gsheet`,
+              `**URL:** ${result.spreadsheet_url}`,
+              `**Sheets:** ${result.sheet_count}`,
+              `**Rows:** ${result.row_count}`,
+            ].join("\n"),
+          }],
+        };
+      } catch (err) {
+        const message = err instanceof SekkeiError ? err.toClientMessage() : "Google Sheets export failed";
+        logger.error({ err, doc_type }, "gsheet export failed");
+        return { content: [{ type: "text", text: message }], isError: true };
+      }
+    }
+
+    // Non-gsheet formats require output_path
+    if (!output_path) {
+      return {
+        content: [{ type: "text", text: "[VALIDATION_FAILED] output_path required for xlsx/pdf/docx export" }],
+        isError: true,
+      };
+    }
 
     let exportContent: string;
 
@@ -175,10 +255,10 @@ export async function handleExportDocument(
 export function registerExportDocumentTool(server: McpServer): void {
   server.tool(
     "export_document",
-    "Export a Markdown specification document to Excel (.xlsx), PDF, or Word (.docx)",
+    "Export a Markdown specification document to Excel (.xlsx), PDF, Word (.docx), or Google Sheets (gsheet)",
     inputSchema,
-    async ({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path }) => {
-      return handleExportDocument({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path });
+    async ({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path }) => {
+      return handleExportDocument({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path });
     }
   );
 }

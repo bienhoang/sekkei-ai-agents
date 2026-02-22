@@ -46,6 +46,9 @@ const inputSchema = {
   config_path: z.string().max(500).optional()
     .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "config_path must be .yaml/.yml" })
     .describe("Path to sekkei.config.yaml — enables git auto-commit if autoCommit: true"),
+  source_code_path: z.string().max(500).optional()
+    .refine((p) => !p || !p.includes(".."), { message: "Path must not contain .." })
+    .describe("Path to source code directory for code-aware generation (TypeScript projects)"),
 };
 
 /** Build upstream IDs injection block for cross-reference constraints */
@@ -124,6 +127,7 @@ export interface GenerateDocumentArgs {
   scope?: "shared" | "feature";
   output_path?: string;
   config_path?: string;
+  source_code_path?: string;
   templateDir?: string;
   overrideDir?: string;
 }
@@ -133,7 +137,7 @@ export async function handleGenerateDocument(
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
   const { doc_type, input_content, project_name, language, input_lang, keigo_override,
     upstream_content, project_type, feature_name, scope, output_path, config_path,
-    templateDir: tDir, overrideDir } = args;
+    source_code_path, templateDir: tDir, overrideDir } = args;
   try {
     const { loadConfig } = await import("../config.js");
     const cfg = loadConfig();
@@ -150,6 +154,19 @@ export async function handleGenerateDocument(
     const upstreamIdsBlock = upstream_content
       ? buildUpstreamIdsBlock(upstream_content as string)
       : "";
+
+    let codeContextBlock = "";
+    if (source_code_path && (doc_type === "detail-design" || doc_type === "test-spec")) {
+      try {
+        const { analyzeTypeScript } = await import("../lib/code-analyzer.js");
+        const { formatCodeContext } = await import("../lib/code-context-formatter.js");
+        const codeCtx = await analyzeTypeScript(source_code_path);
+        codeContextBlock = formatCodeContext(codeCtx);
+        logger.info({ fileCount: codeCtx.fileCount, classes: codeCtx.classes.length }, "Code analysis complete");
+      } catch (err) {
+        logger.warn({ err, source_code_path }, "Code analysis failed — proceeding without code context");
+      }
+    }
 
     const projectTypeBlock = project_type
       ? (PROJECT_TYPE_INSTRUCTIONS[project_type as ProjectType]?.[doc_type] ?? "")
@@ -198,6 +215,10 @@ export async function handleGenerateDocument(
 
     if (upstreamIdsBlock) {
       sections.push(``, upstreamIdsBlock);
+    }
+
+    if (codeContextBlock) {
+      sections.push(``, codeContextBlock);
     }
 
     sections.push(
@@ -261,8 +282,8 @@ export function registerGenerateDocumentTool(server: McpServer, templateDir: str
     "generate_document",
     "Generate a Japanese specification document using template + AI instructions",
     inputSchema,
-    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path }) => {
-      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, templateDir, overrideDir });
+    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path }) => {
+      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, templateDir, overrideDir });
     }
   );
 }

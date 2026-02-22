@@ -13,6 +13,7 @@ export const generateCommand = defineCommand({
     language: { type: "string", description: "Output language: ja (default), en, vi" },
     "project-name": { type: "string", description: "Project name for document header" },
     config: { type: "string", description: "Path to sekkei.config.yaml" },
+    "source-code": { type: "string", description: "Path to source code for code-aware generation" },
   },
   async run({ args }) {
     const docType = args["doc-type"] as string;
@@ -23,6 +24,7 @@ export const generateCommand = defineCommand({
       language: (args.language as "ja" | "en" | "vi" | undefined) ?? "ja",
       project_name: args["project-name"] as string | undefined,
       config_path: args.config as string | undefined,
+      source_code_path: args["source-code"] as string | undefined,
     });
     if (result.isError) {
       process.stderr.write(result.content[0].text + "\n");

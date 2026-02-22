@@ -12,6 +12,8 @@ export const validateCommand = defineCommand({
     manifest: { type: "string", description: "Path to _index.yaml for split document validation" },
     structure: { type: "string", description: "Path to output directory for structure validation" },
     completeness: { type: "boolean", description: "Run content depth checks", default: false },
+    "structure-rules": { type: "boolean", description: "Check document structure rules", default: false },
+    preset: { type: "string", description: "Strictness preset: enterprise, standard, agile" },
   },
   async run({ args }) {
     const result = await handleValidateDocument({
@@ -20,6 +22,8 @@ export const validateCommand = defineCommand({
       manifest_path: args.manifest as string | undefined,
       structure_path: args.structure as string | undefined,
       check_completeness: args.completeness as boolean | undefined,
+      check_structure_rules: args["structure-rules"] as boolean | undefined,
+      preset: args.preset as "enterprise" | "standard" | "agile" | undefined,
     });
     if (result.isError) {
       process.stderr.write(result.content[0].text + "\n");

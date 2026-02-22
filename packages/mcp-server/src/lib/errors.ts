@@ -12,7 +12,12 @@ export type SekkeiErrorCode =
   | "GENERATION_FAILED"
   | "VALIDATION_FAILED"
   | "MANIFEST_ERROR"
-  | "MOCKUP_ERROR";
+  | "MOCKUP_ERROR"
+  | "CODE_ANALYSIS_FAILED"
+  | "STALENESS_ERROR"
+  | "STRUCTURE_RULES_ERROR"
+  | "GOOGLE_EXPORT_FAILED"
+  | "BACKLOG_SYNC_FAILED";
 
 export class SekkeiError extends Error {
   constructor(

@@ -107,6 +107,22 @@ export interface ProjectConfig {
   };
   /** Auto-commit generated documents to git. Default: false */
   autoCommit?: boolean;
+  /** Feature-to-file mapping for staleness detection */
+  feature_file_map?: Record<string, { label: string; files: string[] }>;
+  /** Google Workspace export config */
+  google?: {
+    credentials_path: string;
+    auth_type: "service_account" | "oauth2";
+    folder_id?: string;
+  };
+  /** Nulab Backlog integration config */
+  backlog?: {
+    space_key: string;
+    project_key: string;
+    api_key_env: string;
+    issue_type_id?: number;
+    sync_mode: "push" | "bidirectional";
+  };
   chain: {
     rfp: string;
     overview: ChainEntry;
