@@ -1,0 +1,1018 @@
+industry: logistics
+language: ja
+terms:
+  # 倉庫管理 (warehouse)
+  - ja: 入庫
+    en: receiving
+    vi: nhập kho
+    context: 倉庫管理
+  - ja: 出庫
+    en: shipping
+    vi: xuất kho
+    context: 倉庫管理
+  - ja: 倉庫管理システム
+    en: warehouse management system
+    vi: hệ thống quản lý kho
+    context: 倉庫管理
+  - ja: ロケーション管理
+    en: location management
+    vi: quản lý vị trí
+    context: 倉庫管理
+  - ja: ピッキング
+    en: picking
+    vi: picking
+    context: 倉庫管理
+  - ja: パッキング
+    en: packing
+    vi: packing
+    context: 倉庫管理
+  - ja: 棚卸し
+    en: stocktaking
+    vi: kiểm kê kho
+    context: 倉庫管理
+  - ja: 棚番号
+    en: shelf number
+    vi: số kệ
+    context: 倉庫管理
+  - ja: 荷受け
+    en: goods receipt
+    vi: nhận hàng
+    context: 倉庫管理
+  - ja: 保管場所
+    en: storage location
+    vi: vị trí lưu kho
+    context: 倉庫管理
+  - ja: 仕分け
+    en: sorting
+    vi: phân loại hàng
+    context: 倉庫管理
+  - ja: 入出庫履歴
+    en: inventory movement history
+    vi: lịch sử nhập xuất kho
+    context: 倉庫管理
+  - ja: 棚払い
+    en: shelf clearance
+    vi: dọn kệ
+    context: 倉庫管理
+  - ja: 荷姿
+    en: packaging form
+    vi: hình thức đóng gói
+    context: 倉庫管理
+  - ja: パレット
+    en: pallet
+    vi: pallet
+    context: 倉庫管理
+  - ja: フォークリフト
+    en: forklift
+    vi: xe nâng
+    context: 倉庫管理
+  - ja: 入荷予定
+    en: expected arrival
+    vi: kế hoạch nhập hàng
+    context: 倉庫管理
+  - ja: 出荷指示
+    en: shipping instruction
+    vi: chỉ thị xuất hàng
+    context: 倉庫管理
+  - ja: 検品
+    en: inspection
+    vi: kiểm tra hàng hóa
+    context: 倉庫管理
+  - ja: 数量差異
+    en: quantity discrepancy
+    vi: sai lệch số lượng
+    context: 倉庫管理
+  - ja: 格納
+    en: putaway
+    vi: lưu kho
+    context: 倉庫管理
+  - ja: 引当
+    en: reservation / allocation
+    vi: phân bổ hàng
+    context: 倉庫管理
+  - ja: 保管料
+    en: storage fee
+    vi: phí lưu kho
+    context: 倉庫管理
+  - ja: 荷物
+    en: cargo / parcel
+    vi: hàng hóa
+    context: 倉庫管理
+  - ja: バーコードスキャン
+    en: barcode scanning
+    vi: quét mã vạch
+    context: 倉庫管理
+  - ja: ゾーン管理
+    en: zone management
+    vi: quản lý khu vực
+    context: 倉庫管理
+  - ja: 先入れ先出し
+    en: FIFO (first in first out)
+    vi: nhập trước xuất trước
+    context: 倉庫管理
+  - ja: 後入れ先出し
+    en: LIFO (last in first out)
+    vi: nhập sau xuất trước
+    context: 倉庫管理
+  - ja: 積み付け
+    en: loading / stowage
+    vi: xếp hàng
+    context: 倉庫管理
+  - ja: 残量確認
+    en: remaining quantity check
+    vi: kiểm tra số lượng tồn
+    context: 倉庫管理
+  - ja: 出荷伝票
+    en: shipping slip
+    vi: phiếu xuất kho
+    context: 倉庫管理
+  - ja: 荷役
+    en: cargo handling
+    vi: bốc xếp hàng hóa
+    context: 倉庫管理
+
+  # 配送 (delivery)
+  - ja: 配送先
+    en: delivery destination
+    vi: địa chỉ giao hàng
+    context: 配送
+  - ja: 配送ルート
+    en: delivery route
+    vi: tuyến giao hàng
+    context: 配送
+  - ja: 配送業者
+    en: carrier / delivery company
+    vi: đơn vị vận chuyển
+    context: 配送
+  - ja: 配送スケジュール
+    en: delivery schedule
+    vi: lịch giao hàng
+    context: 配送
+  - ja: ラストマイル
+    en: last mile delivery
+    vi: giao hàng chặng cuối
+    context: 配送
+  - ja: 着時間指定
+    en: delivery time slot designation
+    vi: chỉ định khung giờ giao hàng
+    context: 配送
+  - ja: 宅配便
+    en: home delivery / courier service
+    vi: dịch vụ giao hàng tận nhà
+    context: 配送
+  - ja: 再配達
+    en: redelivery
+    vi: giao hàng lại
+    context: 配送
+  - ja: 不在票
+    en: missed delivery notice
+    vi: phiếu vắng mặt
+    context: 配送
+  - ja: 着払い
+    en: cash on delivery
+    vi: thu tiền khi giao hàng
+    context: 配送
+  - ja: 元払い
+    en: prepaid shipping
+    vi: trả phí trước
+    context: 配送
+  - ja: 時間指定配送
+    en: scheduled delivery
+    vi: giao hàng theo lịch hẹn
+    context: 配送
+  - ja: 置き配
+    en: unattended delivery
+    vi: giao hàng để tại chỗ
+    context: 配送
+  - ja: 配送コスト
+    en: delivery cost
+    vi: chi phí giao hàng
+    context: 配送
+  - ja: 配送遅延
+    en: delivery delay
+    vi: chậm giao hàng
+    context: 配送
+  - ja: 積載量
+    en: loading capacity
+    vi: trọng tải
+    context: 配送
+  - ja: 配送証明
+    en: proof of delivery
+    vi: bằng chứng giao hàng
+    context: 配送
+  - ja: 集配
+    en: pickup and delivery
+    vi: thu gom và giao hàng
+    context: 配送
+  - ja: 幹線輸送
+    en: trunk transportation
+    vi: vận chuyển tuyến chính
+    context: 配送
+  - ja: ハブ拠点
+    en: hub facility
+    vi: trung tâm trung chuyển
+    context: 配送
+  - ja: 集荷
+    en: pickup
+    vi: lấy hàng
+    context: 配送
+  - ja: 運賃
+    en: freight charge
+    vi: cước vận chuyển
+    context: 配送
+  - ja: 混載便
+    en: consolidated shipment
+    vi: hàng ghép
+    context: 配送
+  - ja: チャーター便
+    en: charter service
+    vi: dịch vụ thuê bao
+    context: 配送
+  - ja: 転送
+    en: forwarding
+    vi: chuyển tiếp hàng
+    context: 配送
+  - ja: 配達完了
+    en: delivery completed
+    vi: giao hàng hoàn tất
+    context: 配送
+  - ja: 受取人
+    en: recipient / consignee
+    vi: người nhận hàng
+    context: 配送
+  - ja: 発送通知
+    en: shipment notification
+    vi: thông báo giao hàng
+    context: 配送
+  - ja: 配送管理システム
+    en: delivery management system
+    vi: hệ thống quản lý giao hàng
+    context: 配送
+  - ja: ドライバー管理
+    en: driver management
+    vi: quản lý tài xế
+    context: 配送
+  - ja: 配送効率
+    en: delivery efficiency
+    vi: hiệu quả giao hàng
+    context: 配送
+  - ja: 荷物追跡
+    en: parcel tracking
+    vi: theo dõi bưu kiện
+    context: 配送
+
+  # 輸出入 (import/export)
+  - ja: 輸出申告
+    en: export declaration
+    vi: khai báo xuất khẩu
+    context: 輸出入
+  - ja: 輸入申告
+    en: import declaration
+    vi: khai báo nhập khẩu
+    context: 輸出入
+  - ja: 通関業者
+    en: customs broker
+    vi: đại lý hải quan
+    context: 輸出入
+  - ja: 関税
+    en: customs duty / tariff
+    vi: thuế hải quan
+    context: 輸出入
+  - ja: インボイス
+    en: commercial invoice
+    vi: hóa đơn thương mại
+    context: 輸出入
+  - ja: パッキングリスト
+    en: packing list
+    vi: danh sách đóng gói
+    context: 輸出入
+  - ja: 原産地証明書
+    en: certificate of origin
+    vi: giấy chứng nhận xuất xứ
+    context: 輸出入
+  - ja: 貿易条件
+    en: trade terms / Incoterms
+    vi: điều kiện thương mại
+    context: 輸出入
+  - ja: FOB
+    en: free on board
+    vi: giao hàng lên tàu
+    context: 輸出入
+  - ja: CIF
+    en: cost insurance and freight
+    vi: giá CIF (chi phí bảo hiểm và cước)
+    context: 輸出入
+  - ja: 船荷証券
+    en: bill of lading
+    vi: vận đơn đường biển
+    context: 輸出入
+  - ja: 航空貨物
+    en: air freight
+    vi: hàng hóa hàng không
+    context: 輸出入
+  - ja: 海上輸送
+    en: sea freight
+    vi: vận chuyển đường biển
+    context: 輸出入
+  - ja: 輸出規制
+    en: export control
+    vi: kiểm soát xuất khẩu
+    context: 輸出入
+  - ja: 禁輸品
+    en: prohibited goods
+    vi: hàng cấm
+    context: 輸出入
+  - ja: 輸入許可証
+    en: import license
+    vi: giấy phép nhập khẩu
+    context: 輸出入
+  - ja: 関税分類
+    en: tariff classification / HS code
+    vi: phân loại thuế quan
+    context: 輸出入
+  - ja: 保税倉庫
+    en: bonded warehouse
+    vi: kho ngoại quan
+    context: 輸出入
+  - ja: 外国為替
+    en: foreign exchange
+    vi: ngoại hối
+    context: 輸出入
+  - ja: 輸出実績
+    en: export record / actual export
+    vi: doanh số xuất khẩu thực tế
+    context: 輸出入
+  - ja: 輸入実績
+    en: import record
+    vi: doanh số nhập khẩu thực tế
+    context: 輸出入
+  - ja: 貿易保険
+    en: trade credit insurance
+    vi: bảo hiểm thương mại
+    context: 輸出入
+  - ja: 積み替え
+    en: transshipment
+    vi: trung chuyển hàng hóa
+    context: 輸出入
+  - ja: 検疫
+    en: quarantine
+    vi: kiểm dịch
+    context: 輸出入
+  - ja: 輸出入統計
+    en: trade statistics
+    vi: thống kê xuất nhập khẩu
+    context: 輸出入
+  - ja: 特恵関税
+    en: preferential tariff
+    vi: thuế ưu đãi
+    context: 輸出入
+  - ja: 貿易摩擦
+    en: trade friction / trade dispute
+    vi: tranh chấp thương mại
+    context: 輸出入
+  - ja: 輸出通関
+    en: export customs clearance
+    vi: thông quan xuất khẩu
+    context: 輸出入
+  - ja: 輸入通関
+    en: import customs clearance
+    vi: thông quan nhập khẩu
+    context: 輸出入
+  - ja: 貿易決済
+    en: trade settlement
+    vi: thanh toán thương mại
+    context: 輸出入
+
+  # 在庫 (inventory)
+  - ja: 在庫回転率
+    en: inventory turnover
+    vi: vòng quay tồn kho
+    context: 在庫
+  - ja: 安全在庫
+    en: safety stock
+    vi: tồn kho an toàn
+    context: 在庫
+  - ja: 在庫切れ
+    en: stockout
+    vi: hết hàng
+    context: 在庫
+  - ja: 過剰在庫
+    en: excess inventory
+    vi: tồn kho dư thừa
+    context: 在庫
+  - ja: 在庫評価
+    en: inventory valuation
+    vi: định giá tồn kho
+    context: 在庫
+  - ja: 在庫調整
+    en: inventory adjustment
+    vi: điều chỉnh tồn kho
+    context: 在庫
+  - ja: 棚卸資産
+    en: inventory assets
+    vi: tài sản tồn kho
+    context: 在庫
+  - ja: 発注点
+    en: reorder point
+    vi: điểm đặt hàng lại
+    context: 在庫
+  - ja: 発注量
+    en: order quantity
+    vi: số lượng đặt hàng
+    context: 在庫
+  - ja: 欠品
+    en: out-of-stock / shortage
+    vi: thiếu hàng
+    context: 在庫
+  - ja: 在庫数
+    en: stock quantity
+    vi: số lượng tồn kho
+    context: 在庫
+  - ja: 在庫移動
+    en: stock transfer
+    vi: chuyển kho
+    context: 在庫
+  - ja: 在庫ロス
+    en: inventory loss / shrinkage
+    vi: hao hụt tồn kho
+    context: 在庫
+  - ja: 在庫補充
+    en: stock replenishment
+    vi: bổ sung tồn kho
+    context: 在庫
+  - ja: 在庫計画
+    en: inventory planning
+    vi: kế hoạch tồn kho
+    context: 在庫
+  - ja: 期末在庫
+    en: end-of-period inventory
+    vi: tồn kho cuối kỳ
+    context: 在庫
+  - ja: 適正在庫
+    en: optimal inventory level
+    vi: mức tồn kho tối ưu
+    context: 在庫
+  - ja: 在庫差異
+    en: inventory variance
+    vi: sai lệch tồn kho
+    context: 在庫
+  - ja: 在庫廃棄
+    en: inventory disposal / write-off
+    vi: thanh lý tồn kho
+    context: 在庫
+  - ja: 製品在庫
+    en: finished goods inventory
+    vi: tồn kho thành phẩm
+    context: 在庫
+  - ja: 原材料在庫
+    en: raw material inventory
+    vi: tồn kho nguyên liệu
+    context: 在庫
+  - ja: 仕掛品
+    en: work in progress (WIP)
+    vi: hàng đang sản xuất
+    context: 在庫
+  - ja: ロット管理
+    en: lot management
+    vi: quản lý lô hàng
+    context: 在庫
+  - ja: シリアル番号管理
+    en: serial number management
+    vi: quản lý số serial
+    context: 在庫
+  - ja: 有効期限管理
+    en: expiry date management
+    vi: quản lý hạn sử dụng
+    context: 在庫
+  - ja: 在庫可視化
+    en: inventory visibility
+    vi: hiển thị tồn kho
+    context: 在庫
+  - ja: 滞留在庫
+    en: slow-moving inventory
+    vi: tồn kho chậm luân chuyển
+    context: 在庫
+  - ja: 在庫削減
+    en: inventory reduction
+    vi: giảm tồn kho
+    context: 在庫
+  - ja: 集中在庫
+    en: centralized inventory
+    vi: tồn kho tập trung
+    context: 在庫
+  - ja: 分散在庫
+    en: distributed inventory
+    vi: tồn kho phân tán
+    context: 在庫
+
+  # トラッキング (tracking)
+  - ja: 追跡番号
+    en: tracking number
+    vi: mã theo dõi
+    context: トラッキング
+  - ja: リアルタイム追跡
+    en: real-time tracking
+    vi: theo dõi thời gian thực
+    context: トラッキング
+  - ja: GPS追跡
+    en: GPS tracking
+    vi: theo dõi GPS
+    context: トラッキング
+  - ja: 配達状況
+    en: delivery status
+    vi: trạng thái giao hàng
+    context: トラッキング
+  - ja: 到着予定時刻
+    en: estimated time of arrival (ETA)
+    vi: thời gian dự kiến đến
+    context: トラッキング
+  - ja: 追跡照会
+    en: tracking inquiry
+    vi: tra cứu theo dõi
+    context: トラッキング
+  - ja: 配送ステータス
+    en: delivery status code
+    vi: mã trạng thái giao hàng
+    context: トラッキング
+  - ja: 輸送中
+    en: in transit
+    vi: đang vận chuyển
+    context: トラッキング
+  - ja: 通関中
+    en: in customs
+    vi: đang thông quan
+    context: トラッキング
+  - ja: 保管中
+    en: in storage
+    vi: đang lưu kho
+    context: トラッキング
+  - ja: 引き渡し済み
+    en: handed over / delivered
+    vi: đã giao hàng
+    context: トラッキング
+  - ja: 位置情報
+    en: location information
+    vi: thông tin vị trí
+    context: トラッキング
+  - ja: 運送状
+    en: waybill / airway bill
+    vi: vận đơn
+    context: トラッキング
+  - ja: 受領確認
+    en: delivery confirmation
+    vi: xác nhận nhận hàng
+    context: トラッキング
+  - ja: 電子署名
+    en: electronic signature
+    vi: chữ ký điện tử
+    context: トラッキング
+  - ja: RFID
+    en: radio frequency identification
+    vi: nhận dạng tần số vô tuyến
+    context: トラッキング
+  - ja: QRコード
+    en: QR code
+    vi: mã QR
+    context: トラッキング
+  - ja: ラベル印刷
+    en: label printing
+    vi: in nhãn
+    context: トラッキング
+  - ja: 輸送履歴
+    en: transport history
+    vi: lịch sử vận chuyển
+    context: トラッキング
+  - ja: イベントログ
+    en: event log
+    vi: nhật ký sự kiện
+    context: トラッキング
+  - ja: アラート通知
+    en: alert notification
+    vi: thông báo cảnh báo
+    context: トラッキング
+  - ja: 遅延検知
+    en: delay detection
+    vi: phát hiện chậm trễ
+    context: トラッキング
+  - ja: チェックポイント
+    en: checkpoint
+    vi: điểm kiểm tra
+    context: トラッキング
+  - ja: スキャン履歴
+    en: scan history
+    vi: lịch sử quét
+    context: トラッキング
+  - ja: 輸送可視性
+    en: transport visibility
+    vi: khả năng hiển thị vận chuyển
+    context: トラッキング
+  - ja: 荷物ステータス
+    en: parcel status
+    vi: trạng thái bưu kiện
+    context: トラッキング
+  - ja: 追跡システム
+    en: tracking system
+    vi: hệ thống theo dõi
+    context: トラッキング
+  - ja: 配送通知メール
+    en: delivery notification email
+    vi: email thông báo giao hàng
+    context: トラッキング
+  - ja: プッシュ通知
+    en: push notification
+    vi: thông báo đẩy
+    context: トラッキング
+  - ja: 追跡URL
+    en: tracking URL
+    vi: đường dẫn theo dõi
+    context: トラッキング
+  - ja: 荷物スキャン
+    en: parcel scan
+    vi: quét bưu kiện
+    context: トラッキング
+  - ja: 配送拠点
+    en: delivery hub / depot
+    vi: trung tâm giao hàng
+    context: トラッキング
+
+  # 3PL
+  - ja: 委託先
+    en: outsourcing partner
+    vi: đối tác thuê ngoài
+    context: 3PL
+  - ja: サードパーティロジスティクス
+    en: third-party logistics
+    vi: logistics bên thứ ba
+    context: 3PL
+  - ja: フルフィルメント
+    en: fulfillment
+    vi: dịch vụ thực hiện đơn hàng
+    context: 3PL
+  - ja: アウトソーシング
+    en: outsourcing
+    vi: thuê ngoài
+    context: 3PL
+  - ja: 物流代行
+    en: logistics outsourcing service
+    vi: dịch vụ ủy thác logistics
+    context: 3PL
+  - ja: 受発注管理
+    en: order management
+    vi: quản lý đặt hàng và nhận hàng
+    context: 3PL
+  - ja: SLA（サービスレベル協定）
+    en: service level agreement
+    vi: thỏa thuận mức dịch vụ
+    context: 3PL
+  - ja: KPI管理
+    en: KPI management
+    vi: quản lý chỉ số KPI
+    context: 3PL
+  - ja: コスト削減
+    en: cost reduction
+    vi: giảm chi phí
+    context: 3PL
+  - ja: 物流コンサルティング
+    en: logistics consulting
+    vi: tư vấn logistics
+    context: 3PL
+  - ja: 業務委託契約
+    en: outsourcing contract
+    vi: hợp đồng ủy thác
+    context: 3PL
+  - ja: 返品処理
+    en: returns processing
+    vi: xử lý hàng trả lại
+    context: 3PL
+  - ja: 流通加工
+    en: distribution processing
+    vi: gia công phân phối
+    context: 3PL
+  - ja: 輸送手配
+    en: transportation arrangement
+    vi: sắp xếp vận chuyển
+    context: 3PL
+  - ja: 物流センター
+    en: logistics center / distribution center
+    vi: trung tâm logistics
+    context: 3PL
+  - ja: 在庫管理受託
+    en: outsourced inventory management
+    vi: ủy thác quản lý tồn kho
+    context: 3PL
+  - ja: 輸出入代行
+    en: import/export agency service
+    vi: dịch vụ đại lý xuất nhập khẩu
+    context: 3PL
+  - ja: スペース賃貸
+    en: space rental / warehousing space
+    vi: thuê không gian kho
+    context: 3PL
+  - ja: 物流パートナー
+    en: logistics partner
+    vi: đối tác logistics
+    context: 3PL
+  - ja: 品質管理受託
+    en: outsourced quality management
+    vi: ủy thác quản lý chất lượng
+    context: 3PL
+  - ja: ピック&パック
+    en: pick and pack
+    vi: lấy hàng và đóng gói
+    context: 3PL
+  - ja: 物流ネットワーク
+    en: logistics network
+    vi: mạng lưới logistics
+    context: 3PL
+  - ja: 4PL
+    en: fourth-party logistics
+    vi: logistics bên thứ tư
+    context: 3PL
+  - ja: 受託倉庫
+    en: contract warehouse
+    vi: kho theo hợp đồng
+    context: 3PL
+  - ja: 輸配送委託
+    en: transportation and delivery outsourcing
+    vi: ủy thác vận chuyển và giao hàng
+    context: 3PL
+  - ja: サービス品質
+    en: service quality
+    vi: chất lượng dịch vụ
+    context: 3PL
+  - ja: 請求明細
+    en: billing statement
+    vi: bảng kê hóa đơn
+    context: 3PL
+  - ja: パフォーマンス評価
+    en: performance evaluation
+    vi: đánh giá hiệu suất
+    context: 3PL
+  - ja: 補完サービス
+    en: value-added service
+    vi: dịch vụ giá trị gia tăng
+    context: 3PL
+  - ja: 物流DX
+    en: logistics digital transformation
+    vi: chuyển đổi số logistics
+    context: 3PL
+
+  # 冷蔵物流 (cold chain)
+  - ja: 温度管理
+    en: temperature control
+    vi: kiểm soát nhiệt độ
+    context: 冷蔵物流
+  - ja: コールドチェーン
+    en: cold chain
+    vi: chuỗi lạnh
+    context: 冷蔵物流
+  - ja: 冷蔵倉庫
+    en: refrigerated warehouse
+    vi: kho lạnh
+    context: 冷蔵物流
+  - ja: 冷凍倉庫
+    en: frozen storage warehouse
+    vi: kho đông lạnh
+    context: 冷蔵物流
+  - ja: 温度記録
+    en: temperature log
+    vi: nhật ký nhiệt độ
+    context: 冷蔵物流
+  - ja: 温度逸脱
+    en: temperature excursion
+    vi: vượt ngưỡng nhiệt độ
+    context: 冷蔵物流
+  - ja: 保冷車
+    en: refrigerated vehicle
+    vi: xe lạnh
+    context: 冷蔵物流
+  - ja: 保冷材
+    en: coolant / ice pack
+    vi: vật liệu giữ lạnh
+    context: 冷蔵物流
+  - ja: チルド配送
+    en: chilled delivery
+    vi: giao hàng nhiệt độ mát
+    context: 冷蔵物流
+  - ja: 冷凍食品
+    en: frozen food
+    vi: thực phẩm đông lạnh
+    context: 冷蔵物流
+  - ja: 食品安全
+    en: food safety
+    vi: an toàn thực phẩm
+    context: 冷蔵物流
+  - ja: HACCP
+    en: hazard analysis critical control points
+    vi: phân tích mối nguy và điểm kiểm soát tới hạn
+    context: 冷蔵物流
+  - ja: 温湿度センサー
+    en: temperature and humidity sensor
+    vi: cảm biến nhiệt độ và độ ẩm
+    context: 冷蔵物流
+  - ja: 解凍管理
+    en: thawing management
+    vi: quản lý rã đông
+    context: 冷蔵物流
+  - ja: 品質保持期限
+    en: best before date
+    vi: hạn sử dụng tốt nhất
+    context: 冷蔵物流
+  - ja: 冷媒
+    en: refrigerant
+    vi: chất làm lạnh
+    context: 冷蔵物流
+  - ja: ドライアイス
+    en: dry ice
+    vi: đá khô
+    context: 冷蔵物流
+  - ja: 保冷ボックス
+    en: insulated box / cold box
+    vi: thùng giữ lạnh
+    context: 冷蔵物流
+  - ja: 低温輸送
+    en: low-temperature transport
+    vi: vận chuyển nhiệt độ thấp
+    context: 冷蔵物流
+  - ja: 冷蔵車
+    en: refrigerator truck
+    vi: xe tải lạnh
+    context: 冷蔵物流
+  - ja: 医薬品物流
+    en: pharmaceutical logistics
+    vi: logistics dược phẩm
+    context: 冷蔵物流
+  - ja: バイオ医薬品輸送
+    en: biopharmaceutical transport
+    vi: vận chuyển dược phẩm sinh học
+    context: 冷蔵物流
+  - ja: 温度アラート
+    en: temperature alert
+    vi: cảnh báo nhiệt độ
+    context: 冷蔵物流
+  - ja: 冷蔵コンテナ
+    en: refrigerated container / reefer container
+    vi: container lạnh
+    context: 冷蔵物流
+  - ja: コールドルーム
+    en: cold room
+    vi: phòng lạnh
+    context: 冷蔵物流
+  - ja: 温度保証
+    en: temperature guarantee
+    vi: bảo đảm nhiệt độ
+    context: 冷蔵物流
+  - ja: 品温管理
+    en: product temperature management
+    vi: quản lý nhiệt độ sản phẩm
+    context: 冷蔵物流
+  - ja: 冷凍サプライチェーン
+    en: frozen supply chain
+    vi: chuỗi cung ứng đông lạnh
+    context: 冷蔵物流
+  - ja: 保管温度帯
+    en: storage temperature range
+    vi: dải nhiệt độ bảo quản
+    context: 冷蔵物流
+  - ja: 冷蔵品管理
+    en: refrigerated goods management
+    vi: quản lý hàng lạnh
+    context: 冷蔵物流
+  - ja: エコール配送
+    en: eco-friendly cold delivery
+    vi: giao hàng lạnh thân thiện môi trường
+    context: 冷蔵物流
+  - ja: 庫内温度
+    en: warehouse internal temperature
+    vi: nhiệt độ bên trong kho
+    context: 冷蔵物流
+
+  # 通関 (customs)
+  - ja: 通関手続き
+    en: customs clearance procedure
+    vi: thủ tục hải quan
+    context: 通関
+  - ja: 税関申告
+    en: customs declaration
+    vi: khai báo hải quan
+    context: 通関
+  - ja: 輸出許可
+    en: export permit
+    vi: giấy phép xuất khẩu
+    context: 通関
+  - ja: 輸入許可
+    en: import permit
+    vi: giấy phép nhập khẩu
+    context: 通関
+  - ja: 関税率
+    en: tariff rate
+    vi: mức thuế suất
+    context: 通関
+  - ja: HS コード
+    en: HS code (harmonized system)
+    vi: mã HS
+    context: 通関
+  - ja: 税関検査
+    en: customs inspection
+    vi: kiểm tra hải quan
+    context: 通関
+  - ja: 輸入消費税
+    en: import consumption tax
+    vi: thuế tiêu thụ nhập khẩu
+    context: 通関
+  - ja: 申告書
+    en: declaration form
+    vi: tờ khai
+    context: 通関
+  - ja: 通関士
+    en: licensed customs specialist
+    vi: chuyên viên hải quan có chứng chỉ
+    context: 通関
+  - ja: 認定通関業者
+    en: authorized economic operator (AEO)
+    vi: nhà khai thác kinh tế được cấp phép
+    context: 通関
+  - ja: 事前確定裁定
+    en: advance ruling
+    vi: phán quyết trước
+    context: 通関
+  - ja: 不正輸入
+    en: illegal import / smuggling
+    vi: nhập khẩu bất hợp pháp
+    context: 通関
+  - ja: 罰則
+    en: penalty
+    vi: hình phạt
+    context: 通関
+  - ja: 関税還付
+    en: customs duty refund / drawback
+    vi: hoàn thuế hải quan
+    context: 通関
+  - ja: 保税制度
+    en: bonded system
+    vi: chế độ kho ngoại quan
+    context: 通関
+  - ja: 輸出免税
+    en: export tax exemption
+    vi: miễn thuế xuất khẩu
+    context: 通関
+  - ja: 関税協定
+    en: customs agreement
+    vi: hiệp định thuế quan
+    context: 通関
+  - ja: EPA（経済連携協定）
+    en: economic partnership agreement
+    vi: hiệp định đối tác kinh tế
+    context: 通関
+  - ja: 輸出統計品目番号
+    en: statistical code for exports
+    vi: mã thống kê hàng xuất khẩu
+    context: 通関
+  - ja: 関税割当
+    en: tariff rate quota
+    vi: hạn ngạch thuế quan
+    context: 通関
+  - ja: 通関電子化
+    en: customs digitalization
+    vi: số hóa thủ tục hải quan
+    context: 通関
+  - ja: 輸入禁止品目
+    en: prohibited import items
+    vi: hàng hóa cấm nhập khẩu
+    context: 通関
+  - ja: 貨物検査
+    en: cargo inspection
+    vi: kiểm tra hàng hóa
+    context: 通関
+  - ja: 原産地規則
+    en: rules of origin
+    vi: quy tắc xuất xứ
+    context: 通関
+  - ja: 輸入関税
+    en: import duty
+    vi: thuế nhập khẩu
+    context: 通関
+  - ja: 現地確認
+    en: on-site verification
+    vi: xác nhận tại chỗ
+    context: 通関
+  - ja: 通関コスト
+    en: customs clearance cost
+    vi: chi phí thông quan
+    context: 通関
+  - ja: 輸入申請
+    en: import application
+    vi: đơn xin nhập khẩu
+    context: 通関
+  - ja: 税関コード
+    en: customs code
+    vi: mã hải quan
+    context: 通関
+  - ja: 通関遅延
+    en: customs delay
+    vi: chậm thông quan
+    context: 通関
+  - ja: 税関窓口
+    en: customs counter
+    vi: quầy hải quan
+    context: 通関

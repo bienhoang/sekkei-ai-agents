@@ -1,0 +1,1018 @@
+industry: telecom
+language: ja
+terms:
+  # 基地局 (base station) — 32 terms
+  - ja: アンテナ
+    en: antenna
+    vi: ăng-ten
+    context: 基地局
+  - ja: セル
+    en: cell
+    vi: cell
+    context: 基地局
+  - ja: 基地局
+    en: base station
+    vi: trạm gốc
+    context: 基地局
+  - ja: eNodeB
+    en: eNodeB
+    vi: eNodeB
+    context: 基地局
+  - ja: gNodeB
+    en: gNodeB
+    vi: gNodeB
+    context: 基地局
+  - ja: セクター
+    en: sector
+    vi: sector
+    context: 基地局
+  - ja: カバレッジ
+    en: coverage
+    vi: coverage
+    context: 基地局
+  - ja: 送信電力
+    en: transmit power
+    vi: công suất phát
+    context: 基地局
+  - ja: ハンドオーバー
+    en: handover
+    vi: handover
+    context: 基地局
+  - ja: ビームフォーミング
+    en: beamforming
+    vi: beamforming
+    context: 基地局
+  - ja: MIMO
+    en: MIMO
+    vi: MIMO
+    context: 基地局
+  - ja: 周波数帯
+    en: frequency band
+    vi: băng tần
+    context: 基地局
+  - ja: 干渉
+    en: interference
+    vi: nhiễu
+    context: 基地局
+  - ja: 基地局コントローラー
+    en: base station controller
+    vi: bộ điều khiển trạm gốc
+    context: 基地局
+  - ja: リモートラジオヘッド
+    en: remote radio head
+    vi: đầu radio từ xa
+    context: 基地局
+  - ja: 無線アクセスネットワーク
+    en: radio access network
+    vi: mạng truy cập vô tuyến
+    context: 基地局
+  - ja: セルID
+    en: cell ID
+    vi: cell ID
+    context: 基地局
+  - ja: タワー
+    en: tower
+    vi: tháp viễn thông
+    context: 基地局
+  - ja: フェムトセル
+    en: femtocell
+    vi: femtocell
+    context: 基地局
+  - ja: マクロセル
+    en: macro cell
+    vi: macro cell
+    context: 基地局
+  - ja: スモールセル
+    en: small cell
+    vi: small cell
+    context: 基地局
+  - ja: 無線リソース管理
+    en: radio resource management
+    vi: quản lý tài nguyên vô tuyến
+    context: 基地局
+  - ja: チャネル推定
+    en: channel estimation
+    vi: ước lượng kênh
+    context: 基地局
+  - ja: 変調方式
+    en: modulation scheme
+    vi: phương thức điều chế
+    context: 基地局
+  - ja: OFDM
+    en: OFDM
+    vi: OFDM
+    context: 基地局
+  - ja: 空中線利得
+    en: antenna gain
+    vi: độ lợi ăng-ten
+    context: 基地局
+  - ja: 受信感度
+    en: receiver sensitivity
+    vi: độ nhạy thu
+    context: 基地局
+  - ja: パスロス
+    en: path loss
+    vi: suy hao đường truyền
+    context: 基地局
+  - ja: フェージング
+    en: fading
+    vi: fading
+    context: 基地局
+  - ja: ダウンリンク
+    en: downlink
+    vi: đường xuống
+    context: 基地局
+  - ja: アップリンク
+    en: uplink
+    vi: đường lên
+    context: 基地局
+  - ja: 周波数再利用
+    en: frequency reuse
+    vi: tái sử dụng tần số
+    context: 基地局
+
+  # 回線 (circuit) — 32 terms
+  - ja: 光回線
+    en: fiber optic
+    vi: cáp quang
+    context: 回線
+  - ja: 帯域幅
+    en: bandwidth
+    vi: băng thông
+    context: 回線
+  - ja: 専用回線
+    en: dedicated line
+    vi: đường truyền riêng
+    context: 回線
+  - ja: 回線速度
+    en: line speed
+    vi: tốc độ đường truyền
+    context: 回線
+  - ja: 遅延
+    en: latency
+    vi: độ trễ
+    context: 回線
+  - ja: パケットロス
+    en: packet loss
+    vi: mất gói tin
+    context: 回線
+  - ja: スループット
+    en: throughput
+    vi: thông lượng
+    context: 回線
+  - ja: 回線品質
+    en: line quality
+    vi: chất lượng đường truyền
+    context: 回線
+  - ja: 伝送速度
+    en: transmission speed
+    vi: tốc độ truyền
+    context: 回線
+  - ja: DSL
+    en: DSL
+    vi: DSL
+    context: 回線
+  - ja: FTTH
+    en: fiber to the home
+    vi: cáp quang đến nhà
+    context: 回線
+  - ja: ADSL
+    en: ADSL
+    vi: ADSL
+    context: 回線
+  - ja: ジッター
+    en: jitter
+    vi: jitter
+    context: 回線
+  - ja: エラーレート
+    en: error rate
+    vi: tỷ lệ lỗi
+    context: 回線
+  - ja: 多重化
+    en: multiplexing
+    vi: ghép kênh
+    context: 回線
+  - ja: バックボーン回線
+    en: backbone circuit
+    vi: đường truyền backbone
+    context: 回線
+  - ja: アクセス回線
+    en: access line
+    vi: đường truy cập
+    context: 回線
+  - ja: 中継回線
+    en: trunk line
+    vi: đường trung kế
+    context: 回線
+  - ja: 回線切替
+    en: line switching
+    vi: chuyển mạch đường truyền
+    context: 回線
+  - ja: 回線冗長化
+    en: line redundancy
+    vi: dự phòng đường truyền
+    context: 回線
+  - ja: 輻輳
+    en: congestion
+    vi: tắc nghẽn
+    context: 回線
+  - ja: QoS
+    en: quality of service
+    vi: chất lượng dịch vụ
+    context: 回線
+  - ja: トラフィック整形
+    en: traffic shaping
+    vi: định hình lưu lượng
+    context: 回線
+  - ja: 回線容量
+    en: line capacity
+    vi: dung lượng đường truyền
+    context: 回線
+  - ja: 伝送遅延
+    en: propagation delay
+    vi: độ trễ truyền lan
+    context: 回線
+  - ja: 非対称通信
+    en: asymmetric communication
+    vi: truyền thông không đối xứng
+    context: 回線
+  - ja: フレームリレー
+    en: frame relay
+    vi: frame relay
+    context: 回線
+  - ja: ATM回線
+    en: ATM circuit
+    vi: đường truyền ATM
+    context: 回線
+  - ja: 仮想回線
+    en: virtual circuit
+    vi: mạch ảo
+    context: 回線
+  - ja: 回線稼働率
+    en: line availability
+    vi: tỷ lệ hoạt động đường truyền
+    context: 回線
+  - ja: 広帯域
+    en: broadband
+    vi: băng rộng
+    context: 回線
+  - ja: 狭帯域
+    en: narrowband
+    vi: băng hẹp
+    context: 回線
+
+  # 課金 (billing) — 30 terms
+  - ja: 従量課金
+    en: usage-based billing
+    vi: tính phí theo lượng
+    context: 課金
+  - ja: 定額課金
+    en: flat-rate billing
+    vi: tính phí cố định
+    context: 課金
+  - ja: 請求書
+    en: invoice
+    vi: hóa đơn
+    context: 課金
+  - ja: 料金プラン
+    en: rate plan
+    vi: gói cước
+    context: 課金
+  - ja: 月額料金
+    en: monthly fee
+    vi: phí hàng tháng
+    context: 課金
+  - ja: 通話料
+    en: call charge
+    vi: cước gọi
+    context: 課金
+  - ja: データ通信料
+    en: data usage fee
+    vi: phí dữ liệu
+    context: 課金
+  - ja: 初期費用
+    en: initial fee
+    vi: phí khởi đầu
+    context: 課金
+  - ja: 解約違約金
+    en: cancellation penalty
+    vi: phí phạt hủy hợp đồng
+    context: 課金
+  - ja: 割引適用
+    en: discount application
+    vi: áp dụng chiết khấu
+    context: 課金
+  - ja: 自動引き落とし
+    en: auto debit
+    vi: ghi nợ tự động
+    context: 課金
+  - ja: 請求明細
+    en: billing detail
+    vi: chi tiết hóa đơn
+    context: 課金
+  - ja: 締め日
+    en: billing cutoff date
+    vi: ngày chốt hóa đơn
+    context: 課金
+  - ja: 支払期日
+    en: payment due date
+    vi: ngày thanh toán
+    context: 課金
+  - ja: 滞納
+    en: overdue payment
+    vi: trả nợ quá hạn
+    context: 課金
+  - ja: 前払い
+    en: prepayment
+    vi: trả trước
+    context: 課金
+  - ja: 後払い
+    en: postpaid
+    vi: trả sau
+    context: 課金
+  - ja: プリペイド
+    en: prepaid
+    vi: trả trước
+    context: 課金
+  - ja: ポストペイド
+    en: postpaid contract
+    vi: hợp đồng trả sau
+    context: 課金
+  - ja: 国際ローミング料金
+    en: international roaming fee
+    vi: phí roaming quốc tế
+    context: 課金
+  - ja: 超過料金
+    en: overage fee
+    vi: phí vượt hạn mức
+    context: 課金
+  - ja: 請求サイクル
+    en: billing cycle
+    vi: chu kỳ thanh toán
+    context: 課金
+  - ja: 課金システム
+    en: billing system
+    vi: hệ thống tính cước
+    context: 課金
+  - ja: レート計算
+    en: rate calculation
+    vi: tính toán giá cước
+    context: 課金
+  - ja: 料金通知
+    en: fee notification
+    vi: thông báo cước phí
+    context: 課金
+  - ja: 返金
+    en: refund
+    vi: hoàn tiền
+    context: 課金
+  - ja: クレジット
+    en: credit
+    vi: tín dụng
+    context: 課金
+  - ja: 消費税込み
+    en: tax inclusive
+    vi: đã bao gồm thuế
+    context: 課金
+  - ja: 課税対象
+    en: taxable
+    vi: chịu thuế
+    context: 課金
+  - ja: 収益認識
+    en: revenue recognition
+    vi: ghi nhận doanh thu
+    context: 課金
+
+  # CRM — 30 terms
+  - ja: 解約率
+    en: churn rate
+    vi: tỷ lệ rời mạng
+    context: CRM
+  - ja: 顧客満足度
+    en: customer satisfaction
+    vi: mức độ hài lòng khách hàng
+    context: CRM
+  - ja: 顧客生涯価値
+    en: customer lifetime value
+    vi: giá trị vòng đời khách hàng
+    context: CRM
+  - ja: 解約防止
+    en: churn prevention
+    vi: ngăn chặn rời mạng
+    context: CRM
+  - ja: 顧客獲得コスト
+    en: customer acquisition cost
+    vi: chi phí thu hút khách hàng
+    context: CRM
+  - ja: アップセル
+    en: upsell
+    vi: bán thêm
+    context: CRM
+  - ja: クロスセル
+    en: cross-sell
+    vi: bán chéo
+    context: CRM
+  - ja: 契約更新
+    en: contract renewal
+    vi: gia hạn hợp đồng
+    context: CRM
+  - ja: 問い合わせ管理
+    en: inquiry management
+    vi: quản lý yêu cầu
+    context: CRM
+  - ja: 苦情対応
+    en: complaint handling
+    vi: xử lý khiếu nại
+    context: CRM
+  - ja: サービスレベル協定
+    en: service level agreement
+    vi: thỏa thuận mức dịch vụ
+    context: CRM
+  - ja: NPS
+    en: net promoter score
+    vi: điểm NPS
+    context: CRM
+  - ja: コールセンター
+    en: call center
+    vi: trung tâm cuộc gọi
+    context: CRM
+  - ja: チケット管理
+    en: ticket management
+    vi: quản lý phiếu hỗ trợ
+    context: CRM
+  - ja: エスカレーション
+    en: escalation
+    vi: escalation
+    context: CRM
+  - ja: 顧客セグメント
+    en: customer segment
+    vi: phân khúc khách hàng
+    context: CRM
+  - ja: リテンション率
+    en: retention rate
+    vi: tỷ lệ giữ chân khách hàng
+    context: CRM
+  - ja: 顧客プロファイル
+    en: customer profile
+    vi: hồ sơ khách hàng
+    context: CRM
+  - ja: マイグレーション
+    en: migration
+    vi: migration
+    context: CRM
+  - ja: 乗り換え促進
+    en: MNP promotion
+    vi: khuyến mãi chuyển mạng
+    context: CRM
+  - ja: ロイヤルティプログラム
+    en: loyalty program
+    vi: chương trình khách hàng thân thiết
+    context: CRM
+  - ja: 顧客データベース
+    en: customer database
+    vi: cơ sở dữ liệu khách hàng
+    context: CRM
+  - ja: オムニチャネル
+    en: omnichannel
+    vi: omnichannel
+    context: CRM
+  - ja: セルフサービスポータル
+    en: self-service portal
+    vi: cổng tự phục vụ
+    context: CRM
+  - ja: 加入者情報
+    en: subscriber information
+    vi: thông tin thuê bao
+    context: CRM
+  - ja: キャンペーン管理
+    en: campaign management
+    vi: quản lý chiến dịch
+    context: CRM
+  - ja: 営業目標
+    en: sales target
+    vi: mục tiêu bán hàng
+    context: CRM
+  - ja: 契約件数
+    en: contract count
+    vi: số lượng hợp đồng
+    context: CRM
+  - ja: 接続先変更
+    en: carrier change
+    vi: thay đổi nhà mạng
+    context: CRM
+  - ja: 顧客接点
+    en: customer touchpoint
+    vi: điểm tiếp xúc khách hàng
+    context: CRM
+
+  # ネットワーク (network) — 32 terms
+  - ja: ルーター
+    en: router
+    vi: router
+    context: ネットワーク
+  - ja: ファイアウォール
+    en: firewall
+    vi: firewall
+    context: ネットワーク
+  - ja: スイッチ
+    en: switch
+    vi: switch
+    context: ネットワーク
+  - ja: VPN
+    en: virtual private network
+    vi: VPN
+    context: ネットワーク
+  - ja: IPアドレス
+    en: IP address
+    vi: địa chỉ IP
+    context: ネットワーク
+  - ja: サブネットマスク
+    en: subnet mask
+    vi: mặt nạ mạng con
+    context: ネットワーク
+  - ja: ゲートウェイ
+    en: gateway
+    vi: gateway
+    context: ネットワーク
+  - ja: DNS
+    en: domain name system
+    vi: DNS
+    context: ネットワーク
+  - ja: DHCP
+    en: dynamic host configuration protocol
+    vi: DHCP
+    context: ネットワーク
+  - ja: NAT
+    en: network address translation
+    vi: NAT
+    context: ネットワーク
+  - ja: VLAN
+    en: virtual LAN
+    vi: VLAN
+    context: ネットワーク
+  - ja: ロードバランサー
+    en: load balancer
+    vi: load balancer
+    context: ネットワーク
+  - ja: プロキシサーバー
+    en: proxy server
+    vi: proxy server
+    context: ネットワーク
+  - ja: SDN
+    en: software-defined networking
+    vi: SDN
+    context: ネットワーク
+  - ja: NFV
+    en: network function virtualization
+    vi: NFV
+    context: ネットワーク
+  - ja: MPLSネットワーク
+    en: MPLS network
+    vi: mạng MPLS
+    context: ネットワーク
+  - ja: トラフィック
+    en: traffic
+    vi: lưu lượng mạng
+    context: ネットワーク
+  - ja: パケット
+    en: packet
+    vi: gói tin
+    context: ネットワーク
+  - ja: ネットワーク監視
+    en: network monitoring
+    vi: giám sát mạng
+    context: ネットワーク
+  - ja: 障害検知
+    en: fault detection
+    vi: phát hiện sự cố
+    context: ネットワーク
+  - ja: ネットワークトポロジー
+    en: network topology
+    vi: tô-pô mạng
+    context: ネットワーク
+  - ja: ピアリング
+    en: peering
+    vi: peering
+    context: ネットワーク
+  - ja: トランジット
+    en: transit
+    vi: transit
+    context: ネットワーク
+  - ja: IXP
+    en: internet exchange point
+    vi: điểm trao đổi internet
+    context: ネットワーク
+  - ja: BGP
+    en: border gateway protocol
+    vi: BGP
+    context: ネットワーク
+  - ja: OSPF
+    en: open shortest path first
+    vi: OSPF
+    context: ネットワーク
+  - ja: ネットワークセキュリティ
+    en: network security
+    vi: bảo mật mạng
+    context: ネットワーク
+  - ja: DDoS対策
+    en: DDoS mitigation
+    vi: chống DDoS
+    context: ネットワーク
+  - ja: 帯域制限
+    en: bandwidth throttling
+    vi: giới hạn băng thông
+    context: ネットワーク
+  - ja: ネットワーク分離
+    en: network segmentation
+    vi: phân đoạn mạng
+    context: ネットワーク
+  - ja: アクセス制御リスト
+    en: access control list
+    vi: danh sách kiểm soát truy cập
+    context: ネットワーク
+  - ja: ネットワーク仮想化
+    en: network virtualization
+    vi: ảo hóa mạng
+    context: ネットワーク
+
+  # VoIP — 30 terms
+  - ja: SIPサーバー
+    en: SIP server
+    vi: SIP server
+    context: VoIP
+  - ja: IP電話
+    en: IP phone
+    vi: điện thoại IP
+    context: VoIP
+  - ja: コーデック
+    en: codec
+    vi: codec
+    context: VoIP
+  - ja: RTP
+    en: real-time transport protocol
+    vi: RTP
+    context: VoIP
+  - ja: SIP
+    en: session initiation protocol
+    vi: SIP
+    context: VoIP
+  - ja: PSTN連携
+    en: PSTN integration
+    vi: kết nối PSTN
+    context: VoIP
+  - ja: ダイヤルプラン
+    en: dial plan
+    vi: kế hoạch quay số
+    context: VoIP
+  - ja: 音声品質
+    en: voice quality
+    vi: chất lượng âm thanh
+    context: VoIP
+  - ja: MOS値
+    en: mean opinion score
+    vi: điểm MOS
+    context: VoIP
+  - ja: エコーキャンセル
+    en: echo cancellation
+    vi: triệt tiếng vọng
+    context: VoIP
+  - ja: 転送機能
+    en: call transfer
+    vi: chuyển cuộc gọi
+    context: VoIP
+  - ja: 保留
+    en: hold
+    vi: giữ cuộc gọi
+    context: VoIP
+  - ja: 三者通話
+    en: three-way call
+    vi: cuộc gọi ba chiều
+    context: VoIP
+  - ja: IVR
+    en: interactive voice response
+    vi: hệ thống IVR
+    context: VoIP
+  - ja: PBX
+    en: private branch exchange
+    vi: tổng đài nội bộ
+    context: VoIP
+  - ja: ソフトフォン
+    en: softphone
+    vi: softphone
+    context: VoIP
+  - ja: UC
+    en: unified communications
+    vi: truyền thông hợp nhất
+    context: VoIP
+  - ja: プレゼンス
+    en: presence
+    vi: trạng thái hiện diện
+    context: VoIP
+  - ja: ボイスメール
+    en: voicemail
+    vi: hộp thư thoại
+    context: VoIP
+  - ja: 着信拒否
+    en: call rejection
+    vi: từ chối cuộc gọi
+    context: VoIP
+  - ja: 通話録音
+    en: call recording
+    vi: ghi âm cuộc gọi
+    context: VoIP
+  - ja: 通話ログ
+    en: call log
+    vi: nhật ký cuộc gọi
+    context: VoIP
+  - ja: ゲートウェイ装置
+    en: VoIP gateway
+    vi: thiết bị gateway VoIP
+    context: VoIP
+  - ja: セッション
+    en: session
+    vi: phiên
+    context: VoIP
+  - ja: シグナリング
+    en: signaling
+    vi: tín hiệu hóa
+    context: VoIP
+  - ja: メディアサーバー
+    en: media server
+    vi: media server
+    context: VoIP
+  - ja: 音声圧縮
+    en: voice compression
+    vi: nén giọng nói
+    context: VoIP
+  - ja: 通話品質監視
+    en: call quality monitoring
+    vi: giám sát chất lượng cuộc gọi
+    context: VoIP
+  - ja: ネットワーク電話番号
+    en: DID number
+    vi: số DID
+    context: VoIP
+  - ja: トランク
+    en: trunk
+    vi: trunk
+    context: VoIP
+
+  # 5G — 32 terms
+  - ja: ミリ波
+    en: millimeter wave
+    vi: sóng mm
+    context: 5G
+  - ja: スライシング
+    en: network slicing
+    vi: network slicing
+    context: 5G
+  - ja: 超低遅延
+    en: ultra-low latency
+    vi: độ trễ cực thấp
+    context: 5G
+  - ja: 大容量通信
+    en: massive capacity communication
+    vi: truyền thông dung lượng lớn
+    context: 5G
+  - ja: 同時接続数
+    en: simultaneous connections
+    vi: số kết nối đồng thời
+    context: 5G
+  - ja: エッジコンピューティング
+    en: edge computing
+    vi: điện toán biên
+    context: 5G
+  - ja: スタンドアローン
+    en: standalone
+    vi: standalone
+    context: 5G
+  - ja: ノンスタンドアローン
+    en: non-standalone
+    vi: non-standalone
+    context: 5G
+  - ja: コアネットワーク
+    en: core network
+    vi: mạng lõi
+    context: 5G
+  - ja: NR
+    en: new radio
+    vi: new radio
+    context: 5G
+  - ja: サブ6GHz
+    en: sub-6GHz
+    vi: sub-6GHz
+    context: 5G
+  - ja: 仮想化コアネットワーク
+    en: virtualized core network
+    vi: mạng lõi ảo hóa
+    context: 5G
+  - ja: O-RAN
+    en: open RAN
+    vi: O-RAN
+    context: 5G
+  - ja: MEC
+    en: multi-access edge computing
+    vi: MEC
+    context: 5G
+  - ja: eMBB
+    en: enhanced mobile broadband
+    vi: băng thông di động nâng cao
+    context: 5G
+  - ja: URLLC
+    en: ultra-reliable low-latency communication
+    vi: URLLC
+    context: 5G
+  - ja: mMTC
+    en: massive machine type communication
+    vi: mMTC
+    context: 5G
+  - ja: 仮想化RAN
+    en: virtualized RAN
+    vi: RAN ảo hóa
+    context: 5G
+  - ja: NSA構成
+    en: NSA configuration
+    vi: cấu hình NSA
+    context: 5G
+  - ja: SA構成
+    en: SA configuration
+    vi: cấu hình SA
+    context: 5G
+  - ja: ネットワーク関数仮想化
+    en: network function virtualization
+    vi: ảo hóa chức năng mạng
+    context: 5G
+  - ja: クラウドネイティブ
+    en: cloud native
+    vi: cloud native
+    context: 5G
+  - ja: API公開
+    en: API exposure
+    vi: công khai API
+    context: 5G
+  - ja: ローカル5G
+    en: private 5G
+    vi: 5G nội bộ
+    context: 5G
+  - ja: 5G基地局
+    en: 5G base station
+    vi: trạm gốc 5G
+    context: 5G
+  - ja: 超高速通信
+    en: ultra-high-speed communication
+    vi: truyền thông tốc độ cực cao
+    context: 5G
+  - ja: ネットワーク仮想化基盤
+    en: network virtualization platform
+    vi: nền tảng ảo hóa mạng
+    context: 5G
+  - ja: スペクトラム効率
+    en: spectrum efficiency
+    vi: hiệu quả phổ tần
+    context: 5G
+  - ja: 協調マルチポイント
+    en: coordinated multipoint
+    vi: đa điểm phối hợp
+    context: 5G
+  - ja: 大規模MIMO
+    en: massive MIMO
+    vi: massive MIMO
+    context: 5G
+  - ja: 超高密度ネットワーク
+    en: ultra-dense network
+    vi: mạng siêu dày đặc
+    context: 5G
+  - ja: レイテンシー要件
+    en: latency requirement
+    vi: yêu cầu độ trễ
+    context: 5G
+
+  # MVNO — 32 terms
+  - ja: 仮想移動体通信事業者
+    en: virtual mobile network operator
+    vi: nhà mạng ảo
+    context: MVNO
+  - ja: MNO
+    en: mobile network operator
+    vi: nhà mạng di động
+    context: MVNO
+  - ja: 回線貸し
+    en: line leasing
+    vi: cho thuê đường truyền
+    context: MVNO
+  - ja: SIMカード
+    en: SIM card
+    vi: thẻ SIM
+    context: MVNO
+  - ja: eSIM
+    en: embedded SIM
+    vi: eSIM
+    context: MVNO
+  - ja: MVNE
+    en: mobile virtual network enabler
+    vi: MVNE
+    context: MVNO
+  - ja: フルMVNO
+    en: full MVNO
+    vi: full MVNO
+    context: MVNO
+  - ja: ライトMVNO
+    en: light MVNO
+    vi: light MVNO
+    context: MVNO
+  - ja: ブランドMVNO
+    en: branded MVNO
+    vi: MVNO thương hiệu
+    context: MVNO
+  - ja: 卸価格
+    en: wholesale price
+    vi: giá bán buôn
+    context: MVNO
+  - ja: ローミング協定
+    en: roaming agreement
+    vi: thỏa thuận roaming
+    context: MVNO
+  - ja: 相互接続
+    en: interconnection
+    vi: kết nối liên mạng
+    context: MVNO
+  - ja: MVNOプラン
+    en: MVNO plan
+    vi: gói MVNO
+    context: MVNO
+  - ja: データSIM
+    en: data SIM
+    vi: SIM dữ liệu
+    context: MVNO
+  - ja: 音声SIM
+    en: voice SIM
+    vi: SIM thoại
+    context: MVNO
+  - ja: SIMロック解除
+    en: SIM unlock
+    vi: mở khóa SIM
+    context: MVNO
+  - ja: MNP転出
+    en: MNP port-out
+    vi: chuyển mạng giữ số
+    context: MVNO
+  - ja: 契約者識別子
+    en: subscriber identifier
+    vi: mã định danh thuê bao
+    context: MVNO
+  - ja: APN設定
+    en: APN settings
+    vi: cài đặt APN
+    context: MVNO
+  - ja: 通信品質保証
+    en: quality guarantee
+    vi: đảm bảo chất lượng truyền thông
+    context: MVNO
+  - ja: サービスエリア
+    en: service area
+    vi: vùng phủ sóng
+    context: MVNO
+  - ja: 接続容量
+    en: connection capacity
+    vi: dung lượng kết nối
+    context: MVNO
+  - ja: 帯域保証
+    en: bandwidth guarantee
+    vi: đảm bảo băng thông
+    context: MVNO
+  - ja: 回線契約
+    en: line contract
+    vi: hợp đồng thuê bao
+    context: MVNO
+  - ja: 端末販売
+    en: device sales
+    vi: bán thiết bị đầu cuối
+    context: MVNO
+  - ja: 格安SIM
+    en: budget SIM
+    vi: SIM giá rẻ
+    context: MVNO
+  - ja: MVNO認定
+    en: MVNO certification
+    vi: chứng nhận MVNO
+    context: MVNO
+  - ja: 電気通信事業法
+    en: Telecommunications Business Act
+    vi: Luật kinh doanh viễn thông
+    context: MVNO
+  - ja: 利用規約
+    en: terms of use
+    vi: điều khoản sử dụng
+    context: MVNO
+  - ja: 個人情報保護
+    en: personal information protection
+    vi: bảo vệ thông tin cá nhân
+    context: MVNO
+  - ja: 設備共用
+    en: infrastructure sharing
+    vi: chia sẻ cơ sở hạ tầng
+    context: MVNO
+  - ja: 接続料
+    en: interconnection fee
+    vi: phí kết nối liên mạng
+    context: MVNO

@@ -1,0 +1,1018 @@
+industry: insurance
+language: ja
+terms:
+  # 生命保険 (life insurance)
+  - ja: 終身保険
+    en: whole life insurance
+    vi: bảo hiểm trọn đời
+    context: 生命保険
+  - ja: 定期保険
+    en: term life insurance
+    vi: bảo hiểm có kỳ hạn
+    context: 生命保険
+  - ja: 養老保険
+    en: endowment insurance
+    vi: bảo hiểm hỗn hợp
+    context: 生命保険
+  - ja: 医療保険
+    en: medical insurance
+    vi: bảo hiểm y tế
+    context: 生命保険
+  - ja: がん保険
+    en: cancer insurance
+    vi: bảo hiểm ung thư
+    context: 生命保険
+  - ja: 死亡保険金
+    en: death benefit
+    vi: tiền bồi thường tử vong
+    context: 生命保険
+  - ja: 入院給付金
+    en: hospitalization benefit
+    vi: trợ cấp nhập viện
+    context: 生命保険
+  - ja: 手術給付金
+    en: surgery benefit
+    vi: trợ cấp phẫu thuật
+    context: 生命保険
+  - ja: 保険証券
+    en: insurance policy certificate
+    vi: hợp đồng bảo hiểm
+    context: 生命保険
+  - ja: 保険料
+    en: insurance premium
+    vi: phí bảo hiểm
+    context: 生命保険
+  - ja: 被保険者
+    en: insured person
+    vi: người được bảo hiểm
+    context: 生命保険
+  - ja: 保険契約者
+    en: policyholder
+    vi: người tham gia bảo hiểm
+    context: 生命保険
+  - ja: 受取人
+    en: beneficiary
+    vi: người thụ hưởng
+    context: 生命保険
+  - ja: 告知義務
+    en: duty of disclosure
+    vi: nghĩa vụ khai báo
+    context: 生命保険
+  - ja: 保険期間
+    en: policy term
+    vi: thời hạn bảo hiểm
+    context: 生命保険
+  - ja: 解約返戻金
+    en: surrender value / cash value
+    vi: giá trị hoàn lại khi hủy hợp đồng
+    context: 生命保険
+  - ja: 保険金額
+    en: sum insured / coverage amount
+    vi: số tiền bảo hiểm
+    context: 生命保険
+  - ja: 特約
+    en: rider / special clause
+    vi: điều khoản bổ sung
+    context: 生命保険
+  - ja: 主契約
+    en: main policy contract
+    vi: hợp đồng bảo hiểm chính
+    context: 生命保険
+  - ja: 払込猶予期間
+    en: grace period for premium payment
+    vi: thời gian ân hạn nộp phí
+    context: 生命保険
+  - ja: 失効
+    en: lapse / policy lapse
+    vi: mất hiệu lực hợp đồng
+    context: 生命保険
+  - ja: 復活
+    en: reinstatement
+    vi: khôi phục hợp đồng
+    context: 生命保険
+  - ja: 保険料払込免除
+    en: premium waiver
+    vi: miễn đóng phí bảo hiểm
+    context: 生命保険
+  - ja: 就業不能保険
+    en: income protection / disability insurance
+    vi: bảo hiểm mất khả năng lao động
+    context: 生命保険
+  - ja: 介護保険
+    en: long-term care insurance
+    vi: bảo hiểm chăm sóc dài hạn
+    context: 生命保険
+  - ja: 変額保険
+    en: variable life insurance
+    vi: bảo hiểm liên kết đầu tư
+    context: 生命保険
+  - ja: 団体保険
+    en: group insurance
+    vi: bảo hiểm nhóm
+    context: 生命保険
+  - ja: 個人年金保険
+    en: individual annuity insurance
+    vi: bảo hiểm hưu trí cá nhân
+    context: 生命保険
+  - ja: 保険料払込方法
+    en: premium payment method
+    vi: phương thức đóng phí bảo hiểm
+    context: 生命保険
+  - ja: 予定利率
+    en: assumed interest rate
+    vi: lãi suất dự kiến
+    context: 生命保険
+  - ja: 配当金
+    en: dividend
+    vi: cổ tức
+    context: 生命保険
+  - ja: 無解約返戻金型
+    en: no-surrender-value type
+    vi: loại không có giá trị hoàn lại
+    context: 生命保険
+
+  # 損害保険 (non-life insurance)
+  - ja: 火災保険
+    en: fire insurance
+    vi: bảo hiểm hỏa hoạn
+    context: 損害保険
+  - ja: 自動車保険
+    en: automobile insurance
+    vi: bảo hiểm ô tô
+    context: 損害保険
+  - ja: 賠償責任保険
+    en: liability insurance
+    vi: bảo hiểm trách nhiệm dân sự
+    context: 損害保険
+  - ja: 傷害保険
+    en: accident insurance
+    vi: bảo hiểm tai nạn
+    context: 損害保険
+  - ja: 旅行保険
+    en: travel insurance
+    vi: bảo hiểm du lịch
+    context: 損害保険
+  - ja: 地震保険
+    en: earthquake insurance
+    vi: bảo hiểm động đất
+    context: 損害保険
+  - ja: 風水害補償
+    en: storm and flood coverage
+    vi: bồi thường thiệt hại bão lụt
+    context: 損害保険
+  - ja: 盗難保険
+    en: theft insurance
+    vi: bảo hiểm trộm cắp
+    context: 損害保険
+  - ja: 製造物責任保険
+    en: product liability insurance
+    vi: bảo hiểm trách nhiệm sản phẩm
+    context: 損害保険
+  - ja: 工事保険
+    en: construction insurance
+    vi: bảo hiểm công trình
+    context: 損害保険
+  - ja: 船舶保険
+    en: marine hull insurance
+    vi: bảo hiểm thân tàu
+    context: 損害保険
+  - ja: 貨物保険
+    en: cargo insurance
+    vi: bảo hiểm hàng hóa
+    context: 損害保険
+  - ja: 賠償額
+    en: indemnity amount / compensation
+    vi: số tiền bồi thường
+    context: 損害保険
+  - ja: 免責金額
+    en: deductible
+    vi: mức miễn thường
+    context: 損害保険
+  - ja: 保険価額
+    en: insurable value
+    vi: giá trị có thể bảo hiểm
+    context: 損害保険
+  - ja: 超過保険
+    en: over-insurance
+    vi: bảo hiểm vượt giá trị
+    context: 損害保険
+  - ja: 一部保険
+    en: under-insurance
+    vi: bảo hiểm dưới giá trị
+    context: 損害保険
+  - ja: 比例填補
+    en: pro-rata indemnity
+    vi: bồi thường theo tỷ lệ
+    context: 損害保険
+  - ja: 実損填補
+    en: actual loss indemnity
+    vi: bồi thường thiệt hại thực tế
+    context: 損害保険
+  - ja: 損害調査
+    en: damage survey / claims investigation
+    vi: điều tra thiệt hại
+    context: 損害保険
+  - ja: 損害防止義務
+    en: duty to mitigate loss
+    vi: nghĩa vụ giảm thiểu tổn thất
+    context: 損害保険
+  - ja: 代位求償
+    en: subrogation
+    vi: quyền thế quyền
+    context: 損害保険
+  - ja: 重複保険
+    en: double insurance
+    vi: bảo hiểm trùng
+    context: 損害保険
+  - ja: 補償内容
+    en: coverage details
+    vi: nội dung bồi thường
+    context: 損害保険
+  - ja: 特約条件
+    en: endorsement / rider conditions
+    vi: điều kiện bổ sung
+    context: 損害保険
+  - ja: 保険の目的
+    en: subject matter of insurance
+    vi: đối tượng bảo hiểm
+    context: 損害保険
+  - ja: 損害保険料率
+    en: non-life insurance premium rate
+    vi: tỷ lệ phí bảo hiểm phi nhân thọ
+    context: 損害保険
+  - ja: 更新手続き
+    en: renewal procedure
+    vi: thủ tục gia hạn
+    context: 損害保険
+  - ja: 保険始期
+    en: policy inception date
+    vi: ngày bắt đầu hiệu lực bảo hiểm
+    context: 損害保険
+  - ja: 保険終期
+    en: policy expiry date
+    vi: ngày hết hạn bảo hiểm
+    context: 損害保険
+  - ja: 無事故割引
+    en: no-claim discount
+    vi: chiết khấu không có tổn thất
+    context: 損害保険
+  - ja: サイバー保険
+    en: cyber insurance
+    vi: bảo hiểm an ninh mạng
+    context: 損害保険
+
+  # 査定 (assessment)
+  - ja: 損害査定
+    en: claims assessment / loss assessment
+    vi: giám định tổn thất
+    context: 査定
+  - ja: 査定人
+    en: claims assessor / adjuster
+    vi: chuyên viên giám định
+    context: 査定
+  - ja: 損害額
+    en: loss amount
+    vi: số tiền tổn thất
+    context: 査定
+  - ja: 現地調査
+    en: field investigation / site survey
+    vi: khảo sát thực địa
+    context: 査定
+  - ja: 修理見積もり
+    en: repair estimate
+    vi: dự toán sửa chữa
+    context: 査定
+  - ja: 証拠書類
+    en: supporting documents / evidence
+    vi: tài liệu chứng minh
+    context: 査定
+  - ja: 過失割合
+    en: fault ratio / degree of negligence
+    vi: tỷ lệ lỗi
+    context: 査定
+  - ja: 損害原因
+    en: cause of loss
+    vi: nguyên nhân tổn thất
+    context: 査定
+  - ja: 保険金支払い
+    en: insurance claim payment
+    vi: chi trả tiền bảo hiểm
+    context: 査定
+  - ja: 支払い審査
+    en: payment review
+    vi: thẩm định chi trả
+    context: 査定
+  - ja: 示談交渉
+    en: settlement negotiation
+    vi: đàm phán bồi thường
+    context: 査定
+  - ja: 免責事由
+    en: exclusion / exemption clause
+    vi: điều khoản loại trừ
+    context: 査定
+  - ja: 損失防止費用
+    en: loss prevention cost
+    vi: chi phí phòng ngừa tổn thất
+    context: 査定
+  - ja: 全損
+    en: total loss
+    vi: tổn thất toàn bộ
+    context: 査定
+  - ja: 分損
+    en: partial loss
+    vi: tổn thất bộ phận
+    context: 査定
+  - ja: 残存物
+    en: salvage
+    vi: hàng cứu vớt
+    context: 査定
+  - ja: 修理不能
+    en: beyond repair / irreparable
+    vi: không thể sửa chữa
+    context: 査定
+  - ja: 損害査定報告書
+    en: claims assessment report
+    vi: báo cáo giám định tổn thất
+    context: 査定
+  - ja: 支払い遅延
+    en: payment delay
+    vi: chậm trễ chi trả
+    context: 査定
+  - ja: 不服申し立て
+    en: appeal / dispute
+    vi: khiếu nại
+    context: 査定
+  - ja: 損害賠償請求
+    en: claim for damages
+    vi: yêu cầu bồi thường thiệt hại
+    context: 査定
+  - ja: 損害証明書
+    en: damage certificate
+    vi: giấy chứng nhận thiệt hại
+    context: 査定
+  - ja: 写真証拠
+    en: photographic evidence
+    vi: bằng chứng hình ảnh
+    context: 査定
+  - ja: 自動車修理代
+    en: vehicle repair cost
+    vi: chi phí sửa chữa ô tô
+    context: 査定
+  - ja: 医療費明細
+    en: medical expense statement
+    vi: bảng kê chi phí y tế
+    context: 査定
+  - ja: 査定基準
+    en: assessment criteria
+    vi: tiêu chí giám định
+    context: 査定
+  - ja: 保険金請求書
+    en: insurance claim form
+    vi: đơn yêu cầu bồi thường
+    context: 査定
+  - ja: 損害通知
+    en: loss notification
+    vi: thông báo tổn thất
+    context: 査定
+  - ja: 損害立証
+    en: proof of loss
+    vi: chứng minh tổn thất
+    context: 査定
+  - ja: 査定完了通知
+    en: assessment completion notice
+    vi: thông báo hoàn thành giám định
+    context: 査定
+
+  # 引受 (underwriting)
+  - ja: 引受審査
+    en: underwriting review
+    vi: thẩm định bảo lãnh
+    context: 引受
+  - ja: 引受基準
+    en: underwriting criteria
+    vi: tiêu chí bảo lãnh
+    context: 引受
+  - ja: リスク評価
+    en: risk assessment
+    vi: đánh giá rủi ro
+    context: 引受
+  - ja: 引受可否判断
+    en: accept or decline decision
+    vi: quyết định chấp nhận hay từ chối
+    context: 引受
+  - ja: 危険選択
+    en: risk selection
+    vi: lựa chọn rủi ro
+    context: 引受
+  - ja: 引受条件
+    en: underwriting terms
+    vi: điều kiện bảo lãnh
+    context: 引受
+  - ja: 割増保険料
+    en: extra premium / loading
+    vi: phụ phí bảo hiểm
+    context: 引受
+  - ja: 引受限度額
+    en: underwriting limit
+    vi: hạn mức bảo lãnh
+    context: 引受
+  - ja: 告知審査
+    en: disclosure review
+    vi: thẩm định khai báo
+    context: 引受
+  - ja: 健康診断結果
+    en: medical examination result
+    vi: kết quả khám sức khỏe
+    context: 引受
+  - ja: 職業リスク
+    en: occupational risk
+    vi: rủi ro nghề nghiệp
+    context: 引受
+  - ja: 引受拒絶
+    en: underwriting rejection / declination
+    vi: từ chối bảo lãnh
+    context: 引受
+  - ja: 条件付き引受
+    en: conditional acceptance
+    vi: chấp nhận có điều kiện
+    context: 引受
+  - ja: モデル引受
+    en: model underwriting
+    vi: bảo lãnh theo mô hình
+    context: 引受
+  - ja: 引受ガイドライン
+    en: underwriting guidelines
+    vi: hướng dẫn bảo lãnh
+    context: 引受
+  - ja: リスク区分
+    en: risk classification
+    vi: phân loại rủi ro
+    context: 引受
+  - ja: 再査定
+    en: re-assessment / re-underwriting
+    vi: thẩm định lại
+    context: 引受
+  - ja: 引受実績
+    en: underwriting track record
+    vi: hồ sơ bảo lãnh
+    context: 引受
+  - ja: ポートフォリオ管理
+    en: portfolio management
+    vi: quản lý danh mục
+    context: 引受
+  - ja: 引受リスク
+    en: underwriting risk
+    vi: rủi ro bảo lãnh
+    context: 引受
+  - ja: 引受権限
+    en: underwriting authority
+    vi: thẩm quyền bảo lãnh
+    context: 引受
+  - ja: 既往症
+    en: pre-existing condition
+    vi: bệnh có sẵn trước khi tham gia bảo hiểm
+    context: 引受
+  - ja: 団体引受
+    en: group underwriting
+    vi: bảo lãnh nhóm
+    context: 引受
+  - ja: 自動引受
+    en: automatic underwriting
+    vi: bảo lãnh tự động
+    context: 引受
+  - ja: 引受手数料
+    en: underwriting fee / commission
+    vi: phí bảo lãnh
+    context: 引受
+  - ja: 純保険料
+    en: net premium / pure premium
+    vi: phí bảo hiểm thuần
+    context: 引受
+  - ja: 付加保険料
+    en: loading / expense loading
+    vi: phụ phí chi phí
+    context: 引受
+  - ja: 引受ロス率
+    en: underwriting loss ratio
+    vi: tỷ lệ tổn thất bảo lãnh
+    context: 引受
+  - ja: 超過損失再保険
+    en: excess of loss reinsurance
+    vi: tái bảo hiểm vượt mức tổn thất
+    context: 引受
+  - ja: 引受能力
+    en: underwriting capacity
+    vi: năng lực bảo lãnh
+    context: 引受
+
+  # 保全 (policy administration)
+  - ja: 契約変更
+    en: policy change / endorsement
+    vi: thay đổi hợp đồng
+    context: 保全
+  - ja: 住所変更
+    en: address change
+    vi: thay đổi địa chỉ
+    context: 保全
+  - ja: 受取人変更
+    en: beneficiary change
+    vi: thay đổi người thụ hưởng
+    context: 保全
+  - ja: 保険金額変更
+    en: sum insured change
+    vi: thay đổi số tiền bảo hiểm
+    context: 保全
+  - ja: 保険料払込方法変更
+    en: premium payment method change
+    vi: thay đổi phương thức đóng phí
+    context: 保全
+  - ja: 契約更新
+    en: policy renewal
+    vi: gia hạn hợp đồng
+    context: 保全
+  - ja: 契約解除
+    en: policy cancellation
+    vi: hủy bỏ hợp đồng
+    context: 保全
+  - ja: 契約照会
+    en: policy inquiry
+    vi: tra cứu hợp đồng
+    context: 保全
+  - ja: 保険料振替
+    en: premium direct debit
+    vi: ghi nợ trực tiếp phí bảo hiểm
+    context: 保全
+  - ja: 失効再加入
+    en: re-entry after lapse
+    vi: tái tham gia sau khi mất hiệu lực
+    context: 保全
+  - ja: 特約追加
+    en: rider addition
+    vi: thêm điều khoản bổ sung
+    context: 保全
+  - ja: 特約削除
+    en: rider removal
+    vi: xóa điều khoản bổ sung
+    context: 保全
+  - ja: 保険料減額
+    en: premium reduction
+    vi: giảm phí bảo hiểm
+    context: 保全
+  - ja: 保険金額増額
+    en: sum insured increase
+    vi: tăng số tiền bảo hiểm
+    context: 保全
+  - ja: 保全手続き
+    en: policy administration procedure
+    vi: thủ tục quản lý hợp đồng
+    context: 保全
+  - ja: 契約内容確認書
+    en: policy summary document
+    vi: tài liệu tóm tắt hợp đồng
+    context: 保全
+  - ja: 代理人変更
+    en: agent change
+    vi: thay đổi đại lý
+    context: 保全
+  - ja: 保険料払込猶予
+    en: premium payment grace period
+    vi: ân hạn đóng phí bảo hiểm
+    context: 保全
+  - ja: 転換制度
+    en: conversion / policy conversion
+    vi: chuyển đổi hợp đồng
+    context: 保全
+  - ja: 延長定期
+    en: extended term insurance
+    vi: gia hạn bảo hiểm định kỳ
+    context: 保全
+  - ja: 払済保険
+    en: paid-up insurance
+    vi: bảo hiểm đã đóng đủ phí
+    context: 保全
+  - ja: 保険料口座振替
+    en: premium bank account transfer
+    vi: chuyển khoản phí bảo hiểm qua tài khoản
+    context: 保全
+  - ja: 保全システム
+    en: policy administration system
+    vi: hệ thống quản lý hợp đồng
+    context: 保全
+  - ja: 手続き書類
+    en: procedure documents
+    vi: tài liệu thủ tục
+    context: 保全
+  - ja: 保全照会画面
+    en: policy inquiry screen
+    vi: màn hình tra cứu hợp đồng
+    context: 保全
+  - ja: 口振不能処理
+    en: failed direct debit processing
+    vi: xử lý ghi nợ thất bại
+    context: 保全
+  - ja: 契約者貸付
+    en: policy loan
+    vi: vay theo hợp đồng bảo hiểm
+    context: 保全
+  - ja: 保全履歴
+    en: policy administration history
+    vi: lịch sử quản lý hợp đồng
+    context: 保全
+  - ja: 電子交付
+    en: electronic delivery of documents
+    vi: giao tài liệu điện tử
+    context: 保全
+  - ja: 契約者サービス
+    en: policyholder services
+    vi: dịch vụ người tham gia bảo hiểm
+    context: 保全
+  - ja: 満期通知
+    en: maturity notice
+    vi: thông báo đáo hạn
+    context: 保全
+  - ja: 保全センター
+    en: policy service center
+    vi: trung tâm dịch vụ hợp đồng
+    context: 保全
+
+  # 再保険 (reinsurance)
+  - ja: 出再
+    en: cession / cedant
+    vi: nhượng tái bảo hiểm
+    context: 再保険
+  - ja: 受再
+    en: assumption / reinsurer
+    vi: nhận tái bảo hiểm
+    context: 再保険
+  - ja: 出再比率
+    en: cession ratio
+    vi: tỷ lệ nhượng tái
+    context: 再保険
+  - ja: 再保険料
+    en: reinsurance premium
+    vi: phí tái bảo hiểm
+    context: 再保険
+  - ja: 再保険会社
+    en: reinsurance company / reinsurer
+    vi: công ty tái bảo hiểm
+    context: 再保険
+  - ja: 比例再保険
+    en: proportional reinsurance
+    vi: tái bảo hiểm theo tỷ lệ
+    context: 再保険
+  - ja: 非比例再保険
+    en: non-proportional reinsurance
+    vi: tái bảo hiểm không theo tỷ lệ
+    context: 再保険
+  - ja: ファカルタティブ
+    en: facultative reinsurance
+    vi: tái bảo hiểm tùy ý
+    context: 再保険
+  - ja: 特約再保険
+    en: treaty reinsurance
+    vi: tái bảo hiểm theo hiệp ước
+    context: 再保険
+  - ja: 損害超過再保険
+    en: excess of loss reinsurance
+    vi: tái bảo hiểm vượt mức tổn thất
+    context: 再保険
+  - ja: 再保険条約
+    en: reinsurance treaty
+    vi: hiệp ước tái bảo hiểm
+    context: 再保険
+  - ja: 再保険ブローカー
+    en: reinsurance broker
+    vi: môi giới tái bảo hiểm
+    context: 再保険
+  - ja: 再保険手数料
+    en: reinsurance commission
+    vi: hoa hồng tái bảo hiểm
+    context: 再保険
+  - ja: 累積損失
+    en: accumulated loss
+    vi: tổn thất tích lũy
+    context: 再保険
+  - ja: カタストロフィ再保険
+    en: catastrophe reinsurance
+    vi: tái bảo hiểm thảm họa
+    context: 再保険
+  - ja: 再保険回収
+    en: reinsurance recovery
+    vi: thu hồi tái bảo hiểm
+    context: 再保険
+  - ja: 共同保険
+    en: co-insurance
+    vi: đồng bảo hiểm
+    context: 再保険
+  - ja: 出再限度額
+    en: cession limit
+    vi: hạn mức nhượng tái
+    context: 再保険
+  - ja: 自己保有
+    en: retention
+    vi: mức tự giữ lại
+    context: 再保険
+  - ja: 再保険勘定
+    en: reinsurance account
+    vi: tài khoản tái bảo hiểm
+    context: 再保険
+  - ja: 再保険市場
+    en: reinsurance market
+    vi: thị trường tái bảo hiểm
+    context: 再保険
+  - ja: 再保険リスク
+    en: reinsurance risk
+    vi: rủi ro tái bảo hiểم
+    context: 再保険
+  - ja: 再保険格付け
+    en: reinsurer credit rating
+    vi: xếp hạng tín dụng tái bảo hiểm
+    context: 再保険
+  - ja: 出再プログラム
+    en: cession program
+    vi: chương trình nhượng tái
+    context: 再保険
+  - ja: 再保険契約書
+    en: reinsurance contract
+    vi: hợp đồng tái bảo hiểm
+    context: 再保険
+  - ja: 再保険精算
+    en: reinsurance settlement
+    vi: thanh toán tái bảo hiểm
+    context: 再保険
+  - ja: 再保険準備金
+    en: reinsurance reserve
+    vi: dự phòng tái bảo hiểm
+    context: 再保険
+  - ja: 再保険報告書
+    en: reinsurance report
+    vi: báo cáo tái bảo hiểm
+    context: 再保険
+  - ja: 元受保険
+    en: direct insurance / primary insurance
+    vi: bảo hiểm gốc
+    context: 再保険
+  - ja: 出再通知
+    en: cession notice
+    vi: thông báo nhượng tái
+    context: 再保険
+
+  # アクチュアリー (actuary)
+  - ja: 死亡率
+    en: mortality rate
+    vi: tỷ lệ tử vong
+    context: アクチュアリー
+  - ja: 生命表
+    en: life table / mortality table
+    vi: bảng tử vong
+    context: アクチュアリー
+  - ja: 保険数理
+    en: actuarial science
+    vi: khoa học bảo hiểm số lý
+    context: アクチュアリー
+  - ja: アクチュアリー
+    en: actuary
+    vi: chuyên gia tính toán bảo hiểm
+    context: アクチュアリー
+  - ja: 責任準備金
+    en: policy reserve / actuarial reserve
+    vi: dự phòng nghiệp vụ
+    context: アクチュアリー
+  - ja: 純保険料計算
+    en: net premium calculation
+    vi: tính toán phí bảo hiểm thuần
+    context: アクチュアリー
+  - ja: 損害率
+    en: loss ratio
+    vi: tỷ lệ bồi thường
+    context: アクチュアリー
+  - ja: 経費率
+    en: expense ratio
+    vi: tỷ lệ chi phí
+    context: アクチュアリー
+  - ja: 合算率
+    en: combined ratio
+    vi: tỷ lệ kết hợp
+    context: アクチュアリー
+  - ja: 将来収支見通し
+    en: future cash flow projection
+    vi: dự báo luồng tiền tương lai
+    context: アクチュアリー
+  - ja: 危険率
+    en: hazard rate / force of mortality
+    vi: tỷ lệ rủi ro
+    context: アクチュアリー
+  - ja: 解約率
+    en: lapse rate / surrender rate
+    vi: tỷ lệ hủy hợp đồng
+    context: アクチュアリー
+  - ja: 保険料計算基礎
+    en: actuarial basis for premium calculation
+    vi: cơ sở tính phí bảo hiểm
+    context: アクチュアリー
+  - ja: リスクモデル
+    en: risk model
+    vi: mô hình rủi ro
+    context: アクチュアリー
+  - ja: 確率論的モデル
+    en: stochastic model
+    vi: mô hình ngẫu nhiên
+    context: アクチュアリー
+  - ja: 決定論的モデル
+    en: deterministic model
+    vi: mô hình tất định
+    context: アクチュアリー
+  - ja: 感応度分析
+    en: sensitivity analysis
+    vi: phân tích độ nhạy
+    context: アクチュアリー
+  - ja: ソルベンシー
+    en: solvency
+    vi: khả năng thanh toán
+    context: アクチュアリー
+  - ja: 資本要件
+    en: capital requirement
+    vi: yêu cầu vốn
+    context: アクチュアリー
+  - ja: 経済価値ベース
+    en: economic value basis
+    vi: cơ sở giá trị kinh tế
+    context: アクチュアリー
+  - ja: 内部モデル
+    en: internal model
+    vi: mô hình nội bộ
+    context: アクチュアリー
+  - ja: ストレステスト
+    en: stress test
+    vi: kiểm tra khả năng chịu đựng
+    context: アクチュアリー
+  - ja: 保険数理的評価
+    en: actuarial valuation
+    vi: định giá số lý bảo hiểm
+    context: アクチュアリー
+  - ja: 予定死亡率
+    en: assumed mortality rate
+    vi: tỷ lệ tử vong dự kiến
+    context: アクチュアリー
+  - ja: 実績死亡率
+    en: actual mortality rate
+    vi: tỷ lệ tử vong thực tế
+    context: アクチュアリー
+  - ja: 長寿リスク
+    en: longevity risk
+    vi: rủi ro sống thọ
+    context: アクチュアリー
+  - ja: 大数の法則
+    en: law of large numbers
+    vi: quy luật số lớn
+    context: アクチュアリー
+  - ja: 収支相等の原則
+    en: equivalence principle
+    vi: nguyên tắc cân bằng thu chi
+    context: アクチュアリー
+  - ja: 給付現価
+    en: present value of benefits
+    vi: giá trị hiện tại của quyền lợi
+    context: アクチュアリー
+  - ja: 保険料現価
+    en: present value of premiums
+    vi: giá trị hiện tại của phí bảo hiểm
+    context: アクチュアリー
+  - ja: 数理計算書
+    en: actuarial report
+    vi: báo cáo số lý bảo hiểm
+    context: アクチュアリー
+  - ja: 担当数理人
+    en: appointed actuary
+    vi: chuyên gia số lý bảo hiểm được chỉ định
+    context: アクチュアリー
+
+  # コンプライアンス (compliance)
+  - ja: 金融庁
+    en: Financial Services Agency (FSA)
+    vi: Cơ quan Tài chính (FSA)
+    context: コンプライアンス
+  - ja: 保険業法
+    en: Insurance Business Act
+    vi: Luật kinh doanh bảo hiểm
+    context: コンプライアンス
+  - ja: 内部統制
+    en: internal control
+    vi: kiểm soát nội bộ
+    context: コンプライアンス
+  - ja: コンプライアンス研修
+    en: compliance training
+    vi: đào tạo tuân thủ
+    context: コンプライアンス
+  - ja: 反社会的勢力排除
+    en: exclusion of antisocial forces
+    vi: loại trừ lực lượng chống xã hội
+    context: コンプライアンス
+  - ja: マネーロンダリング防止
+    en: anti-money laundering (AML)
+    vi: phòng chống rửa tiền
+    context: コンプライアンス
+  - ja: 顧客保護
+    en: customer protection
+    vi: bảo vệ khách hàng
+    context: コンプライアンス
+  - ja: 情報管理
+    en: information management
+    vi: quản lý thông tin
+    context: コンプライアンス
+  - ja: 個人情報保護
+    en: personal data protection
+    vi: bảo vệ dữ liệu cá nhân
+    context: コンプライアンス
+  - ja: 苦情対応
+    en: complaint handling
+    vi: xử lý khiếu nại
+    context: コンプライアンス
+  - ja: 規制対応
+    en: regulatory compliance
+    vi: tuân thủ quy định
+    context: コンプライアンス
+  - ja: 適合性原則
+    en: suitability principle
+    vi: nguyên tắc phù hợp
+    context: コンプライアンス
+  - ja: 説明義務
+    en: duty to explain / disclosure obligation
+    vi: nghĩa vụ giải thích
+    context: コンプライアンス
+  - ja: 保険募集規制
+    en: insurance solicitation regulation
+    vi: quy định về chào bán bảo hiểm
+    context: コンプライアンス
+  - ja: 不正請求防止
+    en: fraud claim prevention
+    vi: phòng ngừa yêu cầu bồi thường gian lận
+    context: コンプライアンス
+  - ja: 内部監査
+    en: internal audit
+    vi: kiểm toán nội bộ
+    context: コンプライアンス
+  - ja: 外部監査
+    en: external audit
+    vi: kiểm toán bên ngoài
+    context: コンプライアンス
+  - ja: リスク管理委員会
+    en: risk management committee
+    vi: ủy ban quản lý rủi ro
+    context: コンプライアンス
+  - ja: ガバナンス
+    en: governance
+    vi: quản trị doanh nghiệp
+    context: コンプライアンス
+  - ja: コンプライアンス部門
+    en: compliance department
+    vi: bộ phận tuân thủ
+    context: コンプライアンス
+  - ja: 行為規範
+    en: code of conduct
+    vi: quy tắc ứng xử
+    context: コンプライアンス
+  - ja: 内部通報制度
+    en: whistleblower system
+    vi: hệ thống báo cáo nội bộ
+    context: コンプライアンス
+  - ja: 規制変更対応
+    en: regulatory change management
+    vi: quản lý thay đổi quy định
+    context: コンプライアンス
+  - ja: 法令遵守
+    en: legal compliance
+    vi: tuân thủ pháp luật
+    context: コンプライアンス
+  - ja: 保険募集人
+    en: insurance agent / solicitor
+    vi: đại lý bán bảo hiểm
+    context: コンプライアンス
+  - ja: 登録代理店
+    en: registered agency
+    vi: đại lý được đăng ký
+    context: コンプライアンス
+  - ja: 監督指針
+    en: supervisory guidelines
+    vi: hướng dẫn giám sát
+    context: コンプライアンス
+  - ja: 報告義務
+    en: reporting obligation
+    vi: nghĩa vụ báo cáo
+    context: コンプライアンス
+  - ja: 健全性規制
+    en: prudential regulation
+    vi: quy định an toàn lành mạnh
+    context: コンプライアンス
+  - ja: 消費者契約法
+    en: Consumer Contract Act
+    vi: Luật hợp đồng người tiêu dùng
+    context: コンプライアンス
+  - ja: 特定保険契約
+    en: specified insurance contract
+    vi: hợp đồng bảo hiểm đặc biệt
+    context: コンプライアンス
+  - ja: 情報セキュリティポリシー
+    en: information security policy
+    vi: chính sách an toàn thông tin
+    context: コンプライアンス

@@ -1,0 +1,1018 @@
+industry: education
+language: ja
+terms:
+  # 学校管理 (school admin) — 32 terms
+  - ja: 時間割
+    en: timetable
+    vi: thời khóa biểu
+    context: 学校管理
+  - ja: 学年
+    en: academic year
+    vi: năm học
+    context: 学校管理
+  - ja: 学期
+    en: semester
+    vi: học kỳ
+    context: 学校管理
+  - ja: 出席簿
+    en: attendance register
+    vi: sổ điểm danh
+    context: 学校管理
+  - ja: 欠席届
+    en: absence notice
+    vi: giấy báo vắng
+    context: 学校管理
+  - ja: 遅刻
+    en: tardiness
+    vi: đi trễ
+    context: 学校管理
+  - ja: 早退
+    en: early dismissal
+    vi: về sớm
+    context: 学校管理
+  - ja: 校則
+    en: school rules
+    vi: nội quy trường học
+    context: 学校管理
+  - ja: 学校行事
+    en: school event
+    vi: sự kiện trường học
+    context: 学校管理
+  - ja: 保護者連絡
+    en: parent communication
+    vi: liên lạc phụ huynh
+    context: 学校管理
+  - ja: 連絡帳
+    en: communication notebook
+    vi: sổ liên lạc
+    context: 学校管理
+  - ja: 学校説明会
+    en: school orientation
+    vi: buổi giới thiệu trường
+    context: 学校管理
+  - ja: 転校手続き
+    en: school transfer procedure
+    vi: thủ tục chuyển trường
+    context: 学校管理
+  - ja: 修学旅行
+    en: school trip
+    vi: chuyến tham quan học tập
+    context: 学校管理
+  - ja: 運動会
+    en: sports day
+    vi: ngày hội thể thao
+    context: 学校管理
+  - ja: 文化祭
+    en: cultural festival
+    vi: lễ hội văn hóa
+    context: 学校管理
+  - ja: 卒業式
+    en: graduation ceremony
+    vi: lễ tốt nghiệp
+    context: 学校管理
+  - ja: 入学式
+    en: entrance ceremony
+    vi: lễ nhập học
+    context: 学校管理
+  - ja: 学校評価
+    en: school evaluation
+    vi: đánh giá trường học
+    context: 学校管理
+  - ja: 教室配置
+    en: classroom assignment
+    vi: phân công phòng học
+    context: 学校管理
+  - ja: 時間割作成
+    en: timetable creation
+    vi: lập thời khóa biểu
+    context: 学校管理
+  - ja: 授業コマ数
+    en: number of class periods
+    vi: số tiết học
+    context: 学校管理
+  - ja: 休講
+    en: class cancellation
+    vi: hủy lớp học
+    context: 学校管理
+  - ja: 補講
+    en: make-up class
+    vi: học bù
+    context: 学校管理
+  - ja: 試験期間
+    en: exam period
+    vi: kỳ thi
+    context: 学校管理
+  - ja: 長期休暇
+    en: extended vacation
+    vi: kỳ nghỉ dài
+    context: 学校管理
+  - ja: 夏季休業
+    en: summer recess
+    vi: nghỉ hè
+    context: 学校管理
+  - ja: 冬季休業
+    en: winter recess
+    vi: nghỉ đông
+    context: 学校管理
+  - ja: 春季休業
+    en: spring recess
+    vi: nghỉ xuân
+    context: 学校管理
+  - ja: クラス編成
+    en: class formation
+    vi: phân lớp
+    context: 学校管理
+  - ja: ホームルーム
+    en: homeroom
+    vi: sinh hoạt lớp
+    context: 学校管理
+  - ja: 学校暦
+    en: school calendar
+    vi: lịch học đường
+    context: 学校管理
+
+  # LMS — 32 terms
+  - ja: 学習管理
+    en: learning management
+    vi: quản lý học tập
+    context: LMS
+  - ja: コース登録
+    en: course enrollment
+    vi: đăng ký khóa học
+    context: LMS
+  - ja: 学習進捗
+    en: learning progress
+    vi: tiến độ học tập
+    context: LMS
+  - ja: 課題提出
+    en: assignment submission
+    vi: nộp bài tập
+    context: LMS
+  - ja: フォーラム
+    en: forum
+    vi: diễn đàn
+    context: LMS
+  - ja: クイズ機能
+    en: quiz feature
+    vi: tính năng trắc nghiệm
+    context: LMS
+  - ja: ルーブリック
+    en: rubric
+    vi: tiêu chí đánh giá
+    context: LMS
+  - ja: バッジ
+    en: badge
+    vi: huy hiệu
+    context: LMS
+  - ja: 修了証
+    en: completion certificate
+    vi: chứng chỉ hoàn thành
+    context: LMS
+  - ja: ダッシュボード
+    en: dashboard
+    vi: bảng điều khiển
+    context: LMS
+  - ja: 学習履歴
+    en: learning history
+    vi: lịch sử học tập
+    context: LMS
+  - ja: 受講者管理
+    en: learner management
+    vi: quản lý học viên
+    context: LMS
+  - ja: コンテンツ配信
+    en: content delivery
+    vi: phân phối nội dung
+    context: LMS
+  - ja: SCORM
+    en: SCORM
+    vi: SCORM
+    context: LMS
+  - ja: xAPI
+    en: xAPI
+    vi: xAPI
+    context: LMS
+  - ja: 非同期学習
+    en: asynchronous learning
+    vi: học không đồng bộ
+    context: LMS
+  - ja: 同期学習
+    en: synchronous learning
+    vi: học đồng bộ
+    context: LMS
+  - ja: 自己ペース学習
+    en: self-paced learning
+    vi: học theo tốc độ cá nhân
+    context: LMS
+  - ja: 学習パス
+    en: learning path
+    vi: lộ trình học tập
+    context: LMS
+  - ja: プレテスト
+    en: pre-test
+    vi: kiểm tra đầu vào
+    context: LMS
+  - ja: ポストテスト
+    en: post-test
+    vi: kiểm tra đầu ra
+    context: LMS
+  - ja: アクセス権限
+    en: access permission
+    vi: quyền truy cập
+    context: LMS
+  - ja: 受講期限
+    en: enrollment deadline
+    vi: hạn đăng ký
+    context: LMS
+  - ja: グループ学習
+    en: group learning
+    vi: học nhóm
+    context: LMS
+  - ja: メンター
+    en: mentor
+    vi: người hướng dẫn
+    context: LMS
+  - ja: ピアレビュー
+    en: peer review
+    vi: đánh giá đồng đẳng
+    context: LMS
+  - ja: 学習レポート
+    en: learning report
+    vi: báo cáo học tập
+    context: LMS
+  - ja: コース評価
+    en: course evaluation
+    vi: đánh giá khóa học
+    context: LMS
+  - ja: 通知機能
+    en: notification feature
+    vi: tính năng thông báo
+    context: LMS
+  - ja: モバイル学習
+    en: mobile learning
+    vi: học qua thiết bị di động
+    context: LMS
+  - ja: オフライン学習
+    en: offline learning
+    vi: học ngoại tuyến
+    context: LMS
+  - ja: API連携
+    en: API integration
+    vi: tích hợp API
+    context: LMS
+
+  # 成績管理 (grades) — 30 terms
+  - ja: 成績表
+    en: report card
+    vi: phiếu điểm
+    context: 成績管理
+  - ja: 評定
+    en: grade rating
+    vi: xếp loại
+    context: 成績管理
+  - ja: 合格点
+    en: passing score
+    vi: điểm đậu
+    context: 成績管理
+  - ja: 不合格
+    en: failing grade
+    vi: điểm rớt
+    context: 成績管理
+  - ja: GPA
+    en: GPA
+    vi: điểm trung bình tích lũy
+    context: 成績管理
+  - ja: 単位取得
+    en: credit acquisition
+    vi: tích lũy tín chỉ
+    context: 成績管理
+  - ja: 落第
+    en: grade retention
+    vi: lưu ban
+    context: 成績管理
+  - ja: 優秀賞
+    en: excellence award
+    vi: giải xuất sắc
+    context: 成績管理
+  - ja: 成績開示
+    en: grade disclosure
+    vi: công bố kết quả
+    context: 成績管理
+  - ja: 異議申し立て
+    en: grade appeal
+    vi: khiếu nại điểm
+    context: 成績管理
+  - ja: 定期試験
+    en: periodic exam
+    vi: thi định kỳ
+    context: 成績管理
+  - ja: 小テスト
+    en: quiz
+    vi: bài kiểm tra nhỏ
+    context: 成績管理
+  - ja: レポート評価
+    en: report evaluation
+    vi: đánh giá báo cáo
+    context: 成績管理
+  - ja: 実技評価
+    en: practical evaluation
+    vi: đánh giá thực hành
+    context: 成績管理
+  - ja: 絶対評価
+    en: absolute grading
+    vi: đánh giá theo chuẩn tuyệt đối
+    context: 成績管理
+  - ja: 相対評価
+    en: relative grading
+    vi: đánh giá tương đối
+    context: 成績管理
+  - ja: 観点別評価
+    en: criterion-based evaluation
+    vi: đánh giá theo tiêu chí
+    context: 成績管理
+  - ja: 内申点
+    en: internal assessment score
+    vi: điểm học bạ
+    context: 成績管理
+  - ja: 成績集計
+    en: grade aggregation
+    vi: tổng hợp điểm
+    context: 成績管理
+  - ja: 成績照会
+    en: grade inquiry
+    vi: tra cứu điểm
+    context: 成績管理
+  - ja: 単位数
+    en: number of credits
+    vi: số tín chỉ
+    context: 成績管理
+  - ja: 履修登録
+    en: course registration
+    vi: đăng ký môn học
+    context: 成績管理
+  - ja: 卒業要件
+    en: graduation requirements
+    vi: yêu cầu tốt nghiệp
+    context: 成績管理
+  - ja: 卒業判定
+    en: graduation determination
+    vi: xét tốt nghiệp
+    context: 成績管理
+  - ja: 成績通知書
+    en: grade notification
+    vi: thông báo kết quả học tập
+    context: 成績管理
+  - ja: 追試験
+    en: make-up exam
+    vi: thi lại
+    context: 成績管理
+  - ja: 再評価
+    en: re-evaluation
+    vi: đánh giá lại
+    context: 成績管理
+  - ja: 出席点
+    en: attendance score
+    vi: điểm chuyên cần
+    context: 成績管理
+  - ja: 平均点
+    en: average score
+    vi: điểm trung bình
+    context: 成績管理
+  - ja: 最高点
+    en: highest score
+    vi: điểm cao nhất
+    context: 成績管理
+
+  # 入試 (admissions) — 30 terms
+  - ja: 入学試験
+    en: entrance exam
+    vi: thi tuyển sinh
+    context: 入試
+  - ja: 出願書類
+    en: application documents
+    vi: hồ sơ đăng ký
+    context: 入試
+  - ja: 願書
+    en: application form
+    vi: đơn xin nhập học
+    context: 入試
+  - ja: 合格通知
+    en: acceptance notice
+    vi: thông báo trúng tuyển
+    context: 入試
+  - ja: 不合格通知
+    en: rejection notice
+    vi: thông báo không trúng tuyển
+    context: 入試
+  - ja: 入学金
+    en: enrollment fee
+    vi: học phí nhập học
+    context: 入試
+  - ja: 授業料
+    en: tuition fee
+    vi: học phí
+    context: 入試
+  - ja: 奨学金
+    en: scholarship
+    vi: học bổng
+    context: 入試
+  - ja: 推薦入試
+    en: recommendation-based admission
+    vi: tuyển sinh theo giới thiệu
+    context: 入試
+  - ja: 一般入試
+    en: general admission
+    vi: tuyển sinh thông thường
+    context: 入試
+  - ja: AO入試
+    en: AO admission
+    vi: tuyển sinh AO
+    context: 入試
+  - ja: 志望動機書
+    en: personal statement
+    vi: bài luận động cơ
+    context: 入試
+  - ja: 調査書
+    en: school record
+    vi: học bạ
+    context: 入試
+  - ja: 面接試験
+    en: interview exam
+    vi: thi phỏng vấn
+    context: 入試
+  - ja: 筆記試験
+    en: written exam
+    vi: thi viết
+    context: 入試
+  - ja: 実技試験
+    en: practical exam
+    vi: thi thực hành
+    context: 入試
+  - ja: 入試日程
+    en: exam schedule
+    vi: lịch thi tuyển sinh
+    context: 入試
+  - ja: 倍率
+    en: acceptance ratio
+    vi: tỷ lệ chọi
+    context: 入試
+  - ja: 定員
+    en: enrollment capacity
+    vi: chỉ tiêu tuyển sinh
+    context: 入試
+  - ja: 補欠合格
+    en: waitlist admission
+    vi: trúng tuyển dự bị
+    context: 入試
+  - ja: 出願期間
+    en: application period
+    vi: thời gian nộp hồ sơ
+    context: 入試
+  - ja: 受験番号
+    en: examinee number
+    vi: số báo danh
+    context: 入試
+  - ja: 受験料
+    en: exam fee
+    vi: lệ phí thi
+    context: 入試
+  - ja: 二次試験
+    en: second-stage exam
+    vi: thi vòng hai
+    context: 入試
+  - ja: センター試験
+    en: university entrance exam (CSET)
+    vi: kỳ thi đại học
+    context: 入試
+  - ja: 合格最低点
+    en: minimum passing score
+    vi: điểm sàn trúng tuyển
+    context: 入試
+  - ja: 繰り上げ合格
+    en: promoted admission
+    vi: trúng tuyển bổ sung
+    context: 入試
+  - ja: 入試説明会
+    en: admission information session
+    vi: buổi tư vấn tuyển sinh
+    context: 入試
+  - ja: オープンキャンパス
+    en: open campus
+    vi: ngày mở cửa trường
+    context: 入試
+  - ja: 入学手続き
+    en: enrollment procedure
+    vi: thủ tục nhập học
+    context: 入試
+
+  # 学生情報 (student info) — 32 terms
+  - ja: 学籍番号
+    en: student ID
+    vi: mã sinh viên
+    context: 学生情報
+  - ja: 学籍情報
+    en: student record
+    vi: thông tin học sinh
+    context: 学生情報
+  - ja: 学籍管理
+    en: student record management
+    vi: quản lý hồ sơ học sinh
+    context: 学生情報
+  - ja: 在籍確認
+    en: enrollment verification
+    vi: xác nhận đang theo học
+    context: 学生情報
+  - ja: 休学届
+    en: leave of absence form
+    vi: đơn xin nghỉ học
+    context: 学生情報
+  - ja: 復学手続き
+    en: re-enrollment procedure
+    vi: thủ tục học lại
+    context: 学生情報
+  - ja: 退学届
+    en: withdrawal form
+    vi: đơn xin thôi học
+    context: 学生情報
+  - ja: 在学証明書
+    en: enrollment certificate
+    vi: giấy chứng nhận đang học
+    context: 学生情報
+  - ja: 卒業証明書
+    en: graduation certificate
+    vi: bằng tốt nghiệp
+    context: 学生情報
+  - ja: 成績証明書
+    en: transcript
+    vi: bảng điểm
+    context: 学生情報
+  - ja: 保護者情報
+    en: guardian information
+    vi: thông tin phụ huynh
+    context: 学生情報
+  - ja: 緊急連絡先
+    en: emergency contact
+    vi: liên lạc khẩn cấp
+    context: 学生情報
+  - ja: アレルギー情報
+    en: allergy information
+    vi: thông tin dị ứng
+    context: 学生情報
+  - ja: 健康診断記録
+    en: health checkup record
+    vi: hồ sơ khám sức khỏe
+    context: 学生情報
+  - ja: 個人情報保護
+    en: personal data protection
+    vi: bảo vệ thông tin cá nhân
+    context: 学生情報
+  - ja: 写真登録
+    en: photo registration
+    vi: đăng ký ảnh
+    context: 学生情報
+  - ja: 住所変更
+    en: address change
+    vi: thay đổi địa chỉ
+    context: 学生情報
+  - ja: 氏名変更
+    en: name change
+    vi: thay đổi tên
+    context: 学生情報
+  - ja: 国籍
+    en: nationality
+    vi: quốc tịch
+    context: 学生情報
+  - ja: 留学生
+    en: international student
+    vi: sinh viên quốc tế
+    context: 学生情報
+  - ja: 特別支援
+    en: special needs support
+    vi: hỗ trợ đặc biệt
+    context: 学生情報
+  - ja: 障害配慮
+    en: disability accommodation
+    vi: hỗ trợ người khuyết tật
+    context: 学生情報
+  - ja: 奨学生
+    en: scholarship recipient
+    vi: học sinh nhận học bổng
+    context: 学生情報
+  - ja: クラブ活動
+    en: club activity
+    vi: hoạt động câu lạc bộ
+    context: 学生情報
+  - ja: 課外活動
+    en: extracurricular activity
+    vi: hoạt động ngoại khóa
+    context: 学生情報
+  - ja: アルバイト届
+    en: part-time job notification
+    vi: thông báo làm thêm
+    context: 学生情報
+  - ja: 生活指導記録
+    en: conduct guidance record
+    vi: hồ sơ hướng dẫn sinh hoạt
+    context: 学生情報
+  - ja: 就職活動記録
+    en: job hunting record
+    vi: hồ sơ tìm việc
+    context: 学生情報
+  - ja: キャリア相談
+    en: career counseling
+    vi: tư vấn nghề nghiệp
+    context: 学生情報
+  - ja: 入学年度
+    en: enrollment year
+    vi: năm nhập học
+    context: 学生情報
+  - ja: 卒業年度
+    en: graduation year
+    vi: năm tốt nghiệp
+    context: 学生情報
+  - ja: 専攻
+    en: major
+    vi: chuyên ngành
+    context: 学生情報
+
+  # eラーニング (e-learning) — 30 terms
+  - ja: 動画教材
+    en: video content
+    vi: nội dung video
+    context: eラーニング
+  - ja: オンライン授業
+    en: online class
+    vi: lớp học trực tuyến
+    context: eラーニング
+  - ja: ライブ配信
+    en: live streaming
+    vi: phát trực tiếp
+    context: eラーニング
+  - ja: 録画授業
+    en: recorded class
+    vi: bài giảng được ghi hình
+    context: eラーニング
+  - ja: 字幕
+    en: subtitle
+    vi: phụ đề
+    context: eラーニング
+  - ja: インタラクティブ教材
+    en: interactive material
+    vi: tài liệu tương tác
+    context: eラーニング
+  - ja: シミュレーション
+    en: simulation
+    vi: mô phỏng
+    context: eラーニング
+  - ja: デジタル教科書
+    en: digital textbook
+    vi: sách giáo khoa điện tử
+    context: eラーニング
+  - ja: 電子黒板
+    en: electronic whiteboard
+    vi: bảng trắng điện tử
+    context: eラーニング
+  - ja: タブレット学習
+    en: tablet-based learning
+    vi: học bằng máy tính bảng
+    context: eラーニング
+  - ja: 学習アプリ
+    en: learning app
+    vi: ứng dụng học tập
+    context: eラーニング
+  - ja: 音声教材
+    en: audio material
+    vi: tài liệu âm thanh
+    context: eラーニング
+  - ja: アダプティブラーニング
+    en: adaptive learning
+    vi: học tập thích ứng
+    context: eラーニング
+  - ja: ゲーミフィケーション
+    en: gamification
+    vi: trò chơi hóa
+    context: eラーニング
+  - ja: マイクロラーニング
+    en: microlearning
+    vi: học vi mô
+    context: eラーニング
+  - ja: フリップドクラスルーム
+    en: flipped classroom
+    vi: lớp học đảo ngược
+    context: eラーニング
+  - ja: 画面共有
+    en: screen sharing
+    vi: chia sẻ màn hình
+    context: eラーニング
+  - ja: ブレイクアウトルーム
+    en: breakout room
+    vi: phòng thảo luận nhóm
+    context: eラーニング
+  - ja: オンラインテスト
+    en: online test
+    vi: kiểm tra trực tuyến
+    context: eラーニング
+  - ja: 自動採点
+    en: auto grading
+    vi: chấm điểm tự động
+    context: eラーニング
+  - ja: 学習分析
+    en: learning analytics
+    vi: phân tích học tập
+    context: eラーニング
+  - ja: コンテンツ管理
+    en: content management
+    vi: quản lý nội dung
+    context: eラーニング
+  - ja: 動画配信サーバー
+    en: video streaming server
+    vi: máy chủ phát video
+    context: eラーニング
+  - ja: 帯域制限
+    en: bandwidth limit
+    vi: giới hạn băng thông
+    context: eラーニング
+  - ja: 著作権管理
+    en: copyright management
+    vi: quản lý bản quyền
+    context: eラーニング
+  - ja: DRMコンテンツ
+    en: DRM-protected content
+    vi: nội dung bảo vệ DRM
+    context: eラーニング
+  - ja: 受講完了率
+    en: course completion rate
+    vi: tỷ lệ hoàn thành khóa học
+    context: eラーニング
+  - ja: ウェビナー
+    en: webinar
+    vi: hội thảo trực tuyến
+    context: eラーニング
+  - ja: バーチャル教室
+    en: virtual classroom
+    vi: lớp học ảo
+    context: eラーニング
+  - ja: eポートフォリオ
+    en: e-portfolio
+    vi: hồ sơ điện tử
+    context: eラーニング
+
+  # 教材管理 (materials) — 32 terms
+  - ja: 教科書
+    en: textbook
+    vi: sách giáo khoa
+    context: 教材管理
+  - ja: 副教材
+    en: supplementary material
+    vi: tài liệu bổ trợ
+    context: 教材管理
+  - ja: 問題集
+    en: exercise book
+    vi: sách bài tập
+    context: 教材管理
+  - ja: 参考書
+    en: reference book
+    vi: sách tham khảo
+    context: 教材管理
+  - ja: プリント
+    en: handout
+    vi: tài liệu phát tay
+    context: 教材管理
+  - ja: ワークシート
+    en: worksheet
+    vi: phiếu bài tập
+    context: 教材管理
+  - ja: 教材リスト
+    en: material list
+    vi: danh sách tài liệu
+    context: 教材管理
+  - ja: 図書室
+    en: library
+    vi: thư viện
+    context: 教材管理
+  - ja: 貸出管理
+    en: loan management
+    vi: quản lý mượn sách
+    context: 教材管理
+  - ja: 返却期限
+    en: return deadline
+    vi: hạn trả sách
+    context: 教材管理
+  - ja: 蔵書検索
+    en: catalog search
+    vi: tìm kiếm tài liệu
+    context: 教材管理
+  - ja: 電子書籍
+    en: e-book
+    vi: sách điện tử
+    context: 教材管理
+  - ja: デジタルコンテンツ
+    en: digital content
+    vi: nội dung số
+    context: 教材管理
+  - ja: 教材共有
+    en: material sharing
+    vi: chia sẻ tài liệu
+    context: 教材管理
+  - ja: カリキュラム
+    en: curriculum
+    vi: chương trình giảng dạy
+    context: 教材管理
+  - ja: シラバス
+    en: syllabus
+    vi: đề cương môn học
+    context: 教材管理
+  - ja: 指導計画
+    en: teaching plan
+    vi: kế hoạch giảng dạy
+    context: 教材管理
+  - ja: 教材作成
+    en: material creation
+    vi: soạn tài liệu
+    context: 教材管理
+  - ja: 著者情報
+    en: author information
+    vi: thông tin tác giả
+    context: 教材管理
+  - ja: 版数管理
+    en: version management
+    vi: quản lý phiên bản
+    context: 教材管理
+  - ja: 教材評価
+    en: material evaluation
+    vi: đánh giá tài liệu
+    context: 教材管理
+  - ja: 教材配布
+    en: material distribution
+    vi: phân phối tài liệu
+    context: 教材管理
+  - ja: 購買管理
+    en: purchase management
+    vi: quản lý mua sắm
+    context: 教材管理
+  - ja: 在庫管理
+    en: inventory management
+    vi: quản lý tồn kho
+    context: 教材管理
+  - ja: 発注管理
+    en: order management
+    vi: quản lý đặt hàng
+    context: 教材管理
+  - ja: 廃棄管理
+    en: disposal management
+    vi: quản lý thanh lý
+    context: 教材管理
+  - ja: 教材タグ
+    en: material tag
+    vi: thẻ tài liệu
+    context: 教材管理
+  - ja: 科目別教材
+    en: subject-specific material
+    vi: tài liệu theo môn học
+    context: 教材管理
+  - ja: 実験器具
+    en: lab equipment
+    vi: dụng cụ thí nghiệm
+    context: 教材管理
+  - ja: 視聴覚教材
+    en: audiovisual material
+    vi: tài liệu nghe nhìn
+    context: 教材管理
+  - ja: 体育用具
+    en: PE equipment
+    vi: dụng cụ thể dục
+    context: 教材管理
+  - ja: ICT機器
+    en: ICT devices
+    vi: thiết bị CNTT
+    context: 教材管理
+
+  # 校務 (school ops) — 32 terms
+  - ja: 教職員
+    en: faculty
+    vi: giảng viên
+    context: 校務
+  - ja: 教員免許
+    en: teaching license
+    vi: giấy phép dạy học
+    context: 校務
+  - ja: 勤務シフト
+    en: work shift
+    vi: ca làm việc
+    context: 校務
+  - ja: 給与管理
+    en: payroll management
+    vi: quản lý lương
+    context: 校務
+  - ja: 有給休暇
+    en: paid leave
+    vi: nghỉ phép có lương
+    context: 校務
+  - ja: 年次有給
+    en: annual paid leave
+    vi: phép năm
+    context: 校務
+  - ja: 研修記録
+    en: training record
+    vi: hồ sơ đào tạo
+    context: 校務
+  - ja: 人事評価
+    en: personnel evaluation
+    vi: đánh giá nhân sự
+    context: 校務
+  - ja: 業務日誌
+    en: work log
+    vi: nhật ký công việc
+    context: 校務
+  - ja: 校長
+    en: principal
+    vi: hiệu trưởng
+    context: 校務
+  - ja: 副校長
+    en: vice principal
+    vi: phó hiệu trưởng
+    context: 校務
+  - ja: 学部長
+    en: department head
+    vi: trưởng khoa
+    context: 校務
+  - ja: 事務局
+    en: administrative office
+    vi: phòng hành chính
+    context: 校務
+  - ja: 施設管理
+    en: facility management
+    vi: quản lý cơ sở vật chất
+    context: 校務
+  - ja: 会議録
+    en: meeting minutes
+    vi: biên bản cuộc họp
+    context: 校務
+  - ja: 稟議書
+    en: approval request
+    vi: tờ trình phê duyệt
+    context: 校務
+  - ja: 予算管理
+    en: budget management
+    vi: quản lý ngân sách
+    context: 校務
+  - ja: 決裁フロー
+    en: approval workflow
+    vi: quy trình phê duyệt
+    context: 校務
+  - ja: 文書管理
+    en: document management
+    vi: quản lý văn bản
+    context: 校務
+  - ja: 校内放送
+    en: school broadcast
+    vi: thông báo nội bộ
+    context: 校務
+  - ja: 学校日誌
+    en: school journal
+    vi: nhật ký trường học
+    context: 校務
+  - ja: 防災訓練
+    en: disaster drill
+    vi: diễn tập phòng chống thiên tai
+    context: 校務
+  - ja: 安全管理
+    en: safety management
+    vi: quản lý an toàn
+    context: 校務
+  - ja: 警備記録
+    en: security log
+    vi: nhật ký bảo vệ
+    context: 校務
+  - ja: 清掃当番
+    en: cleaning duty roster
+    vi: phân công vệ sinh
+    context: 校務
+  - ja: 給食管理
+    en: school meal management
+    vi: quản lý bữa ăn
+    context: 校務
+  - ja: アレルギー対応
+    en: allergy accommodation
+    vi: xử lý dị ứng
+    context: 校務
+  - ja: 通学バス
+    en: school bus
+    vi: xe buýt học đường
+    context: 校務
+  - ja: 校外活動許可
+    en: off-campus activity approval
+    vi: phê duyệt hoạt động ngoài trường
+    context: 校務
+  - ja: 保険加入管理
+    en: insurance enrollment management
+    vi: quản lý tham gia bảo hiểm
+    context: 校務
+  - ja: 外部委託管理
+    en: outsourcing management
+    vi: quản lý thuê ngoài
+    context: 校務
+  - ja: 学校評議員
+    en: school board member
+    vi: thành viên hội đồng trường
+    context: 校務

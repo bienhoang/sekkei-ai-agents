@@ -1,123 +1,1044 @@
 industry: finance
 language: ja
 terms:
+  # ===== 会計 (accounting) — 35 terms =====
   - ja: 勘定科目
     en: account category
+    vi: danh mục tài khoản
     context: 会計
   - ja: 仕訳
     en: journal entry
+    vi: bút toán nhật ký
     context: 会計
   - ja: 元帳
     en: general ledger
+    vi: sổ cái
     context: 会計
   - ja: 売掛金
     en: accounts receivable
+    vi: khoản phải thu
     context: 会計
   - ja: 買掛金
     en: accounts payable
+    vi: khoản phải trả
     context: 会計
   - ja: 残高
     en: balance
+    vi: số dư
     context: 会計
-  - ja: 消費税
-    en: consumption tax
-    context: 税務
-  - ja: 決算
-    en: settlement / closing
-    context: 会計
-  - ja: 貸借対照表
-    en: balance sheet
-    context: 財務
-  - ja: 損益計算書
-    en: income statement
-    context: 財務
-  - ja: キャッシュフロー計算書
-    en: cash flow statement
-    context: 財務
   - ja: 固定資産
     en: fixed assets
+    vi: tài sản cố định
     context: 会計
   - ja: 減価償却
     en: depreciation
+    vi: khấu hao
     context: 会計
   - ja: 棚卸資産
     en: inventory assets
+    vi: tài sản tồn kho
     context: 会計
   - ja: 未収金
     en: accrued revenue
+    vi: doanh thu chưa thu
     context: 会計
   - ja: 前受金
     en: advance received
+    vi: tiền nhận trước
     context: 会計
   - ja: 引当金
     en: provisions / reserves
+    vi: dự phòng
     context: 会計
-  - ja: 振込
-    en: bank transfer
-    context: 金融
-  - ja: 口座
-    en: account
-    context: 金融
-  - ja: 与信
-    en: credit assessment
-    context: 金融
-  - ja: 審査
-    en: screening / review
-    context: 金融
-  - ja: 約定
-    en: contract / commitment
-    context: 金融
-  - ja: 金利
-    en: interest rate
-    context: 金融
-  - ja: 担保
-    en: collateral
-    context: 金融
-  - ja: 融資
-    en: loan / financing
-    context: 金融
-  - ja: 返済
-    en: repayment
-    context: 金融
-  - ja: 手数料
-    en: fee / commission
-    context: 金融
-  - ja: 為替
-    en: foreign exchange
-    context: 金融
-  - ja: 電子決済
-    en: electronic payment
-    context: 決済
   - ja: 請求書
     en: invoice
+    vi: hóa đơn
     context: 会計
   - ja: 領収書
     en: receipt
+    vi: biên lai
     context: 会計
   - ja: 伝票
     en: voucher / slip
+    vi: phiếu kế toán
     context: 会計
   - ja: 年度
     en: fiscal year
+    vi: năm tài chính
     context: 会計
   - ja: 四半期
     en: quarter
+    vi: quý
     context: 会計
   - ja: 月次
     en: monthly
+    vi: hàng tháng
     context: 会計
   - ja: 日次
     en: daily
+    vi: hàng ngày
     context: 会計
+  - ja: 決算
+    en: settlement / closing
+    vi: quyết toán / kết sổ
+    context: 会計
+  - ja: 棚卸
+    en: inventory count
+    vi: kiểm kê
+    context: 会計
+  - ja: 試算表
+    en: trial balance
+    vi: bảng cân đối thử
+    context: 会計
+  - ja: 補助元帳
+    en: subsidiary ledger
+    vi: sổ cái phụ
+    context: 会計
+  - ja: 繰越利益剰余金
+    en: retained earnings
+    vi: lợi nhuận giữ lại
+    context: 会計
+  - ja: 純資産
+    en: net assets
+    vi: tài sản thuần
+    context: 会計
+  - ja: 負債
+    en: liabilities
+    vi: nợ phải trả
+    context: 会計
+  - ja: 流動資産
+    en: current assets
+    vi: tài sản lưu động
+    context: 会計
+  - ja: 流動負債
+    en: current liabilities
+    vi: nợ ngắn hạn
+    context: 会計
+  - ja: 資本金
+    en: paid-in capital
+    vi: vốn điều lệ
+    context: 会計
+  - ja: 未払金
+    en: accrued expenses payable
+    vi: chi phí phải trả
+    context: 会計
+  - ja: 前払費用
+    en: prepaid expenses
+    vi: chi phí trả trước
+    context: 会計
+  - ja: 費用
+    en: expenses
+    vi: chi phí
+    context: 会計
+  - ja: 収益
+    en: revenue
+    vi: doanh thu
+    context: 会計
+  - ja: 原価
+    en: cost
+    vi: giá vốn
+    context: 会計
+  - ja: 粗利
+    en: gross profit
+    vi: lợi nhuận gộp
+    context: 会計
+
+  # ===== 銀行 (banking) — 30 terms =====
+  - ja: 口座
+    en: account
+    vi: tài khoản ngân hàng
+    context: 銀行
+  - ja: 振込
+    en: bank transfer
+    vi: chuyển khoản ngân hàng
+    context: 銀行
+  - ja: 口座振替
+    en: direct debit
+    vi: ghi nợ trực tiếp
+    context: 銀行
+  - ja: 普通預金
+    en: ordinary deposit
+    vi: tài khoản tiết kiệm thường
+    context: 銀行
+  - ja: 定期預金
+    en: fixed-term deposit
+    vi: tiền gửi có kỳ hạn
+    context: 銀行
+  - ja: 当座預金
+    en: checking account
+    vi: tài khoản thanh toán
+    context: 銀行
+  - ja: 預金残高
+    en: deposit balance
+    vi: số dư tiền gửi
+    context: 銀行
+  - ja: 引き出し
+    en: withdrawal
+    vi: rút tiền
+    context: 銀行
+  - ja: 入金
+    en: deposit / credit
+    vi: tiền vào / ghi có
+    context: 銀行
+  - ja: 出金
+    en: withdrawal / debit
+    vi: tiền ra / ghi nợ
+    context: 銀行
+  - ja: 通帳
+    en: bankbook / passbook
+    vi: sổ ngân hàng
+    context: 銀行
+  - ja: ATM
+    en: ATM
+    vi: ATM
+    context: 銀行
+  - ja: インターネットバンキング
+    en: internet banking
+    vi: ngân hàng trực tuyến
+    context: 銀行
+  - ja: 融資
+    en: loan / financing
+    vi: cho vay / tài trợ vốn
+    context: 銀行
+  - ja: 返済
+    en: repayment
+    vi: hoàn trả
+    context: 銀行
+  - ja: 金利
+    en: interest rate
+    vi: lãi suất
+    context: 銀行
+  - ja: 担保
+    en: collateral
+    vi: tài sản thế chấp
+    context: 銀行
+  - ja: 与信
+    en: credit assessment
+    vi: đánh giá tín dụng
+    context: 銀行
+  - ja: 審査
+    en: screening / review
+    vi: thẩm định
+    context: 銀行
+  - ja: 約定
+    en: contract / commitment
+    vi: cam kết / hợp đồng vay
+    context: 銀行
+  - ja: 手数料
+    en: fee / commission
+    vi: phí giao dịch
+    context: 銀行
+  - ja: 為替
+    en: foreign exchange
+    vi: ngoại hối
+    context: 銀行
+  - ja: 送金
+    en: remittance
+    vi: chuyển tiền
+    context: 銀行
+  - ja: 両替
+    en: currency exchange
+    vi: đổi tiền
+    context: 銀行
+  - ja: 利子
+    en: interest
+    vi: tiền lãi
+    context: 銀行
+  - ja: 元金
+    en: principal
+    vi: vốn gốc
+    context: 銀行
+  - ja: 残高照会
+    en: balance inquiry
+    vi: kiểm tra số dư
+    context: 銀行
+  - ja: 振替
+    en: transfer / debit
+    vi: chuyển khoản nội bộ
+    context: 銀行
+  - ja: 口座開設
+    en: account opening
+    vi: mở tài khoản
+    context: 銀行
+  - ja: 解約
+    en: account closure / cancellation
+    vi: đóng tài khoản
+    context: 銀行
+
+  # ===== 証券 (securities) — 30 terms =====
+  - ja: 株式
+    en: stock
+    vi: cổ phiếu
+    context: 証券
+  - ja: 配当
+    en: dividend
+    vi: cổ tức
+    context: 証券
+  - ja: 債券
+    en: bond
+    vi: trái phiếu
+    context: 証券
+  - ja: 投資信託
+    en: investment trust / mutual fund
+    vi: quỹ đầu tư
+    context: 証券
+  - ja: 上場
+    en: listing
+    vi: niêm yết
+    context: 証券
+  - ja: 株価
+    en: stock price
+    vi: giá cổ phiếu
+    context: 証券
+  - ja: 時価総額
+    en: market capitalization
+    vi: vốn hóa thị trường
+    context: 証券
+  - ja: 売買
+    en: trading / buying and selling
+    vi: mua bán chứng khoán
+    context: 証券
+  - ja: 証券口座
+    en: securities account
+    vi: tài khoản chứng khoán
+    context: 証券
+  - ja: 注文
+    en: order
+    vi: lệnh giao dịch
+    context: 証券
+  - ja: 成行注文
+    en: market order
+    vi: lệnh thị trường
+    context: 証券
+  - ja: 指値注文
+    en: limit order
+    vi: lệnh giới hạn
+    context: 証券
+  - ja: 約定価格
+    en: execution price
+    vi: giá khớp lệnh
+    context: 証券
+  - ja: 清算
+    en: clearing / liquidation
+    vi: thanh lý / bù trừ
+    context: 証券
+  - ja: 決済日
+    en: settlement date
+    vi: ngày thanh toán
+    context: 証券
+  - ja: 信用取引
+    en: margin trading
+    vi: giao dịch ký quỹ
+    context: 証券
+  - ja: 空売り
+    en: short selling
+    vi: bán khống
+    context: 証券
+  - ja: 分散投資
+    en: diversified investment
+    vi: đầu tư phân tán
+    context: 証券
+  - ja: ポートフォリオ
+    en: portfolio
+    vi: danh mục đầu tư
+    context: 証券
+  - ja: 利回り
+    en: yield / return rate
+    vi: tỷ suất lợi nhuận
+    context: 証券
+  - ja: 騰落率
+    en: rate of change
+    vi: tỷ lệ tăng giảm
+    context: 証券
+  - ja: 株主
+    en: shareholder
+    vi: cổ đông
+    context: 証券
+  - ja: 優先株
+    en: preferred stock
+    vi: cổ phiếu ưu đãi
+    context: 証券
+  - ja: 社債
+    en: corporate bond
+    vi: trái phiếu doanh nghiệp
+    context: 証券
+  - ja: 国債
+    en: government bond
+    vi: trái phiếu chính phủ
+    context: 証券
+  - ja: ETF
+    en: exchange-traded fund
+    vi: quỹ ETF
+    context: 証券
+  - ja: IPO
+    en: initial public offering
+    vi: phát hành cổ phiếu lần đầu ra công chúng
+    context: 証券
+  - ja: 相場
+    en: market price / market conditions
+    vi: giá thị trường
+    context: 証券
+  - ja: 取引所
+    en: exchange
+    vi: sở giao dịch
+    context: 証券
+  - ja: 証券会社
+    en: securities company / brokerage
+    vi: công ty chứng khoán
+    context: 証券
+
+  # ===== 保険 (insurance) — 30 terms =====
+  - ja: 保険料
+    en: premium
+    vi: phí bảo hiểm
+    context: 保険
+  - ja: 免責
+    en: deductible / exemption
+    vi: mức miễn thường
+    context: 保険
+  - ja: 保険契約
+    en: insurance contract / policy
+    vi: hợp đồng bảo hiểm
+    context: 保険
+  - ja: 被保険者
+    en: insured person
+    vi: người được bảo hiểm
+    context: 保険
+  - ja: 保険者
+    en: insurer
+    vi: công ty bảo hiểm
+    context: 保険
+  - ja: 受取人
+    en: beneficiary
+    vi: người thụ hưởng
+    context: 保険
+  - ja: 保険金
+    en: insurance benefit / claim payout
+    vi: tiền bồi thường bảo hiểm
+    context: 保険
+  - ja: 保険期間
+    en: policy period
+    vi: thời hạn bảo hiểm
+    context: 保険
+  - ja: 保険事故
+    en: insured event
+    vi: sự kiện bảo hiểm
+    context: 保険
+  - ja: 損害保険
+    en: non-life insurance / property insurance
+    vi: bảo hiểm phi nhân thọ
+    context: 保険
+  - ja: 生命保険
+    en: life insurance
+    vi: bảo hiểm nhân thọ
+    context: 保険
+  - ja: 医療保険
+    en: health insurance
+    vi: bảo hiểm y tế
+    context: 保険
+  - ja: 自動車保険
+    en: automobile insurance
+    vi: bảo hiểm ô tô
+    context: 保険
+  - ja: 火災保険
+    en: fire insurance
+    vi: bảo hiểm hỏa hoạn
+    context: 保険
+  - ja: 解約返戻金
+    en: surrender value / cash value
+    vi: giá trị hoàn lại khi hủy hợp đồng
+    context: 保険
+  - ja: 告知
+    en: disclosure / notification
+    vi: khai báo thông tin
+    context: 保険
+  - ja: 再保険
+    en: reinsurance
+    vi: tái bảo hiểm
+    context: 保険
+  - ja: 保険料率
+    en: premium rate
+    vi: tỷ lệ phí bảo hiểm
+    context: 保険
+  - ja: 査定
+    en: assessment / appraisal
+    vi: thẩm định tổn thất
+    context: 保険
+  - ja: 支払限度額
+    en: coverage limit
+    vi: hạn mức chi trả
+    context: 保険
+  - ja: 特約
+    en: rider / special clause
+    vi: điều khoản đặc biệt
+    context: 保険
+  - ja: 保険募集
+    en: insurance solicitation
+    vi: chào bán bảo hiểm
+    context: 保険
+  - ja: 代理店
+    en: insurance agent / agency
+    vi: đại lý bảo hiểm
+    context: 保険
+  - ja: 契約者
+    en: policyholder
+    vi: người mua bảo hiểm
+    context: 保険
+  - ja: 給付金
+    en: benefit payment
+    vi: tiền trợ cấp bảo hiểm
+    context: 保険
+  - ja: 保険証券
+    en: insurance policy document
+    vi: chứng nhận bảo hiểm
+    context: 保険
+  - ja: 失効
+    en: lapse / expiry
+    vi: hết hiệu lực
+    context: 保険
+  - ja: 復活
+    en: policy reinstatement
+    vi: tái hiệu lực hợp đồng
+    context: 保険
+  - ja: 払済
+    en: paid-up policy
+    vi: hợp đồng đã thanh toán xong
+    context: 保険
+  - ja: 団体保険
+    en: group insurance
+    vi: bảo hiểm nhóm
+    context: 保険
+
+  # ===== 税務 (tax) — 30 terms =====
+  - ja: 消費税
+    en: consumption tax
+    vi: thuế tiêu thụ
+    context: 税務
   - ja: 税込
     en: tax included
+    vi: đã bao gồm thuế
     context: 税務
   - ja: 税抜
     en: tax excluded
+    vi: chưa bao gồm thuế
     context: 税務
   - ja: 源泉徴収
     en: withholding tax
+    vi: khấu trừ thuế tại nguồn
     context: 税務
   - ja: 確定申告
     en: tax return
+    vi: khai thuế hàng năm
     context: 税務
+  - ja: 控除
+    en: deduction
+    vi: khấu trừ thuế
+    context: 税務
+  - ja: 法人税
+    en: corporate tax
+    vi: thuế thu nhập doanh nghiệp
+    context: 税務
+  - ja: 所得税
+    en: income tax
+    vi: thuế thu nhập cá nhân
+    context: 税務
+  - ja: 住民税
+    en: resident tax
+    vi: thuế cư trú
+    context: 税務
+  - ja: 固定資産税
+    en: property tax
+    vi: thuế tài sản cố định
+    context: 税務
+  - ja: 相続税
+    en: inheritance tax
+    vi: thuế thừa kế
+    context: 税務
+  - ja: 贈与税
+    en: gift tax
+    vi: thuế quà tặng
+    context: 税務
+  - ja: 印紙税
+    en: stamp duty
+    vi: thuế tem
+    context: 税務
+  - ja: 登録免許税
+    en: registration tax
+    vi: thuế đăng ký
+    context: 税務
+  - ja: 申告期限
+    en: filing deadline
+    vi: hạn nộp tờ khai
+    context: 税務
+  - ja: 税務調査
+    en: tax audit
+    vi: kiểm tra thuế
+    context: 税務
+  - ja: 課税対象
+    en: taxable subject / tax base
+    vi: đối tượng chịu thuế
+    context: 税務
+  - ja: 非課税
+    en: tax-exempt
+    vi: miễn thuế
+    context: 税務
+  - ja: 軽減税率
+    en: reduced tax rate
+    vi: thuế suất ưu đãi
+    context: 税務
+  - ja: 電子申告
+    en: e-filing
+    vi: khai thuế điện tử
+    context: 税務
+  - ja: 税務署
+    en: tax office
+    vi: cơ quan thuế
+    context: 税務
+  - ja: 納税
+    en: tax payment
+    vi: nộp thuế
+    context: 税務
+  - ja: 還付
+    en: tax refund
+    vi: hoàn thuế
+    context: 税務
+  - ja: 税額控除
+    en: tax credit
+    vi: tín thuế
+    context: 税務
+  - ja: 益金
+    en: taxable income / profit for tax purposes
+    vi: thu nhập chịu thuế
+    context: 税務
+  - ja: 損金
+    en: deductible expense for tax
+    vi: chi phí được khấu trừ thuế
+    context: 税務
+  - ja: インボイス制度
+    en: invoice taxation system
+    vi: hệ thống hóa đơn thuế
+    context: 税務
+  - ja: 適格請求書
+    en: qualified invoice
+    vi: hóa đơn đủ điều kiện
+    context: 税務
+  - ja: 税率
+    en: tax rate
+    vi: thuế suất
+    context: 税務
+  - ja: 繰越欠損金
+    en: net operating loss carryforward
+    vi: lỗ kết chuyển
+    context: 税務
+
+  # ===== フィンテック (fintech) — 30 terms =====
+  - ja: 電子決済
+    en: electronic payment
+    vi: thanh toán điện tử
+    context: フィンテック
+  - ja: ブロックチェーン
+    en: blockchain
+    vi: blockchain
+    context: フィンテック
+  - ja: 仮想通貨
+    en: cryptocurrency
+    vi: tiền mã hóa
+    context: フィンテック
+  - ja: デジタルウォレット
+    en: digital wallet
+    vi: ví điện tử
+    context: フィンテック
+  - ja: 送金API
+    en: remittance API
+    vi: API chuyển tiền
+    context: フィンテック
+  - ja: オープンバンキング
+    en: open banking
+    vi: ngân hàng mở
+    context: フィンテック
+  - ja: API連携
+    en: API integration
+    vi: tích hợp API
+    context: フィンテック
+  - ja: トークン化
+    en: tokenization
+    vi: token hóa
+    context: フィンテック
+  - ja: スマートコントラクト
+    en: smart contract
+    vi: hợp đồng thông minh
+    context: フィンテック
+  - ja: KYC
+    en: know your customer
+    vi: xác minh danh tính khách hàng
+    context: フィンテック
+  - ja: AML
+    en: anti-money laundering
+    vi: chống rửa tiền
+    context: フィンテック
+  - ja: ロボアドバイザー
+    en: robo-advisor
+    vi: tư vấn đầu tư tự động
+    context: フィンテック
+  - ja: クラウドファンディング
+    en: crowdfunding
+    vi: gọi vốn cộng đồng
+    context: フィンテック
+  - ja: P2Pレンディング
+    en: peer-to-peer lending
+    vi: cho vay ngang hàng
+    context: フィンテック
+  - ja: BNPL
+    en: buy now pay later
+    vi: mua trước trả sau
+    context: フィンテック
+  - ja: eKYC
+    en: electronic know your customer
+    vi: xác minh danh tính điện tử
+    context: フィンテック
+  - ja: 生体認証
+    en: biometric authentication
+    vi: xác thực sinh trắc học
+    context: フィンテック
+  - ja: ワンタイムパスワード
+    en: one-time password
+    vi: mật khẩu một lần
+    context: フィンテック
+  - ja: 二要素認証
+    en: two-factor authentication
+    vi: xác thực hai yếu tố
+    context: フィンテック
+  - ja: データ分析
+    en: data analytics
+    vi: phân tích dữ liệu
+    context: フィンテック
+  - ja: 機械学習
+    en: machine learning
+    vi: học máy
+    context: フィンテック
+  - ja: 不正検知
+    en: fraud detection
+    vi: phát hiện gian lận
+    context: フィンテック
+  - ja: 決済代行
+    en: payment processing service
+    vi: dịch vụ xử lý thanh toán
+    context: フィンテック
+  - ja: ペイメントゲートウェイ
+    en: payment gateway
+    vi: cổng thanh toán
+    context: フィンテック
+  - ja: クレジットスコア
+    en: credit score
+    vi: điểm tín dụng
+    context: フィンテック
+  - ja: デジタル通貨
+    en: digital currency
+    vi: tiền kỹ thuật số
+    context: フィンテック
+  - ja: マネーロンダリング
+    en: money laundering
+    vi: rửa tiền
+    context: フィンテック
+  - ja: フィンテック企業
+    en: fintech company
+    vi: công ty fintech
+    context: フィンテック
+  - ja: 金融包摂
+    en: financial inclusion
+    vi: tài chính toàn diện
+    context: フィンテック
+  - ja: 超高速取引
+    en: high-frequency trading
+    vi: giao dịch tần số cao
+    context: フィンテック
+
+  # ===== リスク管理 (risk management) — 35 terms =====
+  - ja: 信用リスク
+    en: credit risk
+    vi: rủi ro tín dụng
+    context: リスク管理
+  - ja: コンプライアンス
+    en: compliance
+    vi: tuân thủ
+    context: リスク管理
+  - ja: 市場リスク
+    en: market risk
+    vi: rủi ro thị trường
+    context: リスク管理
+  - ja: 流動性リスク
+    en: liquidity risk
+    vi: rủi ro thanh khoản
+    context: リスク管理
+  - ja: オペレーショナルリスク
+    en: operational risk
+    vi: rủi ro vận hành
+    context: リスク管理
+  - ja: 金利リスク
+    en: interest rate risk
+    vi: rủi ro lãi suất
+    context: リスク管理
+  - ja: 為替リスク
+    en: foreign exchange risk
+    vi: rủi ro tỷ giá
+    context: リスク管理
+  - ja: 内部統制
+    en: internal controls
+    vi: kiểm soát nội bộ
+    context: リスク管理
+  - ja: リスクアセスメント
+    en: risk assessment
+    vi: đánh giá rủi ro
+    context: リスク管理
+  - ja: リスクヘッジ
+    en: risk hedging
+    vi: phòng ngừa rủi ro
+    context: リスク管理
+  - ja: デリバティブ
+    en: derivative
+    vi: công cụ phái sinh
+    context: リスク管理
+  - ja: ヘッジファンド
+    en: hedge fund
+    vi: quỹ phòng hộ
+    context: リスク管理
+  - ja: バーゼル規制
+    en: Basel regulation
+    vi: quy định Basel
+    context: リスク管理
+  - ja: 自己資本比率
+    en: capital adequacy ratio
+    vi: tỷ lệ an toàn vốn
+    context: リスク管理
+  - ja: ストレステスト
+    en: stress test
+    vi: kiểm tra căng thẳng
+    context: リスク管理
+  - ja: シナリオ分析
+    en: scenario analysis
+    vi: phân tích kịch bản
+    context: リスク管理
+  - ja: VaR
+    en: value at risk
+    vi: giá trị chịu rủi ro
+    context: リスク管理
+  - ja: デューデリジェンス
+    en: due diligence
+    vi: thẩm định toàn diện
+    context: リスク管理
+  - ja: ガバナンス
+    en: governance
+    vi: quản trị
+    context: リスク管理
+  - ja: リスクマトリクス
+    en: risk matrix
+    vi: ma trận rủi ro
+    context: リスク管理
+  - ja: 与信限度額
+    en: credit limit
+    vi: hạn mức tín dụng
+    context: リスク管理
+  - ja: 不良債権
+    en: non-performing loan
+    vi: nợ xấu
+    context: リスク管理
+  - ja: 貸倒引当金
+    en: allowance for doubtful accounts
+    vi: dự phòng nợ khó đòi
+    context: リスク管理
+  - ja: サイバーリスク
+    en: cyber risk
+    vi: rủi ro mạng
+    context: リスク管理
+  - ja: システムリスク
+    en: systemic risk
+    vi: rủi ro hệ thống
+    context: リスク管理
+  - ja: モニタリング
+    en: monitoring
+    vi: giám sát
+    context: リスク管理
+  - ja: 報告義務
+    en: reporting obligation
+    vi: nghĩa vụ báo cáo
+    context: リスク管理
+  - ja: 格付け
+    en: credit rating
+    vi: xếp hạng tín dụng
+    context: リスク管理
+  - ja: ロールアウト計画
+    en: rollout plan
+    vi: kế hoạch triển khai
+    context: リスク管理
+  - ja: 業務継続計画
+    en: business continuity plan
+    vi: kế hoạch duy trì hoạt động
+    context: リスク管理
+  - ja: 危機管理
+    en: crisis management
+    vi: quản lý khủng hoảng
+    context: リスク管理
+  - ja: 利益相反
+    en: conflict of interest
+    vi: xung đột lợi ích
+    context: リスク管理
+  - ja: インサイダー取引
+    en: insider trading
+    vi: giao dịch nội gián
+    context: リスク管理
+  - ja: 規制当局
+    en: regulatory authority
+    vi: cơ quan quản lý
+    context: リスク管理
+  - ja: 審査基準
+    en: screening criteria
+    vi: tiêu chí thẩm định
+    context: リスク管理
+
+  # ===== 決済 (settlement/payment) — 30 terms =====
+  - ja: 即時決済
+    en: instant payment
+    vi: thanh toán tức thì
+    context: 決済
+  - ja: QRコード決済
+    en: QR code payment
+    vi: thanh toán QR
+    context: 決済
+  - ja: クレジットカード決済
+    en: credit card payment
+    vi: thanh toán thẻ tín dụng
+    context: 決済
+  - ja: デビットカード決済
+    en: debit card payment
+    vi: thanh toán thẻ ghi nợ
+    context: 決済
+  - ja: 非接触決済
+    en: contactless payment
+    vi: thanh toán không tiếp xúc
+    context: 決済
+  - ja: 分割払い
+    en: installment payment
+    vi: thanh toán trả góp
+    context: 決済
+  - ja: 一括払い
+    en: lump sum payment
+    vi: thanh toán một lần
+    context: 決済
+  - ja: 後払い
+    en: deferred payment / pay later
+    vi: thanh toán sau
+    context: 決済
+  - ja: 前払い
+    en: prepayment / advance payment
+    vi: thanh toán trước
+    context: 決済
+  - ja: 現金払い
+    en: cash payment
+    vi: thanh toán tiền mặt
+    context: 決済
+  - ja: 電子マネー
+    en: electronic money
+    vi: tiền điện tử
+    context: 決済
+  - ja: ポイント決済
+    en: points payment
+    vi: thanh toán bằng điểm thưởng
+    context: 決済
+  - ja: 銀行振込決済
+    en: bank transfer payment
+    vi: thanh toán qua chuyển khoản
+    context: 決済
+  - ja: 代金引換
+    en: cash on delivery
+    vi: thanh toán khi nhận hàng
+    context: 決済
+  - ja: 決済処理
+    en: payment processing
+    vi: xử lý thanh toán
+    context: 決済
+  - ja: 承認
+    en: authorization
+    vi: ủy quyền thanh toán
+    context: 決済
+  - ja: 売上確定
+    en: capture / settlement confirmation
+    vi: xác nhận doanh thu
+    context: 決済
+  - ja: 返金
+    en: refund
+    vi: hoàn tiền
+    context: 決済
+  - ja: チャージバック
+    en: chargeback
+    vi: hoàn tiền tranh chấp
+    context: 決済
+  - ja: 決済端末
+    en: payment terminal / POS terminal
+    vi: thiết bị thanh toán
+    context: 決済
+  - ja: 3Dセキュア
+    en: 3D Secure
+    vi: xác thực 3D Secure
+    context: 決済
+  - ja: 国際決済
+    en: international payment
+    vi: thanh toán quốc tế
+    context: 決済
+  - ja: SWIFT
+    en: SWIFT
+    vi: SWIFT
+    context: 決済
+  - ja: SEPA
+    en: single euro payments area
+    vi: khu vực thanh toán Euro thống nhất
+    context: 決済
+  - ja: 決済手数料
+    en: payment processing fee
+    vi: phí xử lý thanh toán
+    context: 決済
+  - ja: 決済サービス
+    en: payment service
+    vi: dịch vụ thanh toán
+    context: 決済
+  - ja: 収納代行
+    en: payment collection agency
+    vi: dịch vụ thu hộ
+    context: 決済
+  - ja: 口座引き落とし
+    en: account debit / auto-debit
+    vi: tự động ghi nợ tài khoản
+    context: 決済
+  - ja: 精算
+    en: settlement / reconciliation
+    vi: đối soát / thanh toán cuối kỳ
+    context: 決済
+  - ja: 決済照合
+    en: payment reconciliation
+    vi: đối chiếu thanh toán
+    context: 決済
+
+  # ===== 財務 (financial statements — additional) — 6 terms =====
+  - ja: 貸借対照表
+    en: balance sheet
+    vi: bảng cân đối kế toán
+    context: 財務
+  - ja: 損益計算書
+    en: income statement
+    vi: báo cáo kết quả kinh doanh
+    context: 財務
+  - ja: キャッシュフロー計算書
+    en: cash flow statement
+    vi: báo cáo lưu chuyển tiền tệ
+    context: 財務
+  - ja: 財務諸表
+    en: financial statements
+    vi: báo cáo tài chính
+    context: 財務
+  - ja: 財務分析
+    en: financial analysis
+    vi: phân tích tài chính
+    context: 財務
+  - ja: 財務計画
+    en: financial planning
+    vi: kế hoạch tài chính
+    context: 財務

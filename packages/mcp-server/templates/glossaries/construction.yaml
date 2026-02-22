@@ -1,0 +1,1018 @@
+industry: construction
+language: ja
+terms:
+  # 施工管理 (site management) — 32 terms
+  - ja: 施工計画
+    en: construction plan
+    vi: kế hoạch thi công
+    context: 施工管理
+  - ja: 施工管理
+    en: construction management
+    vi: quản lý thi công
+    context: 施工管理
+  - ja: 現場監督
+    en: site supervisor
+    vi: giám sát công trường
+    context: 施工管理
+  - ja: 施工図
+    en: shop drawing
+    vi: bản vẽ thi công
+    context: 施工管理
+  - ja: 施工記録
+    en: construction record
+    vi: nhật ký thi công
+    context: 施工管理
+  - ja: 作業日報
+    en: daily work report
+    vi: báo cáo công việc hàng ngày
+    context: 施工管理
+  - ja: 施工体制台帳
+    en: construction organization ledger
+    vi: sổ tổ chức thi công
+    context: 施工管理
+  - ja: 施工体系図
+    en: construction hierarchy chart
+    vi: sơ đồ phân cấp thi công
+    context: 施工管理
+  - ja: 請負金額
+    en: contract amount
+    vi: giá trị hợp đồng
+    context: 施工管理
+  - ja: 工事種別
+    en: work type
+    vi: loại công trình
+    context: 施工管理
+  - ja: 着工届
+    en: construction commencement notice
+    vi: thông báo khởi công
+    context: 施工管理
+  - ja: 竣工届
+    en: construction completion notice
+    vi: thông báo hoàn công
+    context: 施工管理
+  - ja: 工事台帳
+    en: construction ledger
+    vi: sổ công trình
+    context: 施工管理
+  - ja: 現場代理人
+    en: site representative
+    vi: đại diện công trường
+    context: 施工管理
+  - ja: 主任技術者
+    en: chief engineer
+    vi: kỹ sư trưởng
+    context: 施工管理
+  - ja: 監理技術者
+    en: supervisory engineer
+    vi: kỹ sư giám sát
+    context: 施工管理
+  - ja: 施工方法
+    en: construction method
+    vi: phương pháp thi công
+    context: 施工管理
+  - ja: 工種
+    en: trade / work category
+    vi: hạng mục công việc
+    context: 施工管理
+  - ja: 仮設工事
+    en: temporary works
+    vi: công trình tạm thời
+    context: 施工管理
+  - ja: 基礎工事
+    en: foundation work
+    vi: công tác nền móng
+    context: 施工管理
+  - ja: 躯体工事
+    en: structural work
+    vi: công tác kết cấu
+    context: 施工管理
+  - ja: 仕上げ工事
+    en: finishing work
+    vi: công tác hoàn thiện
+    context: 施工管理
+  - ja: 設備工事
+    en: equipment installation
+    vi: lắp đặt thiết bị
+    context: 施工管理
+  - ja: 土工事
+    en: earthwork
+    vi: công tác đất
+    context: 施工管理
+  - ja: 鉄筋工事
+    en: rebar work
+    vi: công tác cốt thép
+    context: 施工管理
+  - ja: 型枠工事
+    en: formwork
+    vi: công tác cốp pha
+    context: 施工管理
+  - ja: コンクリート工事
+    en: concrete work
+    vi: công tác bê tông
+    context: 施工管理
+  - ja: 鉄骨工事
+    en: structural steel work
+    vi: công tác kết cấu thép
+    context: 施工管理
+  - ja: 防水工事
+    en: waterproofing work
+    vi: công tác chống thấm
+    context: 施工管理
+  - ja: 外壁工事
+    en: exterior wall work
+    vi: công tác tường ngoài
+    context: 施工管理
+  - ja: 品質記録
+    en: quality record
+    vi: hồ sơ chất lượng
+    context: 施工管理
+  - ja: 施工承認
+    en: construction approval
+    vi: phê duyệt thi công
+    context: 施工管理
+
+  # 積算 (cost estimation) — 32 terms
+  - ja: 見積書
+    en: estimate
+    vi: bản dự toán
+    context: 積算
+  - ja: 積算
+    en: cost estimation
+    vi: lập dự toán
+    context: 積算
+  - ja: 数量計算書
+    en: quantity calculation sheet
+    vi: bảng tính khối lượng
+    context: 積算
+  - ja: 内訳書
+    en: itemized breakdown
+    vi: bảng phân tích chi tiết
+    context: 積算
+  - ja: 単価表
+    en: unit price table
+    vi: bảng đơn giá
+    context: 積算
+  - ja: 歩掛
+    en: labor productivity rate
+    vi: định mức lao động
+    context: 積算
+  - ja: 労務費
+    en: labor cost
+    vi: chi phí nhân công
+    context: 積算
+  - ja: 材料費
+    en: material cost
+    vi: chi phí vật liệu
+    context: 積算
+  - ja: 機械経費
+    en: equipment cost
+    vi: chi phí máy móc
+    context: 積算
+  - ja: 諸経費
+    en: miscellaneous expenses
+    vi: chi phí phát sinh
+    context: 積算
+  - ja: 直接工事費
+    en: direct construction cost
+    vi: chi phí thi công trực tiếp
+    context: 積算
+  - ja: 間接工事費
+    en: indirect construction cost
+    vi: chi phí thi công gián tiếp
+    context: 積算
+  - ja: 共通仮設費
+    en: common temporary facility cost
+    vi: chi phí cơ sở tạm thời chung
+    context: 積算
+  - ja: 現場管理費
+    en: site management cost
+    vi: chi phí quản lý công trường
+    context: 積算
+  - ja: 一般管理費
+    en: general administrative cost
+    vi: chi phí quản lý chung
+    context: 積算
+  - ja: 消費税額
+    en: consumption tax amount
+    vi: số thuế tiêu thụ
+    context: 積算
+  - ja: 設計変更
+    en: design change
+    vi: thay đổi thiết kế
+    context: 積算
+  - ja: 変更契約額
+    en: revised contract amount
+    vi: giá trị hợp đồng sửa đổi
+    context: 積算
+  - ja: 精算書
+    en: final settlement
+    vi: quyết toán
+    context: 積算
+  - ja: 数量拾い
+    en: quantity takeoff
+    vi: bóc tách khối lượng
+    context: 積算
+  - ja: 積算ソフト
+    en: estimation software
+    vi: phần mềm lập dự toán
+    context: 積算
+  - ja: 工事費明細
+    en: construction cost details
+    vi: chi tiết chi phí công trình
+    context: 積算
+  - ja: 概算見積
+    en: rough estimate
+    vi: dự toán sơ bộ
+    context: 積算
+  - ja: 詳細見積
+    en: detailed estimate
+    vi: dự toán chi tiết
+    context: 積算
+  - ja: 比較見積
+    en: comparative estimate
+    vi: dự toán so sánh
+    context: 積算
+  - ja: 市場単価
+    en: market unit price
+    vi: đơn giá thị trường
+    context: 積算
+  - ja: 積算基準
+    en: estimation standard
+    vi: tiêu chuẩn lập dự toán
+    context: 積算
+  - ja: 工事費予算
+    en: construction budget
+    vi: ngân sách công trình
+    context: 積算
+  - ja: 予算超過
+    en: budget overrun
+    vi: vượt ngân sách
+    context: 積算
+  - ja: コスト管理
+    en: cost management
+    vi: quản lý chi phí
+    context: 積算
+  - ja: 原価管理
+    en: cost control
+    vi: kiểm soát giá thành
+    context: 積算
+  - ja: 出来高払い
+    en: progress payment
+    vi: thanh toán theo tiến độ
+    context: 積算
+
+  # BIM — 30 terms
+  - ja: 3Dモデル
+    en: 3D model
+    vi: mô hình 3D
+    context: BIM
+  - ja: BIM
+    en: Building Information Modeling
+    vi: mô hình thông tin công trình
+    context: BIM
+  - ja: LOD
+    en: Level of Development
+    vi: mức độ phát triển mô hình
+    context: BIM
+  - ja: IFC
+    en: Industry Foundation Classes
+    vi: định dạng IFC
+    context: BIM
+  - ja: BIMモデル
+    en: BIM model
+    vi: mô hình BIM
+    context: BIM
+  - ja: ファミリ
+    en: family (BIM component)
+    vi: thư viện cấu kiện BIM
+    context: BIM
+  - ja: パラメータ
+    en: parameter
+    vi: tham số
+    context: BIM
+  - ja: 干渉チェック
+    en: clash detection
+    vi: kiểm tra xung đột
+    context: BIM
+  - ja: 4D施工シミュレーション
+    en: 4D construction simulation
+    vi: mô phỏng thi công 4D
+    context: BIM
+  - ja: 5D積算連携
+    en: 5D cost integration
+    vi: tích hợp dự toán 5D
+    context: BIM
+  - ja: ポイントクラウド
+    en: point cloud
+    vi: đám mây điểm
+    context: BIM
+  - ja: 竣工BIM
+    en: as-built BIM
+    vi: BIM hoàn công
+    context: BIM
+  - ja: BIMマネージャー
+    en: BIM manager
+    vi: quản lý BIM
+    context: BIM
+  - ja: BIM標準
+    en: BIM standard
+    vi: tiêu chuẩn BIM
+    context: BIM
+  - ja: CIM
+    en: Construction Information Modeling
+    vi: mô hình thông tin xây dựng
+    context: BIM
+  - ja: モデル統合
+    en: model integration
+    vi: tích hợp mô hình
+    context: BIM
+  - ja: 属性情報
+    en: attribute information
+    vi: thông tin thuộc tính
+    context: BIM
+  - ja: レビンドソフト
+    en: BIM authoring software
+    vi: phần mềm tạo mô hình BIM
+    context: BIM
+  - ja: Revit
+    en: Revit
+    vi: Revit
+    context: BIM
+  - ja: Navisworks
+    en: Navisworks
+    vi: Navisworks
+    context: BIM
+  - ja: 数量算出
+    en: quantity extraction from BIM
+    vi: trích xuất khối lượng từ BIM
+    context: BIM
+  - ja: ビューア
+    en: BIM viewer
+    vi: phần mềm xem mô hình
+    context: BIM
+  - ja: コラボレーション
+    en: collaboration
+    vi: cộng tác
+    context: BIM
+  - ja: クラウドBIM
+    en: cloud BIM
+    vi: BIM trên đám mây
+    context: BIM
+  - ja: 共有モデル
+    en: shared model
+    vi: mô hình chia sẻ
+    context: BIM
+  - ja: モデル分割
+    en: model splitting
+    vi: chia nhỏ mô hình
+    context: BIM
+  - ja: フェーズ管理
+    en: phase management
+    vi: quản lý giai đoạn
+    context: BIM
+  - ja: 施設管理BIM
+    en: FM BIM
+    vi: BIM quản lý cơ sở vật chất
+    context: BIM
+  - ja: GISデータ連携
+    en: GIS data integration
+    vi: tích hợp dữ liệu GIS
+    context: BIM
+  - ja: BIM活用基準
+    en: BIM usage guidelines
+    vi: hướng dẫn sử dụng BIM
+    context: BIM
+
+  # 安全管理 (safety management) — 30 terms
+  - ja: KY活動
+    en: KY activity
+    vi: hoạt động KY
+    context: 安全管理
+  - ja: 危険予知
+    en: hazard prediction
+    vi: dự báo nguy hiểm
+    context: 安全管理
+  - ja: ヒヤリハット
+    en: near miss
+    vi: sự cố suýt xảy ra
+    context: 安全管理
+  - ja: 安全朝礼
+    en: morning safety meeting
+    vi: cuộc họp an toàn buổi sáng
+    context: 安全管理
+  - ja: 安全パトロール
+    en: safety patrol
+    vi: tuần tra an toàn
+    context: 安全管理
+  - ja: 安全教育
+    en: safety training
+    vi: đào tạo an toàn
+    context: 安全管理
+  - ja: 墜落防止
+    en: fall prevention
+    vi: phòng chống ngã cao
+    context: 安全管理
+  - ja: 足場
+    en: scaffold
+    vi: giàn giáo
+    context: 安全管理
+  - ja: 安全帯
+    en: safety harness
+    vi: dây an toàn
+    context: 安全管理
+  - ja: ヘルメット
+    en: hard hat
+    vi: mũ bảo hộ
+    context: 安全管理
+  - ja: 安全施工サイクル
+    en: safety construction cycle
+    vi: chu trình thi công an toàn
+    context: 安全管理
+  - ja: 労働災害
+    en: occupational accident
+    vi: tai nạn lao động
+    context: 安全管理
+  - ja: 労災報告
+    en: occupational accident report
+    vi: báo cáo tai nạn lao động
+    context: 安全管理
+  - ja: 危険区域
+    en: hazardous zone
+    vi: khu vực nguy hiểm
+    context: 安全管理
+  - ja: 立入禁止
+    en: no entry
+    vi: cấm vào
+    context: 安全管理
+  - ja: 安全標識
+    en: safety sign
+    vi: biển báo an toàn
+    context: 安全管理
+  - ja: 作業許可書
+    en: work permit
+    vi: giấy phép làm việc
+    context: 安全管理
+  - ja: 保護具
+    en: personal protective equipment
+    vi: thiết bị bảo hộ cá nhân
+    context: 安全管理
+  - ja: 安全管理計画
+    en: safety management plan
+    vi: kế hoạch quản lý an toàn
+    context: 安全管理
+  - ja: 緊急連絡体制
+    en: emergency contact system
+    vi: hệ thống liên lạc khẩn cấp
+    context: 安全管理
+  - ja: 救急処置
+    en: first aid
+    vi: sơ cứu
+    context: 安全管理
+  - ja: 事故報告書
+    en: accident report
+    vi: báo cáo tai nạn
+    context: 安全管理
+  - ja: 再発防止策
+    en: recurrence prevention measure
+    vi: biện pháp phòng ngừa tái phát
+    context: 安全管理
+  - ja: リスクアセスメント
+    en: risk assessment
+    vi: đánh giá rủi ro
+    context: 安全管理
+  - ja: 安全衛生委員会
+    en: safety and health committee
+    vi: ủy ban an toàn và vệ sinh
+    context: 安全管理
+  - ja: 健康診断
+    en: health checkup
+    vi: khám sức khỏe
+    context: 安全管理
+  - ja: 作業環境測定
+    en: work environment measurement
+    vi: đo lường môi trường làm việc
+    context: 安全管理
+  - ja: 酸欠危険
+    en: oxygen deficiency hazard
+    vi: nguy hiểm thiếu oxy
+    context: 安全管理
+  - ja: 火気管理
+    en: fire management
+    vi: quản lý lửa
+    context: 安全管理
+  - ja: 整理整頓
+    en: tidying and organizing (5S)
+    vi: sắp xếp gọn gàng (5S)
+    context: 安全管理
+
+  # 工程管理 (scheduling) — 32 terms
+  - ja: ガントチャート
+    en: Gantt chart
+    vi: biểu đồ Gantt
+    context: 工程管理
+  - ja: 工程表
+    en: construction schedule
+    vi: tiến độ thi công
+    context: 工程管理
+  - ja: 工期
+    en: construction period
+    vi: thời gian thi công
+    context: 工程管理
+  - ja: 工期延長
+    en: construction period extension
+    vi: gia hạn thi công
+    context: 工程管理
+  - ja: クリティカルパス
+    en: critical path
+    vi: đường găng
+    context: 工程管理
+  - ja: バーチャート
+    en: bar chart
+    vi: biểu đồ thanh
+    context: 工程管理
+  - ja: ネットワーク工程表
+    en: network schedule
+    vi: biểu đồ mạng tiến độ
+    context: 工程管理
+  - ja: 着手日
+    en: start date
+    vi: ngày khởi công
+    context: 工程管理
+  - ja: 完了日
+    en: completion date
+    vi: ngày hoàn thành
+    context: 工程管理
+  - ja: マイルストーン
+    en: milestone
+    vi: cột mốc
+    context: 工程管理
+  - ja: 前工程
+    en: preceding process
+    vi: công đoạn trước
+    context: 工程管理
+  - ja: 後工程
+    en: succeeding process
+    vi: công đoạn sau
+    context: 工程管理
+  - ja: 進捗率
+    en: progress rate
+    vi: tỷ lệ tiến độ
+    context: 工程管理
+  - ja: 出来高管理
+    en: progress earned value management
+    vi: quản lý giá trị hoàn thành
+    context: 工程管理
+  - ja: 遅延対策
+    en: delay countermeasure
+    vi: biện pháp ứng phó chậm trễ
+    context: 工程管理
+  - ja: 工程会議
+    en: schedule meeting
+    vi: họp tiến độ
+    context: 工程管理
+  - ja: 作業手順書
+    en: work procedure document
+    vi: tài liệu quy trình làm việc
+    context: 工程管理
+  - ja: 工程調整
+    en: schedule adjustment
+    vi: điều chỉnh tiến độ
+    context: 工程管理
+  - ja: 山積み
+    en: resource loading
+    vi: phân bổ nguồn lực
+    context: 工程管理
+  - ja: 山崩し
+    en: resource leveling
+    vi: cân bằng nguồı lực
+    context: 工程管理
+  - ja: 短工期
+    en: compressed schedule
+    vi: tiến độ rút ngắn
+    context: 工程管理
+  - ja: 夜間工事
+    en: nighttime construction
+    vi: thi công ban đêm
+    context: 工程管理
+  - ja: 休日作業
+    en: holiday work
+    vi: làm việc ngày lễ
+    context: 工程管理
+  - ja: 天候リスク
+    en: weather risk
+    vi: rủi ro thời tiết
+    context: 工程管理
+  - ja: 工程管理ソフト
+    en: scheduling software
+    vi: phần mềm quản lý tiến độ
+    context: 工程管理
+  - ja: 週間工程
+    en: weekly schedule
+    vi: tiến độ tuần
+    context: 工程管理
+  - ja: 月間工程
+    en: monthly schedule
+    vi: tiến độ tháng
+    context: 工程管理
+  - ja: 全体工程
+    en: overall schedule
+    vi: tiến độ tổng thể
+    context: 工程管理
+  - ja: 先行工事
+    en: advance work
+    vi: công việc tiên phong
+    context: 工程管理
+  - ja: 工事順序
+    en: work sequence
+    vi: trình tự thi công
+    context: 工程管理
+  - ja: 工程精度
+    en: schedule accuracy
+    vi: độ chính xác tiến độ
+    context: 工程管理
+  - ja: 予実管理
+    en: plan vs actual management
+    vi: quản lý kế hoạch so với thực tế
+    context: 工程管理
+
+  # 資材調達 (materials procurement) — 30 terms
+  - ja: 生コン
+    en: ready-mixed concrete
+    vi: bê tông trộn sẵn
+    context: 資材調達
+  - ja: 資材調達
+    en: materials procurement
+    vi: mua sắm vật liệu
+    context: 資材調達
+  - ja: 発注書
+    en: purchase order
+    vi: đơn đặt hàng
+    context: 資材調達
+  - ja: 納品書
+    en: delivery note
+    vi: phiếu giao hàng
+    context: 資材調達
+  - ja: 検収書
+    en: goods receipt
+    vi: biên bản nghiệm thu hàng hóa
+    context: 資材調達
+  - ja: 在庫表
+    en: inventory list
+    vi: bảng tồn kho
+    context: 資材調達
+  - ja: 資材置き場
+    en: material storage area
+    vi: khu vực lưu kho vật liệu
+    context: 資材調達
+  - ja: 搬入計画
+    en: delivery plan
+    vi: kế hoạch vận chuyển vào công trường
+    context: 資材調達
+  - ja: 搬出管理
+    en: removal management
+    vi: quản lý vận chuyển ra ngoài
+    context: 資材調達
+  - ja: 鉄筋
+    en: rebar
+    vi: cốt thép
+    context: 資材調達
+  - ja: 型枠材
+    en: formwork material
+    vi: vật liệu cốp pha
+    context: 資材調達
+  - ja: 合板
+    en: plywood
+    vi: ván ép
+    context: 資材調達
+  - ja: 砕石
+    en: crushed stone
+    vi: đá dăm
+    context: 資材調達
+  - ja: 砂
+    en: sand
+    vi: cát
+    context: 資材調達
+  - ja: セメント
+    en: cement
+    vi: xi măng
+    context: 資材調達
+  - ja: 鋼材
+    en: steel material
+    vi: vật liệu thép
+    context: 資材調達
+  - ja: 木材
+    en: timber
+    vi: gỗ xây dựng
+    context: 資材調達
+  - ja: 断熱材
+    en: insulation material
+    vi: vật liệu cách nhiệt
+    context: 資材調達
+  - ja: 防水材
+    en: waterproofing material
+    vi: vật liệu chống thấm
+    context: 資材調達
+  - ja: 塗料
+    en: paint
+    vi: sơn
+    context: 資材調達
+  - ja: タイル
+    en: tile
+    vi: gạch ốp lát
+    context: 資材調達
+  - ja: サッシ
+    en: window sash
+    vi: khung cửa
+    context: 資材調達
+  - ja: 資材管理システム
+    en: material management system
+    vi: hệ thống quản lý vật liệu
+    context: 資材調達
+  - ja: 廃材処理
+    en: waste material disposal
+    vi: xử lý vật liệu thải
+    context: 資材調達
+  - ja: リサイクル資材
+    en: recycled material
+    vi: vật liệu tái chế
+    context: 資材調達
+  - ja: 品質証明書
+    en: quality certificate
+    vi: giấy chứng nhận chất lượng
+    context: 資材調達
+  - ja: 試験成績書
+    en: test report
+    vi: báo cáo thử nghiệm vật liệu
+    context: 資材調達
+  - ja: 仕入れ先
+    en: supplier
+    vi: nhà cung cấp
+    context: 資材調達
+  - ja: 価格交渉
+    en: price negotiation
+    vi: đàm phán giá
+    context: 資材調達
+  - ja: 資材ロス率
+    en: material loss rate
+    vi: tỷ lệ hao hụt vật liệu
+    context: 資材調達
+
+  # 図面管理 (drawing management) — 32 terms
+  - ja: 設計図
+    en: blueprint
+    vi: bản thiết kế
+    context: 図面管理
+  - ja: 図面番号
+    en: drawing number
+    vi: số bản vẽ
+    context: 図面管理
+  - ja: 図面リスト
+    en: drawing list
+    vi: danh sách bản vẽ
+    context: 図面管理
+  - ja: 図面管理台帳
+    en: drawing management ledger
+    vi: sổ quản lý bản vẽ
+    context: 図面管理
+  - ja: 平面図
+    en: floor plan
+    vi: bản vẽ mặt bằng
+    context: 図面管理
+  - ja: 立面図
+    en: elevation drawing
+    vi: bản vẽ mặt đứng
+    context: 図面管理
+  - ja: 断面図
+    en: section drawing
+    vi: bản vẽ mặt cắt
+    context: 図面管理
+  - ja: 詳細図
+    en: detail drawing
+    vi: bản vẽ chi tiết
+    context: 図面管理
+  - ja: 配置図
+    en: site plan
+    vi: sơ đồ bố trí công trường
+    context: 図面管理
+  - ja: 杭伏図
+    en: pile layout drawing
+    vi: bản vẽ bố trí cọc
+    context: 図面管理
+  - ja: 構造図
+    en: structural drawing
+    vi: bản vẽ kết cấu
+    context: 図面管理
+  - ja: 設備図
+    en: equipment drawing
+    vi: bản vẽ thiết bị
+    context: 図面管理
+  - ja: 電気図
+    en: electrical drawing
+    vi: bản vẽ điện
+    context: 図面管理
+  - ja: 給排水図
+    en: plumbing drawing
+    vi: bản vẽ cấp thoát nước
+    context: 図面管理
+  - ja: 図面改訂
+    en: drawing revision
+    vi: sửa đổi bản vẽ
+    context: 図面管理
+  - ja: 改訂履歴
+    en: revision history
+    vi: lịch sử sửa đổi
+    context: 図面管理
+  - ja: 承認図
+    en: approved drawing
+    vi: bản vẽ đã phê duyệt
+    context: 図面管理
+  - ja: 未承認図
+    en: unapproved drawing
+    vi: bản vẽ chưa phê duyệt
+    context: 図面管理
+  - ja: 図面照合
+    en: drawing reconciliation
+    vi: đối chiếu bản vẽ
+    context: 図面管理
+  - ja: 電子図面
+    en: electronic drawing
+    vi: bản vẽ điện tử
+    context: 図面管理
+  - ja: CADデータ
+    en: CAD data
+    vi: dữ liệu CAD
+    context: 図面管理
+  - ja: DWG形式
+    en: DWG format
+    vi: định dạng DWG
+    context: 図面管理
+  - ja: PDF図面
+    en: PDF drawing
+    vi: bản vẽ PDF
+    context: 図面管理
+  - ja: 図面配布
+    en: drawing distribution
+    vi: phân phối bản vẽ
+    context: 図面管理
+  - ja: 図面閲覧権限
+    en: drawing view permission
+    vi: quyền xem bản vẽ
+    context: 図面管理
+  - ja: 原図保管
+    en: original drawing storage
+    vi: lưu trữ bản vẽ gốc
+    context: 図面管理
+  - ja: 縮尺
+    en: scale
+    vi: tỷ lệ bản vẽ
+    context: 図面管理
+  - ja: 図面照会
+    en: drawing inquiry
+    vi: tra cứu bản vẽ
+    context: 図面管理
+  - ja: 図面差異管理
+    en: drawing discrepancy management
+    vi: quản lý sự khác biệt bản vẽ
+    context: 図面管理
+  - ja: 竣工図
+    en: as-built drawing
+    vi: bản vẽ hoàn công
+    context: 図面管理
+  - ja: 製本
+    en: drawing binding
+    vi: đóng tập bản vẽ
+    context: 図面管理
+  - ja: 図面スキャン
+    en: drawing scan
+    vi: quét bản vẽ
+    context: 図面管理
+
+  # 検査 (inspection) — 32 terms
+  - ja: 中間検査
+    en: interim inspection
+    vi: kiểm tra giữa kỳ
+    context: 検査
+  - ja: 竣工検査
+    en: completion inspection
+    vi: kiểm tra hoàn công
+    context: 検査
+  - ja: 社内検査
+    en: internal inspection
+    vi: kiểm tra nội bộ
+    context: 検査
+  - ja: 施主検査
+    en: client inspection
+    vi: kiểm tra của chủ đầu tư
+    context: 検査
+  - ja: 行政検査
+    en: government inspection
+    vi: kiểm tra hành chính
+    context: 検査
+  - ja: 配筋検査
+    en: rebar placement inspection
+    vi: kiểm tra bố trí cốt thép
+    context: 検査
+  - ja: 型枠検査
+    en: formwork inspection
+    vi: kiểm tra cốp pha
+    context: 検査
+  - ja: コンクリート検査
+    en: concrete inspection
+    vi: kiểm tra bê tông
+    context: 検査
+  - ja: スランプ試験
+    en: slump test
+    vi: thử nghiệm độ sụt
+    context: 検査
+  - ja: 圧縮強度試験
+    en: compressive strength test
+    vi: thử nghiệm cường độ nén
+    context: 検査
+  - ja: 溶接検査
+    en: weld inspection
+    vi: kiểm tra mối hàn
+    context: 検査
+  - ja: 非破壊検査
+    en: non-destructive testing
+    vi: kiểm tra không phá hủy
+    context: 検査
+  - ja: 超音波探傷
+    en: ultrasonic flaw detection
+    vi: phát hiện khuyết tật siêu âm
+    context: 検査
+  - ja: 防水検査
+    en: waterproofing inspection
+    vi: kiểm tra chống thấm
+    context: 検査
+  - ja: 気密検査
+    en: airtightness inspection
+    vi: kiểm tra độ kín
+    context: 検査
+  - ja: 設備検査
+    en: equipment inspection
+    vi: kiểm tra thiết bị
+    context: 検査
+  - ja: 電気検査
+    en: electrical inspection
+    vi: kiểm tra điện
+    context: 検査
+  - ja: 消防検査
+    en: fire safety inspection
+    vi: kiểm tra phòng cháy chữa cháy
+    context: 検査
+  - ja: 建築確認検査
+    en: building permit inspection
+    vi: kiểm tra giấy phép xây dựng
+    context: 検査
+  - ja: 検査チェックリスト
+    en: inspection checklist
+    vi: danh sách kiểm tra
+    context: 検査
+  - ja: 検査記録
+    en: inspection record
+    vi: hồ sơ kiểm tra
+    context: 検査
+  - ja: 指摘事項
+    en: inspection finding
+    vi: vấn đề được chỉ ra
+    context: 検査
+  - ja: 是正措置
+    en: corrective action
+    vi: hành động khắc phục
+    context: 検査
+  - ja: 検査合格
+    en: inspection pass
+    vi: đạt kiểm tra
+    context: 検査
+  - ja: 検査不合格
+    en: inspection fail
+    vi: không đạt kiểm tra
+    context: 検査
+  - ja: 再検査
+    en: re-inspection
+    vi: kiểm tra lại
+    context: 検査
+  - ja: 品質検査
+    en: quality inspection
+    vi: kiểm tra chất lượng
+    context: 検査
+  - ja: 受入検査
+    en: incoming inspection
+    vi: kiểm tra nghiệm thu đầu vào
+    context: 検査
+  - ja: 完成検査証明書
+    en: completion inspection certificate
+    vi: giấy chứng nhận kiểm tra hoàn công
+    context: 検査
+  - ja: 瑕疵担保
+    en: defect warranty
+    vi: bảo hành khuyết tật
+    context: 検査
+  - ja: 手直し工事
+    en: remedial work
+    vi: công tác sửa chữa
+    context: 検査
+  - ja: 検査員
+    en: inspector
+    vi: kiểm tra viên
+    context: 検査

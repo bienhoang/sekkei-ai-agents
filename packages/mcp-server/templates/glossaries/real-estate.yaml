@@ -1,93 +1,1018 @@
 industry: real-estate
 language: ja
 terms:
-  - ja: 物件管理
-    en: property management
-    context: 不動産
-  - ja: 賃貸契約
-    en: lease agreement
-    context: 不動産
-  - ja: 敷金
-    en: security deposit
-    context: 不動産
-  - ja: 礼金
-    en: key money
-    context: 不動産
-  - ja: 管理費
-    en: management fee
-    context: 不動産
-  - ja: 共益費
-    en: common area maintenance fee
-    context: 不動産
+  # ─── 売買 (Property Sales) — 35 terms ───
+  - ja: 売買契約
+    en: sales and purchase agreement
+    vi: hợp đồng mua bán bất động sản
+    context: 売買
+  - ja: 買主
+    en: buyer / purchaser
+    vi: bên mua
+    context: 売買
+  - ja: 売主
+    en: seller / vendor
+    vi: bên bán
+    context: 売買
+  - ja: 売却価格
+    en: sale price
+    vi: giá bán
+    context: 売買
+  - ja: 成約価格
+    en: transaction price / agreed price
+    vi: giá giao dịch thành công
+    context: 売買
+  - ja: 手付金
+    en: earnest money / deposit
+    vi: tiền đặt cọc
+    context: 売買
+  - ja: 残代金
+    en: balance payment / remaining amount
+    vi: số tiền còn lại phải thanh toán
+    context: 売買
+  - ja: 引渡し
+    en: handover / delivery of property
+    vi: bàn giao bất động sản
+    context: 売買
+  - ja: 所有権移転
+    en: transfer of ownership
+    vi: chuyển nhượng quyền sở hữu
+    context: 売買
+  - ja: 物件概要書
+    en: property summary sheet
+    vi: tờ tóm tắt thông tin bất động sản
+    context: 売買
+  - ja: 売出価格
+    en: asking price / listing price
+    vi: giá niêm yết / giá chào bán
+    context: 売買
+  - ja: 公示地価
+    en: published land price
+    vi: giá đất công bố / giá đất niêm yết
+    context: 売買
+  - ja: 価格改定
+    en: price revision / price reduction
+    vi: điều chỉnh giá / giảm giá
+    context: 売買
+  - ja: 物件調査報告書
+    en: property investigation report
+    vi: báo cáo khảo sát bất động sản
+    context: 売買
+  - ja: 売買代金
+    en: purchase price / consideration
+    vi: giá trị hợp đồng mua bán
+    context: 売買
+  - ja: 印紙税
+    en: stamp duty / documentary stamp tax
+    vi: thuế tem / thuế đóng dấu hợp đồng
+    context: 売買
+  - ja: 不動産取得税
+    en: real estate acquisition tax
+    vi: thuế thu nhập từ mua bất động sản
+    context: 売買
+  - ja: 登録免許税
+    en: registration and license tax
+    vi: thuế đăng ký và cấp phép
+    context: 売買
   - ja: 仲介手数料
     en: brokerage fee
-    context: 不動産
-  - ja: 更新料
-    en: renewal fee
-    context: 不動産
-  - ja: 原状回復
-    en: restoration to original condition
-    context: 不動産
-  - ja: 内覧
-    en: property viewing
-    context: 不動産
-  - ja: 間取り
-    en: floor plan / layout
-    context: 不動産
-  - ja: 専有面積
-    en: exclusive area
-    context: 不動産
-  - ja: 築年数
-    en: building age
-    context: 不動産
-  - ja: 耐震
-    en: earthquake resistance
-    context: 不動産
-  - ja: 登記
-    en: property registration
-    context: 法務
-  - ja: 重要事項説明
-    en: important matter explanation
-    context: 法務
-  - ja: 宅建
-    en: real estate broker license
-    context: 法務
-  - ja: 管理組合
-    en: management association
-    context: 不動産
-  - ja: 修繕積立金
-    en: repair reserve fund
-    context: 不動産
-  - ja: 大規模修繕
-    en: major renovation
-    context: 不動産
-  - ja: 入居者
-    en: tenant / resident
-    context: 不動産
-  - ja: 退去
-    en: move-out / vacating
-    context: 不動産
+    vi: phí môi giới
+    context: 売買
+  - ja: 住宅ローン
+    en: housing loan / mortgage
+    vi: vay mua nhà / thế chấp nhà ở
+    context: 売買
+  - ja: 抵当権
+    en: mortgage / hypothec
+    vi: quyền thế chấp / cầm cố
+    context: 売買
+  - ja: 抵当権抹消
+    en: mortgage cancellation / discharge
+    vi: xóa đăng ký thế chấp
+    context: 売買
+  - ja: 瑕疵担保責任
+    en: warranty against defects
+    vi: trách nhiệm bảo hành lỗi ẩn
+    context: 売買
+  - ja: 契約解除
+    en: contract cancellation / rescission
+    vi: hủy bỏ hợp đồng
+    context: 売買
+  - ja: 違約金
+    en: penalty / liquidated damages
+    vi: phạt vi phạm hợp đồng
+    context: 売買
+  - ja: 分譲住宅
+    en: subdivision house / housing development
+    vi: nhà ở phân lô bán nền
+    context: 売買
+  - ja: 新築物件
+    en: newly built property
+    vi: bất động sản mới xây
+    context: 売買
+  - ja: 中古物件
+    en: used / second-hand property
+    vi: bất động sản cũ / đã qua sử dụng
+    context: 売買
+  - ja: 建売住宅
+    en: spec house / pre-built house for sale
+    vi: nhà xây sẵn bán theo dự án
+    context: 売買
+  - ja: 注文住宅
+    en: custom-built house
+    vi: nhà xây theo yêu cầu
+    context: 売買
+  - ja: マンション
+    en: condominium / apartment (Japanese usage)
+    vi: căn hộ chung cư
+    context: 売買
+  - ja: 一戸建て
+    en: detached house / single-family home
+    vi: nhà riêng / nhà phố đơn lập
+    context: 売買
+  - ja: 土地売買
+    en: land sale and purchase
+    vi: mua bán đất
+    context: 売買
+  - ja: 建築条件付き土地
+    en: land with building conditions
+    vi: đất kèm điều kiện xây dựng
+    context: 売買
+  - ja: 売買仲介
+    en: real estate sales brokerage
+    vi: môi giới mua bán bất động sản
+    context: 売買
+
+  # ─── 賃貸 (Rental) — 30 terms ───
+  - ja: 賃貸契約
+    en: lease agreement / rental contract
+    vi: hợp đồng thuê nhà / hợp đồng thuê mặt bằng
+    context: 賃貸
   - ja: 家賃
     en: rent
-    context: 不動産
+    vi: tiền thuê nhà
+    context: 賃貸
+  - ja: 敷金
+    en: security deposit
+    vi: tiền đặt cọc bảo đảm
+    context: 賃貸
+  - ja: 礼金
+    en: key money / gift money
+    vi: tiền lễ / tiền cảm ơn chủ nhà
+    context: 賃貸
+  - ja: 管理費
+    en: management fee
+    vi: phí quản lý
+    context: 賃貸
+  - ja: 共益費
+    en: common area maintenance fee
+    vi: phí dịch vụ chung cư / phí khu vực chung
+    context: 賃貸
+  - ja: 更新料
+    en: lease renewal fee
+    vi: phí gia hạn hợp đồng thuê
+    context: 賃貸
+  - ja: 原状回復
+    en: restoration to original condition
+    vi: hoàn trả nguyên trạng
+    context: 賃貸
+  - ja: 内覧
+    en: property viewing / showing
+    vi: xem nhà / tham quan bất động sản
+    context: 賃貸
+  - ja: 入居者
+    en: tenant / resident
+    vi: người thuê nhà / người ở
+    context: 賃貸
+  - ja: 退去
+    en: move-out / vacating
+    vi: trả nhà / rời khỏi
+    context: 賃貸
   - ja: 滞納
-    en: overdue payment
-    context: 不動産
+    en: overdue / delinquent rent payment
+    vi: chậm trả tiền thuê / nợ tiền thuê
+    context: 賃貸
   - ja: 保証人
     en: guarantor
-    context: 不動産
+    vi: người bảo lãnh
+    context: 賃貸
   - ja: 保証会社
-    en: guarantee company
-    context: 不動産
+    en: rental guarantee company
+    vi: công ty bảo lãnh thuê nhà
+    context: 賃貸
+  - ja: 賃料改定
+    en: rent revision / rent adjustment
+    vi: điều chỉnh tiền thuê
+    context: 賃貸
+  - ja: 賃貸借期間
+    en: lease term / rental period
+    vi: thời hạn thuê
+    context: 賃貸
+  - ja: 中途解約
+    en: mid-term cancellation
+    vi: chấm dứt hợp đồng trước hạn
+    context: 賃貸
+  - ja: 解約予告
+    en: notice of termination
+    vi: thông báo chấm dứt hợp đồng
+    context: 賃貸
+  - ja: 入居審査
+    en: tenant screening / rental application review
+    vi: xét duyệt hồ sơ thuê nhà
+    context: 賃貸
+  - ja: 申込書
+    en: rental application form
+    vi: đơn đăng ký thuê nhà
+    context: 賃貸
+  - ja: 住民票
+    en: residence certificate
+    vi: giấy chứng nhận cư trú
+    context: 賃貸
+  - ja: 連帯保証人
+    en: joint and several guarantor
+    vi: người bảo lãnh liên đới
+    context: 賃貸
+  - ja: 家賃保証
+    en: rent guarantee
+    vi: bảo lãnh tiền thuê
+    context: 賃貸
+  - ja: 賃貸物件
+    en: rental property
+    vi: bất động sản cho thuê
+    context: 賃貸
+  - ja: 空室管理
+    en: vacant room management
+    vi: quản lý phòng trống
+    context: 賃貸
+  - ja: 入居率
+    en: occupancy rate
+    vi: tỷ lệ lấp đầy
+    context: 賃貸
+  - ja: 退去精算
+    en: move-out settlement / final accounting
+    vi: quyết toán khi trả nhà
+    context: 賃貸
+  - ja: クリーニング費用
+    en: cleaning cost (upon move-out)
+    vi: chi phí vệ sinh khi trả nhà
+    context: 賃貸
+  - ja: 定期借家契約
+    en: fixed-term lease agreement
+    vi: hợp đồng thuê có thời hạn cố định
+    context: 賃貸
+  - ja: 普通借家契約
+    en: standard lease agreement (renewable)
+    vi: hợp đồng thuê thông thường (có thể gia hạn)
+    context: 賃貸
+
+  # ─── 仲介 (Brokerage) — 30 terms ───
+  - ja: 宅建
+    en: real estate broker license (Takken)
+    vi: chứng chỉ môi giới bất động sản (Takken)
+    context: 仲介
+  - ja: 重要事項説明
+    en: explanation of important matters (Jusetsu)
+    vi: giải thích các điều khoản quan trọng
+    context: 仲介
+  - ja: 宅地建物取引業者
+    en: licensed real estate agent / broker
+    vi: đơn vị kinh doanh bất động sản có giấy phép
+    context: 仲介
+  - ja: 媒介契約
+    en: brokerage agreement / agency contract
+    vi: hợp đồng môi giới
+    context: 仲介
+  - ja: 専任媒介契約
+    en: exclusive agency agreement
+    vi: hợp đồng môi giới độc quyền
+    context: 仲介
+  - ja: 一般媒介契約
+    en: open agency / general brokerage agreement
+    vi: hợp đồng môi giới thông thường (không độc quyền)
+    context: 仲介
+  - ja: レインズ
+    en: REINS (real estate information network system)
+    vi: hệ thống thông tin bất động sản REINS
+    context: 仲介
+  - ja: 物件情報
+    en: property information / listing
+    vi: thông tin bất động sản
+    context: 仲介
+  - ja: 図面
+    en: floor plan drawing
+    vi: bản vẽ mặt bằng
+    context: 仲介
+  - ja: 物件広告
+    en: property advertisement / listing advertisement
+    vi: quảng cáo bất động sản
+    context: 仲介
+  - ja: ポータルサイト
+    en: real estate portal site
+    vi: trang cổng thông tin bất động sản
+    context: 仲介
+  - ja: 案内業務
+    en: property showing / guided tour service
+    vi: dịch vụ dẫn khách xem nhà
+    context: 仲介
+  - ja: 顧客管理
+    en: customer relationship management (CRM)
+    vi: quản lý khách hàng
+    context: 仲介
+  - ja: 反響対応
+    en: inquiry response / lead handling
+    vi: xử lý phản hồi / xử lý khách hàng tiềm năng
+    context: 仲介
+  - ja: 成約率
+    en: closing rate / conversion rate
+    vi: tỷ lệ chốt giao dịch
+    context: 仲介
+  - ja: 両手仲介
+    en: dual agency (representing both parties)
+    vi: môi giới hai đầu (đại diện cả hai bên)
+    context: 仲介
+  - ja: 片手仲介
+    en: single agency (representing one party)
+    vi: môi giới một đầu
+    context: 仲介
+  - ja: 売主代理
+    en: seller's agent
+    vi: đại diện bên bán
+    context: 仲介
+  - ja: 買主代理
+    en: buyer's agent
+    vi: đại diện bên mua
+    context: 仲介
+  - ja: 価格交渉
+    en: price negotiation
+    vi: đàm phán giá
+    context: 仲介
+  - ja: 条件交渉
+    en: terms negotiation
+    vi: đàm phán điều kiện hợp đồng
+    context: 仲介
+  - ja: 内見予約
+    en: property viewing appointment
+    vi: đặt lịch xem nhà
+    context: 仲介
+  - ja: 物件調査
+    en: property due diligence / investigation
+    vi: khảo sát thực địa bất động sản
+    context: 仲介
+  - ja: 境界確認
+    en: boundary confirmation
+    vi: xác nhận ranh giới đất
+    context: 仲介
+  - ja: 道路付け
+    en: road frontage / road access
+    vi: tiếp giáp đường / điều kiện đường tiếp cận
+    context: 仲介
+  - ja: 法令上の制限
+    en: statutory restrictions / legal limitations
+    vi: hạn chế theo quy định pháp luật
+    context: 仲介
+  - ja: 建築規制
+    en: building regulation / construction restriction
+    vi: quy định xây dựng
+    context: 仲介
+  - ja: 私道
+    en: private road
+    vi: đường tư nhân
+    context: 仲介
+  - ja: 持分
+    en: ownership share / equity interest
+    vi: phần sở hữu / phần vốn góp
+    context: 仲介
+  - ja: 囲繞地
+    en: landlocked parcel / surrounded land
+    vi: đất không có lối ra đường công cộng
+    context: 仲介
+
+  # ─── 物件管理 (Property Management) — 30 terms ───
+  - ja: 物件管理
+    en: property management
+    vi: quản lý bất động sản
+    context: 物件管理
+  - ja: 管理組合
+    en: condominium owners' association
+    vi: ban quản trị chung cư
+    context: 物件管理
+  - ja: 修繕積立金
+    en: repair reserve fund / sinking fund
+    vi: quỹ bảo trì chung cư
+    context: 物件管理
+  - ja: 大規模修繕
+    en: major renovation / large-scale repair
+    vi: sửa chữa lớn / cải tạo quy mô lớn
+    context: 物件管理
+  - ja: 長期修繕計画
+    en: long-term repair plan
+    vi: kế hoạch sửa chữa dài hạn
+    context: 物件管理
+  - ja: 管理規約
+    en: management rules / condominium by-laws
+    vi: nội quy quản lý chung cư
+    context: 物件管理
+  - ja: 管理費収入
+    en: management fee income
+    vi: thu nhập phí quản lý
+    context: 物件管理
+  - ja: 設備点検
+    en: equipment inspection
+    vi: kiểm tra thiết bị
+    context: 物件管理
+  - ja: エレベーター保守
+    en: elevator maintenance
+    vi: bảo trì thang máy
+    context: 物件管理
+  - ja: 消防設備点検
+    en: fire protection equipment inspection
+    vi: kiểm tra thiết bị phòng cháy chữa cháy
+    context: 物件管理
+  - ja: 給排水設備
+    en: water supply and drainage system
+    vi: hệ thống cấp thoát nước
+    context: 物件管理
+  - ja: 共用部分
+    en: common area / common spaces
+    vi: khu vực chung / phần diện tích chung
+    context: 物件管理
+  - ja: 専有部分
+    en: exclusive / private area
+    vi: phần diện tích riêng
+    context: 物件管理
+  - ja: 駐車場管理
+    en: parking lot management
+    vi: quản lý bãi đỗ xe
+    context: 物件管理
+  - ja: 清掃管理
+    en: cleaning management
+    vi: quản lý vệ sinh
+    context: 物件管理
+  - ja: 警備管理
+    en: security management
+    vi: quản lý bảo vệ an ninh
+    context: 物件管理
+  - ja: 入居者トラブル対応
+    en: tenant dispute handling
+    vi: xử lý tranh chấp người thuê nhà
+    context: 物件管理
+  - ja: 苦情処理
+    en: complaint handling
+    vi: xử lý khiếu nại
+    context: 物件管理
+  - ja: 管理委託
+    en: management entrustment / outsourced management
+    vi: ủy thác quản lý
+    context: 物件管理
+  - ja: 管理会社
+    en: property management company
+    vi: công ty quản lý bất động sản
+    context: 物件管理
+  - ja: オーナー報告
+    en: owner report
+    vi: báo cáo cho chủ sở hữu
+    context: 物件管理
+  - ja: 収支報告
+    en: income and expense report
+    vi: báo cáo thu chi
+    context: 物件管理
   - ja: 空室率
     en: vacancy rate
-    context: 不動産
+    vi: tỷ lệ phòng trống / tỷ lệ bỏ trống
+    context: 物件管理
+  - ja: 入居者募集
+    en: tenant recruitment / leasing
+    vi: tuyển dụng người thuê nhà
+    context: 物件管理
+  - ja: リノベーション
+    en: renovation / refurbishment
+    vi: cải tạo / tân trang
+    context: 物件管理
+  - ja: 原状回復工事
+    en: restoration works
+    vi: công trình hoàn trả nguyên trạng
+    context: 物件管理
+  - ja: 建物診断
+    en: building diagnosis / property inspection
+    vi: chẩn đoán tình trạng công trình
+    context: 物件管理
+  - ja: 防水工事
+    en: waterproofing works
+    vi: công trình chống thấm
+    context: 物件管理
+  - ja: 外壁塗装
+    en: exterior wall painting
+    vi: sơn tường ngoài
+    context: 物件管理
+  - ja: 管理費滞納
+    en: management fee arrears / delinquency
+    vi: chậm nộp phí quản lý
+    context: 物件管理
+
+  # ─── 登記 (Property Registration) — 30 terms ───
+  - ja: 登記
+    en: property registration
+    vi: đăng ký bất động sản
+    context: 登記
+  - ja: 登記簿謄本
+    en: certified copy of register / title deed
+    vi: bản sao công chứng sổ đăng ký
+    context: 登記
+  - ja: 土地登記
+    en: land registration
+    vi: đăng ký đất
+    context: 登記
+  - ja: 建物登記
+    en: building registration
+    vi: đăng ký nhà / công trình
+    context: 登記
+  - ja: 表題登記
+    en: primary registration / initial registration
+    vi: đăng ký ban đầu
+    context: 登記
+  - ja: 権利登記
+    en: rights registration / title registration
+    vi: đăng ký quyền sở hữu
+    context: 登記
+  - ja: 所有権保存登記
+    en: preservation of ownership registration
+    vi: đăng ký bảo tồn quyền sở hữu
+    context: 登記
+  - ja: 所有権移転登記
+    en: transfer of ownership registration
+    vi: đăng ký chuyển nhượng quyền sở hữu
+    context: 登記
+  - ja: 抵当権設定登記
+    en: mortgage creation registration
+    vi: đăng ký thế chấp
+    context: 登記
+  - ja: 抵当権抹消登記
+    en: mortgage cancellation registration
+    vi: đăng ký xóa thế chấp
+    context: 登記
+  - ja: 司法書士
+    en: judicial scrivener / notary (Japan)
+    vi: thư ký tư pháp / công chứng viên (Nhật)
+    context: 登記
+  - ja: 登記識別情報
+    en: registration identification information
+    vi: thông tin nhận diện đăng ký
+    context: 登記
+  - ja: 地番
+    en: lot number / land number
+    vi: số thửa đất
+    context: 登記
+  - ja: 家屋番号
+    en: building number / house number (registry)
+    vi: số nhà (trong sổ đăng ký)
+    context: 登記
+  - ja: 地積
+    en: land area (registered)
+    vi: diện tích đất (đã đăng ký)
+    context: 登記
+  - ja: 床面積
+    en: floor area
+    vi: diện tích sàn
+    context: 登記
+  - ja: 地目
+    en: land category / land use classification
+    vi: loại đất / phân loại mục đích sử dụng đất
+    context: 登記
+  - ja: 地図
+    en: cadastral map
+    vi: bản đồ địa chính
+    context: 登記
+  - ja: 公図
+    en: public map / official cadastral map
+    vi: bản đồ địa chính công khai
+    context: 登記
+  - ja: 測量図
+    en: survey map
+    vi: bản đồ đo đạc
+    context: 登記
+  - ja: 分筆
+    en: subdivision / lot splitting
+    vi: tách thửa đất
+    context: 登記
+  - ja: 合筆
+    en: lot merging / consolidation
+    vi: hợp thửa đất
+    context: 登記
+  - ja: 地目変更
+    en: change of land category
+    vi: chuyển đổi mục đích sử dụng đất
+    context: 登記
+  - ja: 建物滅失登記
+    en: building demolition registration
+    vi: đăng ký xóa công trình đã phá dỡ
+    context: 登記
+  - ja: 仮登記
+    en: provisional registration
+    vi: đăng ký tạm thời
+    context: 登記
+  - ja: 差押登記
+    en: seizure / attachment registration
+    vi: đăng ký cưỡng chế / phong tỏa tài sản
+    context: 登記
+  - ja: 根抵当権
+    en: revolving mortgage / blanket mortgage
+    vi: thế chấp bao quát / thế chấp khung
+    context: 登記
+  - ja: 信託登記
+    en: trust registration
+    vi: đăng ký ủy thác tài sản
+    context: 登記
+  - ja: 共有持分
+    en: co-ownership share / fractional ownership
+    vi: phần sở hữu chung
+    context: 登記
+  - ja: 登記原因
+    en: cause of registration
+    vi: lý do đăng ký / căn cứ đăng ký
+    context: 登記
+
+  # ─── 建築法規 (Building Regulations) — 30 terms ───
+  - ja: 建築基準法
+    en: Building Standards Act
+    vi: Luật Tiêu chuẩn Xây dựng
+    context: 建築法規
+  - ja: 都市計画法
+    en: City Planning Act
+    vi: Luật Quy hoạch Đô thị
+    context: 建築法規
+  - ja: 建築確認申請
+    en: building permit application / confirmation application
+    vi: hồ sơ xin phép xây dựng
+    context: 建築法規
+  - ja: 建築確認済証
+    en: building confirmation certificate
+    vi: giấy chứng nhận phê duyệt xây dựng
+    context: 建築法規
+  - ja: 検査済証
+    en: completion inspection certificate
+    vi: giấy chứng nhận hoàn công
+    context: 建築法規
+  - ja: 用途地域
+    en: zoning / land use district
+    vi: phân vùng sử dụng đất
+    context: 建築法規
+  - ja: 建ぺい率
+    en: building coverage ratio (BCR)
+    vi: tỷ lệ che phủ xây dựng
+    context: 建築法規
+  - ja: 容積率
+    en: floor area ratio (FAR)
+    vi: hệ số sử dụng đất
+    context: 建築法規
+  - ja: 耐震
+    en: earthquake resistance / seismic performance
+    vi: khả năng chống động đất
+    context: 建築法規
+  - ja: 耐震基準
+    en: seismic standard
+    vi: tiêu chuẩn chống động đất
+    context: 建築法規
+  - ja: 新耐震基準
+    en: new seismic standard (post-1981)
+    vi: tiêu chuẩn chống động đất mới (sau năm 1981)
+    context: 建築法規
+  - ja: 防火地域
+    en: fire prevention district
+    vi: khu vực phòng chống cháy nổ
+    context: 建築法規
+  - ja: 準防火地域
+    en: semi-fire prevention district
+    vi: khu vực bán phòng chống cháy nổ
+    context: 建築法規
+  - ja: 高さ制限
+    en: height restriction
+    vi: giới hạn chiều cao công trình
+    context: 建築法規
+  - ja: 日影規制
+    en: shadow / sun-light regulation
+    vi: quy định về bóng che / ánh sáng
+    context: 建築法規
+  - ja: 斜線制限
+    en: setback line / diagonal plane restriction
+    vi: giới hạn góc nghiêng xây dựng
+    context: 建築法規
+  - ja: 接道義務
+    en: road frontage requirement
+    vi: yêu cầu tiếp giáp đường
+    context: 建築法規
+  - ja: セットバック
+    en: setback
+    vi: lùi công trình khỏi ranh giới / setback
+    context: 建築法規
+  - ja: 建築士
+    en: architect / licensed architect
+    vi: kiến trúc sư có chứng chỉ hành nghề
+    context: 建築法規
+  - ja: 構造計算書
+    en: structural calculation report
+    vi: hồ sơ tính toán kết cấu
+    context: 建築法規
+  - ja: 省エネ基準
+    en: energy conservation standard
+    vi: tiêu chuẩn tiết kiệm năng lượng
+    context: 建築法規
+  - ja: バリアフリー基準
+    en: barrier-free / accessibility standard
+    vi: tiêu chuẩn không rào cản / tiếp cận cho người khuyết tật
+    context: 建築法規
+  - ja: 開発許可
+    en: development permission
+    vi: giấy phép phát triển đất
+    context: 建築法規
+  - ja: 土地区画整理
+    en: land readjustment / replotting
+    vi: quy hoạch lại thửa đất
+    context: 建築法規
+  - ja: 市街化区域
+    en: urbanization area / development zone
+    vi: khu vực đô thị hóa
+    context: 建築法規
+  - ja: 市街化調整区域
+    en: urbanization control area
+    vi: khu vực kiểm soát đô thị hóa
+    context: 建築法規
+  - ja: 既存不適格建築物
+    en: existing non-conforming building
+    vi: công trình không phù hợp quy định hiện hành
+    context: 建築法規
+  - ja: 特定行政庁
+    en: designated administrative body (building authority)
+    vi: cơ quan hành chính được chỉ định (về xây dựng)
+    context: 建築法規
+  - ja: 建築物省エネ法
+    en: Act on the Improvement of Energy Consumption Performance of Buildings
+    vi: Luật cải thiện hiệu suất tiết kiệm năng lượng công trình
+    context: 建築法規
+  - ja: 長期優良住宅
+    en: long-term quality housing certification
+    vi: chứng nhận nhà ở chất lượng dài hạn
+    context: 建築法規
+
+  # ─── 不動産投資 (Real Estate Investment) — 35 terms ───
+  - ja: 不動産投資
+    en: real estate investment
+    vi: đầu tư bất động sản
+    context: 不動産投資
   - ja: 利回り
     en: yield / return rate
-    context: 不動産
-  - ja: 固定資産税
-    en: property tax
-    context: 税務
-  - ja: 都市計画
-    en: urban planning
-    context: 不動産
+    vi: tỷ suất sinh lời / lợi tức đầu tư
+    context: 不動産投資
+  - ja: 表面利回り
+    en: gross yield
+    vi: tỷ suất lợi nhuận gộp
+    context: 不動産投資
+  - ja: 実質利回り
+    en: net yield / effective yield
+    vi: tỷ suất lợi nhuận thực
+    context: 不動産投資
+  - ja: キャッシュフロー
+    en: cash flow
+    vi: dòng tiền
+    context: 不動産投資
+  - ja: 投資回収期間
+    en: payback period
+    vi: thời gian thu hồi vốn
+    context: 不動産投資
+  - ja: 不動産投資信託
+    en: real estate investment trust (REIT)
+    vi: quỹ tín thác đầu tư bất động sản (REIT)
+    context: 不動産投資
+  - ja: J-REIT
+    en: Japan REIT
+    vi: quỹ REIT Nhật Bản
+    context: 不動産投資
+  - ja: 収益物件
+    en: income-producing property / investment property
+    vi: bất động sản sinh lời
+    context: 不動産投資
+  - ja: ネット収入
+    en: net operating income (NOI)
+    vi: thu nhập ròng từ hoạt động (NOI)
+    context: 不動産投資
+  - ja: 不動産ファンド
+    en: real estate fund
+    vi: quỹ đầu tư bất động sản
+    context: 不動産投資
+  - ja: レバレッジ
+    en: leverage / financial gearing
+    vi: đòn bẩy tài chính
+    context: 不動産投資
+  - ja: LTV
+    en: loan-to-value ratio (LTV)
+    vi: tỷ lệ vay so với giá trị tài sản (LTV)
+    context: 不動産投資
+  - ja: キャップレート
+    en: capitalization rate (cap rate)
+    vi: tỷ lệ vốn hóa (cap rate)
+    context: 不動産投資
+  - ja: 不動産鑑定
+    en: real estate appraisal
+    vi: thẩm định giá bất động sản
+    context: 不動産投資
+  - ja: DCF法
+    en: discounted cash flow method (DCF)
+    vi: phương pháp dòng tiền chiết khấu (DCF)
+    context: 不動産投資
+  - ja: 原価法
+    en: cost approach method
+    vi: phương pháp chi phí
+    context: 不動産投資
+  - ja: 取引事例比較法
+    en: sales comparison approach
+    vi: phương pháp so sánh giao dịch
+    context: 不動産投資
+  - ja: 収益還元法
+    en: income capitalization approach
+    vi: phương pháp vốn hóa thu nhập
+    context: 不動産投資
+  - ja: バリューアップ
+    en: value-add / property value improvement
+    vi: nâng cao giá trị bất động sản
+    context: 不動産投資
+  - ja: デューデリジェンス
+    en: due diligence
+    vi: thẩm tra thực địa / kiểm tra toàn diện
+    context: 不動産投資
+  - ja: 物件取得
+    en: property acquisition
+    vi: mua lại / tiếp nhận bất động sản
+    context: 不動産投資
+  - ja: 物件売却
+    en: property disposal / sale
+    vi: thanh lý / bán bất động sản
+    context: 不動産投資
+  - ja: ポートフォリオ管理
+    en: portfolio management
+    vi: quản lý danh mục đầu tư
+    context: 不動産投資
+  - ja: 不動産リスク
+    en: real estate risk
+    vi: rủi ro đầu tư bất động sản
+    context: 不動産投資
+  - ja: 空室リスク
+    en: vacancy risk
+    vi: rủi ro phòng trống / rủi ro bỏ trống
+    context: 不動産投資
+  - ja: 金利リスク
+    en: interest rate risk
+    vi: rủi ro lãi suất
+    context: 不動産投資
+  - ja: 流動性リスク
+    en: liquidity risk
+    vi: rủi ro thanh khoản
+    context: 不動産投資
+  - ja: 資産運用
+    en: asset management
+    vi: quản lý tài sản
+    context: 不動産投資
+  - ja: 不動産開発
+    en: real estate development
+    vi: phát triển bất động sản
+    context: 不動産投資
+  - ja: 再開発
+    en: redevelopment / urban renewal
+    vi: tái phát triển / chỉnh trang đô thị
+    context: 不動産投資
+  - ja: 土地活用
+    en: land utilization / land development
+    vi: khai thác và sử dụng đất
+    context: 不動産投資
+  - ja: 節税対策
+    en: tax saving measures
+    vi: biện pháp tiết kiệm thuế
+    context: 不動産投資
+  - ja: 相続対策
+    en: inheritance / estate planning
+    vi: lập kế hoạch thừa kế bất động sản
+    context: 不動産投資
+  - ja: 出口戦略
+    en: exit strategy
+    vi: chiến lược thoát vốn / chiến lược rút lui
+    context: 不動産投資
+
+  # ─── 査定 (Appraisal / Valuation) — 30 terms ───
+  - ja: 不動産査定
+    en: real estate valuation / appraisal
+    vi: định giá bất động sản
+    context: 査定
+  - ja: 査定価格
+    en: assessed / appraised value
+    vi: giá thẩm định
+    context: 査定
+  - ja: 相場価格
+    en: market price / going rate
+    vi: giá thị trường
+    context: 査定
+  - ja: 成約事例
+    en: comparable sale / transaction record
+    vi: trường hợp giao dịch thành công tương đương
+    context: 査定
+  - ja: 公示価格
+    en: publicly announced land price
+    vi: giá đất công bố chính thức
+    context: 査定
+  - ja: 固定資産税評価額
+    en: property tax assessed value
+    vi: giá trị tính thuế bất động sản
+    context: 査定
+  - ja: 基準地価
+    en: standard land price
+    vi: giá đất tiêu chuẩn
+    context: 査定
+  - ja: 路線価
+    en: road / frontage land price (tax base)
+    vi: giá đất theo mặt tiền đường (cơ sở tính thuế)
+    context: 査定
+  - ja: 不動産鑑定士
+    en: certified real estate appraiser
+    vi: thẩm định viên bất động sản có chứng chỉ
+    context: 査定
+  - ja: 鑑定評価書
+    en: appraisal report
+    vi: báo cáo thẩm định giá
+    context: 査定
+  - ja: 築年数
+    en: building age / years since construction
+    vi: tuổi công trình / năm xây dựng
+    context: 査定
+  - ja: 間取り
+    en: floor plan / room layout
+    vi: bố trí phòng / sơ đồ mặt bằng
+    context: 査定
+  - ja: 専有面積
+    en: exclusive / private floor area
+    vi: diện tích riêng tư
+    context: 査定
+  - ja: 延床面積
+    en: total floor area
+    vi: tổng diện tích sàn
+    context: 査定
+  - ja: 土地面積
+    en: land area
+    vi: diện tích đất
+    context: 査定
+  - ja: 日照条件
+    en: sunlight conditions
+    vi: điều kiện ánh sáng mặt trời
+    context: 査定
+  - ja: 眺望
+    en: view / outlook
+    vi: tầm nhìn / cảnh quan
+    context: 査定
+  - ja: 交通利便性
+    en: transportation accessibility
+    vi: khả năng tiếp cận giao thông
+    context: 査定
+  - ja: 最寄り駅距離
+    en: distance to nearest station
+    vi: khoảng cách đến ga tàu gần nhất
+    context: 査定
+  - ja: 周辺環境
+    en: surrounding environment
+    vi: môi trường xung quanh
+    context: 査定
+  - ja: 土壌汚染
+    en: soil contamination
+    vi: ô nhiễm đất
+    context: 査定
+  - ja: 地盤調査
+    en: ground / soil investigation
+    vi: khảo sát địa chất
+    context: 査定
+  - ja: 境界明示
+    en: boundary demarcation
+    vi: xác định ranh giới
+    context: 査定
+  - ja: 越境
+    en: encroachment / boundary crossing
+    vi: xâm phạm ranh giới
+    context: 査定
+  - ja: 瑕疵
+    en: defect / latent defect
+    vi: khiếm khuyết / lỗi ẩn
+    context: 査定
+  - ja: ホームインスペクション
+    en: home inspection
+    vi: kiểm tra tình trạng nhà ở
+    context: 査定
+  - ja: リフォーム費用
+    en: renovation / remodeling cost
+    vi: chi phí cải tạo
+    context: 査定
+  - ja: 修繕費
+    en: repair cost
+    vi: chi phí sửa chữa
+    context: 査定
+  - ja: 減価修正
+    en: depreciation adjustment
+    vi: điều chỉnh khấu hao
+    context: 査定
+  - ja: 増価要因
+    en: value-adding factor
+    vi: yếu tố tăng giá trị
+    context: 査定

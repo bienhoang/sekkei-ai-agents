@@ -1,0 +1,216 @@
+industry: common
+language: ja
+terms:
+  # V-model document names (~24 terms)
+  - ja: 要件定義書
+    en: requirements definition
+    vi: tài liệu định nghĩa yêu cầu
+    context: V-model
+  - ja: 基本設計書
+    en: basic design document
+    vi: tài liệu thiết kế cơ bản
+    context: V-model
+  - ja: 詳細設計書
+    en: detail design document
+    vi: tài liệu thiết kế chi tiết
+    context: V-model
+  - ja: テスト仕様書
+    en: test specification
+    vi: tài liệu đặc tả kiểm thử
+    context: V-model
+  - ja: 機能一覧
+    en: function list
+    vi: danh sách chức năng
+    context: V-model
+  - ja: 画面設計書
+    en: screen design document
+    vi: tài liệu thiết kế giao diện
+    context: V-model
+  - ja: データベース設計書
+    en: database design document
+    vi: tài liệu thiết kế cơ sở dữ liệu
+    context: V-model
+  - ja: API設計書
+    en: API design document
+    vi: tài liệu thiết kế API
+    context: V-model
+  - ja: 運用設計書
+    en: operation design document
+    vi: tài liệu thiết kế vận hành
+    context: V-model
+  - ja: 移行設計書
+    en: migration design document
+    vi: tài liệu thiết kế chuyển đổi
+    context: V-model
+  - ja: 単体テスト
+    en: unit test
+    vi: kiểm thử đơn vị
+    context: V-model
+  - ja: 結合テスト
+    en: integration test
+    vi: kiểm thử tích hợp
+    context: V-model
+  - ja: システムテスト
+    en: system test
+    vi: kiểm thử hệ thống
+    context: V-model
+  - ja: 受入テスト
+    en: acceptance test
+    vi: kiểm thử chấp nhận
+    context: V-model
+  - ja: 仕様変更
+    en: specification change
+    vi: thay đổi đặc tả
+    context: V-model
+  - ja: 設計レビュー
+    en: design review
+    vi: đánh giá thiết kế
+    context: V-model
+  - ja: コードレビュー
+    en: code review
+    vi: đánh giá mã nguồn
+    context: V-model
+  - ja: リリースノート
+    en: release notes
+    vi: ghi chú phát hành
+    context: V-model
+  - ja: 障害報告書
+    en: bug report
+    vi: báo cáo lỗi
+    context: V-model
+  - ja: 議事録
+    en: meeting minutes
+    vi: biên bản họp
+    context: V-model
+  - ja: 進捗報告
+    en: progress report
+    vi: báo cáo tiến độ
+    context: V-model
+  - ja: プロジェクト計画書
+    en: project plan
+    vi: kế hoạch dự án
+    context: V-model
+  - ja: 見積書
+    en: estimate
+    vi: bản dự toán
+    context: V-model
+  - ja: 納品書
+    en: delivery note
+    vi: phiếu giao hàng
+    context: V-model
+
+  # Universal IT terms (~25 terms)
+  - ja: API
+    en: API
+    vi: API
+    context: IT共通
+  - ja: データベース
+    en: database
+    vi: cơ sở dữ liệu
+    context: IT共通
+  - ja: サーバー
+    en: server
+    vi: máy chủ
+    context: IT共通
+  - ja: クライアント
+    en: client
+    vi: máy khách
+    context: IT共通
+  - ja: フレームワーク
+    en: framework
+    vi: framework
+    context: IT共通
+  - ja: デプロイ
+    en: deploy
+    vi: triển khai
+    context: IT共通
+  - ja: マイグレーション
+    en: migration
+    vi: di chuyển dữ liệu
+    context: IT共通
+  - ja: バッチ処理
+    en: batch processing
+    vi: xử lý hàng loạt
+    context: IT共通
+  - ja: 認証
+    en: authentication
+    vi: xác thực
+    context: IT共通
+  - ja: 認可
+    en: authorization
+    vi: phân quyền
+    context: IT共通
+  - ja: ログ
+    en: log
+    vi: nhật ký
+    context: IT共通
+  - ja: キャッシュ
+    en: cache
+    vi: bộ nhớ đệm
+    context: IT共通
+  - ja: バックアップ
+    en: backup
+    vi: sao lưu
+    context: IT共通
+  - ja: リストア
+    en: restore
+    vi: phục hồi
+    context: IT共通
+  - ja: 負荷分散
+    en: load balancing
+    vi: cân bằng tải
+    context: IT共通
+  - ja: 冗長化
+    en: redundancy
+    vi: dự phòng
+    context: IT共通
+  - ja: 監視
+    en: monitoring
+    vi: giám sát
+    context: IT共通
+  - ja: アラート
+    en: alert
+    vi: cảnh báo
+    context: IT共通
+  - ja: CI/CD
+    en: CI/CD
+    vi: CI/CD
+    context: IT共通
+  - ja: Git
+    en: Git
+    vi: Git
+    context: IT共通
+  - ja: コンテナ
+    en: container
+    vi: container
+    context: IT共通
+  - ja: マイクロサービス
+    en: microservice
+    vi: vi dịch vụ
+    context: IT共通
+  - ja: REST API
+    en: REST API
+    vi: REST API
+    context: IT共通
+  - ja: WebSocket
+    en: WebSocket
+    vi: WebSocket
+    context: IT共通
+  - ja: 環境変数
+    en: environment variable
+    vi: biến môi trường
+    context: IT共通
+
+  # Additional shared terms (~3 terms to reach ~52 total)
+  - ja: インフラ
+    en: infrastructure
+    vi: hạ tầng
+    context: IT共通
+  - ja: セキュリティ要件
+    en: security requirement
+    vi: yêu cầu bảo mật
+    context: IT共通
+  - ja: 非機能要件
+    en: non-functional requirement
+    vi: yêu cầu phi chức năng
+    context: V-model

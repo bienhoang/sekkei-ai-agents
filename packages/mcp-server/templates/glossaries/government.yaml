@@ -1,0 +1,1018 @@
+industry: government
+language: ja
+terms:
+  # 住民基本台帳 (resident registration) — 32 terms
+  - ja: 住民票
+    en: resident card
+    vi: sổ hộ khẩu
+    context: 住民基本台帳
+  - ja: 住民基本台帳
+    en: basic resident register
+    vi: sổ đăng ký cư trú cơ bản
+    context: 住民基本台帳
+  - ja: 転入届
+    en: move-in notification
+    vi: thông báo chuyển đến
+    context: 住民基本台帳
+  - ja: 転出届
+    en: move-out notification
+    vi: thông báo chuyển đi
+    context: 住民基本台帳
+  - ja: 転居届
+    en: change of address notification
+    vi: thông báo thay đổi địa chỉ
+    context: 住民基本台帳
+  - ja: 住所変更手続き
+    en: address change procedure
+    vi: thủ tục thay đổi địa chỉ
+    context: 住民基本台帳
+  - ja: 世帯主
+    en: head of household
+    vi: chủ hộ
+    context: 住民基本台帳
+  - ja: 世帯分離
+    en: household separation
+    vi: tách hộ khẩu
+    context: 住民基本台帳
+  - ja: 世帯合併
+    en: household merger
+    vi: nhập hộ khẩu
+    context: 住民基本台帳
+  - ja: 住民票の写し
+    en: copy of resident card
+    vi: bản sao sổ hộ khẩu
+    context: 住民基本台帳
+  - ja: 住民コード
+    en: resident code
+    vi: mã cư trú
+    context: 住民基本台帳
+  - ja: 外国人住民
+    en: foreign resident
+    vi: cư dân nước ngoài
+    context: 住民基本台帳
+  - ja: 在留資格
+    en: residence status
+    vi: tư cách lưu trú
+    context: 住民基本台帳
+  - ja: 在留カード
+    en: residence card
+    vi: thẻ lưu trú
+    context: 住民基本台帳
+  - ja: 住民票コード
+    en: resident record code
+    vi: mã hồ sơ cư trú
+    context: 住民基本台帳
+  - ja: 証明書発行
+    en: certificate issuance
+    vi: cấp giấy chứng nhận
+    context: 住民基本台帳
+  - ja: 窓口申請
+    en: counter application
+    vi: nộp hồ sơ tại quầy
+    context: 住民基本台帳
+  - ja: 本人確認
+    en: identity verification
+    vi: xác minh danh tính
+    context: 住民基本台帳
+  - ja: 代理申請
+    en: proxy application
+    vi: ủy quyền nộp hồ sơ
+    context: 住民基本台帳
+  - ja: 委任状
+    en: power of attorney
+    vi: giấy ủy quyền
+    context: 住民基本台帳
+  - ja: 転入学通知
+    en: school transfer notice
+    vi: thông báo chuyển trường
+    context: 住民基本台帳
+  - ja: 印鑑登録
+    en: seal registration
+    vi: đăng ký con dấu
+    context: 住民基本台帳
+  - ja: 印鑑証明書
+    en: seal certificate
+    vi: giấy chứng nhận con dấu
+    context: 住民基本台帳
+  - ja: 住民データベース
+    en: resident database
+    vi: cơ sở dữ liệu cư dân
+    context: 住民基本台帳
+  - ja: 宛名システム
+    en: address label system
+    vi: hệ thống nhãn địa chỉ
+    context: 住民基本台帳
+  - ja: 異動情報
+    en: change of status information
+    vi: thông tin biến động
+    context: 住民基本台帳
+  - ja: 除票
+    en: deleted resident record
+    vi: hồ sơ cư trú đã xóa
+    context: 住民基本台帳
+  - ja: 死亡届
+    en: death notification
+    vi: khai tử
+    context: 住民基本台帳
+  - ja: 出生届
+    en: birth notification
+    vi: khai sinh
+    context: 住民基本台帳
+  - ja: 帰国届
+    en: return from abroad notification
+    vi: thông báo về nước
+    context: 住民基本台帳
+  - ja: 広域住民票
+    en: inter-municipal resident record
+    vi: hồ sơ cư trú liên tỉnh
+    context: 住民基本台帳
+  - ja: コンビニ交付
+    en: convenience store certificate issuance
+    vi: cấp giấy tờ tại cửa hàng tiện lợi
+    context: 住民基本台帳
+
+  # 税務 (tax) — 32 terms
+  - ja: 住民税
+    en: resident tax
+    vi: thuế cư trú
+    context: 税務
+  - ja: 固定資産税
+    en: property tax
+    vi: thuế tài sản cố định
+    context: 税務
+  - ja: 軽自動車税
+    en: light vehicle tax
+    vi: thuế xe nhỏ
+    context: 税務
+  - ja: 国民健康保険税
+    en: national health insurance tax
+    vi: thuế bảo hiểm y tế quốc dân
+    context: 税務
+  - ja: 課税標準
+    en: tax base
+    vi: căn cứ tính thuế
+    context: 税務
+  - ja: 課税台帳
+    en: tax ledger
+    vi: sổ thuế
+    context: 税務
+  - ja: 税額計算
+    en: tax amount calculation
+    vi: tính toán số thuế
+    context: 税務
+  - ja: 納税通知書
+    en: tax payment notice
+    vi: thông báo nộp thuế
+    context: 税務
+  - ja: 納付書
+    en: payment slip
+    vi: phiếu nộp tiền
+    context: 税務
+  - ja: 口座振替
+    en: direct debit
+    vi: trích tài khoản tự động
+    context: 税務
+  - ja: 分割納付
+    en: installment payment
+    vi: nộp thuế theo kỳ
+    context: 税務
+  - ja: 延滞金
+    en: late payment penalty
+    vi: tiền phạt chậm nộp
+    context: 税務
+  - ja: 滞納処分
+    en: delinquent tax collection
+    vi: cưỡng chế thuế
+    context: 税務
+  - ja: 減免申請
+    en: tax reduction application
+    vi: đơn xin giảm thuế
+    context: 税務
+  - ja: 非課税世帯
+    en: tax-exempt household
+    vi: hộ miễn thuế
+    context: 税務
+  - ja: 所得割
+    en: income-based portion
+    vi: phần thuế theo thu nhập
+    context: 税務
+  - ja: 均等割
+    en: flat-rate portion
+    vi: phần thuế cố định
+    context: 税務
+  - ja: 特別徴収
+    en: special collection (payroll deduction)
+    vi: khấu trừ tại nguồn
+    context: 税務
+  - ja: 普通徴収
+    en: ordinary collection
+    vi: thu thuế thông thường
+    context: 税務
+  - ja: 申告書
+    en: tax return
+    vi: tờ khai thuế
+    context: 税務
+  - ja: 確定申告
+    en: final tax return
+    vi: quyết toán thuế
+    context: 税務
+  - ja: 更正決定
+    en: tax assessment correction
+    vi: điều chỉnh quyết định thuế
+    context: 税務
+  - ja: 異議申立て
+    en: tax objection
+    vi: khiếu nại thuế
+    context: 税務
+  - ja: 審査請求
+    en: administrative appeal
+    vi: yêu cầu xem xét lại
+    context: 税務
+  - ja: 課税証明書
+    en: tax certificate
+    vi: giấy chứng nhận thuế
+    context: 税務
+  - ja: 非課税証明書
+    en: tax exemption certificate
+    vi: giấy chứng nhận miễn thuế
+    context: 税務
+  - ja: 固定資産評価額
+    en: assessed property value
+    vi: giá trị định giá tài sản
+    context: 税務
+  - ja: 土地台帳
+    en: land register
+    vi: sổ đất
+    context: 税務
+  - ja: 家屋台帳
+    en: building register
+    vi: sổ nhà
+    context: 税務
+  - ja: eLTAX
+    en: eLTAX (electronic local tax)
+    vi: thuế địa phương điện tử
+    context: 税務
+  - ja: 税務調査
+    en: tax audit
+    vi: kiểm tra thuế
+    context: 税務
+  - ja: 徴収猶予
+    en: collection deferral
+    vi: hoãn thu thuế
+    context: 税務
+
+  # 福祉 (welfare) — 30 terms
+  - ja: 生活保護
+    en: welfare assistance
+    vi: trợ cấp xã hội
+    context: 福祉
+  - ja: 介護保険
+    en: long-term care insurance
+    vi: bảo hiểm chăm sóc dài hạn
+    context: 福祉
+  - ja: 要介護認定
+    en: care level certification
+    vi: chứng nhận mức độ cần chăm sóc
+    context: 福祉
+  - ja: 障害福祉サービス
+    en: disability welfare service
+    vi: dịch vụ phúc lợi người khuyết tật
+    context: 福祉
+  - ja: 障害支援区分
+    en: disability support classification
+    vi: phân loại hỗ trợ người khuyết tật
+    context: 福祉
+  - ja: 児童手当
+    en: child allowance
+    vi: trợ cấp trẻ em
+    context: 福祉
+  - ja: 児童扶養手当
+    en: child rearing allowance
+    vi: trợ cấp nuôi con
+    context: 福祉
+  - ja: 特別児童扶養手当
+    en: special child rearing allowance
+    vi: trợ cấp nuôi con đặc biệt
+    context: 福祉
+  - ja: 老齢年金
+    en: old-age pension
+    vi: lương hưu
+    context: 福祉
+  - ja: 生活困窮者支援
+    en: support for those in poverty
+    vi: hỗ trợ người nghèo
+    context: 福祉
+  - ja: 自立支援
+    en: independence support
+    vi: hỗ trợ tự lập
+    context: 福祉
+  - ja: ケアプラン
+    en: care plan
+    vi: kế hoạch chăm sóc
+    context: 福祉
+  - ja: ケアマネージャー
+    en: care manager
+    vi: quản lý chăm sóc
+    context: 福祉
+  - ja: 訪問介護
+    en: home care visit
+    vi: chăm sóc tại nhà
+    context: 福祉
+  - ja: デイサービス
+    en: day service
+    vi: dịch vụ ban ngày
+    context: 福祉
+  - ja: 特別養護老人ホーム
+    en: special nursing home
+    vi: viện dưỡng lão đặc biệt
+    context: 福祉
+  - ja: 地域包括支援センター
+    en: community comprehensive support center
+    vi: trung tâm hỗ trợ toàn diện cộng đồng
+    context: 福祉
+  - ja: 民生委員
+    en: welfare commissioner
+    vi: ủy viên phúc lợi
+    context: 福祉
+  - ja: 福祉相談
+    en: welfare consultation
+    vi: tư vấn phúc lợi
+    context: 福祉
+  - ja: 扶養義務者
+    en: obligated supporter
+    vi: người có nghĩa vụ扶養
+    context: 福祉
+  - ja: 保護費
+    en: welfare payment
+    vi: tiền trợ cấp
+    context: 福祉
+  - ja: 医療扶助
+    en: medical assistance
+    vi: hỗ trợ y tế
+    context: 福祉
+  - ja: 住宅扶助
+    en: housing assistance
+    vi: hỗ trợ nhà ở
+    context: 福祉
+  - ja: 就労支援
+    en: employment support
+    vi: hỗ trợ việc làm
+    context: 福祉
+  - ja: 母子保健
+    en: maternal and child health
+    vi: sức khỏe bà mẹ và trẻ em
+    context: 福祉
+  - ja: 障害者手帳
+    en: disability certificate book
+    vi: sổ chứng nhận người khuyết tật
+    context: 福祉
+  - ja: 福祉台帳
+    en: welfare ledger
+    vi: sổ phúc lợi
+    context: 福祉
+  - ja: 受給者番号
+    en: recipient number
+    vi: số người hưởng trợ cấp
+    context: 福祉
+  - ja: 給付決定
+    en: benefit determination
+    vi: quyết định cấp trợ cấp
+    context: 福祉
+  - ja: 更新申請
+    en: renewal application
+    vi: đơn xin gia hạn
+    context: 福祉
+
+  # 戸籍 (family registration) — 30 terms
+  - ja: 戸籍謄本
+    en: family register copy
+    vi: bản sao hộ tịch
+    context: 戸籍
+  - ja: 戸籍抄本
+    en: partial family register copy
+    vi: bản trích lục hộ tịch
+    context: 戸籍
+  - ja: 戸籍筆頭者
+    en: head of family register
+    vi: người đứng đầu hộ tịch
+    context: 戸籍
+  - ja: 戸籍の届出
+    en: family register notification
+    vi: khai báo hộ tịch
+    context: 戸籍
+  - ja: 婚姻届
+    en: marriage registration
+    vi: đăng ký kết hôn
+    context: 戸籍
+  - ja: 離婚届
+    en: divorce registration
+    vi: đăng ký ly hôn
+    context: 戸籍
+  - ja: 養子縁組届
+    en: adoption registration
+    vi: đăng ký nhận con nuôi
+    context: 戸籍
+  - ja: 認知届
+    en: paternity acknowledgment
+    vi: thừa nhận quan hệ cha con
+    context: 戸籍
+  - ja: 改名申請
+    en: name change application
+    vi: đơn xin đổi tên
+    context: 戸籍
+  - ja: 国籍取得
+    en: nationality acquisition
+    vi: nhập quốc tịch
+    context: 戸籍
+  - ja: 国籍離脱
+    en: nationality renunciation
+    vi: từ bỏ quốc tịch
+    context: 戸籍
+  - ja: 戸籍の訂正
+    en: family register correction
+    vi: sửa đổi hộ tịch
+    context: 戸籍
+  - ja: 除籍謄本
+    en: deleted family register copy
+    vi: bản sao hộ tịch đã xóa
+    context: 戸籍
+  - ja: 分籍届
+    en: family register separation
+    vi: tách hộ tịch
+    context: 戸籍
+  - ja: 入籍届
+    en: family register entry
+    vi: nhập hộ tịch
+    context: 戸籍
+  - ja: 戸籍電算化
+    en: family register computerization
+    vi: tin học hóa hộ tịch
+    context: 戸籍
+  - ja: 戸籍附票
+    en: family register attachment
+    vi: phụ lục hộ tịch
+    context: 戸籍
+  - ja: 戸籍証明書
+    en: family register certificate
+    vi: giấy chứng nhận hộ tịch
+    context: 戸籍
+  - ja: 本籍地
+    en: place of family registration
+    vi: nơi đăng ký hộ tịch gốc
+    context: 戸籍
+  - ja: 転籍届
+    en: family register transfer
+    vi: chuyển hộ tịch
+    context: 戸籍
+  - ja: 戸籍統合
+    en: family register consolidation
+    vi: hợp nhất hộ tịch
+    context: 戸籍
+  - ja: 代理取得
+    en: proxy acquisition
+    vi: lấy giấy tờ qua ủy quyền
+    context: 戸籍
+  - ja: 郵送請求
+    en: mail-based request
+    vi: yêu cầu qua bưu điện
+    context: 戸籍
+  - ja: 広域交付
+    en: inter-municipal issuance
+    vi: cấp liên tỉnh thành
+    context: 戸籍
+  - ja: 戸籍法
+    en: Family Register Act
+    vi: Luật Hộ tịch
+    context: 戸籍
+  - ja: 氏の変更
+    en: family name change
+    vi: thay đổi họ
+    context: 戸籍
+  - ja: 親族関係
+    en: family relationship
+    vi: quan hệ thân tộc
+    context: 戸籍
+  - ja: 続柄
+    en: family relationship code
+    vi: mối quan hệ gia đình
+    context: 戸籍
+  - ja: 特別養子
+    en: special adoption
+    vi: nhận con nuôi đặc biệt
+    context: 戸籍
+  - ja: 戸籍謄本取得手数料
+    en: family register copy fee
+    vi: phí lấy bản sao hộ tịch
+    context: 戸籍
+
+  # 電子申請 (e-government) — 32 terms
+  - ja: 電子署名
+    en: digital signature
+    vi: chữ ký điện tử
+    context: 電子申請
+  - ja: 電子申請
+    en: electronic application
+    vi: đơn xin điện tử
+    context: 電子申請
+  - ja: 電子証明書
+    en: electronic certificate
+    vi: chứng chỉ điện tử
+    context: 電子申請
+  - ja: 公的個人認証
+    en: public personal authentication
+    vi: xác thực cá nhân công cộng
+    context: 電子申請
+  - ja: 申請フォーム
+    en: application form (electronic)
+    vi: mẫu đơn điện tử
+    context: 電子申請
+  - ja: 添付ファイル
+    en: attached file
+    vi: tệp đính kèm
+    context: 電子申請
+  - ja: 受付番号
+    en: reception number
+    vi: số tiếp nhận
+    context: 電子申請
+  - ja: 申請状況照会
+    en: application status inquiry
+    vi: tra cứu tình trạng hồ sơ
+    context: 電子申請
+  - ja: 処理状況通知
+    en: processing status notification
+    vi: thông báo tình trạng xử lý
+    context: 電子申請
+  - ja: 電子決裁
+    en: electronic approval
+    vi: phê duyệt điện tử
+    context: 電子申請
+  - ja: オンライン手続き
+    en: online procedure
+    vi: thủ tục trực tuyến
+    context: 電子申請
+  - ja: 本人確認書類
+    en: identity documents
+    vi: giấy tờ xác minh danh tính
+    context: 電子申請
+  - ja: 二要素認証
+    en: two-factor authentication
+    vi: xác thực hai yếu tố
+    context: 電子申請
+  - ja: ワンストップサービス
+    en: one-stop service
+    vi: dịch vụ một cửa
+    context: 電子申請
+  - ja: 行政手続きオンライン化
+    en: administrative procedure digitization
+    vi: số hóa thủ tục hành chính
+    context: 電子申請
+  - ja: 申請データ連携
+    en: application data linkage
+    vi: liên kết dữ liệu hồ sơ
+    context: 電子申請
+  - ja: 電子公文書
+    en: electronic official document
+    vi: văn bản điện tử chính thức
+    context: 電子申請
+  - ja: タイムスタンプ
+    en: timestamp
+    vi: dấu thời gian
+    context: 電子申請
+  - ja: 改ざん防止
+    en: tampering prevention
+    vi: phòng chống giả mạo
+    context: 電子申請
+  - ja: ログ管理
+    en: log management
+    vi: quản lý nhật ký
+    context: 電子申請
+  - ja: 住民ポータル
+    en: resident portal
+    vi: cổng thông tin cư dân
+    context: 電子申請
+  - ja: ID連携
+    en: ID federation
+    vi: liên kết định danh
+    context: 電子申請
+  - ja: 行政API
+    en: government API
+    vi: API hành chính
+    context: 電子申請
+  - ja: マイナポータル
+    en: My Number portal
+    vi: cổng thông tin số cá nhân
+    context: 電子申請
+  - ja: ぴったりサービス
+    en: Pittari service (eligibility matching)
+    vi: dịch vụ tra cứu điều kiện hưởng lợi
+    context: 電子申請
+  - ja: 電子納付
+    en: electronic payment
+    vi: nộp tiền điện tử
+    context: 電子申請
+  - ja: アクセシビリティ対応
+    en: accessibility compliance
+    vi: tuân thủ khả năng tiếp cận
+    context: 電子申請
+  - ja: システム連携
+    en: system integration
+    vi: tích hợp hệ thống
+    context: 電子申請
+  - ja: データ標準化
+    en: data standardization
+    vi: tiêu chuẩn hóa dữ liệu
+    context: 電子申請
+  - ja: 自治体クラウド
+    en: municipal cloud
+    vi: đám mây chính quyền địa phương
+    context: 電子申請
+  - ja: バックオフィス連携
+    en: back-office integration
+    vi: tích hợp hệ thống hậu trường
+    context: 電子申請
+  - ja: 電子委任状
+    en: electronic power of attorney
+    vi: giấy ủy quyền điện tử
+    context: 電子申請
+
+  # マイナンバー (My Number) — 30 terms
+  - ja: 個人番号
+    en: individual number
+    vi: số cá nhân
+    context: マイナンバー
+  - ja: マイナンバーカード
+    en: My Number card
+    vi: thẻ số cá nhân
+    context: マイナンバー
+  - ja: 法人番号
+    en: corporate number
+    vi: số pháp nhân
+    context: マイナンバー
+  - ja: 番号利用事務
+    en: number utilization operations
+    vi: nghiệp vụ sử dụng số
+    context: マイナンバー
+  - ja: 特定個人情報
+    en: specific personal information
+    vi: thông tin cá nhân đặc định
+    context: マイナンバー
+  - ja: 情報提供ネットワーク
+    en: information provision network
+    vi: mạng cung cấp thông tin
+    context: マイナンバー
+  - ja: 情報連携
+    en: information linkage
+    vi: liên kết thông tin
+    context: マイナンバー
+  - ja: 副本登録
+    en: duplicate registration
+    vi: đăng ký bản phụ
+    context: マイナンバー
+  - ja: 番号収集
+    en: number collection
+    vi: thu thập số cá nhân
+    context: マイナンバー
+  - ja: 番号管理規程
+    en: number management regulations
+    vi: quy định quản lý số
+    context: マイナンバー
+  - ja: 安全管理措置
+    en: security management measures
+    vi: biện pháp quản lý an toàn
+    context: マイナンバー
+  - ja: 特定個人情報保護評価
+    en: specific personal information protection assessment
+    vi: đánh giá bảo vệ thông tin cá nhân đặc định
+    context: マイナンバー
+  - ja: マイナンバー法
+    en: My Number Act
+    vi: Luật Số cá nhân
+    context: マイナンバー
+  - ja: 番号提示
+    en: number presentation
+    vi: xuất trình số cá nhân
+    context: マイナンバー
+  - ja: 利用目的通知
+    en: purpose of use notification
+    vi: thông báo mục đích sử dụng
+    context: マイナンバー
+  - ja: 本人確認措置
+    en: identity verification measures
+    vi: biện pháp xác minh danh tính
+    context: マイナンバー
+  - ja: 番号漏えい対応
+    en: number leak response
+    vi: ứng phó rò rỉ số cá nhân
+    context: マイナンバー
+  - ja: 個人番号カード申請
+    en: My Number card application
+    vi: đơn xin cấp thẻ số cá nhân
+    context: マイナンバー
+  - ja: カード更新
+    en: card renewal
+    vi: gia hạn thẻ
+    context: マイナンバー
+  - ja: 電子証明書更新
+    en: electronic certificate renewal
+    vi: gia hạn chứng chỉ điện tử
+    context: マイナンバー
+  - ja: 暗証番号管理
+    en: PIN management
+    vi: quản lý mã PIN
+    context: マイナンバー
+  - ja: カード紛失届
+    en: card loss report
+    vi: báo cáo mất thẻ
+    context: マイナンバー
+  - ja: 番号通知書
+    en: number notification letter
+    vi: thư thông báo số cá nhân
+    context: マイナンバー
+  - ja: 健康保険証利用
+    en: health insurance card integration
+    vi: tích hợp thẻ bảo hiểm y tế
+    context: マイナンバー
+  - ja: 運転免許証連携
+    en: driver's license integration
+    vi: tích hợp giấy phép lái xe
+    context: マイナンバー
+  - ja: マイナポイント
+    en: My Number point
+    vi: điểm thưởng số cá nhân
+    context: マイナンバー
+  - ja: 公金受取口座
+    en: public fund receiving account
+    vi: tài khoản nhận tiền công
+    context: マイナンバー
+  - ja: 番号制度普及促進
+    en: number system promotion
+    vi: thúc đẩy phổ biến hệ thống số
+    context: マイナンバー
+  - ja: 番号照合
+    en: number matching
+    vi: đối chiếu số cá nhân
+    context: マイナンバー
+  - ja: 特定個人情報ファイル
+    en: specific personal information file
+    vi: tệp thông tin cá nhân đặc định
+    context: マイナンバー
+
+  # 公共調達 (public procurement) — 32 terms
+  - ja: 入札
+    en: bidding
+    vi: đấu thầu
+    context: 公共調達
+  - ja: 指名競争入札
+    en: selective competitive bidding
+    vi: đấu thầu cạnh tranh có lựa chọn
+    context: 公共調達
+  - ja: 一般競争入札
+    en: open competitive bidding
+    vi: đấu thầu cạnh tranh rộng rãi
+    context: 公共調達
+  - ja: 随意契約
+    en: negotiated contract
+    vi: hợp đồng thỏa thuận
+    context: 公共調達
+  - ja: 仕様書
+    en: specification document
+    vi: tài liệu kỹ thuật
+    context: 公共調達
+  - ja: 入札参加資格
+    en: bidding eligibility
+    vi: điều kiện tham gia đấu thầu
+    context: 公共調達
+  - ja: 入札書
+    en: bid document
+    vi: hồ sơ dự thầu
+    context: 公共調達
+  - ja: 落札
+    en: winning bid
+    vi: trúng thầu
+    context: 公共調達
+  - ja: 落札者
+    en: successful bidder
+    vi: nhà thầu trúng thầu
+    context: 公共調達
+  - ja: 予定価格
+    en: reserve price
+    vi: giá dự toán
+    context: 公共調達
+  - ja: 最低制限価格
+    en: minimum price limit
+    vi: giá sàn
+    context: 公共調達
+  - ja: 談合
+    en: bid rigging
+    vi: thông đồng đấu thầu
+    context: 公共調達
+  - ja: 電子入札
+    en: electronic bidding
+    vi: đấu thầu điện tử
+    context: 公共調達
+  - ja: 契約書
+    en: contract document
+    vi: văn bản hợp đồng
+    context: 公共調達
+  - ja: 履行保証
+    en: performance bond
+    vi: bảo lãnh thực hiện hợp đồng
+    context: 公共調達
+  - ja: 検査調書
+    en: inspection record
+    vi: biên bản kiểm tra
+    context: 公共調達
+  - ja: 納品検査
+    en: delivery inspection
+    vi: kiểm tra giao hàng
+    context: 公共調達
+  - ja: 請負契約
+    en: construction contract
+    vi: hợp đồng khoán
+    context: 公共調達
+  - ja: 委託契約
+    en: consignment contract
+    vi: hợp đồng ủy thác
+    context: 公共調達
+  - ja: 物品調達
+    en: goods procurement
+    vi: mua sắm hàng hóa
+    context: 公共調達
+  - ja: 公共工事
+    en: public works
+    vi: công trình công cộng
+    context: 公共調達
+  - ja: 発注者
+    en: client/ordering party
+    vi: bên đặt hàng
+    context: 公共調達
+  - ja: 受注者
+    en: contractor
+    vi: bên nhận thầu
+    context: 公共調達
+  - ja: 下請け
+    en: subcontractor
+    vi: nhà thầu phụ
+    context: 公共調達
+  - ja: 支払い条件
+    en: payment terms
+    vi: điều kiện thanh toán
+    context: 公共調達
+  - ja: 変更契約
+    en: contract amendment
+    vi: sửa đổi hợp đồng
+    context: 公共調達
+  - ja: 入札公告
+    en: bid announcement
+    vi: thông báo mời thầu
+    context: 公共調達
+  - ja: 品質管理
+    en: quality management
+    vi: quản lý chất lượng
+    context: 公共調達
+  - ja: 成績評定
+    en: contractor performance rating
+    vi: đánh giá hiệu suất nhà thầu
+    context: 公共調達
+  - ja: 指名停止
+    en: suspension from bidding
+    vi: đình chỉ tham gia đấu thầu
+    context: 公共調達
+  - ja: 共同企業体
+    en: joint venture
+    vi: liên doanh
+    context: 公共調達
+  - ja: 総合評価落札方式
+    en: comprehensive evaluation method
+    vi: phương thức đánh giá tổng hợp
+    context: 公共調達
+
+  # 統計 (statistics) — 32 terms
+  - ja: 国勢調査
+    en: census
+    vi: điều tra dân số
+    context: 統計
+  - ja: 統計調査
+    en: statistical survey
+    vi: điều tra thống kê
+    context: 統計
+  - ja: 基幹統計
+    en: fundamental statistics
+    vi: thống kê cơ bản
+    context: 統計
+  - ja: 一般統計
+    en: general statistics
+    vi: thống kê thông thường
+    context: 統計
+  - ja: 調査票
+    en: survey form
+    vi: phiếu điều tra
+    context: 統計
+  - ja: 回収率
+    en: response rate
+    vi: tỷ lệ thu hồi phiếu
+    context: 統計
+  - ja: 標本調査
+    en: sample survey
+    vi: điều tra chọn mẫu
+    context: 統計
+  - ja: 全数調査
+    en: full enumeration
+    vi: điều tra toàn bộ
+    context: 統計
+  - ja: 統計法
+    en: Statistics Act
+    vi: Luật Thống kê
+    context: 統計
+  - ja: 公的統計
+    en: official statistics
+    vi: thống kê chính thức
+    context: 統計
+  - ja: 統計データ
+    en: statistical data
+    vi: dữ liệu thống kê
+    context: 統計
+  - ja: 集計処理
+    en: aggregation processing
+    vi: xử lý tổng hợp
+    context: 統計
+  - ja: 二次利用
+    en: secondary use
+    vi: sử dụng thứ cấp
+    context: 統計
+  - ja: 匿名化
+    en: anonymization
+    vi: ẩn danh hóa
+    context: 統計
+  - ja: 統計的開示制限
+    en: statistical disclosure control
+    vi: kiểm soát tiết lộ thống kê
+    context: 統計
+  - ja: 人口動態統計
+    en: vital statistics
+    vi: thống kê dân số
+    context: 統計
+  - ja: 経済センサス
+    en: economic census
+    vi: điều tra kinh tế
+    context: 統計
+  - ja: 農林業センサス
+    en: agriculture and forestry census
+    vi: điều tra nông lâm nghiệp
+    context: 統計
+  - ja: 工業統計
+    en: industrial statistics
+    vi: thống kê công nghiệp
+    context: 統計
+  - ja: 商業統計
+    en: commercial statistics
+    vi: thống kê thương mại
+    context: 統計
+  - ja: 統計指標
+    en: statistical indicator
+    vi: chỉ số thống kê
+    context: 統計
+  - ja: 時系列データ
+    en: time series data
+    vi: dữ liệu chuỗi thời gian
+    context: 統計
+  - ja: 地域統計
+    en: regional statistics
+    vi: thống kê khu vực
+    context: 統計
+  - ja: オープンデータ
+    en: open data
+    vi: dữ liệu mở
+    context: 統計
+  - ja: 統計GIS
+    en: statistical GIS
+    vi: GIS thống kê
+    context: 統計
+  - ja: 統計グラフ
+    en: statistical graph
+    vi: biểu đồ thống kê
+    context: 統計
+  - ja: 推計値
+    en: estimated value
+    vi: giá trị ước tính
+    context: 統計
+  - ja: 確報値
+    en: confirmed value
+    vi: giá trị xác nhận
+    context: 統計
+  - ja: 調査員
+    en: enumerator
+    vi: điều tra viên
+    context: 統計
+  - ja: 調査区
+    en: enumeration district
+    vi: khu vực điều tra
+    context: 統計
+  - ja: 統計委員会
+    en: statistics committee
+    vi: ủy ban thống kê
+    context: 統計
+  - ja: e-Stat
+    en: e-Stat (government statistics portal)
+    vi: cổng thống kê chính phủ điện tử
+    context: 統計

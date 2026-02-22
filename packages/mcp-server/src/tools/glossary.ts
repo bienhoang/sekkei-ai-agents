@@ -8,7 +8,12 @@ import { SekkeiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
 
 const GLOSSARY_ACTIONS = ["add", "list", "find", "export", "import"] as const;
-const INDUSTRIES = ["finance", "medical", "manufacturing", "real-estate"] as const;
+const INDUSTRIES = [
+  "finance", "medical", "manufacturing", "real-estate",
+  "logistics", "retail", "insurance", "education",
+  "government", "construction", "telecom", "automotive",
+  "energy", "food-service", "common",
+] as const;
 
 const inputSchema = {
   action: z.enum(GLOSSARY_ACTIONS).describe("Glossary action to perform"),
@@ -17,6 +22,7 @@ const inputSchema = {
     .describe("Path to glossary.yaml"),
   ja: z.string().optional().describe("Japanese term (for add action)"),
   en: z.string().optional().describe("English term (for add action)"),
+  vi: z.string().optional().describe("Vietnamese term (for add action)"),
   context: z.string().optional().describe("Term context/description"),
   query: z.string().optional().describe("Search query (for find action)"),
   industry: z.enum(INDUSTRIES).optional().describe("Industry glossary to import (for import action)"),
@@ -27,7 +33,7 @@ export function registerGlossaryTool(server: McpServer): void {
     "manage_glossary",
     "Manage project terminology glossary (add, list, find, export terms)",
     inputSchema,
-    async ({ action, project_path, ja, en, context, query, industry }) => {
+    async ({ action, project_path, ja, en, vi, context, query, industry }) => {
       try {
         logger.info({ action, project_path }, "Managing glossary");
 
@@ -36,6 +42,7 @@ export function registerGlossaryTool(server: McpServer): void {
           project_path,
           ja: ja ?? "",
           en: en ?? "",
+          vi: vi ?? "",
           context: context ?? "",
           query: query ?? "",
           industry: industry ?? "",

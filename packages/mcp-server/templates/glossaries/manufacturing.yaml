@@ -1,108 +1,1018 @@
 industry: manufacturing
 language: ja
 terms:
-  - ja: 部品表
-    en: bill of materials (BOM)
-    context: 製造
-  - ja: 在庫管理
-    en: inventory management
-    context: 製造
-  - ja: 発注点
-    en: reorder point
-    context: 製造
+  # ─── 生産管理 (Production Management) — 35 terms ───
+  - ja: 生産計画
+    en: production plan
+    vi: kế hoạch sản xuất
+    context: 生産管理
   - ja: 製造指示
     en: production order
-    context: 製造
-  - ja: 品質検査
-    en: quality inspection
-    context: 品質
+    vi: lệnh sản xuất
+    context: 生産管理
   - ja: 工程管理
     en: process management
-    context: 製造
-  - ja: 生産計画
-    en: production planning
-    context: 製造
-  - ja: 原価管理
-    en: cost management
-    context: 製造
-  - ja: 受入検査
-    en: incoming inspection
-    context: 品質
-  - ja: 出荷検査
-    en: shipping inspection
-    context: 品質
-  - ja: ロット管理
-    en: lot management
-    context: 製造
-  - ja: トレーサビリティ
-    en: traceability
-    context: 品質
-  - ja: 不良品
-    en: defective product
-    context: 品質
-  - ja: 歩留まり
-    en: yield rate
-    context: 製造
+    vi: quản lý quy trình
+    context: 生産管理
+  - ja: ライン
+    en: production line
+    vi: dây chuyền sản xuất
+    context: 生産管理
+  - ja: 生産能力
+    en: production capacity
+    vi: năng lực sản xuất
+    context: 生産管理
+  - ja: 稼働率
+    en: utilization rate
+    vi: tỷ lệ vận hành
+    context: 生産管理
+  - ja: タクトタイム
+    en: takt time
+    vi: thời gian nhịp sản xuất
+    context: 生産管理
+  - ja: サイクルタイム
+    en: cycle time
+    vi: thời gian chu kỳ
+    context: 生産管理
+  - ja: リードタイム
+    en: lead time
+    vi: thời gian giao hàng
+    context: 生産管理
   - ja: 段取り替え
-    en: setup change
-    context: 製造
+    en: setup change / changeover
+    vi: chuyển đổi thiết lập
+    context: 生産管理
   - ja: 作業指示書
     en: work instruction
-    context: 製造
-  - ja: 設備保全
-    en: equipment maintenance
-    context: 製造
-  - ja: 予防保全
-    en: preventive maintenance
-    context: 製造
+    vi: phiếu hướng dẫn công việc
+    context: 生産管理
+  - ja: 部品表
+    en: bill of materials (BOM)
+    vi: bảng danh mục vật tư (BOM)
+    context: 生産管理
+  - ja: 仕掛品
+    en: work in progress (WIP)
+    vi: sản phẩm dở dang (WIP)
+    context: 生産管理
+  - ja: 完成品
+    en: finished goods
+    vi: thành phẩm
+    context: 生産管理
+  - ja: 原材料
+    en: raw materials
+    vi: nguyên vật liệu
+    context: 生産管理
+  - ja: 工場
+    en: factory / plant
+    vi: nhà máy
+    context: 生産管理
+  - ja: 歩留まり
+    en: yield rate
+    vi: tỷ lệ năng suất
+    context: 生産管理
+  - ja: ボトルネック
+    en: bottleneck
+    vi: nút thắt cổ chai
+    context: 生産管理
+  - ja: 平準化
+    en: leveling / heijunka
+    vi: san bằng sản xuất
+    context: 生産管理
+  - ja: 小日程計画
+    en: short-term production schedule
+    vi: kế hoạch sản xuất ngắn hạn
+    context: 生産管理
+  - ja: 大日程計画
+    en: long-term production schedule
+    vi: kế hoạch sản xuất dài hạn
+    context: 生産管理
+  - ja: 製品構成
+    en: product structure
+    vi: cấu trúc sản phẩm
+    context: 生産管理
+  - ja: 工程フロー
+    en: process flow
+    vi: luồng quy trình
+    context: 生産管理
+  - ja: 作業標準
+    en: work standard
+    vi: tiêu chuẩn tác nghiệp
+    context: 生産管理
+  - ja: 多品種少量生産
+    en: high-mix low-volume production
+    vi: sản xuất nhiều chủng loại số lượng nhỏ
+    context: 生産管理
+  - ja: 少品種多量生産
+    en: low-mix high-volume production
+    vi: sản xuất ít chủng loại số lượng lớn
+    context: 生産管理
+  - ja: ロット生産
+    en: batch production
+    vi: sản xuất theo lô
+    context: 生産管理
+  - ja: 金型
+    en: mold / die
+    vi: khuôn đúc / khuôn dập
+    context: 生産管理
+  - ja: 治具
+    en: jig / fixture
+    vi: đồ gá
+    context: 生産管理
+  - ja: 実績収集
+    en: actual performance collection
+    vi: thu thập kết quả thực tế
+    context: 生産管理
+  - ja: 生産実績
+    en: production results / actuals
+    vi: kết quả sản xuất thực tế
+    context: 生産管理
+  - ja: 製造ロット
+    en: manufacturing lot
+    vi: lô sản xuất
+    context: 生産管理
+  - ja: 製品コード
+    en: product code
+    vi: mã sản phẩm
+    context: 生産管理
+  - ja: 工番
+    en: work order number
+    vi: số phiếu công việc
+    context: 生産管理
+  - ja: 混流生産
+    en: mixed-model production
+    vi: sản xuất hỗn hợp mô hình
+    context: 生産管理
+
+  # ─── 品質管理 (Quality Control) — 30 terms ───
+  - ja: 品質検査
+    en: quality inspection
+    vi: kiểm tra chất lượng
+    context: 品質管理
+  - ja: 受入検査
+    en: incoming inspection
+    vi: kiểm tra tiếp nhận
+    context: 品質管理
+  - ja: 出荷検査
+    en: shipping inspection
+    vi: kiểm tra xuất hàng
+    context: 品質管理
+  - ja: トレーサビリティ
+    en: traceability
+    vi: khả năng truy xuất nguồn gốc
+    context: 品質管理
+  - ja: 不良品
+    en: defective product
+    vi: sản phẩm lỗi / phế phẩm
+    context: 品質管理
+  - ja: ロット管理
+    en: lot management
+    vi: quản lý lô hàng
+    context: 品質管理
+  - ja: 品質基準
+    en: quality standard
+    vi: tiêu chuẩn chất lượng
+    context: 品質管理
+  - ja: 検査記録
+    en: inspection record
+    vi: biên bản kiểm tra
+    context: 品質管理
+  - ja: 不適合品
+    en: nonconforming product
+    vi: sản phẩm không phù hợp
+    context: 品質管理
+  - ja: 是正処置
+    en: corrective action
+    vi: hành động khắc phục
+    context: 品質管理
+  - ja: 予防処置
+    en: preventive action
+    vi: hành động phòng ngừa
+    context: 品質管理
+  - ja: 管理図
+    en: control chart
+    vi: biểu đồ kiểm soát
+    context: 品質管理
+  - ja: 工程能力指数
+    en: process capability index (Cp/Cpk)
+    vi: chỉ số năng lực quá trình
+    context: 品質管理
+  - ja: サンプリング検査
+    en: sampling inspection
+    vi: kiểm tra lấy mẫu
+    context: 品質管理
+  - ja: 全数検査
+    en: 100% inspection
+    vi: kiểm tra toàn bộ
+    context: 品質管理
+  - ja: 不良率
+    en: defect rate
+    vi: tỷ lệ lỗi
+    context: 品質管理
+  - ja: 返品
+    en: product return
+    vi: trả hàng / hoàn trả
+    context: 品質管理
+  - ja: クレーム対応
+    en: complaint handling
+    vi: xử lý khiếu nại
+    context: 品質管理
+  - ja: 品質保証
+    en: quality assurance (QA)
+    vi: đảm bảo chất lượng
+    context: 品質管理
+  - ja: ISO 9001
+    en: ISO 9001 (quality management system)
+    vi: ISO 9001 (hệ thống quản lý chất lượng)
+    context: 品質管理
+  - ja: 内部監査
+    en: internal audit
+    vi: kiểm toán nội bộ
+    context: 品質管理
+  - ja: 外部監査
+    en: external audit
+    vi: kiểm toán bên ngoài
+    context: 品質管理
+  - ja: 四M変化点
+    en: 4M change point (Man, Machine, Material, Method)
+    vi: điểm thay đổi 4M (Người, Máy, Vật liệu, Phương pháp)
+    context: 品質管理
+  - ja: ポカヨケ
+    en: poka-yoke / mistake-proofing
+    vi: phòng lỗi (poka-yoke)
+    context: 品質管理
+  - ja: QC工程図
+    en: QC process chart
+    vi: sơ đồ quy trình kiểm soát chất lượng
+    context: 品質管理
+  - ja: 特性要因図
+    en: cause-and-effect diagram / fishbone chart
+    vi: biểu đồ nhân quả / biểu đồ xương cá
+    context: 品質管理
+  - ja: パレート図
+    en: Pareto chart
+    vi: biểu đồ Pareto
+    context: 品質管理
+  - ja: 測定誤差
+    en: measurement error
+    vi: sai số đo lường
+    context: 品質管理
+  - ja: 限界見本
+    en: limit sample / boundary sample
+    vi: mẫu giới hạn
+    context: 品質管理
+  - ja: 初品検査
+    en: first article inspection
+    vi: kiểm tra mẫu đầu tiên
+    context: 品質管理
+
+  # ─── 在庫管理 (Inventory Management) — 30 terms ───
+  - ja: 在庫管理
+    en: inventory management
+    vi: quản lý tồn kho
+    context: 在庫管理
+  - ja: 発注点
+    en: reorder point
+    vi: điểm đặt hàng lại
+    context: 在庫管理
+  - ja: 安全在庫
+    en: safety stock
+    vi: tồn kho an toàn
+    context: 在庫管理
+  - ja: 棚卸
+    en: stocktaking / inventory count
+    vi: kiểm kê kho
+    context: 在庫管理
+  - ja: 入庫
+    en: warehousing / receiving
+    vi: nhập kho
+    context: 在庫管理
+  - ja: 出庫
+    en: shipping / dispatching
+    vi: xuất kho
+    context: 在庫管理
+  - ja: 在庫回転率
+    en: inventory turnover rate
+    vi: tỷ lệ vòng quay hàng tồn kho
+    context: 在庫管理
+  - ja: デッドストック
+    en: dead stock / obsolete inventory
+    vi: hàng tồn kho chết / hàng không luân chuyển
+    context: 在庫管理
+  - ja: 過剰在庫
+    en: excess inventory
+    vi: tồn kho dư thừa
+    context: 在庫管理
+  - ja: 欠品
+    en: stockout / out-of-stock
+    vi: hết hàng / thiếu hàng
+    context: 在庫管理
+  - ja: 先入先出
+    en: FIFO (first in, first out)
+    vi: nhập trước xuất trước (FIFO)
+    context: 在庫管理
+  - ja: 後入先出
+    en: LIFO (last in, first out)
+    vi: nhập sau xuất trước (LIFO)
+    context: 在庫管理
+  - ja: ロケーション管理
+    en: location management
+    vi: quản lý vị trí kho
+    context: 在庫管理
+  - ja: 倉庫管理
+    en: warehouse management
+    vi: quản lý kho bãi
+    context: 在庫管理
+  - ja: バーコード管理
+    en: barcode management
+    vi: quản lý bằng mã vạch
+    context: 在庫管理
+  - ja: 棚番号
+    en: shelf / bin number
+    vi: số kệ / số ô chứa hàng
+    context: 在庫管理
+  - ja: 在庫差異
+    en: inventory discrepancy / variance
+    vi: chênh lệch tồn kho
+    context: 在庫管理
+  - ja: 移動平均法
+    en: moving average method
+    vi: phương pháp bình quân di động
+    context: 在庫管理
+  - ja: 補充発注
+    en: replenishment order
+    vi: lệnh bổ sung hàng
+    context: 在庫管理
+  - ja: 最大在庫量
+    en: maximum stock level
+    vi: mức tồn kho tối đa
+    context: 在庫管理
+  - ja: 最小在庫量
+    en: minimum stock level
+    vi: mức tồn kho tối thiểu
+    context: 在庫管理
+  - ja: 経済発注量
+    en: economic order quantity (EOQ)
+    vi: lượng đặt hàng kinh tế (EOQ)
+    context: 在庫管理
+  - ja: 在庫金額
+    en: inventory value
+    vi: giá trị tồn kho
+    context: 在庫管理
+  - ja: 払出
+    en: issue / withdrawal
+    vi: xuất phát / lĩnh hàng
+    context: 在庫管理
+  - ja: 物流センター
+    en: distribution center / logistics center
+    vi: trung tâm phân phối / trung tâm logistics
+    context: 在庫管理
+  - ja: 受払帳
+    en: stock ledger / receipt and issue ledger
+    vi: sổ nhập xuất tồn
+    context: 在庫管理
+  - ja: 有効在庫
+    en: available inventory / effective stock
+    vi: tồn kho khả dụng
+    context: 在庫管理
+  - ja: 引当
+    en: allocation / reservation
+    vi: phân bổ / đặt trước hàng
+    context: 在庫管理
+  - ja: 在庫評価
+    en: inventory valuation
+    vi: định giá tồn kho
+    context: 在庫管理
+  - ja: ゾーニング
+    en: zoning (warehouse layout)
+    vi: phân vùng kho
+    context: 在庫管理
+
+  # ─── 調達 (Procurement) — 30 terms ───
   - ja: 仕入先
-    en: supplier
+    en: supplier / vendor
+    vi: nhà cung cấp
     context: 調達
   - ja: 発注
     en: purchase order
+    vi: đặt hàng / lệnh mua hàng
     context: 調達
   - ja: 納品
     en: delivery
+    vi: giao hàng
     context: 調達
   - ja: 検収
     en: acceptance inspection
+    vi: nghiệm thu hàng
     context: 調達
-  - ja: 入庫
-    en: warehousing / receiving
-    context: 倉庫
-  - ja: 出庫
-    en: shipping / dispatching
-    context: 倉庫
-  - ja: 棚卸
-    en: stocktaking
-    context: 倉庫
-  - ja: 安全在庫
-    en: safety stock
-    context: 製造
-  - ja: リードタイム
-    en: lead time
-    context: 製造
+  - ja: 購買管理
+    en: purchasing management
+    vi: quản lý mua hàng
+    context: 調達
+  - ja: 見積依頼
+    en: request for quotation (RFQ)
+    vi: yêu cầu báo giá (RFQ)
+    context: 調達
+  - ja: 見積書
+    en: quotation / estimate
+    vi: bảng báo giá
+    context: 調達
+  - ja: 発注書
+    en: purchase order (PO)
+    vi: đơn đặt hàng (PO)
+    context: 調達
+  - ja: 納期
+    en: delivery date / due date
+    vi: ngày giao hàng / thời hạn giao hàng
+    context: 調達
+  - ja: 調達リードタイム
+    en: procurement lead time
+    vi: thời gian giao hàng mua sắm
+    context: 調達
+  - ja: 単価
+    en: unit price
+    vi: đơn giá
+    context: 調達
+  - ja: 価格交渉
+    en: price negotiation
+    vi: đàm phán giá
+    context: 調達
+  - ja: 契約書
+    en: contract / agreement
+    vi: hợp đồng
+    context: 調達
+  - ja: サプライヤー評価
+    en: supplier evaluation
+    vi: đánh giá nhà cung cấp
+    context: 調達
+  - ja: 優先仕入先
+    en: preferred supplier
+    vi: nhà cung cấp ưu tiên
+    context: 調達
+  - ja: 複数購買
+    en: multi-sourcing
+    vi: mua từ nhiều nguồn
+    context: 調達
+  - ja: 単独購買
+    en: single sourcing
+    vi: mua từ nguồn duy nhất
+    context: 調達
+  - ja: 内製外製判断
+    en: make-or-buy decision
+    vi: quyết định tự sản xuất hay thuê ngoài
+    context: 調達
+  - ja: 外注
+    en: outsourcing / subcontracting
+    vi: thuê ngoài / gia công
+    context: 調達
+  - ja: 支払条件
+    en: payment terms
+    vi: điều kiện thanh toán
+    context: 調達
+  - ja: 請求書
+    en: invoice
+    vi: hóa đơn
+    context: 調達
+  - ja: 買掛金
+    en: accounts payable
+    vi: phải trả người bán
+    context: 調達
+  - ja: 調達計画
+    en: procurement plan
+    vi: kế hoạch mua sắm
+    context: 調達
+  - ja: 品目マスタ
+    en: item master
+    vi: danh mục hàng hóa
+    context: 調達
+  - ja: 購買履歴
+    en: purchase history
+    vi: lịch sử mua hàng
+    context: 調達
+  - ja: 緊急発注
+    en: emergency purchase order
+    vi: đặt hàng khẩn cấp
+    context: 調達
+  - ja: 国内調達
+    en: domestic procurement
+    vi: mua hàng trong nước
+    context: 調達
+  - ja: 海外調達
+    en: overseas procurement
+    vi: mua hàng nước ngoài
+    context: 調達
+  - ja: グリーン調達
+    en: green procurement
+    vi: mua sắm xanh / mua sắm thân thiện môi trường
+    context: 調達
+  - ja: 調達リスク管理
+    en: procurement risk management
+    vi: quản lý rủi ro mua sắm
+    context: 調達
+
+  # ─── 設備保全 (Equipment Maintenance) — 30 terms ───
+  - ja: 設備保全
+    en: equipment maintenance
+    vi: bảo trì thiết bị
+    context: 設備保全
+  - ja: 予防保全
+    en: preventive maintenance (PM)
+    vi: bảo trì phòng ngừa
+    context: 設備保全
+  - ja: 事後保全
+    en: corrective maintenance / breakdown maintenance
+    vi: bảo trì sau sự cố
+    context: 設備保全
+  - ja: 予知保全
+    en: predictive maintenance (PdM)
+    vi: bảo trì dự đoán
+    context: 設備保全
+  - ja: 設備台帳
+    en: equipment ledger / asset register
+    vi: sổ đăng ký thiết bị
+    context: 設備保全
+  - ja: 点検周期
+    en: inspection cycle / interval
+    vi: chu kỳ kiểm tra
+    context: 設備保全
+  - ja: 定期点検
+    en: periodic inspection
+    vi: kiểm tra định kỳ
+    context: 設備保全
+  - ja: 故障記録
+    en: failure / breakdown record
+    vi: biên bản sự cố / hỏng hóc
+    context: 設備保全
+  - ja: 平均故障間隔
+    en: mean time between failures (MTBF)
+    vi: thời gian trung bình giữa các lần hỏng hóc (MTBF)
+    context: 設備保全
+  - ja: 平均修理時間
+    en: mean time to repair (MTTR)
+    vi: thời gian trung bình sửa chữa (MTTR)
+    context: 設備保全
+  - ja: 設備総合効率
+    en: overall equipment effectiveness (OEE)
+    vi: hiệu suất thiết bị tổng thể (OEE)
+    context: 設備保全
+  - ja: 設備稼働率
+    en: equipment availability / uptime rate
+    vi: tỷ lệ sẵn sàng hoạt động của thiết bị
+    context: 設備保全
+  - ja: 停止時間
+    en: downtime
+    vi: thời gian ngừng máy
+    context: 設備保全
+  - ja: 計画停止
+    en: planned downtime
+    vi: ngừng máy có kế hoạch
+    context: 設備保全
+  - ja: 突発停止
+    en: unplanned / sudden stoppage
+    vi: ngừng máy đột xuất
+    context: 設備保全
+  - ja: 油脂管理
+    en: lubrication management
+    vi: quản lý dầu bôi trơn
+    context: 設備保全
+  - ja: 部品交換
+    en: parts replacement
+    vi: thay thế linh kiện
+    context: 設備保全
+  - ja: 保全作業指示
+    en: maintenance work order
+    vi: phiếu lệnh bảo trì
+    context: 設備保全
+  - ja: スペアパーツ
+    en: spare parts
+    vi: phụ tùng thay thế
+    context: 設備保全
+  - ja: オーバーホール
+    en: overhaul
+    vi: đại tu thiết bị
+    context: 設備保全
+  - ja: 設備改善
+    en: equipment improvement / kaizen
+    vi: cải tiến thiết bị
+    context: 設備保全
+  - ja: TPM
+    en: total productive maintenance
+    vi: bảo trì năng suất toàn diện (TPM)
+    context: 設備保全
+  - ja: 自主保全
+    en: autonomous maintenance
+    vi: bảo trì tự chủ
+    context: 設備保全
+  - ja: 保全コスト
+    en: maintenance cost
+    vi: chi phí bảo trì
+    context: 設備保全
+  - ja: 設備寿命
+    en: equipment life / service life
+    vi: tuổi thọ thiết bị
+    context: 設備保全
+  - ja: 劣化診断
+    en: deterioration diagnosis
+    vi: chẩn đoán hư hỏng / lão hóa
+    context: 設備保全
+  - ja: 振動診断
+    en: vibration analysis / diagnosis
+    vi: chẩn đoán rung động
+    context: 設備保全
+  - ja: 熱画像診断
+    en: thermal imaging diagnosis
+    vi: chẩn đoán bằng nhiệt ảnh
+    context: 設備保全
+  - ja: 保全計画
+    en: maintenance plan
+    vi: kế hoạch bảo trì
+    context: 設備保全
+  - ja: 清掃点検
+    en: cleaning and inspection
+    vi: vệ sinh và kiểm tra
+    context: 設備保全
+
+  # ─── IoT / スマートファクトリー (IoT / Smart Factory) — 30 terms ───
+  - ja: IoTセンサー
+    en: IoT sensor
+    vi: cảm biến IoT
+    context: IoT
+  - ja: スマートファクトリー
+    en: smart factory
+    vi: nhà máy thông minh
+    context: IoT
+  - ja: リアルタイムモニタリング
+    en: real-time monitoring
+    vi: giám sát thời gian thực
+    context: IoT
+  - ja: データ収集
+    en: data collection
+    vi: thu thập dữ liệu
+    context: IoT
+  - ja: エッジコンピューティング
+    en: edge computing
+    vi: điện toán biên
+    context: IoT
+  - ja: クラウド連携
+    en: cloud integration
+    vi: tích hợp đám mây
+    context: IoT
+  - ja: デジタルツイン
+    en: digital twin
+    vi: bản sao kỹ thuật số
+    context: IoT
+  - ja: 異常検知
+    en: anomaly detection
+    vi: phát hiện bất thường
+    context: IoT
+  - ja: 機械学習モデル
+    en: machine learning model
+    vi: mô hình học máy
+    context: IoT
+  - ja: 予知保全アルゴリズム
+    en: predictive maintenance algorithm
+    vi: thuật toán bảo trì dự đoán
+    context: IoT
+  - ja: PLCデータ連携
+    en: PLC data integration
+    vi: tích hợp dữ liệu PLC
+    context: IoT
+  - ja: MES連携
+    en: MES integration
+    vi: tích hợp hệ thống MES
+    context: IoT
+  - ja: SCADA
+    en: SCADA (supervisory control and data acquisition)
+    vi: hệ thống SCADA
+    context: IoT
+  - ja: OPCプロトコル
+    en: OPC protocol (OPC-UA)
+    vi: giao thức OPC (OPC-UA)
+    context: IoT
+  - ja: 生産ダッシュボード
+    en: production dashboard
+    vi: bảng điều khiển sản xuất
+    context: IoT
+  - ja: アラート通知
+    en: alert notification
+    vi: thông báo cảnh báo
+    context: IoT
+  - ja: ゲートウェイ
+    en: gateway
+    vi: cổng kết nối (gateway)
+    context: IoT
+  - ja: 通信プロトコル
+    en: communication protocol
+    vi: giao thức truyền thông
+    context: IoT
+  - ja: データレイク
+    en: data lake
+    vi: hồ dữ liệu (data lake)
+    context: IoT
+  - ja: BI分析
+    en: business intelligence analysis
+    vi: phân tích BI (business intelligence)
+    context: IoT
+  - ja: QRコード管理
+    en: QR code management
+    vi: quản lý bằng mã QR
+    context: IoT
+  - ja: RFIDタグ
+    en: RFID tag
+    vi: thẻ RFID
+    context: IoT
+  - ja: 設備稼働データ
+    en: equipment operation data
+    vi: dữ liệu vận hành thiết bị
+    context: IoT
+  - ja: ネットワーク帯域
+    en: network bandwidth
+    vi: băng thông mạng
+    context: IoT
+  - ja: ファームウェア更新
+    en: firmware update
+    vi: cập nhật firmware
+    context: IoT
+  - ja: セキュリティパッチ
+    en: security patch
+    vi: bản vá bảo mật
+    context: IoT
+  - ja: サイバーセキュリティ
+    en: cybersecurity
+    vi: an ninh mạng
+    context: IoT
+  - ja: 工場内ネットワーク
+    en: factory network / OT network
+    vi: mạng nội bộ nhà máy
+    context: IoT
+  - ja: データ可視化
+    en: data visualization
+    vi: trực quan hóa dữ liệu
+    context: IoT
+  - ja: 稼働ログ
+    en: operation log
+    vi: nhật ký vận hành
+    context: IoT
+
+  # ─── 安全管理 (Safety Management) — 35 terms ───
+  - ja: 安全管理
+    en: safety management
+    vi: quản lý an toàn
+    context: 安全管理
+  - ja: 労働安全衛生
+    en: occupational health and safety (OHS)
+    vi: an toàn lao động và vệ sinh lao động
+    context: 安全管理
+  - ja: 危険予知活動
+    en: hazard prediction activity (KYT)
+    vi: hoạt động dự báo nguy hiểm (KYT)
+    context: 安全管理
+  - ja: ヒヤリハット
+    en: near miss / close call
+    vi: sự cố suýt xảy ra / sự cố tiệm cận
+    context: 安全管理
+  - ja: 安全点検
+    en: safety inspection
+    vi: kiểm tra an toàn
+    context: 安全管理
+  - ja: 安全教育
+    en: safety training / education
+    vi: đào tạo an toàn
+    context: 安全管理
+  - ja: 保護具
+    en: personal protective equipment (PPE)
+    vi: trang thiết bị bảo hộ cá nhân (PPE)
+    context: 安全管理
+  - ja: 労働災害
+    en: occupational accident / workplace injury
+    vi: tai nạn lao động
+    context: 安全管理
+  - ja: 事故報告書
+    en: accident report
+    vi: báo cáo tai nạn
+    context: 安全管理
+  - ja: リスクアセスメント
+    en: risk assessment
+    vi: đánh giá rủi ro
+    context: 安全管理
+  - ja: 安全衛生委員会
+    en: safety and health committee
+    vi: ủy ban an toàn và vệ sinh lao động
+    context: 安全管理
+  - ja: 危険物管理
+    en: hazardous material management
+    vi: quản lý chất nguy hiểm
+    context: 安全管理
+  - ja: 化学物質管理
+    en: chemical substance management
+    vi: quản lý hóa chất
+    context: 安全管理
+  - ja: 消防設備
+    en: fire protection equipment
+    vi: thiết bị phòng cháy chữa cháy
+    context: 安全管理
+  - ja: 緊急連絡網
+    en: emergency contact network
+    vi: mạng lưới liên lạc khẩn cấp
+    context: 安全管理
+  - ja: 避難訓練
+    en: evacuation drill
+    vi: diễn tập sơ tán
+    context: 安全管理
+  - ja: 作業環境測定
+    en: work environment measurement
+    vi: đo lường môi trường làm việc
+    context: 安全管理
+  - ja: 騒音管理
+    en: noise management
+    vi: quản lý tiếng ồn
+    context: 安全管理
+  - ja: 振動管理
+    en: vibration management
+    vi: quản lý rung động
+    context: 安全管理
+  - ja: 粉塵管理
+    en: dust / particulate matter management
+    vi: quản lý bụi
+    context: 安全管理
+  - ja: 安全標識
+    en: safety sign / warning sign
+    vi: biển báo an toàn
+    context: 安全管理
+  - ja: 鍵管理
+    en: lock / key management (lockout-tagout)
+    vi: quản lý khóa / cô lập năng lượng (LOTO)
+    context: 安全管理
+  - ja: ロックアウトタグアウト
+    en: lockout-tagout (LOTO)
+    vi: cô lập và gắn nhãn năng lượng (LOTO)
+    context: 安全管理
+  - ja: 転倒防止
+    en: slip and fall prevention
+    vi: phòng ngừa trơn trượt và ngã
+    context: 安全管理
+  - ja: 重量物取扱
+    en: heavy load handling
+    vi: xử lý vật nặng
+    context: 安全管理
+  - ja: 安全パトロール
+    en: safety patrol
+    vi: tuần tra an toàn
+    context: 安全管理
+  - ja: 安全目標
+    en: safety target / goal
+    vi: mục tiêu an toàn
+    context: 安全管理
+  - ja: 無災害記録
+    en: zero-accident record
+    vi: kỷ lục không tai nạn
+    context: 安全管理
+  - ja: 健康診断
+    en: health checkup / medical examination
+    vi: khám sức khỏe định kỳ
+    context: 安全管理
+  - ja: メンタルヘルス対策
+    en: mental health measures
+    vi: biện pháp chăm sóc sức khỏe tâm thần
+    context: 安全管理
+  - ja: 作業姿勢指導
+    en: work posture guidance
+    vi: hướng dẫn tư thế làm việc
+    context: 安全管理
+  - ja: 安全会議
+    en: safety meeting
+    vi: cuộc họp an toàn
+    context: 安全管理
+  - ja: 改善提案
+    en: improvement proposal / kaizen suggestion
+    vi: đề xuất cải tiến
+    context: 安全管理
+  - ja: 法令遵守
+    en: regulatory compliance
+    vi: tuân thủ pháp luật
+    context: 安全管理
+  - ja: 安全文化
+    en: safety culture
+    vi: văn hóa an toàn
+    context: 安全管理
+
+  # ─── 原価管理 (Cost Management) — 30 terms ───
+  - ja: 原価管理
+    en: cost management
+    vi: quản lý chi phí
+    context: 原価管理
   - ja: 標準原価
     en: standard cost
-    context: 製造
+    vi: chi phí tiêu chuẩn
+    context: 原価管理
   - ja: 実績原価
     en: actual cost
-    context: 製造
-  - ja: 原材料
-    en: raw materials
-    context: 製造
-  - ja: 仕掛品
-    en: work in progress (WIP)
-    context: 製造
-  - ja: 完成品
-    en: finished goods
-    context: 製造
-  - ja: 工場
-    en: factory / plant
-    context: 製造
-  - ja: ライン
-    en: production line
-    context: 製造
-  - ja: 金型
-    en: mold / die
-    context: 製造
+    vi: chi phí thực tế
+    context: 原価管理
+  - ja: 原価差異
+    en: cost variance
+    vi: chênh lệch chi phí
+    context: 原価管理
+  - ja: 製造原価
+    en: manufacturing cost
+    vi: chi phí sản xuất
+    context: 原価管理
+  - ja: 直接材料費
+    en: direct material cost
+    vi: chi phí nguyên vật liệu trực tiếp
+    context: 原価管理
+  - ja: 直接労務費
+    en: direct labor cost
+    vi: chi phí nhân công trực tiếp
+    context: 原価管理
+  - ja: 製造間接費
+    en: manufacturing overhead
+    vi: chi phí sản xuất chung
+    context: 原価管理
+  - ja: 変動費
+    en: variable cost
+    vi: chi phí biến đổi
+    context: 原価管理
+  - ja: 固定費
+    en: fixed cost
+    vi: chi phí cố định
+    context: 原価管理
+  - ja: 損益分岐点
+    en: break-even point (BEP)
+    vi: điểm hòa vốn
+    context: 原価管理
+  - ja: 限界利益
+    en: contribution margin
+    vi: lợi nhuận biên / đóng góp cận biên
+    context: 原価管理
+  - ja: 原価低減
+    en: cost reduction
+    vi: giảm chi phí
+    context: 原価管理
+  - ja: 原価企画
+    en: target costing
+    vi: lập kế hoạch chi phí mục tiêu
+    context: 原価管理
+  - ja: 予算管理
+    en: budget management
+    vi: quản lý ngân sách
+    context: 原価管理
+  - ja: 製品原価
+    en: product cost
+    vi: chi phí sản phẩm
+    context: 原価管理
+  - ja: 工数
+    en: man-hours / work hours
+    vi: công giờ / giờ công
+    context: 原価管理
+  - ja: 間接費配賦
+    en: overhead allocation
+    vi: phân bổ chi phí gián tiếp
+    context: 原価管理
+  - ja: ABC原価計算
+    en: activity-based costing (ABC)
+    vi: tính giá thành theo hoạt động (ABC)
+    context: 原価管理
+  - ja: 原価計算
+    en: cost accounting
+    vi: kế toán chi phí
+    context: 原価管理
+  - ja: 加工費
+    en: processing cost / conversion cost
+    vi: chi phí gia công / chi phí chuyển đổi
+    context: 原価管理
+  - ja: 外注費
+    en: outsourcing cost / subcontracting cost
+    vi: chi phí thuê ngoài
+    context: 原価管理
+  - ja: 減価償却
+    en: depreciation
+    vi: khấu hao
+    context: 原価管理
+  - ja: 在庫評価損
+    en: inventory write-down loss
+    vi: lỗ giảm giá trị tồn kho
+    context: 原価管理
+  - ja: 利益率
+    en: profit margin
+    vi: tỷ suất lợi nhuận
+    context: 原価管理
+  - ja: コスト分析
+    en: cost analysis
+    vi: phân tích chi phí
+    context: 原価管理
+  - ja: 工程別原価
+    en: process-based cost
+    vi: chi phí theo từng công đoạn
+    context: 原価管理
+  - ja: 売上原価
+    en: cost of goods sold (COGS)
+    vi: giá vốn hàng bán
+    context: 原価管理
+  - ja: ロス管理
+    en: loss management / waste tracking
+    vi: quản lý tổn thất
+    context: 原価管理
+  - ja: 原価報告書
+    en: cost report
+    vi: báo cáo chi phí
+    context: 原価管理

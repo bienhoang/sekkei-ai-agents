@@ -7,7 +7,12 @@ from pathlib import Path
 
 import yaml
 
-ALLOWED_INDUSTRIES = {"finance", "medical", "manufacturing", "real-estate"}
+ALLOWED_INDUSTRIES = {
+    "finance", "medical", "manufacturing", "real-estate",
+    "logistics", "retail", "insurance", "education",
+    "government", "construction", "telecom", "automotive",
+    "energy", "food-service", "common",
+}
 GLOSSARIES_DIR = Path(__file__).resolve().parent.parent.parent / "templates" / "glossaries"
 
 
@@ -28,17 +33,19 @@ def save_glossary(glossary: dict, path: str) -> None:
     )
 
 
-def add_term(glossary: dict, ja: str, en: str, context: str = "") -> dict:
+def add_term(glossary: dict, ja: str, en: str, vi: str = "", context: str = "") -> dict:
     """Add a new term to the glossary."""
     # Check for duplicate
     for term in glossary.get("terms", []):
         if term.get("ja") == ja:
             term["en"] = en
+            if vi:
+                term["vi"] = vi
             if context:
                 term["context"] = context
             return glossary
 
-    glossary.setdefault("terms", []).append({"ja": ja, "en": en, "context": context})
+    glossary.setdefault("terms", []).append({"ja": ja, "en": en, "vi": vi, "context": context})
     return glossary
 
 
@@ -47,7 +54,9 @@ def find_term(glossary: dict, query: str) -> list[dict]:
     results = []
     q = query.lower()
     for term in glossary.get("terms", []):
-        if q in term.get("ja", "").lower() or q in term.get("en", "").lower():
+        if (q in term.get("ja", "").lower()
+                or q in term.get("en", "").lower()
+                or q in term.get("vi", "").lower()):
             results.append(term)
     return results
 
@@ -57,11 +66,13 @@ def export_as_markdown(glossary: dict) -> str:
     lines = [
         f"# 用語集 — {glossary.get('project', '')}",
         "",
-        "| 日本語 | English | コンテキスト |",
-        "|--------|---------|-------------|",
+        "| 日本語 | English | Tiếng Việt | コンテキスト |",
+        "|--------|---------|------------|-------------|",
     ]
     for t in glossary.get("terms", []):
-        lines.append(f"| {t.get('ja', '')} | {t.get('en', '')} | {t.get('context', '')} |")
+        lines.append(
+            f"| {t.get('ja', '')} | {t.get('en', '')} | {t.get('vi', '')} | {t.get('context', '')} |"
+        )
     return "\n".join(lines)
 
 
@@ -94,6 +105,7 @@ def handle_import(industry: str, glossary: dict) -> tuple[dict, int, int]:
             glossary.setdefault("terms", []).append({
                 "ja": ja,
                 "en": term.get("en", ""),
+                "vi": term.get("vi", ""),
                 "context": term.get("context", ""),
             })
             existing_ja.add(ja)
@@ -108,7 +120,7 @@ def handle_action(action: str, data: dict) -> dict:
     glossary = load_glossary(path)
 
     if action == "add":
-        glossary = add_term(glossary, data["ja"], data["en"], data.get("context", ""))
+        glossary = add_term(glossary, data["ja"], data["en"], data.get("vi", ""), data.get("context", ""))
         save_glossary(glossary, path)
         return {"success": True, "terms_count": len(glossary["terms"])}
 

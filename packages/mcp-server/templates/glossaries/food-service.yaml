@@ -1,0 +1,1018 @@
+industry: food-service
+language: ja
+terms:
+  # 店舗管理 (store management) — 32 terms
+  - ja: シフト
+    en: shift
+    vi: ca làm việc
+    context: 店舗管理
+  - ja: 売上日報
+    en: daily sales report
+    vi: báo cáo doanh thu ngày
+    context: 店舗管理
+  - ja: 月次売上
+    en: monthly sales
+    vi: doanh thu hàng tháng
+    context: 店舗管理
+  - ja: 客単価
+    en: average spend per customer
+    vi: chi tiêu trung bình mỗi khách
+    context: 店舗管理
+  - ja: 客数
+    en: customer count
+    vi: số lượng khách
+    context: 店舗管理
+  - ja: 回転率
+    en: table turnover rate
+    vi: tỷ lệ xoay vòng bàn
+    context: 店舗管理
+  - ja: 在庫管理
+    en: inventory management
+    vi: quản lý hàng tồn kho
+    context: 店舗管理
+  - ja: 棚卸し
+    en: stocktaking
+    vi: kiểm kê hàng hóa
+    context: 店舗管理
+  - ja: 廃棄ロス
+    en: waste loss
+    vi: tổn thất do lãng phí
+    context: 店舗管理
+  - ja: 人件費
+    en: labor cost
+    vi: chi phí nhân công
+    context: 店舗管理
+  - ja: 店長
+    en: store manager
+    vi: quản lý cửa hàng
+    context: 店舗管理
+  - ja: アルバイト
+    en: part-time staff
+    vi: nhân viên bán thời gian
+    context: 店舗管理
+  - ja: 正社員
+    en: full-time employee
+    vi: nhân viên chính thức
+    context: 店舗管理
+  - ja: 勤怠管理
+    en: attendance management
+    vi: quản lý chấm công
+    context: 店舗管理
+  - ja: 残業
+    en: overtime
+    vi: làm thêm giờ
+    context: 店舗管理
+  - ja: 休憩時間
+    en: break time
+    vi: thời gian nghỉ
+    context: 店舗管理
+  - ja: 営業時間
+    en: business hours
+    vi: giờ kinh doanh
+    context: 店舗管理
+  - ja: 閉店作業
+    en: closing procedures
+    vi: thủ tục đóng cửa
+    context: 店舗管理
+  - ja: 開店作業
+    en: opening procedures
+    vi: thủ tục mở cửa
+    context: 店舗管理
+  - ja: 売上目標
+    en: sales target
+    vi: mục tiêu doanh thu
+    context: 店舗管理
+  - ja: 達成率
+    en: achievement rate
+    vi: tỷ lệ đạt mục tiêu
+    context: 店舗管理
+  - ja: 損益計算
+    en: profit and loss calculation
+    vi: tính toán lãi lỗ
+    context: 店舗管理
+  - ja: 固定費
+    en: fixed cost
+    vi: chi phí cố định
+    context: 店舗管理
+  - ja: 変動費
+    en: variable cost
+    vi: chi phí biến đổi
+    context: 店舗管理
+  - ja: 粗利
+    en: gross profit
+    vi: lợi nhuận gộp
+    context: 店舗管理
+  - ja: 座席数
+    en: seat count
+    vi: số chỗ ngồi
+    context: 店舗管理
+  - ja: フロアスタッフ
+    en: floor staff
+    vi: nhân viên phục vụ
+    context: 店舗管理
+  - ja: キッチンスタッフ
+    en: kitchen staff
+    vi: nhân viên bếp
+    context: 店舗管理
+  - ja: シフト表
+    en: shift schedule
+    vi: bảng phân ca
+    context: 店舗管理
+  - ja: 店舗コード
+    en: store code
+    vi: mã cửa hàng
+    context: 店舗管理
+  - ja: エリアマネージャー
+    en: area manager
+    vi: quản lý khu vực
+    context: 店舗管理
+  - ja: 本部
+    en: headquarters
+    vi: trụ sở chính
+    context: 店舗管理
+
+  # メニュー (menu) — 32 terms
+  - ja: メニュー
+    en: menu
+    vi: thực đơn
+    context: メニュー
+  - ja: 原価率
+    en: food cost ratio
+    vi: tỷ lệ giá vốn
+    context: メニュー
+  - ja: アレルゲン
+    en: allergen
+    vi: chất gây dị ứng
+    context: メニュー
+  - ja: カロリー
+    en: calorie
+    vi: ca-lo
+    context: メニュー
+  - ja: 食材
+    en: ingredient
+    vi: nguyên liệu
+    context: メニュー
+  - ja: レシピ
+    en: recipe
+    vi: công thức nấu ăn
+    context: メニュー
+  - ja: 季節メニュー
+    en: seasonal menu
+    vi: thực đơn theo mùa
+    context: メニュー
+  - ja: 限定メニュー
+    en: limited menu
+    vi: thực đơn giới hạn
+    context: メニュー
+  - ja: セットメニュー
+    en: set menu
+    vi: thực đơn combo
+    context: メニュー
+  - ja: 単品
+    en: single item
+    vi: món đơn lẻ
+    context: メニュー
+  - ja: サイドメニュー
+    en: side menu
+    vi: món phụ
+    context: メニュー
+  - ja: ドリンクメニュー
+    en: drink menu
+    vi: thực đơn đồ uống
+    context: メニュー
+  - ja: デザートメニュー
+    en: dessert menu
+    vi: thực đơn tráng miệng
+    context: メニュー
+  - ja: グランドメニュー
+    en: main menu
+    vi: thực đơn chính
+    context: メニュー
+  - ja: メニュー改定
+    en: menu revision
+    vi: cập nhật thực đơn
+    context: メニュー
+  - ja: 売れ筋商品
+    en: best-selling item
+    vi: mặt hàng bán chạy
+    context: メニュー
+  - ja: 死に筋商品
+    en: slow-moving item
+    vi: mặt hàng bán chậm
+    context: メニュー
+  - ja: 価格設定
+    en: pricing
+    vi: định giá
+    context: メニュー
+  - ja: 税込価格
+    en: tax-included price
+    vi: giá đã bao gồm thuế
+    context: メニュー
+  - ja: 税抜価格
+    en: tax-excluded price
+    vi: giá chưa bao gồm thuế
+    context: メニュー
+  - ja: 盛り付け
+    en: plating
+    vi: trình bày món ăn
+    context: メニュー
+  - ja: ポーション
+    en: portion size
+    vi: khẩu phần
+    context: メニュー
+  - ja: トッピング
+    en: topping
+    vi: topping
+    context: メニュー
+  - ja: ベジタリアン対応
+    en: vegetarian option
+    vi: tùy chọn chay
+    context: メニュー
+  - ja: ビーガン対応
+    en: vegan option
+    vi: tùy chọn thuần chay
+    context: メニュー
+  - ja: グルテンフリー
+    en: gluten-free
+    vi: không chứa gluten
+    context: メニュー
+  - ja: 辛さ調整
+    en: spice level adjustment
+    vi: điều chỉnh độ cay
+    context: メニュー
+  - ja: 品切れ
+    en: out of stock
+    vi: hết hàng
+    context: メニュー
+  - ja: 仕込み
+    en: prep work
+    vi: công việc chuẩn bị
+    context: メニュー
+  - ja: 食品添加物
+    en: food additive
+    vi: phụ gia thực phẩm
+    context: メニュー
+  - ja: 原材料
+    en: raw material
+    vi: nguyên liệu thô
+    context: メニュー
+  - ja: メニューエンジニアリング
+    en: menu engineering
+    vi: kỹ thuật thiết kế thực đơn
+    context: メニュー
+
+  # 予約 (reservation) — 30 terms
+  - ja: 予約
+    en: reservation
+    vi: đặt bàn
+    context: 予約
+  - ja: テーブル管理
+    en: table management
+    vi: quản lý bàn
+    context: 予約
+  - ja: 予約台帳
+    en: reservation ledger
+    vi: sổ đặt bàn
+    context: 予約
+  - ja: コース予約
+    en: course reservation
+    vi: đặt bàn theo thực đơn
+    context: 予約
+  - ja: 人数変更
+    en: party size change
+    vi: thay đổi số người
+    context: 予約
+  - ja: キャンセル
+    en: cancellation
+    vi: hủy đặt
+    context: 予約
+  - ja: キャンセル料
+    en: cancellation fee
+    vi: phí hủy đặt
+    context: 予約
+  - ja: ノーショー
+    en: no-show
+    vi: không đến mà không báo
+    context: 予約
+  - ja: 当日予約
+    en: same-day reservation
+    vi: đặt bàn trong ngày
+    context: 予約
+  - ja: 事前決済
+    en: advance payment
+    vi: thanh toán trước
+    context: 予約
+  - ja: 貸切
+    en: exclusive use
+    vi: thuê riêng
+    context: 予約
+  - ja: 個室
+    en: private room
+    vi: phòng riêng
+    context: 予約
+  - ja: テーブル番号
+    en: table number
+    vi: số bàn
+    context: 予約
+  - ja: 席配置
+    en: seating arrangement
+    vi: bố trí chỗ ngồi
+    context: 予約
+  - ja: フロアマップ
+    en: floor map
+    vi: sơ đồ tầng
+    context: 予約
+  - ja: 予約確認メール
+    en: reservation confirmation email
+    vi: email xác nhận đặt bàn
+    context: 予約
+  - ja: リマインダー通知
+    en: reminder notification
+    vi: thông báo nhắc nhở
+    context: 予約
+  - ja: ウェイティングリスト
+    en: waiting list
+    vi: danh sách chờ
+    context: 予約
+  - ja: 受付時間
+    en: reception time
+    vi: giờ tiếp nhận
+    context: 予約
+  - ja: 来店時刻
+    en: arrival time
+    vi: giờ đến
+    context: 予約
+  - ja: 滞在時間
+    en: dining duration
+    vi: thời gian lưu trú
+    context: 予約
+  - ja: 誕生日対応
+    en: birthday arrangement
+    vi: dịch vụ sinh nhật
+    context: 予約
+  - ja: アレルギー備考
+    en: allergy note
+    vi: ghi chú dị ứng
+    context: 予約
+  - ja: 禁煙席
+    en: non-smoking seat
+    vi: chỗ ngồi không hút thuốc
+    context: 予約
+  - ja: 喫煙席
+    en: smoking seat
+    vi: chỗ ngồi hút thuốc
+    context: 予約
+  - ja: オンライン予約
+    en: online reservation
+    vi: đặt bàn trực tuyến
+    context: 予約
+  - ja: 予約枠
+    en: reservation slot
+    vi: khung giờ đặt bàn
+    context: 予約
+  - ja: 空席確認
+    en: seat availability check
+    vi: kiểm tra chỗ trống
+    context: 予約
+  - ja: 団体予約
+    en: group reservation
+    vi: đặt bàn theo nhóm
+    context: 予約
+  - ja: VIPゲスト
+    en: VIP guest
+    vi: khách VIP
+    context: 予約
+
+  # 食材調達 (ingredient procurement) — 30 terms
+  - ja: 仕入先
+    en: supplier
+    vi: nhà cung cấp
+    context: 食材調達
+  - ja: 産地
+    en: origin
+    vi: xuất xứ
+    context: 食材調達
+  - ja: 発注書
+    en: purchase order
+    vi: đơn đặt hàng
+    context: 食材調達
+  - ja: 納品書
+    en: delivery note
+    vi: phiếu giao hàng
+    context: 食材調達
+  - ja: 検収
+    en: receiving inspection
+    vi: kiểm tra hàng nhận
+    context: 食材調達
+  - ja: 鮮度管理
+    en: freshness management
+    vi: quản lý độ tươi
+    context: 食材調達
+  - ja: 消費期限
+    en: expiration date
+    vi: hạn sử dụng
+    context: 食材調達
+  - ja: 賞味期限
+    en: best-before date
+    vi: hạn dùng tốt nhất
+    context: 食材調達
+  - ja: 先入先出
+    en: first in first out (FIFO)
+    vi: nhập trước xuất trước (FIFO)
+    context: 食材調達
+  - ja: 冷蔵保管
+    en: refrigerated storage
+    vi: bảo quản lạnh
+    context: 食材調達
+  - ja: 冷凍保管
+    en: frozen storage
+    vi: bảo quản đông lạnh
+    context: 食材調達
+  - ja: 常温保管
+    en: room temperature storage
+    vi: bảo quản nhiệt độ phòng
+    context: 食材調達
+  - ja: 食材コスト
+    en: food cost
+    vi: chi phí nguyên liệu
+    context: 食材調達
+  - ja: 仕入価格
+    en: purchase price
+    vi: giá nhập hàng
+    context: 食材調達
+  - ja: 相見積もり
+    en: competitive bidding
+    vi: đấu thầu cạnh tranh
+    context: 食材調達
+  - ja: 定期発注
+    en: regular order
+    vi: đặt hàng định kỳ
+    context: 食材調達
+  - ja: 緊急発注
+    en: emergency order
+    vi: đặt hàng khẩn cấp
+    context: 食材調達
+  - ja: 返品
+    en: return
+    vi: trả hàng
+    context: 食材調達
+  - ja: 欠品
+    en: stockout
+    vi: hết hàng
+    context: 食材調達
+  - ja: 安全在庫
+    en: safety stock
+    vi: tồn kho an toàn
+    context: 食材調達
+  - ja: 在庫回転数
+    en: inventory turnover
+    vi: vòng quay hàng tồn kho
+    context: 食材調達
+  - ja: ロット管理
+    en: lot management
+    vi: quản lý lô hàng
+    context: 食材調達
+  - ja: トレーサビリティ
+    en: traceability
+    vi: truy xuất nguồn gốc
+    context: 食材調達
+  - ja: 有機食材
+    en: organic ingredient
+    vi: nguyên liệu hữu cơ
+    context: 食材調達
+  - ja: 地産地消
+    en: local production for local consumption
+    vi: sản xuất và tiêu thụ địa phương
+    context: 食材調達
+  - ja: 旬の食材
+    en: seasonal ingredient
+    vi: nguyên liệu theo mùa
+    context: 食材調達
+  - ja: 食材ロス
+    en: food waste
+    vi: lãng phí thực phẩm
+    context: 食材調達
+  - ja: 食品表示
+    en: food labeling
+    vi: nhãn thực phẩm
+    context: 食材調達
+  - ja: 農薬残留
+    en: pesticide residue
+    vi: dư lượng thuốc trừ sâu
+    context: 食材調達
+  - ja: 産地証明
+    en: certificate of origin
+    vi: chứng nhận xuất xứ
+    context: 食材調達
+
+  # HACCP — 32 terms
+  - ja: 危害分析
+    en: hazard analysis
+    vi: phân tích mối nguy
+    context: HACCP
+  - ja: 重要管理点
+    en: critical control point (CCP)
+    vi: điểm kiểm soát tới hạn
+    context: HACCP
+  - ja: 管理基準
+    en: critical limit
+    vi: giới hạn tới hạn
+    context: HACCP
+  - ja: モニタリング
+    en: monitoring
+    vi: giám sát
+    context: HACCP
+  - ja: 是正措置
+    en: corrective action
+    vi: hành động khắc phục
+    context: HACCP
+  - ja: 検証
+    en: verification
+    vi: xác minh
+    context: HACCP
+  - ja: 記録管理
+    en: record keeping
+    vi: quản lý hồ sơ
+    context: HACCP
+  - ja: 加熱殺菌
+    en: heat sterilization
+    vi: tiệt trùng bằng nhiệt
+    context: HACCP
+  - ja: 中心温度
+    en: core temperature
+    vi: nhiệt độ trung tâm
+    context: HACCP
+  - ja: 冷却管理
+    en: cooling management
+    vi: quản lý làm lạnh
+    context: HACCP
+  - ja: 交差汚染
+    en: cross-contamination
+    vi: ô nhiễm chéo
+    context: HACCP
+  - ja: 二次汚染
+    en: secondary contamination
+    vi: ô nhiễm thứ cấp
+    context: HACCP
+  - ja: 微生物検査
+    en: microbiological testing
+    vi: kiểm nghiệm vi sinh
+    context: HACCP
+  - ja: 食中毒
+    en: food poisoning
+    vi: ngộ độc thực phẩm
+    context: HACCP
+  - ja: 細菌汚染
+    en: bacterial contamination
+    vi: ô nhiễm vi khuẩn
+    context: HACCP
+  - ja: ノロウイルス
+    en: norovirus
+    vi: vi-rút noro
+    context: HACCP
+  - ja: サルモネラ菌
+    en: salmonella
+    vi: vi khuẩn salmonella
+    context: HACCP
+  - ja: 異物混入
+    en: foreign object contamination
+    vi: nhiễm vật thể lạ
+    context: HACCP
+  - ja: アレルゲン管理
+    en: allergen management
+    vi: quản lý chất gây dị ứng
+    context: HACCP
+  - ja: 温度記録
+    en: temperature log
+    vi: nhật ký nhiệt độ
+    context: HACCP
+  - ja: 衛生教育
+    en: hygiene training
+    vi: đào tạo vệ sinh
+    context: HACCP
+  - ja: 自主点検
+    en: self-inspection
+    vi: tự kiểm tra
+    context: HACCP
+  - ja: 行政監査
+    en: regulatory audit
+    vi: kiểm tra của cơ quan quản lý
+    context: HACCP
+  - ja: リコール
+    en: product recall
+    vi: thu hồi sản phẩm
+    context: HACCP
+  - ja: クレーム対応
+    en: complaint handling
+    vi: xử lý khiếu nại
+    context: HACCP
+  - ja: 衛生計画
+    en: sanitation plan
+    vi: kế hoạch vệ sinh
+    context: HACCP
+  - ja: 食品安全
+    en: food safety
+    vi: an toàn thực phẩm
+    context: HACCP
+  - ja: 危機管理
+    en: crisis management
+    vi: quản lý khủng hoảng
+    context: HACCP
+  - ja: フローダイアグラム
+    en: process flow diagram
+    vi: sơ đồ quy trình
+    context: HACCP
+  - ja: 前提条件プログラム
+    en: prerequisite program
+    vi: chương trình tiên quyết
+    context: HACCP
+  - ja: 生物的ハザード
+    en: biological hazard
+    vi: mối nguy sinh học
+    context: HACCP
+  - ja: 化学的ハザード
+    en: chemical hazard
+    vi: mối nguy hóa học
+    context: HACCP
+
+  # 衛生管理 (hygiene management) — 30 terms
+  - ja: 食品衛生
+    en: food hygiene
+    vi: vệ sinh thực phẩm
+    context: 衛生管理
+  - ja: 手洗い
+    en: handwashing
+    vi: rửa tay
+    context: 衛生管理
+  - ja: 消毒
+    en: disinfection
+    vi: khử trùng
+    context: 衛生管理
+  - ja: 洗浄
+    en: cleaning
+    vi: làm sạch
+    context: 衛生管理
+  - ja: 清掃点検
+    en: cleaning inspection
+    vi: kiểm tra vệ sinh
+    context: 衛生管理
+  - ja: ゴキブリ対策
+    en: cockroach control
+    vi: kiểm soát gián
+    context: 衛生管理
+  - ja: ネズミ対策
+    en: rodent control
+    vi: kiểm soát chuột
+    context: 衛生管理
+  - ja: 防虫管理
+    en: pest control
+    vi: quản lý phòng trừ côn trùng
+    context: 衛生管理
+  - ja: 廃棄物処理
+    en: waste disposal
+    vi: xử lý chất thải
+    context: 衛生管理
+  - ja: 衛生チェックリスト
+    en: hygiene checklist
+    vi: danh sách kiểm tra vệ sinh
+    context: 衛生管理
+  - ja: 制服
+    en: uniform
+    vi: đồng phục
+    context: 衛生管理
+  - ja: 健康診断
+    en: health checkup
+    vi: khám sức khỏe
+    context: 衛生管理
+  - ja: 調理場
+    en: kitchen area
+    vi: khu vực nấu ăn
+    context: 衛生管理
+  - ja: まな板
+    en: cutting board
+    vi: thớt
+    context: 衛生管理
+  - ja: 包丁
+    en: kitchen knife
+    vi: dao bếp
+    context: 衛生管理
+  - ja: 調理器具
+    en: cooking utensil
+    vi: dụng cụ nấu ăn
+    context: 衛生管理
+  - ja: 食器洗浄
+    en: dishwashing
+    vi: rửa bát
+    context: 衛生管理
+  - ja: 洗浄剤
+    en: detergent
+    vi: chất tẩy rửa
+    context: 衛生管理
+  - ja: 次亜塩素酸
+    en: hypochlorous acid
+    vi: axit hypochlorous
+    context: 衛生管理
+  - ja: アルコール消毒
+    en: alcohol disinfection
+    vi: khử trùng bằng cồn
+    context: 衛生管理
+  - ja: 調理温度
+    en: cooking temperature
+    vi: nhiệt độ nấu ăn
+    context: 衛生管理
+  - ja: 保存温度
+    en: storage temperature
+    vi: nhiệt độ bảo quản
+    context: 衛生管理
+  - ja: 使い捨て手袋
+    en: disposable gloves
+    vi: găng tay dùng một lần
+    context: 衛生管理
+  - ja: マスク着用
+    en: mask wearing
+    vi: đeo khẩu trang
+    context: 衛生管理
+  - ja: 帽子着用
+    en: hat wearing
+    vi: đội mũ
+    context: 衛生管理
+  - ja: 排水管理
+    en: drainage management
+    vi: quản lý thoát nước
+    context: 衛生管理
+  - ja: 換気
+    en: ventilation
+    vi: thông gió
+    context: 衛生管理
+  - ja: 食品衛生責任者
+    en: food hygiene manager
+    vi: người phụ trách vệ sinh thực phẩm
+    context: 衛生管理
+  - ja: 衛生管理計画
+    en: hygiene management plan
+    vi: kế hoạch quản lý vệ sinh
+    context: 衛生管理
+  - ja: 食品安全基準
+    en: food safety standard
+    vi: tiêu chuẩn an toàn thực phẩm
+    context: 衛生管理
+
+  # デリバリー (delivery) — 32 terms
+  - ja: 配達エリア
+    en: delivery area
+    vi: khu vực giao hàng
+    context: デリバリー
+  - ja: 配達時間
+    en: delivery time
+    vi: thời gian giao hàng
+    context: デリバリー
+  - ja: 注文受付
+    en: order intake
+    vi: tiếp nhận đơn hàng
+    context: デリバリー
+  - ja: 配達距離
+    en: delivery distance
+    vi: khoảng cách giao hàng
+    context: デリバリー
+  - ja: 送料
+    en: delivery fee
+    vi: phí vận chuyển
+    context: デリバリー
+  - ja: 最低注文金額
+    en: minimum order amount
+    vi: số tiền đặt hàng tối thiểu
+    context: デリバリー
+  - ja: 配達員
+    en: delivery person
+    vi: nhân viên giao hàng
+    context: デリバリー
+  - ja: 配達ルート
+    en: delivery route
+    vi: tuyến đường giao hàng
+    context: デリバリー
+  - ja: リードタイム
+    en: lead time
+    vi: thời gian chờ
+    context: デリバリー
+  - ja: 保温バッグ
+    en: insulated bag
+    vi: túi giữ nhiệt
+    context: デリバリー
+  - ja: 梱包
+    en: packaging
+    vi: đóng gói
+    context: デリバリー
+  - ja: 配達完了通知
+    en: delivery completion notification
+    vi: thông báo giao hàng thành công
+    context: デリバリー
+  - ja: 遅延通知
+    en: delay notification
+    vi: thông báo trễ
+    context: デリバリー
+  - ja: 注文追跡
+    en: order tracking
+    vi: theo dõi đơn hàng
+    context: デリバリー
+  - ja: 不在対応
+    en: absent customer handling
+    vi: xử lý khi khách vắng mặt
+    context: デリバリー
+  - ja: 置き配
+    en: contactless delivery
+    vi: giao hàng không tiếp xúc
+    context: デリバリー
+  - ja: プラットフォーム手数料
+    en: platform commission
+    vi: phí hoa hồng nền tảng
+    context: デリバリー
+  - ja: デリバリーアプリ
+    en: delivery app
+    vi: ứng dụng giao hàng
+    context: デリバリー
+  - ja: クール便
+    en: cold delivery
+    vi: giao hàng bảo ôn
+    context: デリバリー
+  - ja: ピックアップ
+    en: pickup
+    vi: tự đến lấy hàng
+    context: デリバリー
+  - ja: 配達スケジュール
+    en: delivery schedule
+    vi: lịch giao hàng
+    context: デリバリー
+  - ja: 配達拒否
+    en: delivery refusal
+    vi: từ chối giao hàng
+    context: デリバリー
+  - ja: 誤配達
+    en: misdelivery
+    vi: giao nhầm hàng
+    context: デリバリー
+  - ja: 返金対応
+    en: refund handling
+    vi: xử lý hoàn tiền
+    context: デリバリー
+  - ja: 評価システム
+    en: rating system
+    vi: hệ thống đánh giá
+    context: デリバリー
+  - ja: 口コミ
+    en: customer review
+    vi: đánh giá của khách hàng
+    context: デリバリー
+  - ja: 注文履歴
+    en: order history
+    vi: lịch sử đơn hàng
+    context: デリバリー
+  - ja: 再注文
+    en: reorder
+    vi: đặt lại đơn
+    context: デリバリー
+  - ja: クーポン
+    en: coupon
+    vi: phiếu giảm giá
+    context: デリバリー
+  - ja: フードロス削減
+    en: food waste reduction
+    vi: giảm lãng phí thực phẩm
+    context: デリバリー
+  - ja: エコ梱包
+    en: eco-friendly packaging
+    vi: đóng gói thân thiện môi trường
+    context: デリバリー
+  - ja: 配達実績
+    en: delivery performance
+    vi: hiệu suất giao hàng
+    context: デリバリー
+
+  # POSレジ (POS register) — 32 terms
+  - ja: 会計
+    en: checkout
+    vi: thanh toán
+    context: POSレジ
+  - ja: テイクアウト
+    en: takeout
+    vi: mang về
+    context: POSレジ
+  - ja: イートイン
+    en: dine-in
+    vi: ăn tại chỗ
+    context: POSレジ
+  - ja: レシート
+    en: receipt
+    vi: hóa đơn
+    context: POSレジ
+  - ja: 領収書
+    en: official receipt
+    vi: biên lai chính thức
+    context: POSレジ
+  - ja: 現金払い
+    en: cash payment
+    vi: thanh toán tiền mặt
+    context: POSレジ
+  - ja: クレジットカード払い
+    en: credit card payment
+    vi: thanh toán bằng thẻ tín dụng
+    context: POSレジ
+  - ja: 電子マネー
+    en: electronic money
+    vi: tiền điện tử
+    context: POSレジ
+  - ja: QRコード決済
+    en: QR code payment
+    vi: thanh toán mã QR
+    context: POSレジ
+  - ja: ポイント利用
+    en: point redemption
+    vi: sử dụng điểm thưởng
+    context: POSレジ
+  - ja: ポイント付与
+    en: point accrual
+    vi: tích điểm thưởng
+    context: POSレジ
+  - ja: 割引
+    en: discount
+    vi: giảm giá
+    context: POSレジ
+  - ja: クーポン適用
+    en: coupon application
+    vi: áp dụng phiếu giảm giá
+    context: POSレジ
+  - ja: 消費税処理
+    en: consumption tax processing
+    vi: xử lý thuế tiêu thụ
+    context: POSレジ
+  - ja: 軽減税率
+    en: reduced tax rate
+    vi: thuế suất giảm
+    context: POSレジ
+  - ja: 分割払い
+    en: installment payment
+    vi: thanh toán trả góp
+    context: POSレジ
+  - ja: 精算
+    en: settlement
+    vi: quyết toán
+    context: POSレジ
+  - ja: 釣り銭
+    en: change
+    vi: tiền thối lại
+    context: POSレジ
+  - ja: 売上集計
+    en: sales aggregation
+    vi: tổng hợp doanh thu
+    context: POSレジ
+  - ja: 日締め処理
+    en: end-of-day closing
+    vi: xử lý cuối ngày
+    context: POSレジ
+  - ja: 返品処理
+    en: return processing
+    vi: xử lý hoàn trả
+    context: POSレジ
+  - ja: バーコードスキャン
+    en: barcode scan
+    vi: quét mã vạch
+    context: POSレジ
+  - ja: 商品マスタ
+    en: product master
+    vi: danh mục sản phẩm chính
+    context: POSレジ
+  - ja: 売上明細
+    en: sales detail
+    vi: chi tiết doanh thu
+    context: POSレジ
+  - ja: キャッシュドロワー
+    en: cash drawer
+    vi: ngăn kéo tiền mặt
+    context: POSレジ
+  - ja: レジ締め
+    en: register closing
+    vi: đóng ca máy tính tiền
+    context: POSレジ
+  - ja: 点検金額
+    en: cash count amount
+    vi: số tiền kiểm đếm
+    context: POSレジ
+  - ja: 過不足
+    en: cash discrepancy
+    vi: chênh lệch tiền mặt
+    context: POSレジ
+  - ja: 注文端末
+    en: order terminal
+    vi: thiết bị đặt món
+    context: POSレジ
+  - ja: キッチンディスプレイ
+    en: kitchen display system
+    vi: màn hình hiển thị bếp
+    context: POSレジ
+  - ja: テーブルオーダー
+    en: table ordering
+    vi: đặt món tại bàn
+    context: POSレジ
+  - ja: セルフオーダー
+    en: self-ordering
+    vi: tự đặt món
+    context: POSレジ

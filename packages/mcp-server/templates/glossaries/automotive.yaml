@@ -1,0 +1,1018 @@
+industry: automotive
+language: ja
+terms:
+  # 車両設計 (vehicle design) — 32 terms
+  - ja: シャーシ
+    en: chassis
+    vi: khung gầm
+    context: 車両設計
+  - ja: ボディ
+    en: body
+    vi: thân xe
+    context: 車両設計
+  - ja: サスペンション
+    en: suspension
+    vi: hệ thống treo
+    context: 車両設計
+  - ja: トランスミッション
+    en: transmission
+    vi: hộp số
+    context: 車両設計
+  - ja: エンジン
+    en: engine
+    vi: động cơ
+    context: 車両設計
+  - ja: ステアリング
+    en: steering
+    vi: hệ thống lái
+    context: 車両設計
+  - ja: ブレーキシステム
+    en: brake system
+    vi: hệ thống phanh
+    context: 車両設計
+  - ja: エアバッグ
+    en: airbag
+    vi: túi khí
+    context: 車両設計
+  - ja: 車軸
+    en: axle
+    vi: trục xe
+    context: 車両設計
+  - ja: タイヤ
+    en: tire
+    vi: lốp xe
+    context: 車両設計
+  - ja: ホイール
+    en: wheel
+    vi: vành xe
+    context: 車両設計
+  - ja: 燃料タンク
+    en: fuel tank
+    vi: bình nhiên liệu
+    context: 車両設計
+  - ja: 排気システム
+    en: exhaust system
+    vi: hệ thống xả
+    context: 車両設計
+  - ja: 冷却システム
+    en: cooling system
+    vi: hệ thống làm mát
+    context: 車両設計
+  - ja: 電装システム
+    en: electrical system
+    vi: hệ thống điện
+    context: 車両設計
+  - ja: インストルメントパネル
+    en: instrument panel
+    vi: bảng điều khiển
+    context: 車両設計
+  - ja: シート
+    en: seat
+    vi: ghế xe
+    context: 車両設計
+  - ja: ドア
+    en: door
+    vi: cửa xe
+    context: 車両設計
+  - ja: フロントガラス
+    en: windshield
+    vi: kính chắn gió
+    context: 車両設計
+  - ja: バンパー
+    en: bumper
+    vi: thanh chắn
+    context: 車両設計
+  - ja: フード
+    en: hood
+    vi: nắp capo
+    context: 車両設計
+  - ja: トランク
+    en: trunk
+    vi: cốp xe
+    context: 車両設計
+  - ja: 空力設計
+    en: aerodynamic design
+    vi: thiết kế khí động học
+    context: 車両設計
+  - ja: 重量配分
+    en: weight distribution
+    vi: phân bổ trọng lượng
+    context: 車両設計
+  - ja: クラッシュゾーン
+    en: crumple zone
+    vi: vùng biến dạng
+    context: 車両設計
+  - ja: 防錆処理
+    en: rust prevention
+    vi: xử lý chống gỉ
+    context: 車両設計
+  - ja: 遮音材
+    en: sound insulation
+    vi: vật liệu cách âm
+    context: 車両設計
+  - ja: ルーフライニング
+    en: headliner
+    vi: trần xe
+    context: 車両設計
+  - ja: 車体剛性
+    en: body rigidity
+    vi: độ cứng thân xe
+    context: 車両設計
+  - ja: 衝突安全性
+    en: crash safety
+    vi: an toàn va chạm
+    context: 車両設計
+  - ja: プラットフォーム
+    en: platform
+    vi: nền tảng xe
+    context: 車両設計
+  - ja: モジュール設計
+    en: modular design
+    vi: thiết kế mô-đun
+    context: 車両設計
+
+  # 生産ライン (production) — 32 terms
+  - ja: 組立
+    en: assembly
+    vi: lắp ráp
+    context: 生産ライン
+  - ja: 溶接
+    en: welding
+    vi: hàn
+    context: 生産ライン
+  - ja: プレス加工
+    en: press forming
+    vi: dập khuôn
+    context: 生産ライン
+  - ja: 塗装
+    en: painting
+    vi: sơn
+    context: 生産ライン
+  - ja: 検査工程
+    en: inspection process
+    vi: quy trình kiểm tra
+    context: 生産ライン
+  - ja: ラインバランシング
+    en: line balancing
+    vi: cân bằng dây chuyền
+    context: 生産ライン
+  - ja: サイクルタイム
+    en: cycle time
+    vi: thời gian chu kỳ
+    context: 生産ライン
+  - ja: タクトタイム
+    en: takt time
+    vi: thời gian takt
+    context: 生産ライン
+  - ja: 生産能力
+    en: production capacity
+    vi: năng lực sản xuất
+    context: 生産ライン
+  - ja: 稼働率
+    en: operating rate
+    vi: tỷ lệ hoạt động
+    context: 生産ライン
+  - ja: ジャストインタイム
+    en: just-in-time
+    vi: đúng lúc
+    context: 生産ライン
+  - ja: カンバン
+    en: kanban
+    vi: kanban
+    context: 生産ライン
+  - ja: 自動化ライン
+    en: automated line
+    vi: dây chuyền tự động hóa
+    context: 生産ライン
+  - ja: ロボットアーム
+    en: robot arm
+    vi: cánh tay robot
+    context: 生産ライン
+  - ja: 生産計画
+    en: production planning
+    vi: kế hoạch sản xuất
+    context: 生産ライン
+  - ja: 工程フロー
+    en: process flow
+    vi: luồng quy trình
+    context: 生産ライン
+  - ja: ボトルネック
+    en: bottleneck
+    vi: nút thắt cổ chai
+    context: 生産ライン
+  - ja: スループット
+    en: throughput
+    vi: năng suất sản xuất
+    context: 生産ライン
+  - ja: 不良率
+    en: defect rate
+    vi: tỷ lệ lỗi
+    context: 生産ライン
+  - ja: 手直し
+    en: rework
+    vi: làm lại
+    context: 生産ライン
+  - ja: 廃棄ロス
+    en: scrap loss
+    vi: tổn thất phế liệu
+    context: 生産ライン
+  - ja: 設備保全
+    en: equipment maintenance
+    vi: bảo trì thiết bị
+    context: 生産ライン
+  - ja: 予知保全
+    en: predictive maintenance
+    vi: bảo trì dự đoán
+    context: 生産ライン
+  - ja: OEE
+    en: overall equipment effectiveness
+    vi: hiệu suất thiết bị tổng thể
+    context: 生産ライン
+  - ja: 5S活動
+    en: 5S activity
+    vi: hoạt động 5S
+    context: 生産ライン
+  - ja: 改善活動
+    en: kaizen activity
+    vi: hoạt động cải tiến
+    context: 生産ライン
+  - ja: 工場レイアウト
+    en: factory layout
+    vi: bố trí nhà máy
+    context: 生産ライン
+  - ja: 混流生産
+    en: mixed-model production
+    vi: sản xuất hỗn hợp
+    context: 生産ライン
+  - ja: ライン停止
+    en: line stoppage
+    vi: dừng dây chuyền
+    context: 生産ライン
+  - ja: 部品供給
+    en: parts supply
+    vi: cung cấp linh kiện
+    context: 生産ライン
+  - ja: 製造実行システム
+    en: manufacturing execution system
+    vi: hệ thống thực thi sản xuất
+    context: 生産ライン
+  - ja: デジタル工場
+    en: digital factory
+    vi: nhà máy số
+    context: 生産ライン
+
+  # 品質 (quality) — 30 terms
+  - ja: リコール
+    en: recall
+    vi: thu hồi
+    context: 品質
+  - ja: FMEA
+    en: failure mode and effects analysis
+    vi: FMEA
+    context: 品質
+  - ja: 品質管理
+    en: quality control
+    vi: kiểm soát chất lượng
+    context: 品質
+  - ja: 品質保証
+    en: quality assurance
+    vi: đảm bảo chất lượng
+    context: 品質
+  - ja: 不具合報告
+    en: defect report
+    vi: báo cáo lỗi
+    context: 品質
+  - ja: 根本原因分析
+    en: root cause analysis
+    vi: phân tích nguyên nhân gốc rễ
+    context: 品質
+  - ja: 是正処置
+    en: corrective action
+    vi: hành động khắc phục
+    context: 品質
+  - ja: 予防処置
+    en: preventive action
+    vi: hành động phòng ngừa
+    context: 品質
+  - ja: ゼロディフェクト
+    en: zero defect
+    vi: không lỗi
+    context: 品質
+  - ja: 統計的工程管理
+    en: statistical process control
+    vi: kiểm soát quy trình thống kê
+    context: 品質
+  - ja: 管理図
+    en: control chart
+    vi: biểu đồ kiểm soát
+    context: 品質
+  - ja: 工程能力指数
+    en: process capability index
+    vi: chỉ số năng lực quy trình
+    context: 品質
+  - ja: ISO/TS 16949
+    en: IATF 16949
+    vi: IATF 16949
+    context: 品質
+  - ja: 出荷前検査
+    en: pre-shipment inspection
+    vi: kiểm tra trước xuất hàng
+    context: 品質
+  - ja: 受入検査
+    en: incoming inspection
+    vi: kiểm tra đầu vào
+    context: 品質
+  - ja: 抜き取り検査
+    en: sampling inspection
+    vi: kiểm tra lấy mẫu
+    context: 品質
+  - ja: 全数検査
+    en: 100% inspection
+    vi: kiểm tra toàn bộ
+    context: 品質
+  - ja: トレーサビリティ
+    en: traceability
+    vi: truy xuất nguồn gốc
+    context: 品質
+  - ja: ロット管理
+    en: lot management
+    vi: quản lý lô
+    context: 品質
+  - ja: クレーム対応
+    en: claim handling
+    vi: xử lý khiếu nại
+    context: 品質
+  - ja: 品質コスト
+    en: quality cost
+    vi: chi phí chất lượng
+    context: 品質
+  - ja: 設計品質
+    en: design quality
+    vi: chất lượng thiết kế
+    context: 品質
+  - ja: 製造品質
+    en: manufacturing quality
+    vi: chất lượng sản xuất
+    context: 品質
+  - ja: 耐久試験
+    en: durability test
+    vi: thử nghiệm độ bền
+    context: 品質
+  - ja: 振動試験
+    en: vibration test
+    vi: thử nghiệm rung động
+    context: 品質
+  - ja: 環境試験
+    en: environmental test
+    vi: thử nghiệm môi trường
+    context: 品質
+  - ja: 品質ゲート
+    en: quality gate
+    vi: cổng chất lượng
+    context: 品質
+  - ja: 4Mの管理
+    en: 4M management
+    vi: quản lý 4M
+    context: 品質
+  - ja: ポカヨケ
+    en: poka-yoke
+    vi: chống sai lỗi
+    context: 品質
+  - ja: ヒヤリハット
+    en: near-miss
+    vi: sự cố suýt xảy ra
+    context: 品質
+
+  # サプライチェーン (supply chain) — 30 terms
+  - ja: ティア1
+    en: tier 1 supplier
+    vi: nhà cung cấp cấp 1
+    context: サプライチェーン
+  - ja: ティア2
+    en: tier 2 supplier
+    vi: nhà cung cấp cấp 2
+    context: サプライチェーン
+  - ja: 調達
+    en: procurement
+    vi: mua sắm
+    context: サプライチェーン
+  - ja: 部品表
+    en: bill of materials
+    vi: danh sách linh kiện
+    context: サプライチェーン
+  - ja: リードタイム
+    en: lead time
+    vi: thời gian dẫn
+    context: サプライチェーン
+  - ja: 在庫
+    en: inventory
+    vi: tồn kho
+    context: サプライチェーン
+  - ja: 安全在庫
+    en: safety stock
+    vi: tồn kho an toàn
+    context: サプライチェーン
+  - ja: 発注量
+    en: order quantity
+    vi: số lượng đặt hàng
+    context: サプライチェーン
+  - ja: 納期
+    en: delivery date
+    vi: ngày giao hàng
+    context: サプライチェーン
+  - ja: 輸送管理
+    en: transport management
+    vi: quản lý vận chuyển
+    context: サプライチェーン
+  - ja: 倉庫管理
+    en: warehouse management
+    vi: quản lý kho
+    context: サプライチェーン
+  - ja: グローバル調達
+    en: global sourcing
+    vi: mua sắm toàn cầu
+    context: サプライチェーン
+  - ja: コスト低減
+    en: cost reduction
+    vi: giảm chi phí
+    context: サプライチェーン
+  - ja: 価格交渉
+    en: price negotiation
+    vi: đàm phán giá
+    context: サプライチェーン
+  - ja: サプライヤー評価
+    en: supplier evaluation
+    vi: đánh giá nhà cung cấp
+    context: サプライチェーン
+  - ja: 供給リスク
+    en: supply risk
+    vi: rủi ro cung ứng
+    context: サプライチェーン
+  - ja: 原材料
+    en: raw material
+    vi: nguyên liệu thô
+    context: サプライチェーン
+  - ja: 物流
+    en: logistics
+    vi: hậu cần
+    context: サプライチェーン
+  - ja: 供給網
+    en: supply network
+    vi: mạng lưới cung ứng
+    context: サプライチェーン
+  - ja: 輸出入管理
+    en: import/export control
+    vi: kiểm soát xuất nhập khẩu
+    context: サプライチェーン
+  - ja: 部品欠品
+    en: parts shortage
+    vi: thiếu linh kiện
+    context: サプライチェーン
+  - ja: 代替品
+    en: substitute part
+    vi: linh kiện thay thế
+    context: サプライチェーン
+  - ja: 購買管理
+    en: purchasing management
+    vi: quản lý mua hàng
+    context: サプライチェーン
+  - ja: 契約管理
+    en: contract management
+    vi: quản lý hợp đồng
+    context: サプライチェーン
+  - ja: VMI
+    en: vendor managed inventory
+    vi: tồn kho do nhà cung cấp quản lý
+    context: サプライチェーン
+  - ja: EDI連携
+    en: EDI integration
+    vi: tích hợp EDI
+    context: サプライチェーン
+  - ja: 納品書
+    en: delivery note
+    vi: phiếu giao hàng
+    context: サプライチェーン
+  - ja: 検収
+    en: acceptance inspection
+    vi: kiểm tra nghiệm thu
+    context: サプライチェーン
+  - ja: 支払条件
+    en: payment terms
+    vi: điều kiện thanh toán
+    context: サプライチェーン
+  - ja: 内示
+    en: tentative order
+    vi: đơn hàng dự kiến
+    context: サプライチェーン
+
+  # コネクテッドカー (connected car) — 32 terms
+  - ja: テレマティクス
+    en: telematics
+    vi: telematics
+    context: コネクテッドカー
+  - ja: OTA更新
+    en: over-the-air update
+    vi: cập nhật OTA
+    context: コネクテッドカー
+  - ja: 車載通信機
+    en: telematics control unit
+    vi: thiết bị truyền thông xe
+    context: コネクテッドカー
+  - ja: V2X
+    en: vehicle to everything
+    vi: V2X
+    context: コネクテッドカー
+  - ja: V2V
+    en: vehicle to vehicle
+    vi: V2V
+    context: コネクテッドカー
+  - ja: V2I
+    en: vehicle to infrastructure
+    vi: V2I
+    context: コネクテッドカー
+  - ja: カーナビゲーション
+    en: car navigation
+    vi: hệ thống dẫn đường xe hơi
+    context: コネクテッドカー
+  - ja: インフォテインメント
+    en: infotainment
+    vi: hệ thống giải trí thông tin
+    context: コネクテッドカー
+  - ja: HMI
+    en: human machine interface
+    vi: giao diện người-máy
+    context: コネクテッドカー
+  - ja: OBDポート
+    en: OBD port
+    vi: cổng OBD
+    context: コネクテッドカー
+  - ja: 車両データ収集
+    en: vehicle data collection
+    vi: thu thập dữ liệu xe
+    context: コネクテッドカー
+  - ja: フリート管理
+    en: fleet management
+    vi: quản lý đội xe
+    context: コネクテッドカー
+  - ja: ドライブレコーダー
+    en: drive recorder
+    vi: camera hành trình
+    context: コネクテッドカー
+  - ja: 位置情報サービス
+    en: location-based service
+    vi: dịch vụ dựa trên vị trí
+    context: コネクテッドカー
+  - ja: スマートフォン連携
+    en: smartphone integration
+    vi: tích hợp điện thoại thông minh
+    context: コネクテッドカー
+  - ja: クラウドプラットフォーム
+    en: cloud platform
+    vi: nền tảng đám mây
+    context: コネクテッドカー
+  - ja: 車両サイバーセキュリティ
+    en: vehicle cybersecurity
+    vi: an ninh mạng xe hơi
+    context: コネクテッドカー
+  - ja: AUTOSAR
+    en: AUTOSAR
+    vi: AUTOSAR
+    context: コネクテッドカー
+  - ja: CAN通信
+    en: CAN bus communication
+    vi: truyền thông CAN bus
+    context: コネクテッドカー
+  - ja: Ethernet車内ネットワーク
+    en: in-vehicle Ethernet
+    vi: mạng Ethernet trong xe
+    context: コネクテッドカー
+  - ja: ECU
+    en: electronic control unit
+    vi: bộ điều khiển điện tử
+    context: コネクテッドカー
+  - ja: 遠隔診断
+    en: remote diagnostics
+    vi: chẩn đoán từ xa
+    context: コネクテッドカー
+  - ja: 予知保全アラート
+    en: predictive maintenance alert
+    vi: cảnh báo bảo trì dự đoán
+    context: コネクテッドカー
+  - ja: 運転挙動分析
+    en: driving behavior analysis
+    vi: phân tích hành vi lái xe
+    context: コネクテッドカー
+  - ja: コネクテッドサービス
+    en: connected service
+    vi: dịch vụ kết nối
+    context: コネクテッドカー
+  - ja: デジタルキー
+    en: digital key
+    vi: chìa khóa kỹ thuật số
+    context: コネクテッドカー
+  - ja: リモートコントロール
+    en: remote control
+    vi: điều khiển từ xa
+    context: コネクテッドカー
+  - ja: カーシェアリング
+    en: car sharing
+    vi: chia sẻ xe
+    context: コネクテッドカー
+  - ja: サブスクリプションモデル
+    en: subscription model
+    vi: mô hình thuê bao
+    context: コネクテッドカー
+  - ja: 車載OS
+    en: in-vehicle OS
+    vi: hệ điều hành xe
+    context: コネクテッドカー
+  - ja: SDV
+    en: software-defined vehicle
+    vi: xe định nghĩa bởi phần mềm
+    context: コネクテッドカー
+  - ja: APIゲートウェイ
+    en: API gateway
+    vi: cổng API
+    context: コネクテッドカー
+
+  # ADAS — 30 terms
+  - ja: 自動ブレーキ
+    en: automatic braking
+    vi: phanh tự động
+    context: ADAS
+  - ja: 車線維持支援
+    en: lane keeping assist
+    vi: hỗ trợ giữ làn
+    context: ADAS
+  - ja: 衝突回避
+    en: collision avoidance
+    vi: tránh va chạm
+    context: ADAS
+  - ja: アダプティブクルーズコントロール
+    en: adaptive cruise control
+    vi: kiểm soát hành trình thích ứng
+    context: ADAS
+  - ja: 死角検知
+    en: blind spot detection
+    vi: phát hiện điểm mù
+    context: ADAS
+  - ja: 自動駐車
+    en: automatic parking
+    vi: đỗ xe tự động
+    context: ADAS
+  - ja: 前方衝突警告
+    en: forward collision warning
+    vi: cảnh báo va chạm phía trước
+    context: ADAS
+  - ja: 歩行者検知
+    en: pedestrian detection
+    vi: phát hiện người đi bộ
+    context: ADAS
+  - ja: 標識認識
+    en: traffic sign recognition
+    vi: nhận dạng biển báo
+    context: ADAS
+  - ja: 自動操舵
+    en: automated steering
+    vi: lái tự động
+    context: ADAS
+  - ja: LiDAR
+    en: LiDAR
+    vi: LiDAR
+    context: ADAS
+  - ja: レーダーセンサー
+    en: radar sensor
+    vi: cảm biến radar
+    context: ADAS
+  - ja: カメラセンサー
+    en: camera sensor
+    vi: cảm biến camera
+    context: ADAS
+  - ja: センサーフュージョン
+    en: sensor fusion
+    vi: hợp nhất cảm biến
+    context: ADAS
+  - ja: 物体検知
+    en: object detection
+    vi: phát hiện vật thể
+    context: ADAS
+  - ja: 自動運転レベル
+    en: autonomous driving level
+    vi: cấp độ lái xe tự động
+    context: ADAS
+  - ja: 高精度マップ
+    en: high-definition map
+    vi: bản đồ độ phân giải cao
+    context: ADAS
+  - ja: 周辺環境認識
+    en: surroundings recognition
+    vi: nhận thức môi trường xung quanh
+    context: ADAS
+  - ja: 車線逸脱警告
+    en: lane departure warning
+    vi: cảnh báo lệch làn
+    context: ADAS
+  - ja: 疲労検知
+    en: fatigue detection
+    vi: phát hiện mệt mỏi
+    context: ADAS
+  - ja: ナイトビジョン
+    en: night vision
+    vi: tầm nhìn ban đêm
+    context: ADAS
+  - ja: 自動緊急制動
+    en: autonomous emergency braking
+    vi: phanh khẩn cấp tự động
+    context: ADAS
+  - ja: V2P通信
+    en: vehicle to pedestrian communication
+    vi: truyền thông xe-người đi bộ
+    context: ADAS
+  - ja: 機能安全
+    en: functional safety
+    vi: an toàn chức năng
+    context: ADAS
+  - ja: ISO 26262
+    en: ISO 26262
+    vi: ISO 26262
+    context: ADAS
+  - ja: ASIL
+    en: automotive safety integrity level
+    vi: cấp độ toàn vẹn an toàn ô tô
+    context: ADAS
+  - ja: システム冗長性
+    en: system redundancy
+    vi: dự phòng hệ thống
+    context: ADAS
+  - ja: フォールバック
+    en: fallback
+    vi: dự phòng dự phòng
+    context: ADAS
+  - ja: ドライバーモニタリング
+    en: driver monitoring
+    vi: giám sát lái xe
+    context: ADAS
+  - ja: 走行環境認識
+    en: driving environment recognition
+    vi: nhận dạng môi trường lái xe
+    context: ADAS
+
+  # EV — 32 terms
+  - ja: バッテリー
+    en: battery
+    vi: pin
+    context: EV
+  - ja: 充電ステーション
+    en: charging station
+    vi: trạm sạc
+    context: EV
+  - ja: 航続距離
+    en: driving range
+    vi: phạm vi lái xe
+    context: EV
+  - ja: 充電時間
+    en: charging time
+    vi: thời gian sạc
+    context: EV
+  - ja: 急速充電
+    en: fast charging
+    vi: sạc nhanh
+    context: EV
+  - ja: 普通充電
+    en: standard charging
+    vi: sạc thường
+    context: EV
+  - ja: バッテリー容量
+    en: battery capacity
+    vi: dung lượng pin
+    context: EV
+  - ja: SOC
+    en: state of charge
+    vi: mức sạc
+    context: EV
+  - ja: BMS
+    en: battery management system
+    vi: hệ thống quản lý pin
+    context: EV
+  - ja: 回生ブレーキ
+    en: regenerative braking
+    vi: phanh tái sinh
+    context: EV
+  - ja: モーター
+    en: motor
+    vi: mô-tơ điện
+    context: EV
+  - ja: インバーター
+    en: inverter
+    vi: bộ biến tần
+    context: EV
+  - ja: CHAdeMO
+    en: CHAdeMO
+    vi: CHAdeMO
+    context: EV
+  - ja: CCS
+    en: combined charging system
+    vi: hệ thống sạc kết hợp
+    context: EV
+  - ja: バッテリー劣化
+    en: battery degradation
+    vi: suy giảm pin
+    context: EV
+  - ja: 熱管理システム
+    en: thermal management system
+    vi: hệ thống quản lý nhiệt
+    context: EV
+  - ja: V2G
+    en: vehicle to grid
+    vi: V2G
+    context: EV
+  - ja: プラグインハイブリッド
+    en: plug-in hybrid
+    vi: xe hybrid sạc điện
+    context: EV
+  - ja: 電費
+    en: energy consumption rate
+    vi: mức tiêu thụ điện
+    context: EV
+  - ja: ワイヤレス充電
+    en: wireless charging
+    vi: sạc không dây
+    context: EV
+  - ja: バッテリー交換
+    en: battery swapping
+    vi: hoán đổi pin
+    context: EV
+  - ja: 電動パワートレイン
+    en: electric powertrain
+    vi: hệ thống truyền động điện
+    context: EV
+  - ja: 充電インフラ
+    en: charging infrastructure
+    vi: cơ sở hạ tầng sạc
+    context: EV
+  - ja: グリーン電力
+    en: green electricity
+    vi: điện xanh
+    context: EV
+  - ja: PHEV
+    en: plug-in hybrid electric vehicle
+    vi: xe điện hybrid sạc điện
+    context: EV
+  - ja: BEV
+    en: battery electric vehicle
+    vi: xe điện thuần túy
+    context: EV
+  - ja: HEV
+    en: hybrid electric vehicle
+    vi: xe hybrid
+    context: EV
+  - ja: 電池パック
+    en: battery pack
+    vi: gói pin
+    context: EV
+  - ja: 電動化
+    en: electrification
+    vi: điện khí hóa
+    context: EV
+  - ja: カーボンニュートラル
+    en: carbon neutral
+    vi: trung hòa carbon
+    context: EV
+  - ja: 走行データ分析
+    en: driving data analysis
+    vi: phân tích dữ liệu lái xe
+    context: EV
+  - ja: エネルギー回収
+    en: energy recovery
+    vi: thu hồi năng lượng
+    context: EV
+
+  # アフターサービス (after-sales) — 32 terms
+  - ja: 車検
+    en: vehicle inspection
+    vi: đăng kiểm
+    context: アフターサービス
+  - ja: 定期点検
+    en: periodic inspection
+    vi: kiểm tra định kỳ
+    context: アフターサービス
+  - ja: 部品交換
+    en: parts replacement
+    vi: thay thế linh kiện
+    context: アフターサービス
+  - ja: 修理見積
+    en: repair estimate
+    vi: ước tính sửa chữa
+    context: アフターサービス
+  - ja: 保証期間
+    en: warranty period
+    vi: thời gian bảo hành
+    context: アフターサービス
+  - ja: 延長保証
+    en: extended warranty
+    vi: bảo hành mở rộng
+    context: アフターサービス
+  - ja: ディーラー
+    en: dealer
+    vi: đại lý xe
+    context: アフターサービス
+  - ja: サービスキャンペーン
+    en: service campaign
+    vi: chiến dịch dịch vụ
+    context: アフターサービス
+  - ja: 故障診断
+    en: fault diagnosis
+    vi: chẩn đoán sự cố
+    context: アフターサービス
+  - ja: オイル交換
+    en: oil change
+    vi: thay dầu
+    context: アフターサービス
+  - ja: タイヤ交換
+    en: tire replacement
+    vi: thay lốp
+    context: アフターサービス
+  - ja: バッテリー交換サービス
+    en: battery replacement service
+    vi: dịch vụ thay pin
+    context: アフターサービス
+  - ja: スパークプラグ交換
+    en: spark plug replacement
+    vi: thay bugi
+    context: アフターサービス
+  - ja: 代車
+    en: loaner car
+    vi: xe cho mượn
+    context: アフターサービス
+  - ja: 入庫予約
+    en: workshop booking
+    vi: đặt lịch sửa chữa
+    context: アフターサービス
+  - ja: 整備記録
+    en: maintenance record
+    vi: hồ sơ bảo dưỡng
+    context: アフターサービス
+  - ja: 点検整備明細書
+    en: inspection service report
+    vi: báo cáo kiểm tra bảo dưỡng
+    context: アフターサービス
+  - ja: 認定中古車
+    en: certified pre-owned
+    vi: xe cũ được chứng nhận
+    context: アフターサービス
+  - ja: 下取り
+    en: trade-in
+    vi: đổi xe cũ lấy xe mới
+    context: アフターサービス
+  - ja: 板金塗装
+    en: body repair and painting
+    vi: sửa khung và sơn
+    context: アフターサービス
+  - ja: 純正部品
+    en: genuine parts
+    vi: linh kiện chính hãng
+    context: アフターサービス
+  - ja: 社外品
+    en: aftermarket parts
+    vi: linh kiện phụ tùng
+    context: アフターサービス
+  - ja: 作業時間
+    en: labor time
+    vi: thời gian lao động
+    context: アフターサービス
+  - ja: 工賃
+    en: labor cost
+    vi: chi phí nhân công
+    context: アフターサービス
+  - ja: アフターサービスシステム
+    en: after-sales system
+    vi: hệ thống hậu mãi
+    context: アフターサービス
+  - ja: リコール対応
+    en: recall response
+    vi: xử lý thu hồi
+    context: アフターサービス
+  - ja: コールセンター対応
+    en: call center response
+    vi: hỗ trợ qua trung tâm cuộc gọi
+    context: アフターサービス
+  - ja: 顧客満足調査
+    en: customer satisfaction survey
+    vi: khảo sát hài lòng khách hàng
+    context: アフターサービス
+  - ja: 整備士
+    en: mechanic
+    vi: thợ cơ khí
+    context: アフターサービス
+  - ja: 技術サポート
+    en: technical support
+    vi: hỗ trợ kỹ thuật
+    context: アフターサービス
+  - ja: 修理履歴
+    en: repair history
+    vi: lịch sử sửa chữa
+    context: アフターサービス
+  - ja: ロードサービス
+    en: roadside assistance
+    vi: hỗ trợ đường bộ
+    context: アフターサービス

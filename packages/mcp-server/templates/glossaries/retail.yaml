@@ -1,0 +1,1018 @@
+industry: retail
+language: ja
+terms:
+  # POS
+  - ja: レジ
+    en: register / cash register
+    vi: máy tính tiền
+    context: POS
+  - ja: バーコード
+    en: barcode
+    vi: mã vạch
+    context: POS
+  - ja: POSシステム
+    en: point of sale system
+    vi: hệ thống POS
+    context: POS
+  - ja: レシート
+    en: receipt
+    vi: hóa đơn
+    context: POS
+  - ja: 売上集計
+    en: sales aggregation
+    vi: tổng hợp doanh thu
+    context: POS
+  - ja: 商品コード
+    en: product code / SKU
+    vi: mã sản phẩm
+    context: POS
+  - ja: 値引き
+    en: discount
+    vi: giảm giá
+    context: POS
+  - ja: 釣り銭
+    en: change (money returned)
+    vi: tiền thối lại
+    context: POS
+  - ja: 現金払い
+    en: cash payment
+    vi: thanh toán tiền mặt
+    context: POS
+  - ja: キャッシュドロワー
+    en: cash drawer
+    vi: ngăn kéo tiền mặt
+    context: POS
+  - ja: 点検レポート
+    en: daily inspection report
+    vi: báo cáo kiểm tra hàng ngày
+    context: POS
+  - ja: 精算
+    en: settlement / closing
+    vi: quyết toán
+    context: POS
+  - ja: 返品処理
+    en: return processing
+    vi: xử lý trả hàng
+    context: POS
+  - ja: 交換処理
+    en: exchange processing
+    vi: xử lý đổi hàng
+    context: POS
+  - ja: 商品スキャン
+    en: product scan
+    vi: quét sản phẩm
+    context: POS
+  - ja: レジ打ち
+    en: cashiering / ringing up
+    vi: thao tác thu ngân
+    context: POS
+  - ja: 消費税計算
+    en: consumption tax calculation
+    vi: tính thuế tiêu thụ
+    context: POS
+  - ja: ポイント付与
+    en: points issuance
+    vi: tích điểm
+    context: POS
+  - ja: タッチパネルレジ
+    en: touchscreen register
+    vi: máy tính tiền màn hình cảm ứng
+    context: POS
+  - ja: セルフレジ
+    en: self-checkout
+    vi: tự thanh toán
+    context: POS
+  - ja: 売上伝票
+    en: sales slip
+    vi: phiếu bán hàng
+    context: POS
+  - ja: クレジット端末
+    en: credit card terminal
+    vi: máy đọc thẻ tín dụng
+    context: POS
+  - ja: 日次締め
+    en: daily closing
+    vi: kết sổ ngày
+    context: POS
+  - ja: POS連携
+    en: POS integration
+    vi: tích hợp POS
+    context: POS
+  - ja: 商品マスタ
+    en: product master data
+    vi: dữ liệu gốc sản phẩm
+    context: POS
+  - ja: 免税販売
+    en: tax-free sales
+    vi: bán hàng miễn thuế
+    context: POS
+  - ja: 売上明細
+    en: sales detail
+    vi: chi tiết doanh thu
+    context: POS
+  - ja: レジ締め
+    en: register closing
+    vi: đóng ca thu ngân
+    context: POS
+  - ja: 端数処理
+    en: rounding
+    vi: làm tròn số
+    context: POS
+  - ja: 割引コード
+    en: discount code
+    vi: mã giảm giá
+    context: POS
+  - ja: 売上データ送信
+    en: sales data transmission
+    vi: truyền dữ liệu doanh thu
+    context: POS
+  - ja: 来客数カウント
+    en: customer foot traffic count
+    vi: đếm lượng khách
+    context: POS
+
+  # EC (e-commerce)
+  - ja: カート
+    en: cart
+    vi: giỏ hàng
+    context: EC
+  - ja: 決済画面
+    en: checkout page
+    vi: trang thanh toán
+    context: EC
+  - ja: 商品詳細ページ
+    en: product detail page
+    vi: trang chi tiết sản phẩm
+    context: EC
+  - ja: 注文確認メール
+    en: order confirmation email
+    vi: email xác nhận đơn hàng
+    context: EC
+  - ja: 配送方法選択
+    en: shipping method selection
+    vi: chọn phương thức giao hàng
+    context: EC
+  - ja: 住所登録
+    en: address registration
+    vi: đăng ký địa chỉ
+    context: EC
+  - ja: 会員登録
+    en: member registration
+    vi: đăng ký thành viên
+    context: EC
+  - ja: お気に入り登録
+    en: add to wishlist / favorites
+    vi: thêm vào danh sách yêu thích
+    context: EC
+  - ja: 商品レビュー
+    en: product review
+    vi: đánh giá sản phẩm
+    context: EC
+  - ja: 評価星
+    en: star rating
+    vi: đánh giá sao
+    context: EC
+  - ja: おすすめ商品
+    en: recommended products
+    vi: sản phẩm đề xuất
+    context: EC
+  - ja: 関連商品
+    en: related products
+    vi: sản phẩm liên quan
+    context: EC
+  - ja: 購入履歴
+    en: purchase history
+    vi: lịch sử mua hàng
+    context: EC
+  - ja: 注文キャンセル
+    en: order cancellation
+    vi: hủy đơn hàng
+    context: EC
+  - ja: 返金処理
+    en: refund processing
+    vi: xử lý hoàn tiền
+    context: EC
+  - ja: ランディングページ
+    en: landing page
+    vi: trang đích
+    context: EC
+  - ja: カテゴリ検索
+    en: category search
+    vi: tìm kiếm theo danh mục
+    context: EC
+  - ja: キーワード検索
+    en: keyword search
+    vi: tìm kiếm từ khóa
+    context: EC
+  - ja: 絞り込みフィルター
+    en: filter / faceted search
+    vi: bộ lọc tìm kiếm
+    context: EC
+  - ja: 在庫表示
+    en: stock display
+    vi: hiển thị tồn kho
+    context: EC
+  - ja: 送料無料
+    en: free shipping
+    vi: miễn phí vận chuyển
+    context: EC
+  - ja: まとめ買い割引
+    en: bulk purchase discount
+    vi: giảm giá mua số lượng lớn
+    context: EC
+  - ja: ポイント利用
+    en: point redemption
+    vi: sử dụng điểm
+    context: EC
+  - ja: マーケットプレイス
+    en: marketplace
+    vi: sàn thương mại điện tử
+    context: EC
+  - ja: ドロップシッピング
+    en: drop shipping
+    vi: drop shipping
+    context: EC
+  - ja: 決済完了通知
+    en: payment completion notification
+    vi: thông báo thanh toán hoàn tất
+    context: EC
+  - ja: 商品画像
+    en: product image
+    vi: hình ảnh sản phẩm
+    context: EC
+  - ja: サイズガイド
+    en: size guide
+    vi: hướng dẫn chọn size
+    context: EC
+  - ja: 複数配送先
+    en: multiple delivery addresses
+    vi: nhiều địa chỉ giao hàng
+    context: EC
+  - ja: 注文番号
+    en: order number
+    vi: mã đơn hàng
+    context: EC
+  - ja: ギフト包装
+    en: gift wrapping
+    vi: đóng gói quà tặng
+    context: EC
+  - ja: サブスクリプション
+    en: subscription
+    vi: đăng ký dịch vụ định kỳ
+    context: EC
+
+  # 在庫管理 (inventory)
+  - ja: 発注点
+    en: reorder point
+    vi: điểm đặt hàng lại
+    context: 在庫管理
+  - ja: 在庫補充
+    en: stock replenishment
+    vi: bổ sung hàng tồn kho
+    context: 在庫管理
+  - ja: 在庫切れ対応
+    en: stockout handling
+    vi: xử lý hết hàng
+    context: 在庫管理
+  - ja: 商品回転率
+    en: product turnover rate
+    vi: vòng quay hàng hóa
+    context: 在庫管理
+  - ja: 売れ筋商品
+    en: bestselling product
+    vi: sản phẩm bán chạy
+    context: 在庫管理
+  - ja: 死に筋商品
+    en: slow-moving product
+    vi: sản phẩm bán chậm
+    context: 在庫管理
+  - ja: 商品廃番
+    en: product discontinuation
+    vi: ngừng sản xuất sản phẩm
+    context: 在庫管理
+  - ja: 発注書
+    en: purchase order
+    vi: đơn đặt hàng
+    context: 在庫管理
+  - ja: 仕入れ先
+    en: supplier / vendor
+    vi: nhà cung cấp
+    context: 在庫管理
+  - ja: 仕入れ価格
+    en: purchase price / cost price
+    vi: giá nhập hàng
+    context: 在庫管理
+  - ja: 適正在庫量
+    en: optimal stock level
+    vi: mức tồn kho tối ưu
+    context: 在庫管理
+  - ja: 在庫一覧
+    en: inventory list
+    vi: danh sách tồn kho
+    context: 在庫管理
+  - ja: 入荷検品
+    en: incoming goods inspection
+    vi: kiểm tra hàng nhập
+    context: 在庫管理
+  - ja: 賞味期限管理
+    en: expiry date management
+    vi: quản lý hạn sử dụng
+    context: 在庫管理
+  - ja: ロット番号
+    en: lot number
+    vi: số lô
+    context: 在庫管理
+  - ja: 欠品アラート
+    en: out-of-stock alert
+    vi: cảnh báo hết hàng
+    context: 在庫管理
+  - ja: 棚卸し差異
+    en: stocktaking variance
+    vi: sai lệch kiểm kê
+    context: 在庫管理
+  - ja: 多店舗在庫管理
+    en: multi-store inventory management
+    vi: quản lý tồn kho đa cửa hàng
+    context: 在庫管理
+  - ja: 在庫移動
+    en: stock transfer
+    vi: chuyển hàng giữa kho
+    context: 在庫管理
+  - ja: 発注サイクル
+    en: ordering cycle
+    vi: chu kỳ đặt hàng
+    context: 在庫管理
+  - ja: 安全在庫量
+    en: safety stock quantity
+    vi: số lượng tồn kho an toàn
+    context: 在庫管理
+  - ja: 在庫金額
+    en: inventory value
+    vi: giá trị tồn kho
+    context: 在庫管理
+  - ja: 最終仕入れ価格
+    en: last purchase price
+    vi: giá nhập cuối cùng
+    context: 在庫管理
+  - ja: 在庫予測
+    en: inventory forecast
+    vi: dự báo tồn kho
+    context: 在庫管理
+  - ja: 季節在庫
+    en: seasonal inventory
+    vi: tồn kho theo mùa
+    context: 在庫管理
+  - ja: 廃棄ロス
+    en: disposal loss
+    vi: tổn thất do thanh lý
+    context: 在庫管理
+  - ja: 棚卸し周期
+    en: stocktaking cycle
+    vi: chu kỳ kiểm kê
+    context: 在庫管理
+  - ja: サプライヤー評価
+    en: supplier evaluation
+    vi: đánh giá nhà cung cấp
+    context: 在庫管理
+  - ja: 商品マスタ管理
+    en: product master management
+    vi: quản lý dữ liệu gốc sản phẩm
+    context: 在庫管理
+  - ja: 在庫配分
+    en: inventory allocation
+    vi: phân bổ tồn kho
+    context: 在庫管理
+
+  # CRM
+  - ja: 顧客管理
+    en: customer management
+    vi: quản lý khách hàng
+    context: CRM
+  - ja: 顧客データベース
+    en: customer database
+    vi: cơ sở dữ liệu khách hàng
+    context: CRM
+  - ja: 顧客セグメント
+    en: customer segment
+    vi: phân khúc khách hàng
+    context: CRM
+  - ja: 購買行動分析
+    en: purchase behavior analysis
+    vi: phân tích hành vi mua hàng
+    context: CRM
+  - ja: 顧客生涯価値
+    en: customer lifetime value (CLV)
+    vi: giá trị vòng đời khách hàng
+    context: CRM
+  - ja: リピート率
+    en: repeat purchase rate
+    vi: tỷ lệ mua lại
+    context: CRM
+  - ja: 会員ランク
+    en: membership tier
+    vi: hạng thành viên
+    context: CRM
+  - ja: ポイントカード
+    en: loyalty card / points card
+    vi: thẻ tích điểm
+    context: CRM
+  - ja: メルマガ配信
+    en: email newsletter delivery
+    vi: gửi bản tin email
+    context: CRM
+  - ja: 顧客満足度
+    en: customer satisfaction
+    vi: mức độ hài lòng của khách hàng
+    context: CRM
+  - ja: NPS（顧客推奨度）
+    en: net promoter score
+    vi: chỉ số NPS
+    context: CRM
+  - ja: 解約防止
+    en: churn prevention
+    vi: ngăn chặn rời bỏ
+    context: CRM
+  - ja: 顧客問い合わせ
+    en: customer inquiry
+    vi: yêu cầu của khách hàng
+    context: CRM
+  - ja: 顧客属性
+    en: customer attribute / demographics
+    vi: thuộc tính khách hàng
+    context: CRM
+  - ja: 購買頻度
+    en: purchase frequency
+    vi: tần suất mua hàng
+    context: CRM
+  - ja: 休眠顧客
+    en: dormant customer
+    vi: khách hàng không hoạt động
+    context: CRM
+  - ja: 新規顧客獲得
+    en: new customer acquisition
+    vi: thu hút khách hàng mới
+    context: CRM
+  - ja: 優良顧客
+    en: high-value customer
+    vi: khách hàng có giá trị cao
+    context: CRM
+  - ja: 顧客履歴
+    en: customer history
+    vi: lịch sử khách hàng
+    context: CRM
+  - ja: パーソナライゼーション
+    en: personalization
+    vi: cá nhân hóa
+    context: CRM
+  - ja: RFM分析
+    en: RFM analysis (recency, frequency, monetary)
+    vi: phân tích RFM
+    context: CRM
+  - ja: 顧客フィードバック
+    en: customer feedback
+    vi: phản hồi của khách hàng
+    context: CRM
+  - ja: 顧客ロイヤルティ
+    en: customer loyalty
+    vi: lòng trung thành của khách hàng
+    context: CRM
+  - ja: クロスセル
+    en: cross-sell
+    vi: bán chéo
+    context: CRM
+  - ja: アップセル
+    en: upsell
+    vi: bán thêm sản phẩm cao cấp hơn
+    context: CRM
+  - ja: 来店頻度
+    en: visit frequency
+    vi: tần suất ghé thăm cửa hàng
+    context: CRM
+  - ja: 顧客ID
+    en: customer ID
+    vi: mã khách hàng
+    context: CRM
+  - ja: 顧客カード
+    en: customer card
+    vi: thẻ khách hàng
+    context: CRM
+  - ja: 連絡先管理
+    en: contact management
+    vi: quản lý thông tin liên lạc
+    context: CRM
+  - ja: 顧客ポータル
+    en: customer portal
+    vi: cổng thông tin khách hàng
+    context: CRM
+
+  # 棚割 (planogram)
+  - ja: 陳列
+    en: display / product placement
+    vi: trưng bày
+    context: 棚割
+  - ja: 棚割計画
+    en: planogram planning
+    vi: kế hoạch trưng bày
+    context: 棚割
+  - ja: 棚割表
+    en: planogram
+    vi: sơ đồ trưng bày
+    context: 棚割
+  - ja: 陳列棚
+    en: display shelf
+    vi: kệ trưng bày
+    context: 棚割
+  - ja: 売り場面積
+    en: sales floor area
+    vi: diện tích bán hàng
+    context: 棚割
+  - ja: フェーシング
+    en: facing (product fronts visible)
+    vi: mặt hàng hiển thị
+    context: 棚割
+  - ja: エンド陳列
+    en: end cap display
+    vi: trưng bày đầu kệ
+    context: 棚割
+  - ja: 島陳列
+    en: island display
+    vi: trưng bày dạng đảo
+    context: 棚割
+  - ja: 平台陳列
+    en: table / flat display
+    vi: trưng bày trên bàn phẳng
+    context: 棚割
+  - ja: ゴールデンゾーン
+    en: golden zone (eye-level shelf)
+    vi: vùng vàng (kệ ngang tầm mắt)
+    context: 棚割
+  - ja: 商品配置
+    en: product placement
+    vi: bố trí sản phẩm
+    context: 棚割
+  - ja: ゾーニング
+    en: zoning
+    vi: phân vùng
+    context: 棚割
+  - ja: 売り場レイアウト
+    en: sales floor layout
+    vi: bố trí mặt bằng bán hàng
+    context: 棚割
+  - ja: 棚スペース
+    en: shelf space
+    vi: không gian kệ hàng
+    context: 棚割
+  - ja: 定番商品
+    en: staple / regular product
+    vi: sản phẩm thường xuyên
+    context: 棚割
+  - ja: 特売商品
+    en: sale / promotional item
+    vi: sản phẩm khuyến mãi
+    context: 棚割
+  - ja: 新商品導入
+    en: new product introduction
+    vi: giới thiệu sản phẩm mới
+    context: 棚割
+  - ja: 季節商品入替
+    en: seasonal product changeover
+    vi: thay thế hàng theo mùa
+    context: 棚割
+  - ja: POP広告
+    en: point of purchase advertising
+    vi: quảng cáo tại điểm mua hàng
+    context: 棚割
+  - ja: 売り場改善
+    en: sales floor improvement
+    vi: cải thiện mặt bằng bán hàng
+    context: 棚割
+  - ja: 商品回転スペース
+    en: product rotation space
+    vi: không gian luân chuyển sản phẩm
+    context: 棚割
+  - ja: 陳列基準
+    en: display standard
+    vi: tiêu chuẩn trưng bày
+    context: 棚割
+  - ja: 棚割変更
+    en: planogram change
+    vi: thay đổi sơ đồ trưng bày
+    context: 棚割
+  - ja: 陳列数量
+    en: display quantity
+    vi: số lượng trưng bày
+    context: 棚割
+  - ja: 商品群管理
+    en: category management
+    vi: quản lý danh mục hàng
+    context: 棚割
+  - ja: 商品配列
+    en: product arrangement
+    vi: sắp xếp sản phẩm
+    context: 棚割
+  - ja: 売り場効率
+    en: sales floor efficiency
+    vi: hiệu quả mặt bằng bán hàng
+    context: 棚割
+  - ja: ディスプレイ什器
+    en: display fixture
+    vi: thiết bị trưng bày
+    context: 棚割
+  - ja: 売り場担当者
+    en: floor manager
+    vi: nhân viên phụ trách khu vực bán hàng
+    context: 棚割
+  - ja: 商品補充頻度
+    en: restocking frequency
+    vi: tần suất bổ sung hàng
+    context: 棚割
+  - ja: 棚割システム
+    en: planogram system
+    vi: hệ thống quản lý trưng bày
+    context: 棚割
+  - ja: 棚割承認
+    en: planogram approval
+    vi: phê duyệt sơ đồ trưng bày
+    context: 棚割
+
+  # プロモーション (promo)
+  - ja: クーポン
+    en: coupon
+    vi: phiếu giảm giá
+    context: プロモーション
+  - ja: セール
+    en: sale
+    vi: bán hàng giảm giá
+    context: プロモーション
+  - ja: 特売
+    en: special sale
+    vi: khuyến mãi đặc biệt
+    context: プロモーション
+  - ja: ポイントアップキャンペーン
+    en: bonus points campaign
+    vi: chiến dịch tích điểm thưởng
+    context: プロモーション
+  - ja: タイムセール
+    en: flash sale / time-limited sale
+    vi: flash sale
+    context: プロモーション
+  - ja: まとめ買い特典
+    en: bulk purchase benefit
+    vi: ưu đãi mua nhiều
+    context: プロモーション
+  - ja: 会員割引
+    en: member discount
+    vi: giảm giá thành viên
+    context: プロモーション
+  - ja: 初回購入割引
+    en: first-time purchase discount
+    vi: giảm giá lần mua đầu tiên
+    context: プロモーション
+  - ja: バンドル販売
+    en: bundle sale
+    vi: bán gói
+    context: プロモーション
+  - ja: 無料サンプル
+    en: free sample
+    vi: mẫu miễn phí
+    context: プロモーション
+  - ja: 送料無料キャンペーン
+    en: free shipping campaign
+    vi: chiến dịch miễn phí vận chuyển
+    context: プロモーション
+  - ja: 紹介割引
+    en: referral discount
+    vi: giảm giá giới thiệu
+    context: プロモーション
+  - ja: プロモーション期間
+    en: promotion period
+    vi: thời gian khuyến mãi
+    context: プロモーション
+  - ja: 優待価格
+    en: preferential price
+    vi: giá ưu đãi
+    context: プロモーション
+  - ja: キャッシュバック
+    en: cashback
+    vi: hoàn tiền
+    context: プロモーション
+  - ja: 抽選キャンペーン
+    en: lottery campaign
+    vi: chiến dịch rút thăm trúng thưởng
+    context: プロモーション
+  - ja: 数量限定
+    en: limited quantity
+    vi: số lượng có hạn
+    context: プロモーション
+  - ja: 期間限定
+    en: limited time offer
+    vi: ưu đãi có thời hạn
+    context: プロモーション
+  - ja: 割引率
+    en: discount rate / percentage off
+    vi: tỷ lệ giảm giá
+    context: プロモーション
+  - ja: 広告費
+    en: advertising cost
+    vi: chi phí quảng cáo
+    context: プロモーション
+  - ja: プロモーション効果測定
+    en: promotion effectiveness measurement
+    vi: đo lường hiệu quả khuyến mãi
+    context: プロモーション
+  - ja: 割引券
+    en: discount voucher
+    vi: phiếu chiết khấu
+    context: プロモーション
+  - ja: 販促物
+    en: promotional material
+    vi: vật phẩm xúc tiến bán hàng
+    context: プロモーション
+  - ja: ポイント交換
+    en: point exchange / redemption
+    vi: đổi điểm
+    context: プロモーション
+  - ja: チラシ
+    en: flyer / leaflet
+    vi: tờ rơi
+    context: プロモーション
+  - ja: 告知メール
+    en: announcement email
+    vi: email thông báo
+    context: プロモーション
+  - ja: SNS連動キャンペーン
+    en: social media linked campaign
+    vi: chiến dịch liên kết mạng xã hội
+    context: プロモーション
+  - ja: プロモーションコード
+    en: promotion code
+    vi: mã khuyến mãi
+    context: プロモーション
+  - ja: 店頭イベント
+    en: in-store event
+    vi: sự kiện tại cửa hàng
+    context: プロモーション
+  - ja: 購入特典
+    en: purchase bonus / gift with purchase
+    vi: quà tặng kèm khi mua
+    context: プロモーション
+
+  # オムニチャネル (omnichannel)
+  - ja: 店舗受取
+    en: store pickup / click and collect
+    vi: nhận tại cửa hàng
+    context: オムニチャネル
+  - ja: オムニチャネル
+    en: omnichannel
+    vi: đa kênh
+    context: オムニチャネル
+  - ja: 統合在庫
+    en: unified inventory
+    vi: tồn kho thống nhất
+    context: オムニチャネル
+  - ja: 実店舗
+    en: physical store / brick-and-mortar
+    vi: cửa hàng thực tế
+    context: オムニチャネル
+  - ja: オンライン注文
+    en: online order
+    vi: đặt hàng trực tuyến
+    context: オムニチャネル
+  - ja: チャネル統合
+    en: channel integration
+    vi: tích hợp kênh bán
+    context: オムニチャネル
+  - ja: 顧客統合管理
+    en: unified customer management
+    vi: quản lý khách hàng thống nhất
+    context: オムニチャネル
+  - ja: 在庫共有
+    en: shared inventory
+    vi: chia sẻ tồn kho
+    context: オムニチャネル
+  - ja: 店舗返品
+    en: in-store return
+    vi: trả hàng tại cửa hàng
+    context: オムニチャネル
+  - ja: ショールーミング
+    en: showrooming
+    vi: xem tại cửa hàng mua online
+    context: オムニチャネル
+  - ja: ウェブルーミング
+    en: webrooming
+    vi: xem online mua tại cửa hàng
+    context: オムニチャネル
+  - ja: 統合会員
+    en: unified membership
+    vi: thành viên thống nhất
+    context: オムニチャネル
+  - ja: 購入チャネル分析
+    en: purchase channel analysis
+    vi: phân tích kênh mua hàng
+    context: オムニチャネル
+  - ja: モバイルアプリ連携
+    en: mobile app integration
+    vi: tích hợp ứng dụng di động
+    context: オムニチャネル
+  - ja: シームレス体験
+    en: seamless experience
+    vi: trải nghiệm liền mạch
+    context: オムニチャネル
+  - ja: 予約在庫
+    en: reserved inventory
+    vi: tồn kho đã đặt trước
+    context: オムニチャネル
+  - ja: クロスチャネル
+    en: cross-channel
+    vi: đa nền tảng
+    context: オムニチャネル
+  - ja: D2C（直販）
+    en: direct to consumer
+    vi: bán hàng trực tiếp đến người dùng
+    context: オムニチャネル
+  - ja: 店舗在庫確認
+    en: store stock check
+    vi: kiểm tra hàng tại cửa hàng
+    context: オムニチャネル
+  - ja: 配送または店舗受取
+    en: ship or store pickup option
+    vi: giao hàng hoặc nhận tại cửa hàng
+    context: オムニチャネル
+  - ja: 接客連携
+    en: customer service integration
+    vi: tích hợp phục vụ khách hàng
+    context: オムニチャネル
+  - ja: 統合ポイント
+    en: unified points
+    vi: điểm thống nhất
+    context: オムニチャネル
+  - ja: 注文一元管理
+    en: centralized order management
+    vi: quản lý đơn hàng tập trung
+    context: オムニチャネル
+  - ja: 在庫可視化（全チャネル）
+    en: inventory visibility across all channels
+    vi: hiển thị tồn kho trên toàn bộ kênh
+    context: オムニチャネル
+  - ja: デジタルレシート
+    en: digital receipt
+    vi: hóa đơn điện tử
+    context: オムニチャネル
+  - ja: ハイブリッド購買
+    en: hybrid shopping
+    vi: mua sắm kết hợp
+    context: オムニチャネル
+  - ja: フルフィルメントセンター
+    en: fulfillment center
+    vi: trung tâm thực hiện đơn hàng
+    context: オムニチャネル
+  - ja: 顧客接点統合
+    en: integrated customer touchpoints
+    vi: tích hợp điểm tiếp xúc khách hàng
+    context: オムニチャネル
+  - ja: ブランド統一性
+    en: brand consistency
+    vi: tính nhất quán thương hiệu
+    context: オムニチャネル
+  - ja: リアル×デジタル融合
+    en: physical-digital convergence
+    vi: kết hợp thực tế và kỹ thuật số
+    context: オムニチャネル
+  - ja: 店舗スタッフ連携
+    en: store staff coordination
+    vi: phối hợp nhân viên cửa hàng
+    context: オムニチャネル
+  - ja: オムニ在庫配分
+    en: omnichannel inventory allocation
+    vi: phân bổ tồn kho đa kênh
+    context: オムニチャネル
+
+  # 決済 (payment)
+  - ja: 電子マネー
+    en: e-money / electronic money
+    vi: tiền điện tử
+    context: 決済
+  - ja: クレジットカード
+    en: credit card
+    vi: thẻ tín dụng
+    context: 決済
+  - ja: デビットカード
+    en: debit card
+    vi: thẻ ghi nợ
+    context: 決済
+  - ja: QRコード決済
+    en: QR code payment
+    vi: thanh toán mã QR
+    context: 決済
+  - ja: 非接触決済
+    en: contactless payment
+    vi: thanh toán không tiếp xúc
+    context: 決済
+  - ja: 後払い決済
+    en: deferred payment / buy now pay later
+    vi: thanh toán sau
+    context: 決済
+  - ja: 分割払い
+    en: installment payment
+    vi: thanh toán trả góp
+    context: 決済
+  - ja: 代金引換
+    en: cash on delivery (COD)
+    vi: thanh toán khi nhận hàng
+    context: 決済
+  - ja: 銀行振込
+    en: bank transfer
+    vi: chuyển khoản ngân hàng
+    context: 決済
+  - ja: 決済代行
+    en: payment processing agency
+    vi: đại lý xử lý thanh toán
+    context: 決済
+  - ja: 3Dセキュア
+    en: 3D secure authentication
+    vi: xác thực bảo mật 3D
+    context: 決済
+  - ja: 決済エラー
+    en: payment error
+    vi: lỗi thanh toán
+    context: 決済
+  - ja: 決済履歴
+    en: payment history
+    vi: lịch sử thanh toán
+    context: 決済
+  - ja: 支払い方法
+    en: payment method
+    vi: phương thức thanh toán
+    context: 決済
+  - ja: ウォレット
+    en: digital wallet
+    vi: ví điện tử
+    context: 決済
+  - ja: ポイント決済
+    en: point-based payment
+    vi: thanh toán bằng điểm
+    context: 決済
+  - ja: 売上入金
+    en: sales proceeds deposit
+    vi: tiền doanh thu được nạp vào tài khoản
+    context: 決済
+  - ja: 不正利用検知
+    en: fraud detection
+    vi: phát hiện gian lận
+    context: 決済
+  - ja: 決済ゲートウェイ
+    en: payment gateway
+    vi: cổng thanh toán
+    context: 決済
+  - ja: 暗号化通信
+    en: encrypted communication
+    vi: truyền thông mã hóa
+    context: 決済
+  - ja: カード番号トークン化
+    en: card number tokenization
+    vi: mã hóa token số thẻ
+    context: 決済
+  - ja: 決済手数料
+    en: payment processing fee
+    vi: phí xử lý thanh toán
+    context: 決済
+  - ja: 入金確認
+    en: payment confirmation
+    vi: xác nhận thanh toán
+    context: 決済
+  - ja: オーソリゼーション
+    en: authorization
+    vi: ủy quyền giao dịch
+    context: 決済
+  - ja: 返金
+    en: refund
+    vi: hoàn tiền
+    context: 決済
+  - ja: 二重請求防止
+    en: double billing prevention
+    vi: ngăn chặn tính tiền hai lần
+    context: 決済
+  - ja: バーチャルカード
+    en: virtual card
+    vi: thẻ ảo
+    context: 決済
+  - ja: 定期課金
+    en: recurring billing
+    vi: thanh toán định kỳ
+    context: 決済
+  - ja: 決済API
+    en: payment API
+    vi: API thanh toán
+    context: 決済
+  - ja: マルチ通貨対応
+    en: multi-currency support
+    vi: hỗ trợ đa tiền tệ
+    context: 決済
+  - ja: 為替換算
+    en: currency conversion
+    vi: quy đổi ngoại tệ
+    context: 決済
+  - ja: 収納代行
+    en: payment collection agency
+    vi: dịch vụ thu hộ
+    context: 決済

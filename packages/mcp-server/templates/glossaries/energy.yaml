@@ -1,0 +1,1018 @@
+industry: energy
+language: ja
+terms:
+  # 発電 (generation) — 32 terms
+  - ja: 火力発電
+    en: thermal power generation
+    vi: nhiệt điện
+    context: 発電
+  - ja: 水力発電
+    en: hydroelectric power generation
+    vi: thủy điện
+    context: 発電
+  - ja: 原子力発電
+    en: nuclear power generation
+    vi: điện hạt nhân
+    context: 発電
+  - ja: 発電機
+    en: generator
+    vi: máy phát điện
+    context: 発電
+  - ja: タービン
+    en: turbine
+    vi: tuabin
+    context: 発電
+  - ja: ボイラー
+    en: boiler
+    vi: lò hơi
+    context: 発電
+  - ja: 出力
+    en: output
+    vi: công suất đầu ra
+    context: 発電
+  - ja: 設備利用率
+    en: capacity utilization rate
+    vi: tỷ lệ sử dụng công suất
+    context: 発電
+  - ja: 燃料消費量
+    en: fuel consumption
+    vi: mức tiêu thụ nhiên liệu
+    context: 発電
+  - ja: 熱効率
+    en: thermal efficiency
+    vi: hiệu suất nhiệt
+    context: 発電
+  - ja: 発電コスト
+    en: generation cost
+    vi: chi phí phát điện
+    context: 発電
+  - ja: 揚水発電
+    en: pumped storage power generation
+    vi: điện thủy điện tích năng
+    context: 発電
+  - ja: コンバインドサイクル
+    en: combined cycle
+    vi: chu trình kết hợp
+    context: 発電
+  - ja: 電力系統連系
+    en: grid interconnection
+    vi: kết nối lưới điện
+    context: 発電
+  - ja: 発電量
+    en: power generation volume
+    vi: lượng điện phát
+    context: 発電
+  - ja: 定格出力
+    en: rated output
+    vi: công suất định mức
+    context: 発電
+  - ja: 起動停止制御
+    en: start-stop control
+    vi: kiểm soát khởi động dừng
+    context: 発電
+  - ja: 負荷追従
+    en: load following
+    vi: theo dõi tải
+    context: 発電
+  - ja: ベースロード電源
+    en: baseload power source
+    vi: nguồn điện nền
+    context: 発電
+  - ja: ピーク電源
+    en: peak power source
+    vi: nguồn điện đỉnh
+    context: 発電
+  - ja: 廃熱回収
+    en: waste heat recovery
+    vi: thu hồi nhiệt thải
+    context: 発電
+  - ja: 燃料電池
+    en: fuel cell
+    vi: pin nhiên liệu
+    context: 発電
+  - ja: 地熱発電
+    en: geothermal power generation
+    vi: địa nhiệt điện
+    context: 発電
+  - ja: 潮力発電
+    en: tidal power generation
+    vi: điện thủy triều
+    context: 発電
+  - ja: バイオマス発電
+    en: biomass power generation
+    vi: điện sinh khối
+    context: 発電
+  - ja: 石炭火力
+    en: coal-fired power
+    vi: nhiệt điện than
+    context: 発電
+  - ja: LNG火力
+    en: LNG-fired power
+    vi: nhiệt điện LNG
+    context: 発電
+  - ja: 運転管理
+    en: operation management
+    vi: quản lý vận hành
+    context: 発電
+  - ja: 事故時対応
+    en: emergency response
+    vi: ứng phó sự cố
+    context: 発電
+  - ja: 電力品質
+    en: power quality
+    vi: chất lượng điện
+    context: 発電
+  - ja: 系統安定化
+    en: grid stabilization
+    vi: ổn định lưới điện
+    context: 発電
+  - ja: 発電所監視
+    en: power plant monitoring
+    vi: giám sát nhà máy điện
+    context: 発電
+
+  # 送配電 (transmission and distribution) — 32 terms
+  - ja: 変電所
+    en: substation
+    vi: trạm biến áp
+    context: 送配電
+  - ja: 送電線
+    en: transmission line
+    vi: đường dây truyền tải
+    context: 送配電
+  - ja: 配電線
+    en: distribution line
+    vi: đường dây phân phối
+    context: 送配電
+  - ja: 変圧器
+    en: transformer
+    vi: máy biến áp
+    context: 送配電
+  - ja: 遮断器
+    en: circuit breaker
+    vi: máy cắt điện
+    context: 送配電
+  - ja: 断路器
+    en: disconnector
+    vi: dao cách ly
+    context: 送配電
+  - ja: 母線
+    en: busbar
+    vi: thanh cái
+    context: 送配電
+  - ja: 送電容量
+    en: transmission capacity
+    vi: dung lượng truyền tải
+    context: 送配電
+  - ja: 電圧降下
+    en: voltage drop
+    vi: sụt áp
+    context: 送配電
+  - ja: 線路損失
+    en: line loss
+    vi: tổn thất đường dây
+    context: 送配電
+  - ja: 力率
+    en: power factor
+    vi: hệ số công suất
+    context: 送配電
+  - ja: 無効電力
+    en: reactive power
+    vi: công suất phản kháng
+    context: 送配電
+  - ja: 有効電力
+    en: active power
+    vi: công suất tác dụng
+    context: 送配電
+  - ja: 高圧配電
+    en: high-voltage distribution
+    vi: phân phối điện cao áp
+    context: 送配電
+  - ja: 低圧配電
+    en: low-voltage distribution
+    vi: phân phối điện hạ áp
+    context: 送配電
+  - ja: 系統電圧
+    en: system voltage
+    vi: điện áp hệ thống
+    context: 送配電
+  - ja: 地中送電
+    en: underground transmission
+    vi: truyền tải ngầm
+    context: 送配電
+  - ja: 架空送電線
+    en: overhead transmission line
+    vi: đường dây truyền tải trên không
+    context: 送配電
+  - ja: 絶縁体
+    en: insulator
+    vi: bộ cách điện
+    context: 送配電
+  - ja: 避雷器
+    en: lightning arrester
+    vi: thiết bị chống sét
+    context: 送配電
+  - ja: 地絡
+    en: ground fault
+    vi: chạm đất
+    context: 送配電
+  - ja: 短絡
+    en: short circuit
+    vi: ngắn mạch
+    context: 送配電
+  - ja: 保護継電器
+    en: protective relay
+    vi: rơle bảo vệ
+    context: 送配電
+  - ja: SCADA
+    en: SCADA
+    vi: SCADA
+    context: 送配電
+  - ja: 系統監視
+    en: grid monitoring
+    vi: giám sát lưới điện
+    context: 送配電
+  - ja: 送電ロス
+    en: transmission loss
+    vi: tổn thất truyền tải
+    context: 送配電
+  - ja: 系統連系規程
+    en: grid interconnection regulations
+    vi: quy định kết nối lưới
+    context: 送配電
+  - ja: 電力潮流
+    en: power flow
+    vi: dòng chảy điện năng
+    context: 送配電
+  - ja: 配電自動化
+    en: distribution automation
+    vi: tự động hóa phân phối
+    context: 送配電
+  - ja: 停電復旧
+    en: power restoration
+    vi: khôi phục điện
+    context: 送配電
+  - ja: 需給バランス
+    en: supply-demand balance
+    vi: cân bằng cung cầu
+    context: 送配電
+  - ja: 周波数制御
+    en: frequency control
+    vi: kiểm soát tần số
+    context: 送配電
+
+  # スマートグリッド (smart grid) — 30 terms
+  - ja: スマートメーター
+    en: smart meter
+    vi: đồng hồ thông minh
+    context: スマートグリッド
+  - ja: AMI
+    en: advanced metering infrastructure
+    vi: cơ sở hạ tầng đo lường tiên tiến
+    context: スマートグリッド
+  - ja: デマンドレスポンス
+    en: demand response
+    vi: phản hồi nhu cầu
+    context: スマートグリッド
+  - ja: 蓄電池システム
+    en: battery storage system
+    vi: hệ thống lưu trữ pin
+    context: スマートグリッド
+  - ja: エネルギー管理システム
+    en: energy management system
+    vi: hệ thống quản lý năng lượng
+    context: スマートグリッド
+  - ja: HEMS
+    en: home energy management system
+    vi: hệ thống quản lý năng lượng gia đình
+    context: スマートグリッド
+  - ja: BEMS
+    en: building energy management system
+    vi: hệ thống quản lý năng lượng tòa nhà
+    context: スマートグリッド
+  - ja: FEMS
+    en: factory energy management system
+    vi: hệ thống quản lý năng lượng nhà máy
+    context: スマートグリッド
+  - ja: スマートコミュニティ
+    en: smart community
+    vi: cộng đồng thông minh
+    context: スマートグリッド
+  - ja: 双方向通信
+    en: two-way communication
+    vi: truyền thông hai chiều
+    context: スマートグリッド
+  - ja: リアルタイム電力計測
+    en: real-time power measurement
+    vi: đo lường điện năng thời gian thực
+    context: スマートグリッド
+  - ja: 電力データ分析
+    en: power data analytics
+    vi: phân tích dữ liệu điện
+    context: スマートグリッド
+  - ja: 需要側管理
+    en: demand-side management
+    vi: quản lý phía cầu
+    context: スマートグリッド
+  - ja: 分散型電源
+    en: distributed power source
+    vi: nguồn điện phân tán
+    context: スマートグリッド
+  - ja: マイクログリッド
+    en: microgrid
+    vi: lưới điện nhỏ
+    context: スマートグリッド
+  - ja: バーチャルパワープラント
+    en: virtual power plant
+    vi: nhà máy điện ảo
+    context: スマートグリッド
+  - ja: 電力取引
+    en: electricity trading
+    vi: giao dịch điện năng
+    context: スマートグリッド
+  - ja: 時間帯別料金
+    en: time-of-use pricing
+    vi: định giá theo giờ
+    context: スマートグリッド
+  - ja: ピークシフト
+    en: peak shift
+    vi: dịch chuyển đỉnh tải
+    context: スマートグリッド
+  - ja: 系統安定化制御
+    en: grid stabilization control
+    vi: kiểm soát ổn định lưới điện
+    context: スマートグリッド
+  - ja: 電力融通
+    en: power interchange
+    vi: trao đổi điện năng
+    context: スマートグリッド
+  - ja: IoTセンサー
+    en: IoT sensor
+    vi: cảm biến IoT
+    context: スマートグリッド
+  - ja: クラウド電力管理
+    en: cloud power management
+    vi: quản lý điện đám mây
+    context: スマートグリッド
+  - ja: 蓄電容量
+    en: storage capacity
+    vi: dung lượng lưu trữ
+    context: スマートグリッド
+  - ja: グリッドエッジ
+    en: grid edge
+    vi: biên lưới điện
+    context: スマートグリッド
+  - ja: 自動化制御
+    en: automated control
+    vi: kiểm soát tự động
+    context: スマートグリッド
+  - ja: 電力品質監視
+    en: power quality monitoring
+    vi: giám sát chất lượng điện
+    context: スマートグリッド
+  - ja: 電力サイバーセキュリティ
+    en: energy cybersecurity
+    vi: an ninh mạng năng lượng
+    context: スマートグリッド
+  - ja: デジタルツイン
+    en: digital twin
+    vi: bản sao kỹ thuật số
+    context: スマートグリッド
+  - ja: 停電自動検知
+    en: outage automatic detection
+    vi: phát hiện mất điện tự động
+    context: スマートグリッド
+
+  # 再生可能エネルギー (renewable energy) — 30 terms
+  - ja: 太陽光発電
+    en: solar power generation
+    vi: điện mặt trời
+    context: 再生可能エネルギー
+  - ja: 風力発電
+    en: wind power generation
+    vi: điện gió
+    context: 再生可能エネルギー
+  - ja: 太陽光パネル
+    en: solar panel
+    vi: tấm pin mặt trời
+    context: 再生可能エネルギー
+  - ja: 風車
+    en: wind turbine
+    vi: tuabin gió
+    context: 再生可能エネルギー
+  - ja: 固定価格買取制度
+    en: feed-in tariff
+    vi: biểu giá điện cố định
+    context: 再生可能エネルギー
+  - ja: 再エネ賦課金
+    en: renewable energy surcharge
+    vi: phụ thu năng lượng tái tạo
+    context: 再生可能エネルギー
+  - ja: 出力変動
+    en: output fluctuation
+    vi: biến động đầu ra
+    context: 再生可能エネルギー
+  - ja: 日射量
+    en: solar irradiance
+    vi: bức xạ mặt trời
+    context: 再生可能エネルギー
+  - ja: 風況
+    en: wind conditions
+    vi: điều kiện gió
+    context: 再生可能エネルギー
+  - ja: パワーコンディショナー
+    en: power conditioner
+    vi: bộ điều hòa điện
+    context: 再生可能エネルギー
+  - ja: オフグリッド
+    en: off-grid
+    vi: ngoài lưới
+    context: 再生可能エネルギー
+  - ja: 系統連系型
+    en: grid-connected type
+    vi: loại kết nối lưới
+    context: 再生可能エネルギー
+  - ja: 発電予測
+    en: generation forecast
+    vi: dự báo phát điện
+    context: 再生可能エネルギー
+  - ja: カーテン制御
+    en: curtailment control
+    vi: kiểm soát cắt giảm
+    context: 再生可能エネルギー
+  - ja: 蓄電池併設
+    en: co-located storage
+    vi: lưu trữ kết hợp
+    context: 再生可能エネルギー
+  - ja: REC
+    en: renewable energy certificate
+    vi: chứng chỉ năng lượng tái tạo
+    context: 再生可能エネルギー
+  - ja: 洋上風力
+    en: offshore wind
+    vi: điện gió ngoài khơi
+    context: 再生可能エネルギー
+  - ja: 陸上風力
+    en: onshore wind
+    vi: điện gió trên đất liền
+    context: 再生可能エネルギー
+  - ja: 設備認定
+    en: facility certification
+    vi: chứng nhận cơ sở
+    context: 再生可能エネルギー
+  - ja: 接続可能量
+    en: connectable capacity
+    vi: công suất kết nối được
+    context: 再生可能エネルギー
+  - ja: 再エネ比率
+    en: renewable energy ratio
+    vi: tỷ lệ năng lượng tái tạo
+    context: 再生可能エネルギー
+  - ja: グリーン水素
+    en: green hydrogen
+    vi: hydro xanh
+    context: 再生可能エネルギー
+  - ja: PPA
+    en: power purchase agreement
+    vi: thỏa thuận mua điện
+    context: 再生可能エネルギー
+  - ja: コミュニティ電力
+    en: community power
+    vi: điện cộng đồng
+    context: 再生可能エネルギー
+  - ja: 自己託送
+    en: self-wheeling
+    vi: tự vận chuyển điện
+    context: 再生可能エネルギー
+  - ja: エネルギー自給率
+    en: energy self-sufficiency rate
+    vi: tỷ lệ tự túc năng lượng
+    context: 再生可能エネルギー
+  - ja: 再エネ目標
+    en: renewable energy target
+    vi: mục tiêu năng lượng tái tạo
+    context: 再生可能エネルギー
+  - ja: 系統制約
+    en: grid constraint
+    vi: hạn chế lưới điện
+    context: 再生可能エネルギー
+  - ja: 環境影響評価
+    en: environmental impact assessment
+    vi: đánh giá tác động môi trường
+    context: 再生可能エネルギー
+  - ja: 廃棄物処理
+    en: waste disposal
+    vi: xử lý chất thải
+    context: 再生可能エネルギー
+
+  # ガス (gas) — 32 terms
+  - ja: 都市ガス
+    en: city gas
+    vi: khí đốt thành phố
+    context: ガス
+  - ja: LNG
+    en: liquefied natural gas
+    vi: khí tự nhiên hóa lỏng
+    context: ガス
+  - ja: LPG
+    en: liquefied petroleum gas
+    vi: khí dầu mỏ hóa lỏng
+    context: ガス
+  - ja: ガスパイプライン
+    en: gas pipeline
+    vi: đường ống dẫn khí
+    context: ガス
+  - ja: ガス圧力
+    en: gas pressure
+    vi: áp suất khí
+    context: ガス
+  - ja: ガス漏れ検知
+    en: gas leak detection
+    vi: phát hiện rò khí
+    context: ガス
+  - ja: ガスメーター
+    en: gas meter
+    vi: đồng hồ đo khí
+    context: ガス
+  - ja: ガス供給量
+    en: gas supply volume
+    vi: lượng cung cấp khí
+    context: ガス
+  - ja: ガス調整設備
+    en: gas pressure regulating equipment
+    vi: thiết bị điều chỉnh áp khí
+    context: ガス
+  - ja: 整圧器
+    en: gas pressure regulator
+    vi: bộ điều chỉnh áp suất khí
+    context: ガス
+  - ja: ガス事業者
+    en: gas utility
+    vi: công ty cung cấp khí
+    context: ガス
+  - ja: 導管
+    en: gas conduit
+    vi: ống dẫn khí
+    context: ガス
+  - ja: 熱量
+    en: calorific value
+    vi: giá trị nhiệt
+    context: ガス
+  - ja: 天然ガス
+    en: natural gas
+    vi: khí thiên nhiên
+    context: ガス
+  - ja: ガス安全規制
+    en: gas safety regulation
+    vi: quy định an toàn khí
+    context: ガス
+  - ja: 貯蔵タンク
+    en: storage tank
+    vi: bể chứa
+    context: ガス
+  - ja: 気化器
+    en: vaporizer
+    vi: thiết bị hóa hơi
+    context: ガス
+  - ja: ガス品質
+    en: gas quality
+    vi: chất lượng khí
+    context: ガス
+  - ja: 混合ガス
+    en: mixed gas
+    vi: khí hỗn hợp
+    context: ガス
+  - ja: ガス供給エリア
+    en: gas supply area
+    vi: khu vực cung cấp khí
+    context: ガス
+  - ja: ガス契約
+    en: gas contract
+    vi: hợp đồng khí đốt
+    context: ガス
+  - ja: ガス切替
+    en: gas switching
+    vi: chuyển đổi khí đốt
+    context: ガス
+  - ja: 低圧ガス
+    en: low-pressure gas
+    vi: khí áp thấp
+    context: ガス
+  - ja: 中圧ガス
+    en: medium-pressure gas
+    vi: khí áp trung
+    context: ガス
+  - ja: ガス管工事
+    en: gas pipe construction
+    vi: thi công đường ống khí
+    context: ガス
+  - ja: バイオガス
+    en: biogas
+    vi: khí sinh học
+    context: ガス
+  - ja: 水素混合ガス
+    en: hydrogen blended gas
+    vi: khí pha hydro
+    context: ガス
+  - ja: ガス供給停止
+    en: gas supply suspension
+    vi: đình chỉ cung cấp khí
+    context: ガス
+  - ja: 緊急遮断弁
+    en: emergency shutoff valve
+    vi: van ngắt khẩn cấp
+    context: ガス
+  - ja: ガス復旧
+    en: gas restoration
+    vi: khôi phục khí đốt
+    context: ガス
+  - ja: カーボンニュートラルガス
+    en: carbon neutral gas
+    vi: khí trung hòa carbon
+    context: ガス
+  - ja: ガス需給計画
+    en: gas supply-demand plan
+    vi: kế hoạch cung cầu khí
+    context: ガス
+
+  # 需要予測 (demand forecast) — 30 terms
+  - ja: 電力需要
+    en: power demand
+    vi: nhu cầu điện
+    context: 需要予測
+  - ja: 需要予測モデル
+    en: demand forecast model
+    vi: mô hình dự báo nhu cầu
+    context: 需要予測
+  - ja: 最大電力
+    en: maximum demand
+    vi: công suất cực đại
+    context: 需要予測
+  - ja: 負荷曲線
+    en: load curve
+    vi: đường cong tải
+    context: 需要予測
+  - ja: ピーク需要
+    en: peak demand
+    vi: nhu cầu đỉnh
+    context: 需要予測
+  - ja: オフピーク
+    en: off-peak
+    vi: ngoài giờ cao điểm
+    context: 需要予測
+  - ja: 季節変動
+    en: seasonal variation
+    vi: biến động theo mùa
+    context: 需要予測
+  - ja: 気温補正
+    en: temperature correction
+    vi: hiệu chỉnh nhiệt độ
+    context: 需要予測
+  - ja: 実績データ
+    en: actual data
+    vi: dữ liệu thực tế
+    context: 需要予測
+  - ja: 機械学習予測
+    en: machine learning forecast
+    vi: dự báo học máy
+    context: 需要予測
+  - ja: 時系列分析
+    en: time series analysis
+    vi: phân tích chuỗi thời gian
+    context: 需要予測
+  - ja: 誤差評価
+    en: error evaluation
+    vi: đánh giá sai số
+    context: 需要予測
+  - ja: 需要変動リスク
+    en: demand variation risk
+    vi: rủi ro biến động nhu cầu
+    context: 需要予測
+  - ja: 電力消費パターン
+    en: power consumption pattern
+    vi: mẫu tiêu thụ điện
+    context: 需要予測
+  - ja: 節電要請
+    en: power saving request
+    vi: yêu cầu tiết kiệm điện
+    context: 需要予測
+  - ja: 予備力
+    en: reserve capacity
+    vi: công suất dự phòng
+    context: 需要予測
+  - ja: 供給力
+    en: supply capacity
+    vi: năng lực cung cấp
+    context: 需要予測
+  - ja: 需給逼迫
+    en: supply-demand tightness
+    vi: căng thẳng cung cầu
+    context: 需要予測
+  - ja: 需要抑制
+    en: demand suppression
+    vi: kiềm chế nhu cầu
+    context: 需要予測
+  - ja: 電力市場
+    en: electricity market
+    vi: thị trường điện
+    context: 需要予測
+  - ja: スポット市場
+    en: spot market
+    vi: thị trường giao ngay
+    context: 需要予測
+  - ja: 先渡取引
+    en: forward transaction
+    vi: giao dịch kỳ hạn
+    context: 需要予測
+  - ja: 計画値同時同量
+    en: planned value balancing
+    vi: cân bằng giá trị kế hoạch
+    context: 需要予測
+  - ja: インバランス料金
+    en: imbalance fee
+    vi: phí mất cân bằng
+    context: 需要予測
+  - ja: 電力先物
+    en: electricity futures
+    vi: hợp đồng tương lai điện
+    context: 需要予測
+  - ja: 電力会社
+    en: electric utility
+    vi: công ty điện lực
+    context: 需要予測
+  - ja: 需要家
+    en: electricity consumer
+    vi: người tiêu dùng điện
+    context: 需要予測
+  - ja: 小売電気事業者
+    en: retail electricity provider
+    vi: nhà cung cấp điện bán lẻ
+    context: 需要予測
+  - ja: 電力調達
+    en: electricity procurement
+    vi: mua sắm điện năng
+    context: 需要予測
+  - ja: 需要家側蓄電
+    en: customer-side storage
+    vi: lưu trữ phía người dùng
+    context: 需要予測
+
+  # カーボン (carbon) — 32 terms
+  - ja: CO2排出量
+    en: CO2 emissions
+    vi: lượng phát thải CO2
+    context: カーボン
+  - ja: カーボンニュートラル
+    en: carbon neutral
+    vi: trung hòa carbon
+    context: カーボン
+  - ja: 脱炭素化
+    en: decarbonization
+    vi: khử carbon hóa
+    context: カーボン
+  - ja: 温室効果ガス
+    en: greenhouse gas
+    vi: khí nhà kính
+    context: カーボン
+  - ja: カーボンオフセット
+    en: carbon offset
+    vi: bù đắp carbon
+    context: カーボン
+  - ja: 排出権取引
+    en: emissions trading
+    vi: giao dịch quyền phát thải
+    context: カーボン
+  - ja: カーボンクレジット
+    en: carbon credit
+    vi: tín chỉ carbon
+    context: カーボン
+  - ja: スコープ1
+    en: scope 1 emissions
+    vi: phát thải phạm vi 1
+    context: カーボン
+  - ja: スコープ2
+    en: scope 2 emissions
+    vi: phát thải phạm vi 2
+    context: カーボン
+  - ja: スコープ3
+    en: scope 3 emissions
+    vi: phát thải phạm vi 3
+    context: カーボン
+  - ja: カーボンフットプリント
+    en: carbon footprint
+    vi: dấu chân carbon
+    context: カーボン
+  - ja: GHG排出目標
+    en: GHG emission target
+    vi: mục tiêu phát thải KNK
+    context: カーボン
+  - ja: ネットゼロ
+    en: net zero
+    vi: phát thải ròng bằng không
+    context: カーボン
+  - ja: 再エネ電力調達
+    en: renewable electricity procurement
+    vi: mua sắm điện tái tạo
+    context: カーボン
+  - ja: 省エネ対策
+    en: energy conservation measure
+    vi: biện pháp tiết kiệm năng lượng
+    context: カーボン
+  - ja: 省エネ投資
+    en: energy efficiency investment
+    vi: đầu tư hiệu quả năng lượng
+    context: カーボン
+  - ja: ESG
+    en: environmental social governance
+    vi: môi trường xã hội quản trị
+    context: カーボン
+  - ja: SBT
+    en: science-based targets
+    vi: mục tiêu dựa trên khoa học
+    context: カーボン
+  - ja: TCFD
+    en: task force on climate-related financial disclosures
+    vi: TCFD
+    context: カーボン
+  - ja: カーボンプライシング
+    en: carbon pricing
+    vi: định giá carbon
+    context: カーボン
+  - ja: 炭素税
+    en: carbon tax
+    vi: thuế carbon
+    context: カーボン
+  - ja: LCA
+    en: life cycle assessment
+    vi: đánh giá vòng đời
+    context: カーボン
+  - ja: CCUS
+    en: carbon capture utilization and storage
+    vi: thu giữ sử dụng và lưu trữ carbon
+    context: カーボン
+  - ja: 脱石炭
+    en: coal phase-out
+    vi: loại bỏ than
+    context: カーボン
+  - ja: グリーンボンド
+    en: green bond
+    vi: trái phiếu xanh
+    context: カーボン
+  - ja: トランジションファイナンス
+    en: transition finance
+    vi: tài chính chuyển đổi
+    context: カーボン
+  - ja: 再エネ100
+    en: RE100
+    vi: RE100
+    context: カーボン
+  - ja: 気候変動リスク
+    en: climate change risk
+    vi: rủi ro biến đổi khí hậu
+    context: カーボン
+  - ja: パリ協定
+    en: Paris Agreement
+    vi: Hiệp định Paris
+    context: カーボン
+  - ja: NDC
+    en: nationally determined contribution
+    vi: đóng góp do quốc gia tự quyết định
+    context: カーボン
+  - ja: グリーンウォッシュ
+    en: greenwashing
+    vi: tẩy xanh
+    context: カーボン
+  - ja: サステナビリティ報告書
+    en: sustainability report
+    vi: báo cáo bền vững
+    context: カーボン
+
+  # 設備管理 (asset management) — 32 terms
+  - ja: 定期点検
+    en: periodic inspection
+    vi: kiểm tra định kỳ
+    context: 設備管理
+  - ja: 設備台帳
+    en: asset register
+    vi: sổ đăng ký tài sản
+    context: 設備管理
+  - ja: 劣化診断
+    en: deterioration diagnosis
+    vi: chẩn đoán xuống cấp
+    context: 設備管理
+  - ja: 保全計画
+    en: maintenance plan
+    vi: kế hoạch bảo trì
+    context: 設備管理
+  - ja: 事後保全
+    en: corrective maintenance
+    vi: bảo trì khắc phục
+    context: 設備管理
+  - ja: 予防保全
+    en: preventive maintenance
+    vi: bảo trì phòng ngừa
+    context: 設備管理
+  - ja: 状態監視保全
+    en: condition-based maintenance
+    vi: bảo trì theo trạng thái
+    context: 設備管理
+  - ja: 設備更新
+    en: equipment renewal
+    vi: đổi mới thiết bị
+    context: 設備管理
+  - ja: 設備寿命
+    en: equipment life
+    vi: tuổi thọ thiết bị
+    context: 設備管理
+  - ja: 保全コスト
+    en: maintenance cost
+    vi: chi phí bảo trì
+    context: 設備管理
+  - ja: 資産管理システム
+    en: asset management system
+    vi: hệ thống quản lý tài sản
+    context: 設備管理
+  - ja: GIS
+    en: geographic information system
+    vi: hệ thống thông tin địa lý
+    context: 設備管理
+  - ja: 設備異常検知
+    en: equipment anomaly detection
+    vi: phát hiện bất thường thiết bị
+    context: 設備管理
+  - ja: 振動診断
+    en: vibration diagnostics
+    vi: chẩn đoán rung động
+    context: 設備管理
+  - ja: 絶縁診断
+    en: insulation diagnostics
+    vi: chẩn đoán cách điện
+    context: 設備管理
+  - ja: 熱画像診断
+    en: thermal imaging diagnostics
+    vi: chẩn đoán hình ảnh nhiệt
+    context: 設備管理
+  - ja: 点検記録
+    en: inspection record
+    vi: hồ sơ kiểm tra
+    context: 設備管理
+  - ja: 工事管理
+    en: construction management
+    vi: quản lý thi công
+    context: 設備管理
+  - ja: 停電計画
+    en: planned outage
+    vi: kế hoạch cắt điện
+    context: 設備管理
+  - ja: 緊急復旧
+    en: emergency restoration
+    vi: khôi phục khẩn cấp
+    context: 設備管理
+  - ja: 設備稼働率
+    en: equipment availability rate
+    vi: tỷ lệ sẵn sàng thiết bị
+    context: 設備管理
+  - ja: 故障件数
+    en: failure count
+    vi: số lần sự cố
+    context: 設備管理
+  - ja: MTTR
+    en: mean time to repair
+    vi: thời gian trung bình sửa chữa
+    context: 設備管理
+  - ja: MTBF
+    en: mean time between failures
+    vi: thời gian trung bình giữa các sự cố
+    context: 設備管理
+  - ja: 設備投資計画
+    en: capital investment plan
+    vi: kế hoạch đầu tư vốn
+    context: 設備管理
+  - ja: 廃棄処分
+    en: disposal
+    vi: thanh lý
+    context: 設備管理
+  - ja: 修繕費
+    en: repair cost
+    vi: chi phí sửa chữa
+    context: 設備管理
+  - ja: 設備点検基準
+    en: equipment inspection standard
+    vi: tiêu chuẩn kiểm tra thiết bị
+    context: 設備管理
+  - ja: リスクベース保全
+    en: risk-based maintenance
+    vi: bảo trì dựa trên rủi ro
+    context: 設備管理
+  - ja: ドローン点検
+    en: drone inspection
+    vi: kiểm tra bằng drone
+    context: 設備管理
+  - ja: デジタル点検
+    en: digital inspection
+    vi: kiểm tra kỹ thuật số
+    context: 設備管理
+  - ja: 予知保全プラットフォーム
+    en: predictive maintenance platform
+    vi: nền tảng bảo trì dự đoán
+    context: 設備管理

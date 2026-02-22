@@ -1,123 +1,1018 @@
 industry: medical
 language: ja
 terms:
-  - ja: 電子カルテ
-    en: electronic medical record
-    context: 医療情報
-  - ja: 診療記録
-    en: clinical record
-    context: 医療情報
-  - ja: 処方箋
-    en: prescription
-    context: 医療
-  - ja: 保険請求
-    en: insurance claim
-    context: 医療保険
-  - ja: 病名コード
-    en: disease code (ICD)
-    context: 医療情報
-  - ja: 診療報酬
-    en: medical fee
-    context: 医療保険
-  - ja: レセプト
-    en: medical fee claim
-    context: 医療保険
+  # ── 1. 診療 (Clinical) ── 35 terms ─────────────────────────────────────────
   - ja: 患者
     en: patient
-    context: 医療
+    vi: bệnh nhân
+    context: 診療
   - ja: 外来
     en: outpatient
-    context: 医療
+    vi: ngoại trú
+    context: 診療
   - ja: 入院
     en: hospitalization
-    context: 医療
+    vi: nhập viện
+    context: 診療
   - ja: 紹介状
     en: referral letter
-    context: 医療
-  - ja: 検査結果
-    en: test results
-    context: 医療
-  - ja: 薬歴
-    en: medication history
-    context: 薬剤
-  - ja: 調剤
-    en: dispensing
-    context: 薬剤
-  - ja: 投薬
-    en: medication administration
-    context: 医療
+    vi: thư giới thiệu
+    context: 診療
   - ja: 問診
     en: medical interview
-    context: 医療
+    vi: hỏi bệnh
+    context: 診療
   - ja: 予約
     en: appointment
-    context: 医療
+    vi: đặt lịch hẹn
+    context: 診療
   - ja: 受付
     en: reception / check-in
-    context: 医療
+    vi: tiếp nhận bệnh nhân
+    context: 診療
   - ja: 会計
     en: billing / payment
-    context: 医療
+    vi: thanh toán viện phí
+    context: 診療
   - ja: 病棟
     en: ward
-    context: 医療
+    vi: khoa bệnh viện
+    context: 診療
   - ja: 診療科
     en: clinical department
-    context: 医療
-  - ja: 看護記録
-    en: nursing record
-    context: 医療情報
+    vi: khoa lâm sàng
+    context: 診療
   - ja: バイタルサイン
     en: vital signs
-    context: 医療
+    vi: dấu hiệu sinh tồn
+    context: 診療
   - ja: アレルギー情報
     en: allergy information
-    context: 医療情報
+    vi: thông tin dị ứng
+    context: 診療
   - ja: 同意書
     en: consent form
-    context: 医療
-  - ja: 手術記録
-    en: surgical record
-    context: 医療情報
-  - ja: 退院サマリー
-    en: discharge summary
-    context: 医療情報
-  - ja: 医療機器
-    en: medical device
-    context: 医療
+    vi: phiếu đồng ý
+    context: 診療
   - ja: 健診
     en: health checkup
-    context: 医療
+    vi: khám sức khỏe
+    context: 診療
   - ja: 生活習慣病
     en: lifestyle disease
-    context: 医療
-  - ja: 薬剤管理
-    en: medication management
-    context: 薬剤
+    vi: bệnh lối sống
+    context: 診療
   - ja: 医療安全
     en: medical safety
-    context: 医療
+    vi: an toàn y tế
+    context: 診療
   - ja: 感染管理
     en: infection control
-    context: 医療
-  - ja: 病床管理
-    en: bed management
-    context: 医療
+    vi: kiểm soát nhiễm khuẩn
+    context: 診療
   - ja: 地域連携
-    en: regional cooperation
-    context: 医療
-  - ja: DPC
-    en: diagnosis procedure combination
-    context: 医療保険
-  - ja: 医事会計
-    en: medical accounting
-    context: 医療保険
+    en: regional medical cooperation
+    vi: liên kết y tế khu vực
+    context: 診療
+  - ja: 主訴
+    en: chief complaint
+    vi: lý do khám bệnh
+    context: 診療
+  - ja: 既往歴
+    en: medical history
+    vi: tiền sử bệnh
+    context: 診療
+  - ja: 現病歴
+    en: history of present illness
+    vi: bệnh sử hiện tại
+    context: 診療
+  - ja: 家族歴
+    en: family history
+    vi: tiền sử gia đình
+    context: 診療
+  - ja: 身体所見
+    en: physical findings
+    vi: kết quả khám thực thể
+    context: 診療
+  - ja: 診断名
+    en: diagnosis name
+    vi: tên chẩn đoán
+    context: 診療
+  - ja: 治療計画
+    en: treatment plan
+    vi: kế hoạch điều trị
+    context: 診療
+  - ja: 退院
+    en: discharge
+    vi: xuất viện
+    context: 診療
+  - ja: 転院
+    en: hospital transfer
+    vi: chuyển viện
+    context: 診療
+  - ja: 救急
+    en: emergency
+    vi: cấp cứu
+    context: 診療
+  - ja: 手術
+    en: surgery
+    vi: phẫu thuật
+    context: 診療
+  - ja: 麻酔
+    en: anesthesia
+    vi: gây mê
+    context: 診療
+  - ja: 病名
+    en: disease name
+    vi: tên bệnh
+    context: 診療
+  - ja: 再診
+    en: follow-up visit
+    vi: tái khám
+    context: 診療
+  - ja: 初診
+    en: first visit
+    vi: khám lần đầu
+    context: 診療
+  - ja: 在宅医療
+    en: home medical care
+    vi: chăm sóc y tế tại nhà
+    context: 診療
+  - ja: 往診
+    en: house call
+    vi: khám tại nhà
+    context: 診療
+
+  # ── 2. 薬学 (Pharmacy) ── 30 terms ─────────────────────────────────────────
+  - ja: 処方箋
+    en: prescription
+    vi: đơn thuốc
+    context: 薬学
+  - ja: 投薬
+    en: medication administration
+    vi: dùng thuốc
+    context: 薬学
+  - ja: 薬歴
+    en: medication history
+    vi: lịch sử dùng thuốc
+    context: 薬学
+  - ja: 調剤
+    en: dispensing
+    vi: pha chế thuốc
+    context: 薬学
+  - ja: 薬剤管理
+    en: medication management
+    vi: quản lý thuốc
+    context: 薬学
   - ja: 薬価
     en: drug price
-    context: 薬剤
+    vi: giá thuốc
+    context: 薬学
   - ja: 院内処方
     en: in-house prescription
-    context: 薬剤
+    vi: đơn thuốc nội viện
+    context: 薬学
   - ja: 院外処方
     en: external prescription
-    context: 薬剤
+    vi: đơn thuốc ngoại viện
+    context: 薬学
+  - ja: 用量
+    en: dosage
+    vi: liều lượng
+    context: 薬学
+  - ja: 用法
+    en: dosage instructions
+    vi: cách dùng thuốc
+    context: 薬学
+  - ja: 副作用
+    en: side effect
+    vi: tác dụng phụ
+    context: 薬学
+  - ja: 禁忌
+    en: contraindication
+    vi: chống chỉ định
+    context: 薬学
+  - ja: 相互作用
+    en: drug interaction
+    vi: tương tác thuốc
+    context: 薬学
+  - ja: 一般名
+    en: generic name
+    vi: tên thuốc gốc
+    context: 薬学
+  - ja: 商品名
+    en: brand name
+    vi: tên thương mại
+    context: 薬学
+  - ja: 抗生物質
+    en: antibiotic
+    vi: kháng sinh
+    context: 薬学
+  - ja: 鎮痛剤
+    en: analgesic
+    vi: thuốc giảm đau
+    context: 薬学
+  - ja: 抗炎症薬
+    en: anti-inflammatory drug
+    vi: thuốc kháng viêm
+    context: 薬学
+  - ja: 医薬品コード
+    en: drug code
+    vi: mã thuốc
+    context: 薬学
+  - ja: 薬局
+    en: pharmacy
+    vi: nhà thuốc
+    context: 薬学
+  - ja: 薬剤師
+    en: pharmacist
+    vi: dược sĩ
+    context: 薬学
+  - ja: 処方日数
+    en: prescription days
+    vi: số ngày kê đơn
+    context: 薬学
+  - ja: 服薬指導
+    en: medication counseling
+    vi: tư vấn dùng thuốc
+    context: 薬学
+  - ja: 在庫管理
+    en: inventory management
+    vi: quản lý tồn kho
+    context: 薬学
+  - ja: 麻薬
+    en: narcotic drug
+    vi: thuốc gây nghiện
+    context: 薬学
+  - ja: 向精神薬
+    en: psychotropic drug
+    vi: thuốc hướng thần
+    context: 薬学
+  - ja: 粉末薬
+    en: powder medication
+    vi: thuốc bột
+    context: 薬学
+  - ja: 錠剤
+    en: tablet
+    vi: thuốc viên nén
+    context: 薬学
+  - ja: 注射剤
+    en: injectable drug
+    vi: thuốc tiêm
+    context: 薬学
+  - ja: 点滴
+    en: intravenous drip
+    vi: truyền dịch
+    context: 薬学
+
+  # ── 3. 医療機器 (Medical Devices) ── 30 terms ───────────────────────────────
+  - ja: 医療機器
+    en: medical device
+    vi: thiết bị y tế
+    context: 医療機器
+  - ja: 内視鏡
+    en: endoscope
+    vi: nội soi
+    context: 医療機器
+  - ja: 超音波
+    en: ultrasound
+    vi: siêu âm
+    context: 医療機器
+  - ja: MRI
+    en: magnetic resonance imaging
+    vi: chụp cộng hưởng từ
+    context: 医療機器
+  - ja: X線
+    en: X-ray
+    vi: chụp X-quang
+    context: 医療機器
+  - ja: 心電図
+    en: electrocardiogram
+    vi: điện tâm đồ
+    context: 医療機器
+  - ja: 血圧計
+    en: blood pressure monitor
+    vi: máy đo huyết áp
+    context: 医療機器
+  - ja: 体温計
+    en: thermometer
+    vi: nhiệt kế
+    context: 医療機器
+  - ja: 人工呼吸器
+    en: ventilator
+    vi: máy thở
+    context: 医療機器
+  - ja: 除細動器
+    en: defibrillator
+    vi: máy khử rung tim
+    context: 医療機器
+  - ja: 輸液ポンプ
+    en: infusion pump
+    vi: máy bơm truyền dịch
+    context: 医療機器
+  - ja: 内視鏡カメラ
+    en: endoscopic camera
+    vi: camera nội soi
+    context: 医療機器
+  - ja: 手術用ロボット
+    en: surgical robot
+    vi: robot phẫu thuật
+    context: 医療機器
+  - ja: 放射線治療装置
+    en: radiation therapy device
+    vi: thiết bị xạ trị
+    context: 医療機器
+  - ja: 透析装置
+    en: dialysis machine
+    vi: máy lọc máu
+    context: 医療機器
+  - ja: 内視鏡洗浄機
+    en: endoscope washer
+    vi: máy rửa nội soi
+    context: 医療機器
+  - ja: 生体モニタ
+    en: patient monitor
+    vi: máy theo dõi bệnh nhân
+    context: 医療機器
+  - ja: 血糖測定器
+    en: blood glucose meter
+    vi: máy đo đường huyết
+    context: 医療機器
+  - ja: 酸素飽和度計
+    en: pulse oximeter
+    vi: máy đo SpO2
+    context: 医療機器
+  - ja: 超音波診断装置
+    en: ultrasound diagnostic device
+    vi: máy siêu âm chẩn đoán
+    context: 医療機器
+  - ja: 手術台
+    en: operating table
+    vi: bàn mổ
+    context: 医療機器
+  - ja: 滅菌器
+    en: sterilizer
+    vi: máy tiệt khuẩn
+    context: 医療機器
+  - ja: 電気メス
+    en: electrosurgical unit
+    vi: dao điện phẫu thuật
+    context: 医療機器
+  - ja: 腹腔鏡
+    en: laparoscope
+    vi: ống nội soi ổ bụng
+    context: 医療機器
+  - ja: 補聴器
+    en: hearing aid
+    vi: máy trợ thính
+    context: 医療機器
+  - ja: 義肢
+    en: prosthetic limb
+    vi: chi giả
+    context: 医療機器
+  - ja: 車椅子
+    en: wheelchair
+    vi: xe lăn
+    context: 医療機器
+  - ja: 松葉杖
+    en: crutch
+    vi: nạng
+    context: 医療機器
+  - ja: 医療用ベッド
+    en: hospital bed
+    vi: giường bệnh viện
+    context: 医療機器
+  - ja: 採血管
+    en: blood collection tube
+    vi: ống lấy máu
+    context: 医療機器
+
+  # ── 4. 電子カルテ (EMR) ── 30 terms ─────────────────────────────────────────
+  - ja: 電子カルテ
+    en: electronic medical record
+    vi: hồ sơ bệnh án điện tử
+    context: 電子カルテ
+  - ja: 診療記録
+    en: clinical record
+    vi: hồ sơ bệnh án
+    context: 電子カルテ
+  - ja: 看護記録
+    en: nursing record
+    vi: hồ sơ điều dưỡng
+    context: 電子カルテ
+  - ja: 手術記録
+    en: surgical record
+    vi: hồ sơ phẫu thuật
+    context: 電子カルテ
+  - ja: 退院サマリー
+    en: discharge summary
+    vi: tóm tắt xuất viện
+    context: 電子カルテ
+  - ja: SOAP記録
+    en: SOAP note
+    vi: ghi chú SOAP
+    context: 電子カルテ
+  - ja: 医師記録
+    en: physician note
+    vi: ghi chú bác sĩ
+    context: 電子カルテ
+  - ja: テンプレート
+    en: template
+    vi: mẫu biểu
+    context: 電子カルテ
+  - ja: 患者ID
+    en: patient ID
+    vi: mã bệnh nhân
+    context: 電子カルテ
+  - ja: 患者情報
+    en: patient information
+    vi: thông tin bệnh nhân
+    context: 電子カルテ
+  - ja: 医療情報システム
+    en: health information system
+    vi: hệ thống thông tin y tế
+    context: 電子カルテ
+  - ja: HL7
+    en: Health Level 7
+    vi: chuẩn HL7
+    context: 電子カルテ
+  - ja: FHIR
+    en: Fast Healthcare Interoperability Resources
+    vi: chuẩn FHIR
+    context: 電子カルテ
+  - ja: 相互運用性
+    en: interoperability
+    vi: khả năng tương tác
+    context: 電子カルテ
+  - ja: 電子署名
+    en: electronic signature
+    vi: chữ ký điện tử
+    context: 電子カルテ
+  - ja: アクセス権限
+    en: access privilege
+    vi: quyền truy cập
+    context: 電子カルテ
+  - ja: 監査ログ
+    en: audit log
+    vi: nhật ký kiểm toán
+    context: 電子カルテ
+  - ja: データバックアップ
+    en: data backup
+    vi: sao lưu dữ liệu
+    context: 電子カルテ
+  - ja: 個人情報保護
+    en: personal information protection
+    vi: bảo vệ thông tin cá nhân
+    context: 電子カルテ
+  - ja: 医療情報
+    en: medical information
+    vi: thông tin y tế
+    context: 電子カルテ
+  - ja: 病名コード
+    en: disease code (ICD)
+    vi: mã bệnh (ICD)
+    context: 電子カルテ
+  - ja: オーダリングシステム
+    en: order entry system
+    vi: hệ thống đặt lệnh y tế
+    context: 電子カルテ
+  - ja: 画像ビューア
+    en: image viewer
+    vi: trình xem hình ảnh
+    context: 電子カルテ
+  - ja: 文書管理
+    en: document management
+    vi: quản lý tài liệu
+    context: 電子カルテ
+  - ja: 患者同定
+    en: patient identification
+    vi: xác định danh tính bệnh nhân
+    context: 電子カルテ
+  - ja: ワークフロー
+    en: workflow
+    vi: quy trình làm việc
+    context: 電子カルテ
+  - ja: 通知機能
+    en: notification function
+    vi: chức năng thông báo
+    context: 電子カルテ
+  - ja: 統計レポート
+    en: statistical report
+    vi: báo cáo thống kê
+    context: 電子カルテ
+  - ja: マスタ管理
+    en: master data management
+    vi: quản lý dữ liệu chủ
+    context: 電子カルテ
+  - ja: 紙カルテ
+    en: paper medical record
+    vi: hồ sơ bệnh án giấy
+    context: 電子カルテ
+
+  # ── 5. 検査 (Testing / Laboratory) ── 30 terms ─────────────────────────────
+  - ja: 検査結果
+    en: test results
+    vi: kết quả xét nghiệm
+    context: 検査
+  - ja: 血液検査
+    en: blood test
+    vi: xét nghiệm máu
+    context: 検査
+  - ja: CT検査
+    en: CT scan
+    vi: chụp CT
+    context: 検査
+  - ja: 尿検査
+    en: urinalysis
+    vi: xét nghiệm nước tiểu
+    context: 検査
+  - ja: 病理検査
+    en: pathology test
+    vi: xét nghiệm mô bệnh học
+    context: 検査
+  - ja: 細菌培養
+    en: bacterial culture
+    vi: cấy khuẩn
+    context: 検査
+  - ja: 内分泌検査
+    en: endocrine test
+    vi: xét nghiệm nội tiết
+    context: 検査
+  - ja: 腫瘍マーカー
+    en: tumor marker
+    vi: chỉ số khối u
+    context: 検査
+  - ja: 遺伝子検査
+    en: genetic test
+    vi: xét nghiệm di truyền
+    context: 検査
+  - ja: 基準値
+    en: reference range
+    vi: giá trị tham chiếu
+    context: 検査
+  - ja: 異常値
+    en: abnormal value
+    vi: giá trị bất thường
+    context: 検査
+  - ja: 検体
+    en: specimen
+    vi: mẫu bệnh phẩm
+    context: 検査
+  - ja: 採血
+    en: blood collection
+    vi: lấy máu
+    context: 検査
+  - ja: 生化学検査
+    en: biochemical test
+    vi: xét nghiệm sinh hóa
+    context: 検査
+  - ja: 免疫検査
+    en: immunological test
+    vi: xét nghiệm miễn dịch
+    context: 検査
+  - ja: 検査オーダ
+    en: test order
+    vi: phiếu chỉ định xét nghiệm
+    context: 検査
+  - ja: 外注検査
+    en: outsourced test
+    vi: xét nghiệm gửi ngoài
+    context: 検査
+  - ja: 迅速検査
+    en: rapid test
+    vi: xét nghiệm nhanh
+    context: 検査
+  - ja: 心エコー
+    en: echocardiogram
+    vi: siêu âm tim
+    context: 検査
+  - ja: 脳波検査
+    en: electroencephalogram
+    vi: điện não đồ
+    context: 検査
+  - ja: 肺機能検査
+    en: pulmonary function test
+    vi: kiểm tra chức năng phổi
+    context: 検査
+  - ja: 内視鏡検査
+    en: endoscopic examination
+    vi: nội soi chẩn đoán
+    context: 検査
+  - ja: 生検
+    en: biopsy
+    vi: sinh thiết
+    context: 検査
+  - ja: 感度
+    en: sensitivity
+    vi: độ nhạy
+    context: 検査
+  - ja: 特異度
+    en: specificity
+    vi: độ đặc hiệu
+    context: 検査
+  - ja: 検査報告書
+    en: laboratory report
+    vi: phiếu kết quả xét nghiệm
+    context: 検査
+  - ja: 検査依頼
+    en: test request
+    vi: yêu cầu xét nghiệm
+    context: 検査
+  - ja: 凝固検査
+    en: coagulation test
+    vi: xét nghiệm đông máu
+    context: 検査
+  - ja: 輸血検査
+    en: transfusion compatibility test
+    vi: xét nghiệm truyền máu
+    context: 検査
+  - ja: 微生物検査
+    en: microbiological test
+    vi: xét nghiệm vi sinh
+    context: 検査
+
+  # ── 6. 保険請求 (Insurance Claims) ── 30 terms ──────────────────────────────
+  - ja: 保険請求
+    en: insurance claim
+    vi: yêu cầu thanh toán bảo hiểm
+    context: 保険請求
+  - ja: 診療報酬
+    en: medical fee
+    vi: phí dịch vụ y tế
+    context: 保険請求
+  - ja: レセプト
+    en: medical fee claim
+    vi: phiếu thanh toán y tế
+    context: 保険請求
+  - ja: DPC
+    en: diagnosis procedure combination
+    vi: kết hợp chẩn đoán và thủ thuật
+    context: 保険請求
+  - ja: 医事会計
+    en: medical accounting
+    vi: kế toán y tế
+    context: 保険請求
+  - ja: 点数
+    en: points / medical fee units
+    vi: điểm phí dịch vụ y tế
+    context: 保険請求
+  - ja: 自己負担
+    en: patient copayment
+    vi: chi phí tự trả của bệnh nhân
+    context: 保険請求
+  - ja: 健康保険
+    en: health insurance
+    vi: bảo hiểm y tế
+    context: 保険請求
+  - ja: 国民健康保険
+    en: national health insurance
+    vi: bảo hiểm y tế quốc dân
+    context: 保険請求
+  - ja: 後期高齢者医療
+    en: late-stage elderly medical care
+    vi: chăm sóc y tế người cao tuổi giai đoạn muộn
+    context: 保険請求
+  - ja: 保険者
+    en: insurer
+    vi: bên bảo hiểm
+    context: 保険請求
+  - ja: 被保険者
+    en: insured person
+    vi: người được bảo hiểm
+    context: 保険請求
+  - ja: 保険証
+    en: insurance card
+    vi: thẻ bảo hiểm y tế
+    context: 保険請求
+  - ja: 査定
+    en: claim review / assessment
+    vi: thẩm định yêu cầu bảo hiểm
+    context: 保険請求
+  - ja: 返戻
+    en: claim return / rejection
+    vi: trả lại yêu cầu thanh toán
+    context: 保険請求
+  - ja: 再請求
+    en: resubmission
+    vi: nộp lại yêu cầu thanh toán
+    context: 保険請求
+  - ja: 加算
+    en: additional charge
+    vi: phụ phí bổ sung
+    context: 保険請求
+  - ja: 減算
+    en: deduction
+    vi: khấu trừ
+    context: 保険請求
+  - ja: 保険適用
+    en: insurance coverage
+    vi: phạm vi bảo hiểm
+    context: 保険請求
+  - ja: 自費診療
+    en: self-pay treatment
+    vi: điều trị tự túc
+    context: 保険請求
+  - ja: 混合診療
+    en: mixed medical billing
+    vi: thanh toán y tế kết hợp
+    context: 保険請求
+  - ja: レセプト電算
+    en: electronic claim processing
+    vi: xử lý yêu cầu thanh toán điện tử
+    context: 保険請求
+  - ja: 医療費通知
+    en: medical expense notice
+    vi: thông báo chi phí y tế
+    context: 保険請求
+  - ja: 高額療養費
+    en: high-cost medical expense benefit
+    vi: quyền lợi chi phí y tế cao
+    context: 保険請求
+  - ja: 月次請求
+    en: monthly billing
+    vi: thanh toán hàng tháng
+    context: 保険請求
+  - ja: 診療行為
+    en: medical act
+    vi: hành vi y tế
+    context: 保険請求
+  - ja: 処置料
+    en: procedure fee
+    vi: phí thủ thuật
+    context: 保険請求
+  - ja: 検査料
+    en: examination fee
+    vi: phí xét nghiệm
+    context: 保険請求
+  - ja: 投薬料
+    en: medication fee
+    vi: phí dùng thuốc
+    context: 保険請求
+  - ja: 入院基本料
+    en: basic hospitalization fee
+    vi: phí nhập viện cơ bản
+    context: 保険請求
+
+  # ── 7. 病院管理 (Hospital Management) ── 35 terms ───────────────────────────
+  - ja: 病床管理
+    en: bed management
+    vi: quản lý giường bệnh
+    context: 病院管理
+  - ja: 病院情報システム
+    en: hospital information system
+    vi: hệ thống thông tin bệnh viện
+    context: 病院管理
+  - ja: 病院長
+    en: hospital director
+    vi: giám đốc bệnh viện
+    context: 病院管理
+  - ja: 医師
+    en: physician / doctor
+    vi: bác sĩ
+    context: 病院管理
+  - ja: 看護師
+    en: nurse
+    vi: điều dưỡng
+    context: 病院管理
+  - ja: 医療事務
+    en: medical clerical staff
+    vi: nhân viên hành chính y tế
+    context: 病院管理
+  - ja: シフト管理
+    en: shift management
+    vi: quản lý ca làm việc
+    context: 病院管理
+  - ja: 人員配置
+    en: staffing
+    vi: bố trí nhân sự
+    context: 病院管理
+  - ja: 病院設備
+    en: hospital facilities
+    vi: cơ sở vật chất bệnh viện
+    context: 病院管理
+  - ja: 医療廃棄物
+    en: medical waste
+    vi: chất thải y tế
+    context: 病院管理
+  - ja: 滅菌管理
+    en: sterilization management
+    vi: quản lý tiệt khuẩn
+    context: 病院管理
+  - ja: 院内感染
+    en: hospital-acquired infection
+    vi: nhiễm khuẩn bệnh viện
+    context: 病院管理
+  - ja: 院内研修
+    en: in-hospital training
+    vi: đào tạo nội bộ bệnh viện
+    context: 病院管理
+  - ja: 医療スタッフ
+    en: medical staff
+    vi: nhân viên y tế
+    context: 病院管理
+  - ja: 診療所
+    en: clinic
+    vi: phòng khám
+    context: 病院管理
+  - ja: 総合病院
+    en: general hospital
+    vi: bệnh viện đa khoa
+    context: 病院管理
+  - ja: 専門病院
+    en: specialty hospital
+    vi: bệnh viện chuyên khoa
+    context: 病院管理
+  - ja: 救急病院
+    en: emergency hospital
+    vi: bệnh viện cấp cứu
+    context: 病院管理
+  - ja: 手術室
+    en: operating room
+    vi: phòng mổ
+    context: 病院管理
+  - ja: ICU
+    en: intensive care unit
+    vi: đơn vị chăm sóc tích cực
+    context: 病院管理
+  - ja: 外来待合室
+    en: outpatient waiting room
+    vi: phòng chờ ngoại trú
+    context: 病院管理
+  - ja: 薬剤部
+    en: pharmacy department
+    vi: khoa dược
+    context: 病院管理
+  - ja: 検査室
+    en: laboratory room
+    vi: phòng xét nghiệm
+    context: 病院管理
+  - ja: 放射線科
+    en: radiology department
+    vi: khoa chẩn đoán hình ảnh
+    context: 病院管理
+  - ja: 栄養管理
+    en: nutrition management
+    vi: quản lý dinh dưỡng
+    context: 病院管理
+  - ja: 医療費管理
+    en: medical cost management
+    vi: quản lý chi phí y tế
+    context: 病院管理
+  - ja: クレーム対応
+    en: complaint handling
+    vi: xử lý khiếu nại
+    context: 病院管理
+  - ja: 患者満足度
+    en: patient satisfaction
+    vi: mức độ hài lòng của bệnh nhân
+    context: 病院管理
+  - ja: 医療倫理
+    en: medical ethics
+    vi: đạo đức y tế
+    context: 病院管理
+  - ja: 病院認定
+    en: hospital accreditation
+    vi: công nhận bệnh viện
+    context: 病院管理
+  - ja: 医療統計
+    en: medical statistics
+    vi: thống kê y tế
+    context: 病院管理
+  - ja: 地域医療計画
+    en: regional healthcare plan
+    vi: kế hoạch y tế khu vực
+    context: 病院管理
+  - ja: 病院経営
+    en: hospital management / administration
+    vi: quản trị bệnh viện
+    context: 病院管理
+  - ja: 電子処方箋
+    en: electronic prescription
+    vi: đơn thuốc điện tử
+    context: 病院管理
+  - ja: 診療報酬改定
+    en: medical fee revision
+    vi: điều chỉnh phí dịch vụ y tế
+    context: 病院管理
+
+  # ── 8. 遠隔医療 (Telemedicine) ── 30 terms ──────────────────────────────────
+  - ja: オンライン診療
+    en: online consultation
+    vi: khám trực tuyến
+    context: 遠隔医療
+  - ja: 遠隔医療
+    en: telemedicine
+    vi: y tế từ xa
+    context: 遠隔医療
+  - ja: テレヘルス
+    en: telehealth
+    vi: chăm sóc sức khỏe từ xa
+    context: 遠隔医療
+  - ja: ビデオ通話診療
+    en: video call consultation
+    vi: khám qua cuộc gọi video
+    context: 遠隔医療
+  - ja: 遠隔モニタリング
+    en: remote monitoring
+    vi: giám sát từ xa
+    context: 遠隔医療
+  - ja: ウェアラブル端末
+    en: wearable device
+    vi: thiết bị đeo tay
+    context: 遠隔医療
+  - ja: オンライン処方
+    en: online prescription
+    vi: kê đơn trực tuyến
+    context: 遠隔医療
+  - ja: 電子お薬手帳
+    en: electronic medication booklet
+    vi: sổ tay thuốc điện tử
+    context: 遠隔医療
+  - ja: 予約管理システム
+    en: appointment management system
+    vi: hệ thống quản lý lịch hẹn
+    context: 遠隔医療
+  - ja: 患者ポータル
+    en: patient portal
+    vi: cổng thông tin bệnh nhân
+    context: 遠隔医療
+  - ja: 医療データ連携
+    en: medical data integration
+    vi: tích hợp dữ liệu y tế
+    context: 遠隔医療
+  - ja: チャット診療
+    en: chat-based consultation
+    vi: khám qua tin nhắn
+    context: 遠隔医療
+  - ja: AI診断支援
+    en: AI-assisted diagnosis
+    vi: hỗ trợ chẩn đoán bằng AI
+    context: 遠隔医療
+  - ja: 健康アプリ
+    en: health application
+    vi: ứng dụng sức khỏe
+    context: 遠隔医療
+  - ja: 患者自己管理
+    en: patient self-management
+    vi: tự quản lý sức khỏe của bệnh nhân
+    context: 遠隔医療
+  - ja: データ暗号化
+    en: data encryption
+    vi: mã hóa dữ liệu
+    context: 遠隔医療
+  - ja: セキュアチャンネル
+    en: secure channel
+    vi: kênh truyền bảo mật
+    context: 遠隔医療
+  - ja: 遠隔手術支援
+    en: remote surgical assistance
+    vi: hỗ trợ phẫu thuật từ xa
+    context: 遠隔医療
+  - ja: 診療同意オンライン
+    en: online informed consent
+    vi: đồng ý điều trị trực tuyến
+    context: 遠隔医療
+  - ja: クラウド医療
+    en: cloud-based healthcare
+    vi: chăm sóc sức khỏe trên nền tảng đám mây
+    context: 遠隔医療
+  - ja: IoT医療機器
+    en: IoT medical device
+    vi: thiết bị y tế IoT
+    context: 遠隔医療
+  - ja: 電子お薬連携
+    en: electronic medication coordination
+    vi: phối hợp thuốc điện tử
+    context: 遠隔医療
+  - ja: 遠隔読影
+    en: remote radiology reading
+    vi: đọc hình ảnh chẩn đoán từ xa
+    context: 遠隔医療
+  - ja: 患者フォローアップ
+    en: patient follow-up
+    vi: theo dõi bệnh nhân sau điều trị
+    context: 遠隔医療
+  - ja: 訪問看護支援
+    en: home nursing support
+    vi: hỗ trợ điều dưỡng tại nhà
+    context: 遠隔医療
+  - ja: 地域包括ケア
+    en: community-based integrated care
+    vi: chăm sóc tích hợp cộng đồng
+    context: 遠隔医療
+  - ja: デジタルヘルス
+    en: digital health
+    vi: sức khỏe số
+    context: 遠隔医療
+  - ja: 健康データ管理
+    en: health data management
+    vi: quản lý dữ liệu sức khỏe
+    context: 遠隔医療
+  - ja: 遠隔薬局
+    en: remote pharmacy
+    vi: nhà thuốc từ xa
+    context: 遠隔医療
+  - ja: インターネット医療
+    en: internet-based medicine
+    vi: y tế qua internet
+    context: 遠隔医療

@@ -39,7 +39,7 @@ When the user invokes a sub-command, follow the corresponding workflow below.
 1. Ask the user for project details: name, type (web/mobile/api/desktop/lp/internal-system/saas/batch), tech stack, team size
 2. Ask for keigo preference: 丁寧語 (polite) / 謙譲語 (humble) / simple
 3. Ask for output language: ja (Japanese) / en (English) / vi (Vietnamese). Default: ja. This controls the language of ALL generated documents.
-4. Ask for industry domain: finance / medical / manufacturing / real-estate / none
+4. Ask for industry domain: finance / medical / manufacturing / real-estate / logistics / retail / insurance / education / government / construction / telecom / automotive / energy / food-service / none
 5. Create `sekkei.config.yaml` in the project root with the provided values. Set `project.language` to the selected output language.
    Append the following commented split block at the end of the config file (verbatim):
    ```yaml
@@ -405,11 +405,11 @@ When the user invokes a sub-command, follow the corresponding workflow below.
 ### `/sekkei:glossary [add|list|find|export]`
 
 1. Locate `sekkei-docs/glossary.yaml` (create if not exists)
-2. For `add`: ask for JP term, EN term, context → call `manage_glossary` with action "add"
+2. For `add`: ask for JP term, EN term, VI term, context → call `manage_glossary` with action "add"
 3. For `list`: call `manage_glossary` with action "list" → display all terms
 4. For `find`: ask for search query → call with action "find"
-5. For `export`: call with action "export" → display as Markdown table
-6. For `import`: ask for industry (finance/medical/manufacturing/real-estate) → call with action "import", industry → display imported/skipped counts
+5. For `export`: call with action "export" → display as Markdown table (4 columns: ja/en/vi/context)
+6. For `import`: ask for industry (finance / medical / manufacturing / real-estate / logistics / retail / insurance / education / government / construction / telecom / automotive / energy / food-service / common) → call with action "import", industry → display imported/skipped counts
 
 ### `/sekkei:update @doc`
 
