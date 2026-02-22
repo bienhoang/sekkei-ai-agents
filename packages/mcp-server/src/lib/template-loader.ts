@@ -1,14 +1,15 @@
 /**
  * Load Markdown templates from disk, parse YAML frontmatter.
  * Templates live in templates/{lang}/{doc-type}.md
- * Supports override directories for company customization.
+ * Supports override directories for company customization and preset application.
  */
 import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { parse as parseYaml } from "yaml";
 import { SekkeiError } from "./errors.js";
 import { resolveTemplatePath } from "./template-resolver.js";
-import type { DocType, DocumentMeta, Language, TemplateData } from "../types/documents.js";
+import { loadPreset, applyPreset } from "./preset-resolver.js";
+import type { DocType, DocumentMeta, Language, Preset, TemplateData } from "../types/documents.js";
 import { logger } from "./logger.js";
 
 const FRONTMATTER_RE = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
@@ -44,12 +45,13 @@ function templatePath(baseDir: string, docType: DocType, language: Language): st
   return resolve(baseDir, language, `${docType}.md`);
 }
 
-/** Load and parse a template file from disk. Checks overrideDir first, then language-specific, then ja/ fallback. */
+/** Load and parse a template file from disk. Checks overrideDir first, then language-specific, then ja/ fallback. Applies preset overrides if provided. */
 export async function loadTemplate(
   baseDir: string,
   docType: DocType,
   language: Language = "ja",
-  overrideDir?: string
+  overrideDir?: string,
+  preset?: Preset
 ): Promise<TemplateData> {
   const filePath = await resolveTemplatePath(baseDir, docType, language, overrideDir);
 
@@ -65,8 +67,16 @@ export async function loadTemplate(
     );
   }
 
-  logger.debug({ docType, language, path: filePath }, "Loading template");
+  logger.debug({ docType, language, path: filePath, preset }, "Loading template");
   const { metadata, content } = parseFrontmatter(raw);
+
+  if (preset) {
+    const presetsDir = join(baseDir, "presets");
+    const presetConfig = await loadPreset(presetsDir, preset);
+    const patched = applyPreset(content, docType, presetConfig);
+    return { metadata, content: patched };
+  }
+
   return { metadata, content };
 }
 

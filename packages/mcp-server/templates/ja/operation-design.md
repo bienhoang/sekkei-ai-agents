@@ -13,6 +13,10 @@ sections:
   - incident-response
   - job-management
   - sla-definition
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 
 <!-- AI: Keigo: Use である調 throughout. Never use です or ます for sentence endings. -->

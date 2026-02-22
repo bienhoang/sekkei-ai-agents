@@ -17,6 +17,10 @@ sections:
   - error-handling
   - security
   - performance
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 
 <!-- AI: Keigo: Use である調 throughout. Never mix formal and plain styles within a section. -->

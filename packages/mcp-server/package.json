@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "bin": {
     "sekkei-mcp": "dist/index.js",
-    "sekkei-setup": "bin/setup.js"
+    "sekkei-setup": "bin/setup.js",
+    "sekkei-init": "bin/init.js"
   },
   "files": [
     "dist/",
@@ -26,8 +27,11 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@clack/prompts": "^1.0.1",
     "@modelcontextprotocol/sdk": "^1.12.0",
+    "exceljs": "^4.4.0",
     "handlebars": "^4.7.8",
+    "marked": "^17.0.3",
     "pino": "^9.6.0",
     "playwright": "^1.58.2",
     "yaml": "^2.7.0",

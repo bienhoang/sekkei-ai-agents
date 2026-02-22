@@ -1,0 +1,26 @@
+name: enterprise
+label: "大手SI / 官公庁向け"
+keigo_level: "丁寧語"
+version_scheme: alphabetic
+cover_page: full
+required_ids: true
+section_density: full
+
+doc_overrides:
+  requirements:
+    additional_sections:
+      - "改版管理表"
+      - "承認欄"
+      - "配布先リスト"
+    notes: "全セクション必須。ID体系(REQ-xxx)必須"
+  basic-design:
+    additional_sections:
+      - "非機能要件"
+      - "帳票設計書"
+      - "バッチ設計図"
+    notes: "サブシステム単位で分割推奨"
+  test-spec:
+    additional_sections:
+      - "テスト結果まとめ"
+      - "不具合管理表"
+    notes: "実施結果・担当者サインオフ列必須"

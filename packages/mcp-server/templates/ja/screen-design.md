@@ -11,6 +11,10 @@ sections:
   - event-list
   - screen-transition
   - permissions
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 
 <!-- NOTE: This template is NOT loaded via loadTemplate/generate_document (screen-design is not in DOC_TYPES).

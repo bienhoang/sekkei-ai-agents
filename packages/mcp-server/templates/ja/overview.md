@@ -8,6 +8,10 @@ sections:
   - system-scope
   - stakeholders
   - architecture-overview
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 
 <!-- AI: Keigo: Use ですます調 throughout. -->

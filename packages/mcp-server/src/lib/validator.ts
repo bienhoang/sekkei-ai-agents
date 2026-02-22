@@ -6,7 +6,7 @@ import { resolve, dirname } from "node:path";
 import type { DocType, KeigoLevel, Manifest } from "../types/documents.js";
 import { extractIds, extractIdsByType } from "./id-extractor.js";
 import { SekkeiError } from "./errors.js";
-import { KEIGO_MAP } from "./generation-instructions.js";
+import { validateKeigoComprehensive } from "./keigo-validator.js";
 
 export interface ValidationIssue {
   type: "missing_section" | "missing_id" | "orphaned_id" | "missing_column" | "keigo_violation";
@@ -192,42 +192,26 @@ export function validateTableStructure(
 export function validateKeigo(
   content: string,
   docType: DocType,
-  keigoOverride?: KeigoLevel
+  _keigoOverride?: KeigoLevel
 ): ValidationIssue[] {
-  const expected = keigoOverride ?? KEIGO_MAP[docType];
-  const issues: ValidationIssue[] = [];
-  const lines = content.split("\n");
+  // Delegate to comprehensive keigo validator
+  return validateKeigoComprehensive(content, docType);
+}
 
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    // Skip non-prose lines: headings, tables, code blocks, empty, HTML comments
-    if (!line || line.startsWith("#") || line.startsWith("|") || line.startsWith("```")
-      || line.startsWith("<!--") || line.startsWith("-") || line.startsWith("*")) {
-      continue;
-    }
-
-    if (expected === "丁寧語") {
-      // Flag plain-form endings in a ですます document
-      if (/(?:だ|である|する|した|ない|ある|れる|せる)。\s*$/.test(line)) {
-        issues.push({
-          type: "keigo_violation",
-          message: `Line ${i + 1}: Plain-form ending detected in ですます調 document`,
-          severity: "warning",
-        });
-      }
-    } else if (expected === "simple") {
-      // Flag polite-form endings in a である document
-      if (/(?:です|ます|ました|ません|でした)。\s*$/.test(line)) {
-        issues.push({
-          type: "keigo_violation",
-          message: `Line ${i + 1}: Polite-form ending detected in である調 document`,
-          severity: "warning",
-        });
-      }
-    }
+/** Check YAML frontmatter for required lifecycle status field */
+function validateFrontmatterStatus(content: string): ValidationIssue[] {
+  const match = content.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) return [];
+  // Frontmatter present — check for status field
+  const hasFrontmatter = match[1].trim().length > 0;
+  if (hasFrontmatter && !/^\s*status\s*:/m.test(match[1])) {
+    return [{
+      type: "missing_section",
+      message: "YAMLフロントマターに status フィールドが必要です",
+      severity: "warning",
+    }];
   }
-
-  return issues;
+  return [];
 }
 
 /** Run full validation on a document */
@@ -237,6 +221,7 @@ export function validateDocument(
   upstreamContent?: string
 ): ValidationResult {
   const issues: ValidationIssue[] = [
+    ...validateFrontmatterStatus(content),
     ...validateCompleteness(content, docType),
     ...validateTableStructure(content, docType),
     ...validateKeigo(content, docType),

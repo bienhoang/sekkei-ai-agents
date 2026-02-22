@@ -17,6 +17,10 @@ sections:
   - glossary
   - references
   - appendices
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 
 <!-- AI: Keigo: Use ですます調 throughout. Never mix formal and plain styles within a section. -->

@@ -149,7 +149,7 @@ function checkPython() {
 }
 
 /** Main setup flow */
-function main() {
+export async function runEditorSetup() {
   log("");
   log(`${BOLD}Sekkei Setup${RESET}`);
   log("Configuring MCP server integration for detected editors...");
@@ -194,4 +194,8 @@ function main() {
   log("");
 }
 
-main();
+// Standalone execution
+const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+if (isMainModule) {
+  runEditorSetup().catch(console.error);
+}

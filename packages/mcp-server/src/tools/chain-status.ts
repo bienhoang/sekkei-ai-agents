@@ -7,6 +7,8 @@ import { dirname, join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { logger } from "../lib/logger.js";
+import { readDocumentFrontmatter } from "../lib/frontmatter-reader.js";
+import { LIFECYCLE_LABELS } from "../types/documents.js";
 
 async function fileExists(path: string): Promise<boolean> {
   try { await stat(path); return true; } catch { return false; }
@@ -22,6 +24,8 @@ interface ChainStatusEntry {
   doc_type: string;
   status: string;
   output?: string;
+  lifecycle?: string;
+  version?: string;
 }
 
 export function registerChainStatusTool(server: McpServer): void {
@@ -65,6 +69,8 @@ export function registerChainStatusTool(server: McpServer): void {
       const entries: ChainStatusEntry[] = [];
       const chain = config.chain as Record<string, unknown>;
 
+      const configDir = dirname(config_path);
+
       // RFP is a string path, not a ChainEntry
       if (typeof chain.rfp === "string" && chain.rfp) {
         entries.push({ doc_type: "rfp", status: "provided", output: chain.rfp });
@@ -94,10 +100,22 @@ export function registerChainStatusTool(server: McpServer): void {
             : undefined)
           ?? entry?.global_output;
 
+        // Read lifecycle/version from output file frontmatter when available
+        let lifecycle: string | undefined;
+        let version: string | undefined;
+        if (entry?.output) {
+          const outputPath = join(configDir, entry.output);
+          const meta = await readDocumentFrontmatter(outputPath);
+          if (meta.status) lifecycle = LIFECYCLE_LABELS[meta.status] ?? meta.status;
+          if (meta.version) version = meta.version;
+        }
+
         entries.push({
           doc_type: key.replace(/_/g, "-"),
           status: entry?.status ?? "pending",
           output: outputStr,
+          lifecycle,
+          version,
         });
       }
 
@@ -106,19 +124,19 @@ export function registerChainStatusTool(server: McpServer): void {
         ``,
         `**Project:** ${config.project?.name ?? "Unknown"}`,
         ``,
-        `| Document | Status | Output |`,
-        `|----------|--------|--------|`,
+        `| Document | Chain Status | Lifecycle | Version | Output |`,
+        `|----------|-------------|-----------|---------|--------|`,
       ];
 
       for (const e of entries) {
         const icon = e.status === "complete" ? "✅" : e.status === "in-progress" ? "🔄" : e.status === "provided" ? "📄" : "⏳";
-        lines.push(`| ${e.doc_type} | ${icon} ${e.status} | ${e.output ?? "-"} |`);
+        lines.push(`| ${e.doc_type} | ${icon} ${e.status} | ${e.lifecycle ?? "-"} | ${e.version ?? "-"} | ${e.output ?? "-"} |`);
       }
 
       // Feature status table — discover from filesystem at runtime
       const outputDir = config.output?.directory
-        ? join(dirname(config_path), config.output.directory)
-        : dirname(config_path);
+        ? join(configDir, config.output.directory)
+        : configDir;
       const featuresDir = join(outputDir, "05-features");
       try {
         const entries = await readdir(featuresDir, { withFileTypes: true });

@@ -8,6 +8,10 @@ sections:
   - distribution
   - glossary
   - crud-table
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 
 <!-- AI Instructions:

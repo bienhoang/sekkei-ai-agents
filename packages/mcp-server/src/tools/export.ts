@@ -5,6 +5,9 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { callPython } from "../lib/python-bridge.js";
+import { exportToExcel } from "../lib/excel-exporter.js";
+import { exportToPdf } from "../lib/pdf-exporter.js";
+import { loadConfig } from "../config.js";
 import { DOC_TYPES } from "../types/documents.js";
 import { SekkeiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
@@ -61,30 +64,49 @@ export function registerExportDocumentTool(server: McpServer): void {
         }
 
         const isMatrix = doc_type === "crud-matrix" || doc_type === "traceability-matrix";
-        let action: string;
-        let pythonInput: Record<string, unknown>;
+        const { exportEngine } = loadConfig();
 
-        if (isMatrix) {
-          action = "export-matrix";
-          pythonInput = {
-            content: exportContent,
-            matrix_type: doc_type,
-            output_path,
-            project_name: project_name ?? "",
-          };
-        } else {
-          action = format === "xlsx" ? "export-excel"
-            : format === "pdf" ? "export-pdf"
-            : "export-docx";
-          pythonInput = {
+        let result: { file_path: unknown; file_size: unknown };
+
+        if (exportEngine === "node" && (format === "xlsx" || isMatrix)) {
+          result = await exportToExcel({
             content: exportContent,
             doc_type,
             output_path,
             project_name: project_name ?? "",
-          };
-        }
+            isMatrix,
+          });
+        } else if (exportEngine === "node" && format === "pdf") {
+          result = await exportToPdf({
+            content: exportContent,
+            doc_type,
+            output_path,
+            project_name: project_name ?? "",
+          });
+        } else {
+          let action: string;
+          let pythonInput: Record<string, unknown>;
 
-        const result = await callPython(action, pythonInput);
+          if (isMatrix) {
+            action = "export-matrix";
+            pythonInput = {
+              content: exportContent,
+              matrix_type: doc_type,
+              output_path,
+              project_name: project_name ?? "",
+            };
+          } else {
+            action = format === "pdf" ? "export-pdf" : "export-docx";
+            pythonInput = {
+              content: exportContent,
+              doc_type,
+              output_path,
+              project_name: project_name ?? "",
+            };
+          }
+
+          result = await callPython(action, pythonInput) as { file_path: unknown; file_size: unknown };
+        }
 
         return {
           content: [{

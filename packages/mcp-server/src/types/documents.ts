@@ -24,12 +24,31 @@ export type KeigoLevel = (typeof KEIGO_LEVELS)[number];
 export const PROJECT_TYPES = ["web", "mobile", "api", "desktop", "lp", "internal-system", "saas", "batch"] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
 
+export const PRESETS = ["enterprise", "standard", "agile"] as const;
+export type Preset = (typeof PRESETS)[number];
+
+export const LIFECYCLE_STATUSES = ["draft", "review", "approved", "revised", "obsolete"] as const;
+export type LifecycleStatus = typeof LIFECYCLE_STATUSES[number];
+
+export const LIFECYCLE_LABELS: Record<LifecycleStatus, string> = {
+  draft: "ドラフト",
+  review: "レビュー中",
+  approved: "承認済み",
+  revised: "改版",
+  obsolete: "廃版",
+};
+
 /** YAML frontmatter parsed from template files */
 export interface DocumentMeta {
   doc_type: DocType;
   version: string;
   language: Language;
   sections: string[];
+  // Lifecycle fields (optional for backward compat)
+  status?: LifecycleStatus;
+  author?: string;
+  reviewer?: string;
+  approver?: string;
 }
 
 /** Template loaded from disk: frontmatter + markdown body */
@@ -81,6 +100,7 @@ export interface ProjectConfig {
     language: Language;
     keigo: KeigoLevel;
     industry?: string;
+    preset?: Preset;
   };
   output: {
     directory: string;

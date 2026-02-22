@@ -12,6 +12,10 @@ sections:
   - system-cutover
   - rollback-plan
   - migration-test-plan
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 
 <!-- AI: Keigo: Use である調 throughout. Never use です or ます for sentence endings. -->

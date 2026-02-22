@@ -8,6 +8,10 @@ sections:
   - distribution
   - glossary
   - traceability-table
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 
 <!-- AI Instructions:

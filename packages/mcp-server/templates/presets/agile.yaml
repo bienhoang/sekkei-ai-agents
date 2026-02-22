@@ -1,0 +1,16 @@
+name: agile
+label: "アジャイル / スタートアップ向け"
+keigo_level: "simple"
+version_scheme: numeric
+cover_page: minimal
+required_ids: false
+section_density: minimal
+
+doc_overrides:
+  basic-design:
+    skip_sections:
+      - "帳票設計書"
+      - "バッチ設計図"
+    notes: "Mermaid図推奨。外部設計と内部設計を1ファイルに統合可"
+  test-spec:
+    notes: "BDDスタイル(Given/When/Then)可。ユーザーストーリーにリンク"

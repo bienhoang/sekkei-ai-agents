@@ -1,0 +1,13 @@
+name: standard
+label: "中堅SI / SES向け"
+keigo_level: "mixed"
+version_scheme: numeric
+cover_page: simple
+required_ids: false
+section_density: core
+
+doc_overrides:
+  requirements:
+    notes: "非機能要件は簡略化可"
+  test-spec:
+    notes: "テスト結果と統合可"
