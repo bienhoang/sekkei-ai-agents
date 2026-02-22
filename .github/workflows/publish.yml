@@ -19,6 +19,9 @@ jobs:
           
       - run: npm ci
       
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+      
       - name: Build all packages
         run: npm run build --workspaces
         
