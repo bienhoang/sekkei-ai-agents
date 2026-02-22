@@ -1,0 +1,17 @@
+{
+  "name": "sekkei-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "build:mcp": "npm run build --workspace=packages/mcp-server",
+    "build:preview": "npm run build --workspace=packages/preview",
+    "test": "npm run test --workspace=packages/mcp-server",
+    "lint": "npm run lint --workspaces"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

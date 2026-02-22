@@ -1,0 +1,93 @@
+industry: real-estate
+language: ja
+terms:
+  - ja: 物件管理
+    en: property management
+    context: 不動産
+  - ja: 賃貸契約
+    en: lease agreement
+    context: 不動産
+  - ja: 敷金
+    en: security deposit
+    context: 不動産
+  - ja: 礼金
+    en: key money
+    context: 不動産
+  - ja: 管理費
+    en: management fee
+    context: 不動産
+  - ja: 共益費
+    en: common area maintenance fee
+    context: 不動産
+  - ja: 仲介手数料
+    en: brokerage fee
+    context: 不動産
+  - ja: 更新料
+    en: renewal fee
+    context: 不動産
+  - ja: 原状回復
+    en: restoration to original condition
+    context: 不動産
+  - ja: 内覧
+    en: property viewing
+    context: 不動産
+  - ja: 間取り
+    en: floor plan / layout
+    context: 不動産
+  - ja: 専有面積
+    en: exclusive area
+    context: 不動産
+  - ja: 築年数
+    en: building age
+    context: 不動産
+  - ja: 耐震
+    en: earthquake resistance
+    context: 不動産
+  - ja: 登記
+    en: property registration
+    context: 法務
+  - ja: 重要事項説明
+    en: important matter explanation
+    context: 法務
+  - ja: 宅建
+    en: real estate broker license
+    context: 法務
+  - ja: 管理組合
+    en: management association
+    context: 不動産
+  - ja: 修繕積立金
+    en: repair reserve fund
+    context: 不動産
+  - ja: 大規模修繕
+    en: major renovation
+    context: 不動産
+  - ja: 入居者
+    en: tenant / resident
+    context: 不動産
+  - ja: 退去
+    en: move-out / vacating
+    context: 不動産
+  - ja: 家賃
+    en: rent
+    context: 不動産
+  - ja: 滞納
+    en: overdue payment
+    context: 不動産
+  - ja: 保証人
+    en: guarantor
+    context: 不動産
+  - ja: 保証会社
+    en: guarantee company
+    context: 不動産
+  - ja: 空室率
+    en: vacancy rate
+    context: 不動産
+  - ja: 利回り
+    en: yield / return rate
+    context: 不動産
+  - ja: 固定資産税
+    en: property tax
+    context: 税務
+  - ja: 都市計画
+    en: urban planning
+    context: 不動産

@@ -1,0 +1,123 @@
+industry: medical
+language: ja
+terms:
+  - ja: 電子カルテ
+    en: electronic medical record
+    context: 医療情報
+  - ja: 診療記録
+    en: clinical record
+    context: 医療情報
+  - ja: 処方箋
+    en: prescription
+    context: 医療
+  - ja: 保険請求
+    en: insurance claim
+    context: 医療保険
+  - ja: 病名コード
+    en: disease code (ICD)
+    context: 医療情報
+  - ja: 診療報酬
+    en: medical fee
+    context: 医療保険
+  - ja: レセプト
+    en: medical fee claim
+    context: 医療保険
+  - ja: 患者
+    en: patient
+    context: 医療
+  - ja: 外来
+    en: outpatient
+    context: 医療
+  - ja: 入院
+    en: hospitalization
+    context: 医療
+  - ja: 紹介状
+    en: referral letter
+    context: 医療
+  - ja: 検査結果
+    en: test results
+    context: 医療
+  - ja: 薬歴
+    en: medication history
+    context: 薬剤
+  - ja: 調剤
+    en: dispensing
+    context: 薬剤
+  - ja: 投薬
+    en: medication administration
+    context: 医療
+  - ja: 問診
+    en: medical interview
+    context: 医療
+  - ja: 予約
+    en: appointment
+    context: 医療
+  - ja: 受付
+    en: reception / check-in
+    context: 医療
+  - ja: 会計
+    en: billing / payment
+    context: 医療
+  - ja: 病棟
+    en: ward
+    context: 医療
+  - ja: 診療科
+    en: clinical department
+    context: 医療
+  - ja: 看護記録
+    en: nursing record
+    context: 医療情報
+  - ja: バイタルサイン
+    en: vital signs
+    context: 医療
+  - ja: アレルギー情報
+    en: allergy information
+    context: 医療情報
+  - ja: 同意書
+    en: consent form
+    context: 医療
+  - ja: 手術記録
+    en: surgical record
+    context: 医療情報
+  - ja: 退院サマリー
+    en: discharge summary
+    context: 医療情報
+  - ja: 医療機器
+    en: medical device
+    context: 医療
+  - ja: 健診
+    en: health checkup
+    context: 医療
+  - ja: 生活習慣病
+    en: lifestyle disease
+    context: 医療
+  - ja: 薬剤管理
+    en: medication management
+    context: 薬剤
+  - ja: 医療安全
+    en: medical safety
+    context: 医療
+  - ja: 感染管理
+    en: infection control
+    context: 医療
+  - ja: 病床管理
+    en: bed management
+    context: 医療
+  - ja: 地域連携
+    en: regional cooperation
+    context: 医療
+  - ja: DPC
+    en: diagnosis procedure combination
+    context: 医療保険
+  - ja: 医事会計
+    en: medical accounting
+    context: 医療保険
+  - ja: 薬価
+    en: drug price
+    context: 薬剤
+  - ja: 院内処方
+    en: in-house prescription
+    context: 薬剤
+  - ja: 院外処方
+    en: external prescription
+    context: 薬剤

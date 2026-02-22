@@ -1,0 +1,44 @@
+{
+  "name": "sekkei-preview",
+  "version": "0.1.0",
+  "description": "VitePress-based preview + WYSIWYG editor for Sekkei specification documents",
+  "type": "module",
+  "bin": {
+    "sekkei-preview": "./dist/cli.js"
+  },
+  "main": "dist/cli.js",
+  "files": [
+    "dist/",
+    "theme/",
+    "plugins/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "vitepress": "^1.6.4",
+    "vue": "^3.5.0",
+    "yaml": "^2.7.0",
+    "@milkdown/kit": "^7.18.0",
+    "@milkdown/vue": "^7.18.0",
+    "@milkdown/theme-nord": "^7.18.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.13.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "sekkei",
+    "vitepress",
+    "preview",
+    "wysiwyg",
+    "milkdown",
+    "japanese",
+    "specification"
+  ],
+  "license": "MIT"
+}

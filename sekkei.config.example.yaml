@@ -1,0 +1,37 @@
+# Sekkei project configuration — numbered structure
+# Copy to sekkei.config.yaml and fill in your project details.
+
+project:
+  name: "My Project"
+  type: web        # web | mobile | api | desktop | lp | internal-system | saas | batch
+  stack:
+    - TypeScript
+    - React
+    - PostgreSQL
+  team_size: 5
+  language: ja     # Output language: ja (Japanese) | en (English) | vi (Vietnamese)
+  keigo: 丁寧語    # 丁寧語 | 謙譲語 | simple
+  industry: ""     # Optional: finance | medical | manufacturing | real-estate
+
+output:
+  directory: ./docs/   # User-named during init (default: docs/)
+
+chain:
+  rfp: ""
+  overview:         { status: pending, output: "01-overview.md" }
+  requirements:     { status: pending, output: "02-requirements.md" }
+  basic_design:
+    status: pending
+    system_output: "03-system/"
+    features_output: "05-features/"
+  functions_list:   { status: pending, output: "04-functions-list.md" }
+  detail_design:
+    status: pending
+    features_output: "05-features/"
+  test_spec:
+    status: pending
+    global_output: "08-test/"
+    features_output: "05-features/"
+  migration_design: { status: pending, output: "06-data/" }
+  operation_design: { status: pending, output: "07-operations/" }
+  glossary:         { status: pending, output: "10-glossary.md" }

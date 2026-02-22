@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>{{{css}}}</style>
+</head>
+<body>
+  <div class="wireframe" style="--viewport-width: {{viewportWidth}}px">
+    {{#each regionEntries}}
+    <div class="region">
+      <div class="region-label">{{this.name}}</div>
+      {{#if (eq this.name "main")}}
+      <div class="form-container">
+        {{#if ../screen_name}}<div class="form-title">{{../screen_name}}</div>{{/if}}
+        {{#each this.region.components}}
+        <div class="component">
+          <span class="annotation">{{circledNumber this.n}}</span>
+          {{#if (eq this.type "text-input")}}
+            <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+            <div class="input-field"></div>
+          {{else if (eq this.type "password-input")}}
+            <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+            <div class="input-field">••••••••</div>
+          {{else if (eq this.type "number-input")}}
+            <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+            <div class="input-field">0</div>
+          {{else if (eq this.type "date-input")}}
+            <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+            <div class="input-field">YYYY-MM-DD</div>
+          {{else if (eq this.type "textarea")}}
+            <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+            <div class="textarea-field"></div>
+          {{else if (eq this.type "select")}}
+            <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+            <div class="select-field">{{this.label}}を選択</div>
+          {{else if (eq this.type "checkbox")}}
+            <div class="checkbox-wrap"><input type="checkbox" disabled> {{this.label}}</div>
+          {{else if (eq this.type "radio")}}
+            <div class="radio-wrap"><input type="radio" disabled> {{this.label}}</div>
+          {{else if (eq this.type "toggle")}}
+            <div class="toggle-wrap"><div class="toggle-track"></div> {{this.label}}</div>
+          {{else if (eq this.type "button")}}
+            <div class="button-group">
+              <span class="btn {{#if (eq this.variant "primary")}}btn-primary{{else if (eq this.variant "danger")}}btn-danger{{else}}btn-secondary{{/if}} btn-block">{{this.label}}</span>
+            </div>
+          {{else if (eq this.type "link")}}
+            <div style="text-align:center"><span class="link">{{this.label}}</span></div>
+          {{else if (eq this.type "icon-button")}}
+            <span class="icon-btn" title="{{this.label}}">...</span>
+          {{else if (eq this.type "table")}}
+            <div class="table-placeholder">[{{this.label}}]</div>
+          {{else if (eq this.type "card")}}
+            <div class="card-placeholder">{{this.label}}</div>
+          {{else if (eq this.type "stat-card")}}
+            <div class="stat-card"><div class="stat-value">--</div><div class="stat-label">{{this.label}}</div></div>
+          {{else if (eq this.type "chart-placeholder")}}
+            <div class="table-placeholder">[Chart: {{this.label}}]</div>
+          {{else if (eq this.type "image-placeholder")}}
+            <div class="image-placeholder">[{{this.label}}]</div>
+          {{else if (eq this.type "badge")}}
+            <span class="badge">{{this.label}}</span>
+          {{else if (eq this.type "avatar")}}
+            <span class="avatar">U</span>
+          {{else if (eq this.type "alert")}}
+            <div class="alert-box">{{this.label}}</div>
+          {{else}}
+            <div class="text-content">{{this.label}}</div>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{else}}
+      {{#if (eq this.name "header")}}
+      <div class="nav-bar">
+        {{#each this.region.components}}
+        <div class="component" style="position:relative;display:inline-flex;align-items:center">
+          <span class="annotation">{{circledNumber this.n}}</span>
+          {{#if (eq this.type "logo")}}<span class="logo">{{this.label}}</span>
+          {{else if (eq this.type "nav")}}<span class="text-content">{{this.label}}</span>
+          {{else if (eq this.type "search-bar")}}<div class="search-bar"><div class="input-field" style="width:200px"></div></div>
+          {{else if (eq this.type "avatar")}}<span class="avatar">U</span>
+          {{else if (eq this.type "icon-button")}}<span class="icon-btn">...</span>
+          {{else}}<span class="text-content">{{this.label}}</span>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{else}}
+      {{#each this.region.components}}
+      <div class="component">
+        <span class="annotation">{{circledNumber this.n}}</span>
+        {{#if (eq this.type "text")}}<div class="text-content">{{this.label}}</div>
+        {{else if (eq this.type "link")}}<span class="link">{{this.label}}</span>
+        {{else if (eq this.type "breadcrumb")}}<div class="breadcrumb"><span>{{this.label}}</span></div>
+        {{else if (eq this.type "tabs")}}<div class="tabs"><span class="tab-item active">{{this.label}}</span><span class="tab-item">Tab 2</span></div>
+        {{else if (eq this.type "pagination")}}<div class="pagination"><span>&laquo;</span><span>1</span><span>2</span><span>&raquo;</span></div>
+        {{else if (eq this.type "table")}}<div class="table-placeholder">[{{this.label}}]</div>
+        {{else if (eq this.type "button")}}<span class="btn {{#if (eq this.variant "primary")}}btn-primary{{else if (eq this.variant "danger")}}btn-danger{{else}}btn-secondary{{/if}}">{{this.label}}</span>
+        {{else}}<div class="text-content">{{this.label}}</div>
+        {{/if}}
+      </div>
+      {{/each}}
+      {{/if}}
+      {{/if}}
+    </div>
+    {{/each}}
+  </div>
+</body>
+</html>

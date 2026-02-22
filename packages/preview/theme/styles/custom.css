@@ -1,0 +1,85 @@
+/* Sekkei Docs — Japanese typography + spec table styling */
+
+:root {
+  --vp-font-family-base: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic',
+    'Meiryo', sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', 'Source Code Pro', 'Menlo', monospace;
+  --vp-layout-max-width: 1440px;
+}
+
+/* JP-friendly line height */
+.vp-doc {
+  line-height: 1.8;
+}
+
+.vp-doc p,
+.vp-doc li {
+  line-height: 1.8;
+}
+
+/* Spec tables — visible borders, comfortable padding */
+.vp-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.vp-doc th,
+.vp-doc td {
+  border: 1px solid var(--vp-c-divider);
+  padding: 0.6rem 0.8rem;
+  text-align: left;
+}
+
+.vp-doc th {
+  background-color: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+.vp-doc tr:hover td {
+  background-color: var(--vp-c-bg-soft);
+}
+
+/* Wider content area for tables */
+.VPDoc .content-container {
+  max-width: 960px;
+}
+
+@media (min-width: 1440px) {
+  .VPDoc .content-container {
+    max-width: 1100px;
+  }
+}
+
+/* Headings — slightly tighter for JP */
+.vp-doc h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.vp-doc h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-top: 1px solid var(--vp-c-divider);
+  padding-top: 1.2rem;
+  margin-top: 2rem;
+}
+
+.vp-doc h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* Code blocks */
+.vp-doc div[class*='language-'] {
+  margin: 1rem 0;
+  border-radius: 6px;
+}
+
+/* Frontmatter ID badges (REQ-xxx, F-xxx, etc.) */
+.vp-doc code {
+  font-size: 0.85em;
+  padding: 0.15em 0.35em;
+  border-radius: 4px;
+}

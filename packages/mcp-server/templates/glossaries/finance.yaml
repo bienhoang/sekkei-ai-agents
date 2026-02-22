@@ -1,0 +1,123 @@
+industry: finance
+language: ja
+terms:
+  - ja: 勘定科目
+    en: account category
+    context: 会計
+  - ja: 仕訳
+    en: journal entry
+    context: 会計
+  - ja: 元帳
+    en: general ledger
+    context: 会計
+  - ja: 売掛金
+    en: accounts receivable
+    context: 会計
+  - ja: 買掛金
+    en: accounts payable
+    context: 会計
+  - ja: 残高
+    en: balance
+    context: 会計
+  - ja: 消費税
+    en: consumption tax
+    context: 税務
+  - ja: 決算
+    en: settlement / closing
+    context: 会計
+  - ja: 貸借対照表
+    en: balance sheet
+    context: 財務
+  - ja: 損益計算書
+    en: income statement
+    context: 財務
+  - ja: キャッシュフロー計算書
+    en: cash flow statement
+    context: 財務
+  - ja: 固定資産
+    en: fixed assets
+    context: 会計
+  - ja: 減価償却
+    en: depreciation
+    context: 会計
+  - ja: 棚卸資産
+    en: inventory assets
+    context: 会計
+  - ja: 未収金
+    en: accrued revenue
+    context: 会計
+  - ja: 前受金
+    en: advance received
+    context: 会計
+  - ja: 引当金
+    en: provisions / reserves
+    context: 会計
+  - ja: 振込
+    en: bank transfer
+    context: 金融
+  - ja: 口座
+    en: account
+    context: 金融
+  - ja: 与信
+    en: credit assessment
+    context: 金融
+  - ja: 審査
+    en: screening / review
+    context: 金融
+  - ja: 約定
+    en: contract / commitment
+    context: 金融
+  - ja: 金利
+    en: interest rate
+    context: 金融
+  - ja: 担保
+    en: collateral
+    context: 金融
+  - ja: 融資
+    en: loan / financing
+    context: 金融
+  - ja: 返済
+    en: repayment
+    context: 金融
+  - ja: 手数料
+    en: fee / commission
+    context: 金融
+  - ja: 為替
+    en: foreign exchange
+    context: 金融
+  - ja: 電子決済
+    en: electronic payment
+    context: 決済
+  - ja: 請求書
+    en: invoice
+    context: 会計
+  - ja: 領収書
+    en: receipt
+    context: 会計
+  - ja: 伝票
+    en: voucher / slip
+    context: 会計
+  - ja: 年度
+    en: fiscal year
+    context: 会計
+  - ja: 四半期
+    en: quarter
+    context: 会計
+  - ja: 月次
+    en: monthly
+    context: 会計
+  - ja: 日次
+    en: daily
+    context: 会計
+  - ja: 税込
+    en: tax included
+    context: 税務
+  - ja: 税抜
+    en: tax excluded
+    context: 税務
+  - ja: 源泉徴収
+    en: withholding tax
+    context: 税務
+  - ja: 確定申告
+    en: tax return
+    context: 税務

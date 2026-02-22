@@ -1,0 +1,108 @@
+industry: manufacturing
+language: ja
+terms:
+  - ja: 部品表
+    en: bill of materials (BOM)
+    context: 製造
+  - ja: 在庫管理
+    en: inventory management
+    context: 製造
+  - ja: 発注点
+    en: reorder point
+    context: 製造
+  - ja: 製造指示
+    en: production order
+    context: 製造
+  - ja: 品質検査
+    en: quality inspection
+    context: 品質
+  - ja: 工程管理
+    en: process management
+    context: 製造
+  - ja: 生産計画
+    en: production planning
+    context: 製造
+  - ja: 原価管理
+    en: cost management
+    context: 製造
+  - ja: 受入検査
+    en: incoming inspection
+    context: 品質
+  - ja: 出荷検査
+    en: shipping inspection
+    context: 品質
+  - ja: ロット管理
+    en: lot management
+    context: 製造
+  - ja: トレーサビリティ
+    en: traceability
+    context: 品質
+  - ja: 不良品
+    en: defective product
+    context: 品質
+  - ja: 歩留まり
+    en: yield rate
+    context: 製造
+  - ja: 段取り替え
+    en: setup change
+    context: 製造
+  - ja: 作業指示書
+    en: work instruction
+    context: 製造
+  - ja: 設備保全
+    en: equipment maintenance
+    context: 製造
+  - ja: 予防保全
+    en: preventive maintenance
+    context: 製造
+  - ja: 仕入先
+    en: supplier
+    context: 調達
+  - ja: 発注
+    en: purchase order
+    context: 調達
+  - ja: 納品
+    en: delivery
+    context: 調達
+  - ja: 検収
+    en: acceptance inspection
+    context: 調達
+  - ja: 入庫
+    en: warehousing / receiving
+    context: 倉庫
+  - ja: 出庫
+    en: shipping / dispatching
+    context: 倉庫
+  - ja: 棚卸
+    en: stocktaking
+    context: 倉庫
+  - ja: 安全在庫
+    en: safety stock
+    context: 製造
+  - ja: リードタイム
+    en: lead time
+    context: 製造
+  - ja: 標準原価
+    en: standard cost
+    context: 製造
+  - ja: 実績原価
+    en: actual cost
+    context: 製造
+  - ja: 原材料
+    en: raw materials
+    context: 製造
+  - ja: 仕掛品
+    en: work in progress (WIP)
+    context: 製造
+  - ja: 完成品
+    en: finished goods
+    context: 製造
+  - ja: 工場
+    en: factory / plant
+    context: 製造
+  - ja: ライン
+    en: production line
+    context: 製造
+  - ja: 金型
+    en: mold / die
+    context: 製造
