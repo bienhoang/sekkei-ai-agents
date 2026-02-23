@@ -2,18 +2,24 @@ import { describe, it, expect } from "@jest/globals";
 import { resolveOutputPath } from "../../src/lib/resolve-output-path.js";
 
 describe("resolveOutputPath", () => {
-  it("returns 01-overview.md for overview", () => {
-    expect(resolveOutputPath("overview")).toBe("01-overview.md");
+  // Requirements phase
+  it("returns 02-requirements/requirements.md for requirements", () => {
+    expect(resolveOutputPath("requirements")).toBe("02-requirements/requirements.md");
   });
 
-  it("returns 02-requirements.md for requirements", () => {
-    expect(resolveOutputPath("requirements")).toBe("02-requirements.md");
+  it("returns 02-requirements/nfr.md for nfr", () => {
+    expect(resolveOutputPath("nfr")).toBe("02-requirements/nfr.md");
+  });
+
+  it("returns 02-requirements/project-plan.md for project-plan", () => {
+    expect(resolveOutputPath("project-plan")).toBe("02-requirements/project-plan.md");
   });
 
   it("returns 04-functions-list.md for functions-list", () => {
     expect(resolveOutputPath("functions-list")).toBe("04-functions-list.md");
   });
 
+  // Design phase
   it("returns 03-system/ for basic-design shared", () => {
     expect(resolveOutputPath("basic-design", "shared")).toBe("03-system/");
   });
@@ -21,6 +27,10 @@ describe("resolveOutputPath", () => {
   it("returns 05-features/{name}/basic-design.md for basic-design feature", () => {
     expect(resolveOutputPath("basic-design", "feature", "sales-management"))
       .toBe("05-features/sales-management/basic-design.md");
+  });
+
+  it("returns 03-system/security-design.md for security-design", () => {
+    expect(resolveOutputPath("security-design")).toBe("03-system/security-design.md");
   });
 
   it("returns 05-features/{name}/detail-design.md for detail-design feature", () => {
@@ -32,15 +42,33 @@ describe("resolveOutputPath", () => {
     expect(resolveOutputPath("detail-design")).toBeUndefined();
   });
 
-  it("returns 08-test/ for test-spec shared", () => {
-    expect(resolveOutputPath("test-spec", "shared")).toBe("08-test/");
+  // Test phase
+  it("returns 08-test/test-plan.md for test-plan", () => {
+    expect(resolveOutputPath("test-plan")).toBe("08-test/test-plan.md");
   });
 
-  it("returns 05-features/{name}/test-spec.md for test-spec feature", () => {
-    expect(resolveOutputPath("test-spec", "feature", "sales-management"))
-      .toBe("05-features/sales-management/test-spec.md");
+  it("returns 08-test/ut-spec.md for ut-spec without scope", () => {
+    expect(resolveOutputPath("ut-spec")).toBe("08-test/ut-spec.md");
   });
 
+  it("returns 05-features/{name}/ut-spec.md for ut-spec feature", () => {
+    expect(resolveOutputPath("ut-spec", "feature", "sales-management"))
+      .toBe("05-features/sales-management/ut-spec.md");
+  });
+
+  it("returns 08-test/it-spec.md for it-spec without scope", () => {
+    expect(resolveOutputPath("it-spec")).toBe("08-test/it-spec.md");
+  });
+
+  it("returns 08-test/st-spec.md for st-spec", () => {
+    expect(resolveOutputPath("st-spec")).toBe("08-test/st-spec.md");
+  });
+
+  it("returns 08-test/uat-spec.md for uat-spec", () => {
+    expect(resolveOutputPath("uat-spec")).toBe("08-test/uat-spec.md");
+  });
+
+  // Supplementary
   it("returns 06-data/ for migration-design", () => {
     expect(resolveOutputPath("migration-design")).toBe("06-data/");
   });

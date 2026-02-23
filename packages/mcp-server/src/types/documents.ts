@@ -3,8 +3,56 @@
  * Covers document types, metadata, request/response shapes, and project config.
  */
 
-export const DOC_TYPES = ["overview", "functions-list", "requirements", "basic-design", "detail-design", "test-spec", "crud-matrix", "traceability-matrix", "operation-design", "migration-design", "sitemap", "test-evidence", "meeting-minutes", "decision-record", "interface-spec", "screen-design"] as const;
+export const DOC_TYPES = [
+  // Requirements phase
+  "requirements", "nfr", "functions-list", "project-plan",
+  // Design phase
+  "basic-design", "security-design", "detail-design",
+  // Test phase
+  "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec",
+  // Supplementary
+  "crud-matrix", "traceability-matrix", "operation-design", "migration-design",
+  "sitemap", "test-evidence", "meeting-minutes", "decision-record",
+  "interface-spec", "screen-design",
+] as const;
 export type DocType = (typeof DOC_TYPES)[number];
+
+// --- Phase Grouping (v2.0) ---
+
+export const PHASES = ["requirements", "design", "test", "supplementary"] as const;
+export type Phase = (typeof PHASES)[number];
+
+export const PHASE_MAP: Record<DocType, Phase> = {
+  requirements: "requirements",
+  nfr: "requirements",
+  "functions-list": "requirements",
+  "project-plan": "requirements",
+  "basic-design": "design",
+  "security-design": "design",
+  "detail-design": "design",
+  "test-plan": "test",
+  "ut-spec": "test",
+  "it-spec": "test",
+  "st-spec": "test",
+  "uat-spec": "test",
+  "crud-matrix": "supplementary",
+  "traceability-matrix": "supplementary",
+  "operation-design": "supplementary",
+  "migration-design": "supplementary",
+  sitemap: "supplementary",
+  "test-evidence": "supplementary",
+  "meeting-minutes": "supplementary",
+  "decision-record": "supplementary",
+  "interface-spec": "supplementary",
+  "screen-design": "supplementary",
+};
+
+export const PHASE_LABELS: Record<Phase, string> = {
+  requirements: "要件定義",
+  design: "設計",
+  test: "テスト",
+  supplementary: "補足",
+};
 
 export const LANGUAGES = ["ja", "en", "vi"] as const;
 export type Language = (typeof LANGUAGES)[number];
@@ -94,12 +142,11 @@ export interface ChainEntry {
   output?: string;
 }
 
-/** Chain entry for split docs (basic-design, detail-design, test-spec) */
+/** Chain entry for split docs (basic-design, detail-design) */
 export interface SplitChainEntry {
   status: "pending" | "in-progress" | "complete";
   system_output?: string;   // path prefix for 03-system/
   features_output?: string; // path prefix for 05-features/
-  global_output?: string;   // path prefix for 08-test/ (test-spec global)
 }
 
 /** Project-level config matching sekkei.config.yaml */
@@ -143,12 +190,22 @@ export interface ProjectConfig {
   };
   chain: {
     rfp: string;
-    overview: ChainEntry;
-    functions_list: ChainEntry;
+    // Requirements phase
     requirements: ChainEntry;
+    nfr?: ChainEntry;
+    functions_list: ChainEntry;
+    project_plan?: ChainEntry;
+    // Design phase
     basic_design: SplitChainEntry;
+    security_design?: ChainEntry;
     detail_design: SplitChainEntry;
-    test_spec: SplitChainEntry;
+    // Test phase
+    test_plan?: ChainEntry;
+    ut_spec?: ChainEntry;
+    it_spec?: ChainEntry;
+    st_spec?: ChainEntry;
+    uat_spec?: ChainEntry;
+    // Supplementary
     operation_design?: ChainEntry;
     migration_design?: ChainEntry;
     glossary?: ChainEntry;
@@ -184,7 +241,7 @@ export interface RfpFileInventory {
 
 // --- Manifest Types (Document Splitting) ---
 
-export const SPLIT_DOC_TYPES = ["basic-design", "detail-design", "test-spec"] as const;
+export const SPLIT_DOC_TYPES = ["basic-design", "detail-design"] as const;
 export type SplitDocType = (typeof SPLIT_DOC_TYPES)[number];
 
 export const SHARED_SECTIONS = [

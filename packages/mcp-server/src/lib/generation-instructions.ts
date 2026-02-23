@@ -7,17 +7,6 @@ import type { DocType, KeigoLevel, Language } from "../types/documents.js";
 
 /** Base AI generation instructions per document type */
 export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
-  overview: [
-    "Generate 01-overview.md — project summary document from RFP or initial brief.",
-    "Required sections:",
-    "1. プロジェクト概要 (Project Summary) — background, goals, success criteria",
-    "2. ビジネス目標 (Business Goals) — measurable objectives",
-    "3. システムスコープ (System Scope) — in-scope and out-of-scope boundaries",
-    "4. ステークホルダー (Stakeholders) — roles, responsibilities, contact",
-    "5. アーキテクチャ概要 (High-Level Architecture) — one-paragraph summary + Mermaid C4 context diagram",
-    "Keep concise — max 500 lines. Must NOT contain requirements or design decisions.",
-  ].join("\n"),
-
   "functions-list": [
     "Generate a 機能一覧 (Function List) from the provided input.",
     "Use 3-tier hierarchy: 大分類 -> 中分類 -> 小機能.",
@@ -59,15 +48,83 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Cross-reference SCR-xxx, TBL-xxx, API-xxx IDs from 基本設計書.",
   ].join("\n"),
 
-  "test-spec": [
-    "Generate a テスト仕様書 (Test Specification) from the provided input.",
-    "Follow the 4-section structure defined in the template.",
-    "Test cases: 12-column table per test level (UT/IT/ST/UAT).",
-    "テスト観点: 正常系/異常系/境界値/パフォーマンス/セキュリティ.",
-    "Traceability matrix: REQ-ID -> F-ID -> テストケースID mapping.",
-    "Defect report template with standard columns.",
-    "Generate at least 5 test cases per major function.",
-    "Cross-reference REQ-xxx, F-xxx IDs from upstream documents.",
+  nfr: [
+    "Generate a 非機能要件定義書 (Non-Functional Requirements) from requirements.",
+    "Follow IPA NFUG 6-category framework exactly:",
+    "可用性, 性能・拡張性, 運用・保守性, 移行性, セキュリティ, システム環境・エコロジー.",
+    "ID format: NFR-001. Each NFR MUST have a specific numeric 目標値.",
+    "Prohibited vague terms: 高速, 十分, 適切, 高い, 良好.",
+    "Table: NFR-ID, カテゴリ, 要件名, 目標値, 測定方法, 優先度.",
+    "Cross-reference REQ-xxx IDs from upstream requirements.",
+    "Generate at least 3 NFR entries per IPA category.",
+  ].join("\n"),
+
+  "security-design": [
+    "Generate a セキュリティ設計書 (Security Design) from basic-design.",
+    "7 sections: セキュリティ方針, 認証・認可設計, データ保護, 通信セキュリティ, 脆弱性対策, 監査ログ, インシデント対応.",
+    "ID format: SEC-001. Reference OWASP Top 10 for vulnerability countermeasures.",
+    "Authentication: specify method (OAuth2, SAML, JWT). Password: bcrypt, not MD5.",
+    "Encryption: TLS 1.3+ for transit, AES-256 for rest.",
+    "Table: SEC-ID, 対策項目, 対策内容, 対象, 優先度, 備考.",
+    "Cross-reference REQ-xxx, NFR-xxx IDs from upstream.",
+  ].join("\n"),
+
+  "project-plan": [
+    "Generate a プロジェクト計画書 (Project Plan) from requirements.",
+    "7 sections: プロジェクト概要, WBS・スケジュール, 体制, リソース計画, リスク管理, 品質管理, コミュニケーション計画.",
+    "ID format: PP-001. WBS table with phases, tasks, assignees, dates, effort.",
+    "Risk management: risk ID, probability, impact, mitigation strategy.",
+    "Milestone table with dates and deliverables.",
+    "Cross-reference REQ-xxx, F-xxx IDs from upstream.",
+  ].join("\n"),
+
+  "test-plan": [
+    "Generate a テスト計画書 (Test Plan) from requirements + basic-design.",
+    "7 sections: テスト方針, テスト戦略, テスト環境, テストスケジュール, 体制・役割, リスクと対策, 完了基準.",
+    "ID format: TP-001. Define entry/exit criteria per test level (UT/IT/ST/UAT).",
+    "Test strategy: scope, test levels, test types, risk-based priority.",
+    "Environment table: environment name, purpose, configuration, notes.",
+    "Cross-reference REQ-xxx, F-xxx, NFR-xxx IDs from upstream.",
+  ].join("\n"),
+
+  "ut-spec": [
+    "Generate a 単体テスト仕様書 (Unit Test Specification) from detail-design.",
+    "Sections: テスト設計, 単体テストケース, トレーサビリティ, デフェクト報告.",
+    "Test case 12-column table: No., テストケースID, テスト対象, テスト観点, 前提条件, テスト手順, 入力値, 期待値, 実行結果, 判定, デフェクトID, 備考.",
+    "ID format: UT-001. テスト観点: 正常系/異常系/境界値.",
+    "Cross-reference CLS-xxx, DD-xxx IDs from detail-design.",
+    "Traceability: DD-xxx → CLS-xxx → UT-xxx.",
+    "Generate at least 5 cases per major module.",
+  ].join("\n"),
+
+  "it-spec": [
+    "Generate a 結合テスト仕様書 (Integration Test Specification) from basic-design.",
+    "Sections: テスト設計, 結合テストケース, トレーサビリティ, デフェクト報告.",
+    "Same 12-column table structure as ut-spec.",
+    "ID format: IT-001. Focus on API integration, screen transitions, data flow.",
+    "Cross-reference API-xxx, SCR-xxx, TBL-xxx IDs from basic-design.",
+    "Traceability: API-xxx → SCR-xxx → IT-xxx.",
+    "Generate at least 5 integration test cases.",
+  ].join("\n"),
+
+  "st-spec": [
+    "Generate a システムテスト仕様書 (System Test Specification) from basic-design + functions-list.",
+    "Sections: テスト設計, システムテストケース, トレーサビリティ, デフェクト報告.",
+    "Same 12-column table structure. No feature scope (system-level).",
+    "ID format: ST-001. テスト観点: パフォーマンス/セキュリティ/負荷/E2E.",
+    "Cross-reference SCR-xxx, TBL-xxx, F-xxx IDs from basic-design + functions-list.",
+    "Traceability: F-xxx → SCR-xxx → ST-xxx.",
+    "Include E2E business scenario tests.",
+  ].join("\n"),
+
+  "uat-spec": [
+    "Generate a 受入テスト仕様書 (User Acceptance Test Specification) from requirements + nfr.",
+    "Sections: テスト設計, 受入テストケース, トレーサビリティ, デフェクト報告.",
+    "Same 12-column table structure. No feature scope (business-level).",
+    "ID format: UAT-001. Business scenario-based, user-facing language.",
+    "Cross-reference REQ-xxx, NFR-xxx IDs from requirements + nfr.",
+    "Traceability: REQ-xxx → NFR-xxx → UAT-xxx.",
+    "Include acceptance criteria verification for each major requirement.",
   ].join("\n"),
 
   "crud-matrix": [
@@ -191,12 +248,18 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
 
 /** Default keigo level per document type */
 export const KEIGO_MAP: Record<DocType, KeigoLevel> = {
-  overview: "丁寧語",
   "functions-list": "丁寧語",
   requirements: "丁寧語",
+  nfr: "丁寧語",
+  "project-plan": "丁寧語",
   "basic-design": "丁寧語",
+  "security-design": "simple",
   "detail-design": "simple",
-  "test-spec": "simple",
+  "test-plan": "simple",
+  "ut-spec": "simple",
+  "it-spec": "simple",
+  "st-spec": "simple",
+  "uat-spec": "simple",
   "crud-matrix": "simple",
   "traceability-matrix": "simple",
   "operation-design": "simple",

@@ -26,22 +26,47 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 
 ## Sub-Commands
 
+### Requirements Phase
+
 | Command | Description |
 |---------|-------------|
 | `npx sekkei init` | Initialize project config (CLI) |
+| `/sekkei:rfp @rfp.md` | RFP analysis and presales workflow |
 | `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
 | `/sekkei:requirements @input` | Generate 要件定義書 (Requirements Definition) |
+| `/sekkei:nfr @input` | Generate 非機能要件定義書 (Non-Functional Requirements) |
+| `/sekkei:project-plan @input` | Generate プロジェクト計画書 (Project Plan) |
+
+### Design Phase
+
+| Command | Description |
+|---------|-------------|
 | `/sekkei:basic-design @input` | Generate 基本設計書 (Basic Design) |
+| `/sekkei:security-design @input` | Generate セキュリティ設計書 (Security Design) |
 | `/sekkei:detail-design @input` | Generate 詳細設計書 (Detail Design) |
-| `/sekkei:test-spec @input` | Generate テスト仕様書 (Test Specification) |
+
+### Test Phase
+
+| Command | Description |
+|---------|-------------|
+| `/sekkei:test-plan @input` | Generate テスト計画書 (Test Plan) |
+| `/sekkei:ut-spec @input` | Generate 単体テスト仕様書 (Unit Test Spec) |
+| `/sekkei:it-spec @input` | Generate 結合テスト仕様書 (Integration Test Spec) |
+| `/sekkei:st-spec @input` | Generate システムテスト仕様書 (System Test Spec) |
+| `/sekkei:uat-spec @input` | Generate 受入テスト仕様書 (UAT Spec) |
+
+### Supplementary & Utilities
+
+| Command | Description |
+|---------|-------------|
 | `/sekkei:matrix` | Generate CRUD図 or トレーサビリティマトリックス |
 | `/sekkei:operation-design @input` | Generate 運用設計書 (Operation Design) |
 | `/sekkei:migration-design @input` | Generate 移行設計書 (Migration Design) |
+| `/sekkei:glossary [add\|list\|find\|export]` | Manage project terminology |
 | `/sekkei:validate @doc` | Validate document completeness |
 | `/sekkei:status` | Show V-model chain progress |
 | `/sekkei:export @doc --format=xlsx\|pdf\|docx` | Export to Excel, PDF, or Word |
 | `/sekkei:translate @doc --lang=en` | Translate with glossary context |
-| `/sekkei:glossary [add\|list\|find\|export]` | Manage project terminology |
 | `/sekkei:update @doc` | Detect upstream changes |
 | `/sekkei:diff-visual @before @after` | Color-coded revision Excel (朱書き) |
 | `/sekkei:plan @doc-type` | Create generation plan for large documents |
@@ -57,12 +82,14 @@ npx sekkei init
 # 2. Generate documents following V-model chain
 /sekkei:functions-list @rfp.md          # RFP → 機能一覧
 /sekkei:requirements @functions-list.md  # 機能一覧 → 要件定義書
+/sekkei:nfr @requirements.md             # 要件定義書 → NFR
 /sekkei:basic-design @requirements.md    # 要件定義書 → 基本設計書
 /sekkei:detail-design @basic-design.md   # 基本設計書 → 詳細設計書
-/sekkei:test-spec @detail-design.md      # 詳細設計書 → テスト仕様書
+/sekkei:ut-spec @detail-design.md        # 詳細設計書 → UT仕様書
+/sekkei:it-spec @basic-design.md         # 基本設計書 → IT仕様書
 
 # 3. Validate and export
-/sekkei:validate @test-spec.md
+/sekkei:validate @ut-spec.md
 /sekkei:export @basic-design.md --format=xlsx
 
 # 4. Preview all documents
@@ -96,7 +123,7 @@ Skills invoke MCP tools via Claude Code's MCP integration. Ensure `sekkei-mcp-se
 
 sekkei-skillsは、Claude Codeのスラッシュコマンドで日本語設計書を生成するスキルです。
 
-V字モデルのドキュメントチェーン（機能一覧→要件定義書→基本設計書→詳細設計書→テスト仕様書）に沿って、各種設計書を順番に生成できます。19のサブコマンドで、初期化・生成・検証・エクスポート・翻訳・プレビューまでの全ワークフローをカバーします。
+V字モデルのドキュメントチェーン（機能一覧→要件定義書→NFR→基本設計書→セキュリティ設計書→詳細設計書→UT/IT/ST/UAT仕様書）に沿って、各種設計書を順番に生成できます。30のサブコマンドで、RFP分析・初期化・生成・検証・エクスポート・翻訳・プレビューまでの全ワークフローをカバーします。
 
 ## License
 

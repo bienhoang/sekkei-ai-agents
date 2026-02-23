@@ -34,23 +34,51 @@ export interface ValidationResult {
 const STRUCTURAL_SECTIONS = ["改訂履歴", "承認欄", "配布先", "用語集"];
 
 const REQUIRED_SECTIONS: Record<DocType, string[]> = {
-  overview: [...STRUCTURAL_SECTIONS, "プロジェクト概要", "ビジネス目標", "システムスコープ", "ステークホルダー", "アーキテクチャ概要"],
   "functions-list": [...STRUCTURAL_SECTIONS, "機能一覧"],
   requirements: [...STRUCTURAL_SECTIONS, "概要", "機能要件", "非機能要件"],
+  nfr: [
+    ...STRUCTURAL_SECTIONS,
+    "非機能要件概要", "可用性", "性能・拡張性",
+    "運用・保守性", "移行性", "セキュリティ", "システム環境",
+  ],
+  "project-plan": [
+    ...STRUCTURAL_SECTIONS,
+    "プロジェクト概要", "WBS", "体制", "リスク管理",
+  ],
   "basic-design": [
     ...STRUCTURAL_SECTIONS,
     "概要", "システム構成", "業務フロー", "画面設計",
     "DB設計", "外部インターフェース",
+  ],
+  "security-design": [
+    ...STRUCTURAL_SECTIONS,
+    "セキュリティ方針", "認証・認可設計", "データ保護",
+    "通信セキュリティ", "脆弱性対策", "監査ログ",
   ],
   "detail-design": [
     ...STRUCTURAL_SECTIONS,
     "概要", "モジュール設計", "クラス設計", "画面設計詳細",
     "DB詳細設計", "API詳細仕様", "処理フロー", "エラーハンドリング",
   ],
-  "test-spec": [
+  "test-plan": [
     ...STRUCTURAL_SECTIONS,
-    "テスト設計", "テストケース仕様", "トレーサビリティマトリックス",
-    "デフェクト報告",
+    "テスト方針", "テスト戦略", "テスト環境", "完了基準",
+  ],
+  "ut-spec": [
+    ...STRUCTURAL_SECTIONS,
+    "テスト設計", "単体テストケース", "トレーサビリティ", "デフェクト報告",
+  ],
+  "it-spec": [
+    ...STRUCTURAL_SECTIONS,
+    "テスト設計", "結合テストケース", "トレーサビリティ", "デフェクト報告",
+  ],
+  "st-spec": [
+    ...STRUCTURAL_SECTIONS,
+    "テスト設計", "システムテストケース", "トレーサビリティ", "デフェクト報告",
+  ],
+  "uat-spec": [
+    ...STRUCTURAL_SECTIONS,
+    "テスト設計", "受入テストケース", "トレーサビリティ", "デフェクト報告",
   ],
   "crud-matrix": [],
   "traceability-matrix": [],
@@ -90,12 +118,18 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
 
 /** Expected upstream ID types for cross-reference validation */
 const UPSTREAM_ID_TYPES: Record<DocType, string[]> = {
-  overview: [],
   "functions-list": [],
   requirements: ["F"],
+  nfr: ["REQ"],
+  "project-plan": ["REQ", "F"],
   "basic-design": ["REQ", "F"],
+  "security-design": ["REQ", "NFR"],
   "detail-design": ["SCR", "TBL", "API"],
-  "test-spec": ["REQ", "F"],
+  "test-plan": ["REQ", "F", "NFR"],
+  "ut-spec": ["CLS", "DD"],
+  "it-spec": ["API", "SCR", "TBL"],
+  "st-spec": ["SCR", "TBL", "F"],
+  "uat-spec": ["REQ", "NFR"],
   "crud-matrix": ["F", "TBL"],
   "traceability-matrix": ["REQ", "SCR", "API"],
   "operation-design": ["NFR", "REQ"],
@@ -113,12 +147,18 @@ const UPSTREAM_ID_TYPES: Record<DocType, string[]> = {
 const REVISION_HISTORY_COLUMNS = ["版数", "日付", "変更内容", "変更者"];
 
 const REQUIRED_COLUMNS: Record<DocType, string[][]> = {
-  overview: [REVISION_HISTORY_COLUMNS],
   "functions-list": [REVISION_HISTORY_COLUMNS, ["大分類", "中分類", "機能ID", "機能名"]],
   requirements: [REVISION_HISTORY_COLUMNS, ["要件ID", "要件名"], ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
+  nfr: [REVISION_HISTORY_COLUMNS, ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
+  "project-plan": [REVISION_HISTORY_COLUMNS, ["PP-ID"]],
   "basic-design": [REVISION_HISTORY_COLUMNS, ["画面ID"], ["テーブルID"], ["API"]],
+  "security-design": [REVISION_HISTORY_COLUMNS, ["SEC-ID", "対策項目"]],
   "detail-design": [REVISION_HISTORY_COLUMNS, ["クラスID"], ["エラーコード"]],
-  "test-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
+  "test-plan": [REVISION_HISTORY_COLUMNS, ["TP-ID"]],
+  "ut-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
+  "it-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
+  "st-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
+  "uat-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
   "crud-matrix": [],
   "traceability-matrix": [],
   "operation-design": [REVISION_HISTORY_COLUMNS, ["OP-ID", "手順名", "担当者"]],
@@ -315,7 +355,8 @@ const SHARED_SECTION_HEADINGS: Record<string, string> = {
 const FEATURE_SECTION_HEADINGS: Partial<Record<DocType, string[]>> = {
   "basic-design": ["概要", "業務フロー", "画面設計"],
   "detail-design": ["概要", "モジュール設計", "画面設計詳細"],
-  "test-spec": ["テストケース仕様"],
+  "ut-spec": ["単体テストケース"],
+  "it-spec": ["結合テストケース"],
 };
 
 export interface SplitValidationResult {

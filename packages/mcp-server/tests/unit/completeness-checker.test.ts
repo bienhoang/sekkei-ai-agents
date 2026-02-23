@@ -52,16 +52,16 @@ describe("validateContentDepth — requirements", () => {
   });
 });
 
-describe("validateContentDepth — test-spec", () => {
-  it("warns when fewer than 3 test case IDs present", () => {
-    const content = "## テストケース\nUT-001 ログインテスト\nIT-002 結合テスト";
-    const issues = validateContentDepth(content, "test-spec");
-    expect(issues.some((i) => i.message.includes("UT/IT/ST-xxx"))).toBe(true);
+describe("validateContentDepth — ut-spec", () => {
+  it("warns when fewer than 3 UT case IDs present", () => {
+    const content = "## テストケース\nUT-001 ログインテスト\nUT-002 検索テスト";
+    const issues = validateContentDepth(content, "ut-spec");
+    expect(issues.some((i) => i.message.includes("UT"))).toBe(true);
   });
 
-  it("returns no issues with 3+ test case IDs", () => {
-    const content = "UT-001 ログイン\nIT-002 結合\nST-003 システム";
-    const issues = validateContentDepth(content, "test-spec");
+  it("returns no issues with 3+ UT case IDs", () => {
+    const content = "UT-001 ログイン\nUT-002 検索\nUT-003 レポート";
+    const issues = validateContentDepth(content, "ut-spec");
     expect(issues).toHaveLength(0);
   });
 });
@@ -81,8 +81,8 @@ describe("validateContentDepth — functions-list", () => {
 });
 
 describe("validateContentDepth — doc type with no rules", () => {
-  it("returns empty array for overview (no rules defined)", () => {
-    const issues = validateContentDepth("any content", "overview");
+  it("returns empty array for crud-matrix (no rules defined)", () => {
+    const issues = validateContentDepth("any content", "crud-matrix");
     expect(issues).toHaveLength(0);
   });
 

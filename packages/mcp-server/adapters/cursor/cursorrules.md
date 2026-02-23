@@ -9,27 +9,45 @@ You have access to the Sekkei MCP server for generating Japanese software specif
 - `validate_document(content, doc_type, upstream_content)` — Validate document completeness and cross-references
 - `export_document(content, doc_type, format, output_path, project_name)` — Export to Excel (.xlsx) or PDF
 - `translate_document(content, source_lang, target_lang, glossary_path)` — Translate with glossary context
-- `manage_glossary(action, project_path, ja, en, context, query)` — Manage terminology glossary (add/list/find/export)
+- `manage_glossary(action, project_path, ja, en, context, query)` — Manage terminology glossary (add/list/find/export/seed/finalize)
 - `analyze_update(upstream_old, upstream_new, downstream)` — Analyze upstream changes for downstream impact
 - `get_chain_status(config_path)` — Get V-model document chain progress
 
 ## Document Types
 
-`functions-list` | `requirements` | `basic-design` | `detail-design` | `test-spec`
+### Requirements Phase
+`requirements` | `nfr` | `functions-list` | `project-plan`
+
+### Design Phase
+`basic-design` | `security-design` | `detail-design`
+
+### Test Phase
+`test-plan` | `ut-spec` | `it-spec` | `st-spec` | `uat-spec`
+
+### Supplementary
+`crud-matrix` | `traceability-matrix` | `operation-design` | `migration-design` | `sitemap`
 
 ## V-Model Chain Order
 
 ```
-RFP → functions-list (機能一覧)
-  → requirements (要件定義書)
-    → basic-design (基本設計書)
-      → detail-design (詳細設計書)
-        → test-spec (テスト仕様書)
+RFP
+  └─► requirements (要件定義書)
+        ├─► nfr (非機能要件定義書)
+        ├─► functions-list (機能一覧)
+        ├─► project-plan (プロジェクト計画書)
+        └─► basic-design (基本設計書)
+              ├─► security-design (セキュリティ設計書)
+              └─► detail-design (詳細設計書)
+                    └─► test-plan (テスト計画書)
+                          ├─► ut-spec (単体テスト仕様書)     ← detail-design
+                          ├─► it-spec (結合テスト仕様書)     ← basic-design
+                          ├─► st-spec (システムテスト仕様書)  ← basic-design
+                          └─► uat-spec (受入テスト仕様書)    ← requirements
 ```
 
 ## Usage
 
-When user asks for Japanese specification documents (設計書, 機能一覧, 要件定義書, 基本設計書, 詳細設計書, テスト仕様書), use the Sekkei MCP tools. Always validate before exporting.
+When user asks for Japanese specification documents (設計書, 機能一覧, 要件定義書, 基本設計書, 詳細設計書, テスト仕様書, 非機能要件, セキュリティ設計, テスト計画), use the Sekkei MCP tools. Always validate before exporting.
 
 ## Workflow
 

@@ -1,4 +1,4 @@
-# Sekkei project configuration — numbered structure
+# Sekkei project configuration — V-model v2.0 numbered structure
 # Copy to sekkei.config.yaml and fill in your project details.
 
 project:
@@ -21,20 +21,27 @@ export:
 
 chain:
   rfp: ""
-  overview:         { status: pending, output: "01-overview.md" }
-  requirements:     { status: pending, output: "02-requirements.md" }
+  # Requirements phase
+  requirements:       { status: pending, output: "02-requirements/requirements.md" }
+  nfr:                { status: pending, output: "02-requirements/nfr.md" }
+  functions_list:     { status: pending, output: "04-functions-list.md" }
+  project_plan:       { status: pending, output: "02-requirements/project-plan.md" }
+  # Design phase
   basic_design:
     status: pending
     system_output: "03-system/"
     features_output: "05-features/"
-  functions_list:   { status: pending, output: "04-functions-list.md" }
+  security_design:    { status: pending, output: "03-system/security-design.md" }
   detail_design:
     status: pending
     features_output: "05-features/"
-  test_spec:
-    status: pending
-    global_output: "08-test/"
-    features_output: "05-features/"
-  migration_design: { status: pending, output: "06-data/" }
-  operation_design: { status: pending, output: "07-operations/" }
-  glossary:         { status: pending, output: "10-glossary.md" }
+  # Test phase
+  test_plan:          { status: pending, output: "08-test/test-plan.md" }
+  ut_spec:            { status: pending, output: "08-test/ut-spec.md" }
+  it_spec:            { status: pending, output: "08-test/it-spec.md" }
+  st_spec:            { status: pending, output: "08-test/st-spec.md" }
+  uat_spec:           { status: pending, output: "08-test/uat-spec.md" }
+  # Supplementary
+  migration_design:   { status: pending, output: "06-data/" }
+  operation_design:   { status: pending, output: "07-operations/" }
+  glossary:           { status: pending, output: "10-glossary.md" }

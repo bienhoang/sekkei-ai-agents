@@ -139,18 +139,17 @@ describe("generate_document tool", () => {
     expect(text).toContain("クラス設計");
   });
 
-  it("returns generation context for test-spec", async () => {
+  it("returns generation context for ut-spec", async () => {
     const result = await callTool(server, "generate_document", {
-      doc_type: "test-spec",
-      input_content: "詳細設計書の内容を基にテスト仕様",
+      doc_type: "ut-spec",
+      input_content: "詳細設計書の内容を基に単体テスト仕様",
       project_name: "My App",
       language: "ja",
     });
 
     const text = result.content[0].text;
-    expect(text).toContain("test-spec");
-    expect(text).toContain("テスト仕様書");
-    expect(text).toContain("トレーサビリティ");
+    expect(text).toContain("ut-spec");
+    expect(text).toContain("単体テスト");
   });
 
   it("generate_document with scope=shared returns shared instructions", async () => {
@@ -186,17 +185,17 @@ describe("generate_document tool", () => {
     expect(result.content[0].text).not.toContain("Output Path");
   });
 
-  it("generate_document with doc_type=overview returns overview context", async () => {
+  it("generate_document with doc_type=nfr returns nfr context", async () => {
     const result = await callTool(server, "generate_document", {
-      doc_type: "overview",
-      input_content: "Project brief for a new SaaS product",
+      doc_type: "nfr",
+      input_content: "要件定義書の内容を基に非機能要件を定義",
       project_name: "My SaaS",
       language: "ja",
     });
     const text = result.content[0].text;
-    expect(text).toContain("overview");
+    expect(text).toContain("nfr");
     expect(text).toContain("My SaaS");
-    expect(text).toContain("01-overview.md");
+    expect(text).toContain("非機能要件");
   });
 });
 

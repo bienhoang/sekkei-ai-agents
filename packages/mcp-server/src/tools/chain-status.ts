@@ -9,6 +9,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { logger } from "../lib/logger.js";
 import { readDocumentFrontmatter } from "../lib/frontmatter-reader.js";
 import { LIFECYCLE_LABELS } from "../types/documents.js";
+import type { Phase } from "../types/documents.js";
 
 async function fileExists(path: string): Promise<boolean> {
   try { await stat(path); return true; } catch { return false; }
@@ -73,63 +74,70 @@ export async function handleChainStatus(
 
   const configDir = dirname(config_path);
 
-  if (typeof chain.rfp === "string" && chain.rfp) {
-    entries.push({ doc_type: "rfp", status: "provided", output: chain.rfp });
-  } else {
-    entries.push({ doc_type: "rfp", status: "missing" });
-  }
-
-  const docKeys = [
-    "overview",
-    "functions_list", "requirements", "basic_design",
-    "detail_design", "test_spec",
-    "operation_design", "migration_design", "glossary",
+  const CHAIN_DISPLAY_ORDER: { phase: Phase; label: string; keys: string[] }[] = [
+    { phase: "requirements", label: "要件定義", keys: ["requirements", "nfr", "functions_list", "project_plan"] },
+    { phase: "design", label: "設計", keys: ["basic_design", "security_design", "detail_design"] },
+    { phase: "test", label: "テスト", keys: ["test_plan", "ut_spec", "it_spec", "st_spec", "uat_spec"] },
+    { phase: "supplementary", label: "補足", keys: ["operation_design", "migration_design", "glossary"] },
   ];
-  for (const key of docKeys) {
-    const entry = chain[key] as {
-      status?: string;
-      output?: string;
-      system_output?: string;
-      features_output?: string;
-      global_output?: string;
-    } | undefined;
 
-    const outputStr = entry?.output
-      ?? (entry?.system_output
-        ? `system: ${entry.system_output}, features: ${entry.features_output ?? "-"}`
-        : undefined)
-      ?? entry?.global_output;
+  for (const group of CHAIN_DISPLAY_ORDER) {
+    for (const key of group.keys) {
+      const entry = chain[key] as {
+        status?: string;
+        output?: string;
+        system_output?: string;
+        features_output?: string;
+      } | undefined;
 
-    let lifecycle: string | undefined;
-    let version: string | undefined;
-    if (entry?.output) {
-      const outputPath = join(configDir, entry.output);
-      const meta = await readDocumentFrontmatter(outputPath);
-      if (meta.status) lifecycle = LIFECYCLE_LABELS[meta.status] ?? meta.status;
-      if (meta.version) version = meta.version;
+      const outputStr = entry?.output
+        ?? (entry?.system_output
+          ? `system: ${entry.system_output}, features: ${entry.features_output ?? "-"}`
+          : undefined);
+
+      let lifecycle: string | undefined;
+      let version: string | undefined;
+      if (entry?.output) {
+        const outputPath = join(configDir, entry.output);
+        const meta = await readDocumentFrontmatter(outputPath);
+        if (meta.status) lifecycle = LIFECYCLE_LABELS[meta.status] ?? meta.status;
+        if (meta.version) version = meta.version;
+      }
+
+      entries.push({
+        doc_type: key.replace(/_/g, "-"),
+        status: entry?.status ?? "pending",
+        output: outputStr,
+        lifecycle,
+        version,
+      });
     }
-
-    entries.push({
-      doc_type: key.replace(/_/g, "-"),
-      status: entry?.status ?? "pending",
-      output: outputStr,
-      lifecycle,
-      version,
-    });
   }
 
   const lines: string[] = [
     `# Document Chain Status`,
     ``,
     `**Project:** ${config.project?.name ?? "Unknown"}`,
-    ``,
-    `| Document | Chain Status | Lifecycle | Version | Output |`,
-    `|----------|-------------|-----------|---------|--------|`,
   ];
 
-  for (const e of entries) {
-    const icon = e.status === "complete" ? "✅" : e.status === "in-progress" ? "🔄" : e.status === "provided" ? "📄" : "⏳";
-    lines.push(`| ${e.doc_type} | ${icon} ${e.status} | ${e.lifecycle ?? "-"} | ${e.version ?? "-"} | ${e.output ?? "-"} |`);
+  // Render RFP separately (not part of CHAIN_DISPLAY_ORDER groups)
+  if (typeof chain.rfp === "string" && chain.rfp) {
+    lines.push(``, `**RFP:** 📄 ${chain.rfp}`);
+  } else {
+    lines.push(``, `**RFP:** ❌ not provided`);
+  }
+
+  let entryIdx = 0;
+  for (const group of CHAIN_DISPLAY_ORDER) {
+    lines.push(``, `## ${group.label} (${group.phase})`, ``);
+    lines.push(`| Document | Chain Status | Lifecycle | Version | Output |`);
+    lines.push(`|----------|-------------|-----------|---------|--------|`);
+    for (const _key of group.keys) {
+      const e = entries[entryIdx++];
+      if (!e) continue;
+      const icon = e.status === "complete" ? "✅" : e.status === "in-progress" ? "🔄" : e.status === "provided" ? "📄" : "⏳";
+      lines.push(`| ${e.doc_type} | ${icon} ${e.status} | ${e.lifecycle ?? "-"} | ${e.version ?? "-"} | ${e.output ?? "-"} |`);
+    }
   }
 
   const outputDir = config.output?.directory
@@ -141,13 +149,14 @@ export async function handleChainStatus(
     const featureDirs = dirEntries.filter(e => e.isDirectory() && e.name !== "." && e.name !== "..").map(e => e.name);
     if (featureDirs.length > 0) {
       lines.push(``, `## Feature Status`, ``);
-      lines.push(`| Feature | basic-design | detail-design | test-spec |`);
-      lines.push(`|---------|-------------|---------------|-----------|`);
+      lines.push(`| Feature | basic-design | detail-design | ut-spec | it-spec |`);
+      lines.push(`|---------|-------------|---------------|---------|---------|`);
       for (const name of featureDirs.sort()) {
         const hasBD = await fileExists(join(featuresDir, name, "basic-design.md"));
         const hasDD = await fileExists(join(featuresDir, name, "detail-design.md"));
-        const hasTS = await fileExists(join(featuresDir, name, "test-spec.md"));
-        lines.push(`| ${name} | ${hasBD ? "✅" : "⏳"} | ${hasDD ? "✅" : "⏳"} | ${hasTS ? "✅" : "⏳"} |`);
+        const hasUT = await fileExists(join(featuresDir, name, "ut-spec.md"));
+        const hasIT = await fileExists(join(featuresDir, name, "it-spec.md"));
+        lines.push(`| ${name} | ${hasBD ? "✅" : "⏳"} | ${hasDD ? "✅" : "⏳"} | ${hasUT ? "✅" : "⏳"} | ${hasIT ? "✅" : "⏳"} |`);
       }
       lines.push(``, `_Run \`/sekkei:validate --structure\` for detailed validation._`);
     }

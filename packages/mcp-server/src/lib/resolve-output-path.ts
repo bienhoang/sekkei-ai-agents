@@ -9,24 +9,40 @@ export function resolveOutputPath(
   scope?: "shared" | "feature",
   featureName?: string,
 ): string | undefined {
-  if (docType === "overview")            return "01-overview.md";
-  if (docType === "requirements")        return "02-requirements.md";
+  // Requirements phase — nested under 02-requirements/
+  if (docType === "requirements")        return "02-requirements/requirements.md";
+  if (docType === "nfr")                 return "02-requirements/nfr.md";
+  if (docType === "project-plan")        return "02-requirements/project-plan.md";
   if (docType === "functions-list")      return "04-functions-list.md";
-  if (docType === "migration-design")    return "06-data/";
-  if (docType === "operation-design")    return "07-operations/";
-  if (docType === "crud-matrix")         return "03-system/crud-matrix.md";
-  if (docType === "traceability-matrix") return "08-test/traceability-matrix.md";
 
+  // Design phase
   if (docType === "basic-design") {
     if (scope === "shared")  return "03-system/";
     if (scope === "feature" && featureName) return `05-features/${featureName}/basic-design.md`;
   }
+  if (docType === "security-design")     return "03-system/security-design.md";
   if (docType === "detail-design") {
     if (scope === "feature" && featureName) return `05-features/${featureName}/detail-design.md`;
   }
-  if (docType === "test-spec") {
-    if (scope === "shared")  return "08-test/";
-    if (scope === "feature" && featureName) return `05-features/${featureName}/test-spec.md`;
+
+  // Test phase — nested under 08-test/
+  if (docType === "test-plan")           return "08-test/test-plan.md";
+  if (docType === "ut-spec") {
+    if (scope === "feature" && featureName) return `05-features/${featureName}/ut-spec.md`;
+    return "08-test/ut-spec.md";
   }
+  if (docType === "it-spec") {
+    if (scope === "feature" && featureName) return `05-features/${featureName}/it-spec.md`;
+    return "08-test/it-spec.md";
+  }
+  if (docType === "st-spec")             return "08-test/st-spec.md";
+  if (docType === "uat-spec")            return "08-test/uat-spec.md";
+
+  // Supplementary
+  if (docType === "crud-matrix")         return "03-system/crud-matrix.md";
+  if (docType === "traceability-matrix") return "08-test/traceability-matrix.md";
+  if (docType === "migration-design")    return "06-data/";
+  if (docType === "operation-design")    return "07-operations/";
+
   return undefined;
 }

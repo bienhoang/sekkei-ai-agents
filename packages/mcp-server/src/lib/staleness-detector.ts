@@ -73,9 +73,11 @@ function getAffectedDocTypes(featureId: string): string[] {
   if (featureId.startsWith("TBL-")) return ["basic-design", "detail-design"];
   if (featureId.startsWith("API-")) return ["basic-design", "detail-design"];
   if (featureId.startsWith("CLS-")) return ["detail-design"];
-  if (featureId.startsWith("UT-") || featureId.startsWith("IT-") ||
-      featureId.startsWith("ST-") || featureId.startsWith("UAT-")) {
-    return ["test-spec"];
+  if (featureId.startsWith("UT-")) return ["ut-spec"];
+  if (featureId.startsWith("IT-")) return ["it-spec"];
+  if (featureId.startsWith("ST-")) return ["st-spec"];
+  if (featureId.startsWith("UAT-")) {
+    return ["uat-spec"];
   }
   return ["requirements", "basic-design", "detail-design"];
 }

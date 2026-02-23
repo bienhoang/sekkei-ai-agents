@@ -7,23 +7,44 @@ AI-powered generation of Japanese software specification documents following the
 
 ## What It Does
 
-Sekkei generates structured Japanese specification documents (設計書) from RFP/requirements using a **Chain-of-Documents** pattern — each document's output feeds the next:
+Sekkei generates structured Japanese specification documents (設計書) from RFP/requirements using a **V-Model Document Chain** — each document's output feeds downstream documents:
 
 ```
-RFP → 機能一覧 → 要件定義書 → 基本設計書 → 詳細設計書 → テスト仕様書
-       Function    Requirements   Basic         Detail        Test
-       List        Definition     Design        Design        Specification
+                         RFP
+                          │
+                    ┌─────┴─────┐
+                    ▼           ▼
+              機能一覧        用語集
+              Function List   Glossary
+                    │
+                    ▼
+              要件定義書 ──────────────────► 受入テスト仕様書
+              Requirements                  UAT Spec
+                    │
+              ┌─────┼──────────┐
+              ▼     ▼          ▼
+            NFR   基本設計書    セキュリティ設計書
+                  Basic Design Security Design
+                    │
+              ┌─────┼─────┐
+              ▼     ▼     ▼
+         詳細設計書 IT仕様書 ST仕様書
+         Detail    IT Spec  ST Spec
+              │
+              ▼
+         UT仕様書
+         UT Spec
 ```
 
-Additional document types: サイトマップ (Sitemap), 運用設計書 (Operation Design), 移行設計書 (Migration Design), CRUD図, トレーサビリティマトリックス.
+Additional types: プロジェクト計画書, テスト計画書, 運用設計書, 移行設計書, CRUD図, トレーサビリティ, サイトマップ.
 
 ## Packages
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [sekkei-mcp-server](./packages/mcp-server/) | 1.1.0 | Core MCP server — document generation, validation, export, CLI |
-| [sekkei-preview](./packages/preview/) | 0.2.0 | VitePress live preview + Milkdown WYSIWYG editor |
-| [sekkei-skills](./packages/skills/) | 1.1.0 | Claude Code slash commands (`/sekkei:*`) |
+| [sekkei-mcp-server](./packages/mcp-server/) | 2.0.0 | Core MCP server — document generation, validation, export, CLI |
+| [sekkei-preview](./packages/preview/) | 0.3.0 | VitePress live preview + Milkdown WYSIWYG editor |
+| [sekkei-skills](./packages/skills/) | 2.0.0 | Claude Code slash commands (`/sekkei:*`) |
 
 ## Quick Start
 
@@ -50,9 +71,11 @@ npx sekkei-setup    # Auto-detect editor and configure MCP
 npx sekkei init                           # Create project config (run in terminal)
 /sekkei:functions-list @rfp.md            # Generate function list
 /sekkei:requirements @functions-list.md   # Generate requirements
+/sekkei:nfr @requirements.md              # Generate non-functional requirements
 /sekkei:basic-design @requirements.md     # Generate basic design
 /sekkei:detail-design @basic-design.md    # Generate detail design
-/sekkei:test-spec @detail-design.md       # Generate test spec
+/sekkei:ut-spec @detail-design.md         # Generate unit test spec
+/sekkei:it-spec @basic-design.md          # Generate integration test spec
 ```
 
 ### Preview
@@ -85,8 +108,9 @@ npx sekkei-preview   # Live preview in browser
 ### MCP Server
 
 - **Transport**: STDIO (stdout reserved for JSON-RPC, logs to stderr)
-- **9 MCP Tools**: `generate_document`, `get_template`, `validate_document`, `get_chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`
-- **12 Templates**: Japanese (ja) with YAML frontmatter — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
+- **10 MCP Tools**: `generate_document`, `get_template`, `validate_document`, `get_chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`, `manage_rfp_workspace`
+- **MCP Resources**: `templates://` for doc templates, `rfp://` for RFP workflow instructions
+- **18 Templates**: Japanese (ja) with YAML frontmatter — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
 - **Python Bridge**: `execFile`-based (no shell injection) for Excel/PDF/DOCX export via `SEKKEI_INPUT` env var
 
 ### CLI (`sekkei` command)
@@ -107,25 +131,50 @@ Built with citty. Available commands:
 
 ## Slash Commands (Claude Code)
 
-23 sub-commands covering the full V-model workflow:
+30 sub-commands covering the full V-model workflow:
+
+**Requirements Phase**
 
 | Command | Description |
 |---------|-------------|
 | `npx sekkei init` | Initialize project config (CLI) |
+| `/sekkei:rfp @rfp.md` | RFP analysis and presales workflow |
 | `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
 | `/sekkei:requirements @input` | Generate 要件定義書 (Requirements) |
+| `/sekkei:nfr @input` | Generate 非機能要件定義書 (Non-Functional Requirements) |
+| `/sekkei:project-plan @input` | Generate プロジェクト計画書 (Project Plan) |
+
+**Design Phase**
+
+| Command | Description |
+|---------|-------------|
 | `/sekkei:basic-design @input` | Generate 基本設計書 (Basic Design) |
+| `/sekkei:security-design @input` | Generate セキュリティ設計書 (Security Design) |
 | `/sekkei:detail-design @input` | Generate 詳細設計書 (Detail Design) |
-| `/sekkei:test-spec @input` | Generate テスト仕様書 (Test Spec) |
+
+**Test Phase**
+
+| Command | Description |
+|---------|-------------|
+| `/sekkei:test-plan @input` | Generate テスト計画書 (Test Plan) |
+| `/sekkei:ut-spec @input` | Generate 単体テスト仕様書 (Unit Test Spec) |
+| `/sekkei:it-spec @input` | Generate 結合テスト仕様書 (Integration Test Spec) |
+| `/sekkei:st-spec @input` | Generate システムテスト仕様書 (System Test Spec) |
+| `/sekkei:uat-spec @input` | Generate 受入テスト仕様書 (UAT Spec) |
+
+**Supplementary & Utilities**
+
+| Command | Description |
+|---------|-------------|
 | `/sekkei:matrix` | Generate CRUD図 or トレーサビリティ |
 | `/sekkei:sitemap` | Generate サイトマップ (System Structure Map) |
 | `/sekkei:operation-design @input` | Generate 運用設計書 (Operation Design) |
 | `/sekkei:migration-design @input` | Generate 移行設計書 (Migration Design) |
+| `/sekkei:glossary` | Manage project terminology |
 | `/sekkei:validate @doc` | Validate completeness and cross-references |
 | `/sekkei:status` | Show document chain progress |
 | `/sekkei:export @doc --format=xlsx\|pdf\|docx` | Export document |
 | `/sekkei:translate @doc --lang=en` | Translate with glossary context |
-| `/sekkei:glossary` | Manage project terminology |
 | `/sekkei:update @doc` | Detect upstream changes |
 | `/sekkei:diff-visual @before @after` | Color-coded revision Excel (朱書き) |
 | `/sekkei:plan @doc-type` | Create generation plan for large docs |
@@ -204,11 +253,11 @@ sekkei/
 ├── packages/
 │   ├── mcp-server/              # sekkei-mcp-server
 │   │   ├── src/
-│   │   │   ├── tools/           # 9 MCP tool handlers
-│   │   │   ├── resources/       # Template URI resources
+│   │   │   ├── tools/           # 10 MCP tool handlers
+│   │   │   ├── resources/       # Template + RFP instruction resources
 │   │   │   ├── lib/             # Core logic (template-loader, python-bridge, etc.)
 │   │   │   └── cli/             # CLI commands (citty-based)
-│   │   ├── templates/ja/        # 12 Japanese doc templates
+│   │   ├── templates/ja/        # 18 Japanese doc templates
 │   │   ├── python/              # Export layer (Excel, PDF, DOCX, glossary, diff)
 │   │   ├── bin/                 # setup.js, init.js, cli.js
 │   │   └── adapters/            # Platform configs (Claude Code, Cursor, Copilot)
@@ -218,7 +267,7 @@ sekkei/
 │   │   └── plugins/             # VitePress plugins
 │   └── skills/                  # sekkei-skills
 │       ├── bin/install.js       # Skill installer
-│       └── content/SKILL.md     # 23 sub-commands + workflow router
+│       └── content/SKILL.md     # 30 sub-commands + workflow router
 └── .github/                     # CI/CD
 ```
 

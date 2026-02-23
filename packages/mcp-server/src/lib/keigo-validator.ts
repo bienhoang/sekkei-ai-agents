@@ -101,12 +101,18 @@ export function detectKeigoLevel(text: string): KeigoDetection {
 
 // Expected keigo matrix: doc_type × preset → expected level
 const EXPECTED_KEIGO: Record<string, Record<string, "teineigo" | "joutai" | "any">> = {
-  "requirements":    { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
-  "basic-design":    { enterprise: "teineigo", standard: "any",      agile: "joutai",  default: "any" },
-  "detail-design":   { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
-  "test-spec":       { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
-  "functions-list":  { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
-  "overview":        { enterprise: "teineigo", standard: "teineigo", agile: "any",     default: "teineigo" },
+  "requirements":      { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
+  "nfr":               { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
+  "functions-list":    { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
+  "project-plan":      { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
+  "basic-design":      { enterprise: "teineigo", standard: "any",      agile: "joutai",  default: "any" },
+  "security-design":   { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "detail-design":     { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "test-plan":         { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "ut-spec":           { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "it-spec":           { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "st-spec":           { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "uat-spec":          { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
 };
 
 export function detectBrseMistakes(text: string, docType: DocType): ValidationIssue[] {
@@ -114,12 +120,14 @@ export function detectBrseMistakes(text: string, docType: DocType): ValidationIs
   const prose = extractProse(text);
 
   // Over-keigo in developer-only docs
-  if (docType === "detail-design" || docType === "test-spec") {
+  const devOnlyDocs: DocType[] = ["detail-design", "ut-spec", "it-spec", "st-spec", "uat-spec"];
+  if (devOnlyDocs.includes(docType)) {
     const overKeigo = countMatches(prose, [/させていただ/g]);
     if (overKeigo > 0) {
+      const label = docType === "detail-design" ? "詳細設計書" : `${docType}`;
       issues.push({
         type: "keigo_violation",
-        message: `Over-keigo detected: 「させていただ」が${docType === "detail-design" ? "詳細設計書" : "テスト仕様書"}で${overKeigo}回使用（開発者向けドキュメントには不要）`,
+        message: `Over-keigo detected: 「させていただ」が${label}で${overKeigo}回使用（開発者向けドキュメントには不要）`,
         severity: "warning",
       });
     }

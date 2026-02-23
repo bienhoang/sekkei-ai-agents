@@ -8,11 +8,12 @@ MCP Server for generating Japanese software specification documents (設計書) 
 
 ## Features
 
-- **9 MCP tools** — generate, validate, chain-validate, export, translate, glossary, and more
-- **V-model chain** — RFP → 機能一覧 → 要件定義書 → 基本設計書 → 詳細設計書 → テスト仕様書
-- **11 document templates** — functions-list, requirements, basic/detail design, test-spec, screen-design, CRUD/traceability matrix, operation/migration design, overview
+- **10 MCP tools** — generate, validate, chain-validate, export, translate, glossary, RFP workspace, and more
+- **V-model chain** — branching document chain with phase-grouped types (requirements, design, test, supplementary)
+- **18 document templates** — functions-list, requirements, NFR, basic/detail/security design, project-plan, test-plan, UT/IT/ST/UAT spec, and more
 - **15 industry glossaries** — automotive, finance, medical, manufacturing, retail, and more
 - **3 presets** — standard, enterprise, agile project configurations
+- **RFP workflow** — MCP tool + resources for cross-editor presales workflow
 - **Template system** — Markdown templates with YAML frontmatter, override support
 - **Excel/PDF/DOCX export** — IPA-standard 4-sheet Excel, PDF with Japanese fonts, Word
 - **Multi-platform** — Claude Code, Cursor, VS Code/Copilot via adapters
@@ -85,40 +86,81 @@ cp adapters/copilot/copilot-instructions.md .github/
 | `manage_glossary` | CRUD operations for project terminology glossary |
 | `analyze_update` | Diffs upstream changes and finds downstream impacts |
 | `validate_chain` | Validates cross-references across the entire document chain |
+| `manage_rfp_workspace` | RFP presales workflow — create, status, transition, read, write |
 
 ## MCP Resources
 
-Dynamic template resources via `templates://{doc_type}/{language}` URI pattern:
+**Template resources** via `templates://{doc_type}/{language}`:
 
 | URI | Description |
 |-----|-------------|
-| `templates://overview/ja` | プロジェクト概要 template |
 | `templates://functions-list/ja` | 機能一覧 template |
 | `templates://requirements/ja` | 要件定義書 template |
+| `templates://nfr/ja` | 非機能要件定義書 template |
 | `templates://basic-design/ja` | 基本設計書 template |
+| `templates://security-design/ja` | セキュリティ設計書 template |
 | `templates://detail-design/ja` | 詳細設計書 template |
-| `templates://test-spec/ja` | テスト仕様書 template |
-| `templates://screen-design/ja` | 画面設計書 template |
+| `templates://project-plan/ja` | プロジェクト計画書 template |
+| `templates://test-plan/ja` | テスト計画書 template |
+| `templates://ut-spec/ja` | 単体テスト仕様書 template |
+| `templates://it-spec/ja` | 結合テスト仕様書 template |
+| `templates://st-spec/ja` | システムテスト仕様書 template |
+| `templates://uat-spec/ja` | 受入テスト仕様書 template |
 | `templates://crud-matrix/ja` | CRUD図 template |
 | `templates://traceability-matrix/ja` | トレーサビリティマトリックス template |
 | `templates://operation-design/ja` | 運用設計書 template |
 | `templates://migration-design/ja` | 移行設計書 template |
 
+**RFP instruction resources** via `rfp://`:
+
+| URI | Description |
+|-----|-------------|
+| `rfp://instructions/analyze` | RFP analysis flow prompt |
+| `rfp://instructions/questions` | Q&A generation prompt |
+| `rfp://instructions/draft` | Draft/wait decision prompt |
+| `rfp://instructions/impact` | Answer impact assessment prompt |
+| `rfp://instructions/proposal` | Proposal generation prompt |
+| `rfp://instructions/freeze` | Scope freeze prompt |
+| `rfp://routing` | Phase → flow mapping table |
+
 ## Document Types
 
-| Type | Japanese | Structure |
-|------|----------|-----------|
-| overview | プロジェクト概要 | Project summary and scope |
+### Requirements Phase
+
+| Type | Japanese | Description |
+|------|----------|-------------|
 | functions-list | 機能一覧 | 10-column table (大分類→中分類→小機能 hierarchy) |
-| requirements | 要件定義書 | 10 sections (概要 through 附録) |
-| basic-design | 基本設計書 | 10 sections with 3 key tables (画面, DB, API) |
-| detail-design | 詳細設計書 | 10 sections (modules, classes, API specs, validation) |
-| test-spec | テスト仕様書 | 4 sections (test design, cases per level UT/IT/ST/UAT, traceability) |
-| screen-design | 画面設計書 | Screen layouts and UI specifications |
-| crud-matrix | CRUD図 | Create/Read/Update/Delete matrix |
-| traceability-matrix | トレーサビリティ | Requirements-to-test traceability |
+| requirements | 要件定義書 | Functional and non-functional requirements |
+| nfr | 非機能要件定義書 | Performance, security, availability requirements |
+| project-plan | プロジェクト計画書 | Project timeline, milestones, resource plan |
+
+### Design Phase
+
+| Type | Japanese | Description |
+|------|----------|-------------|
+| basic-design | 基本設計書 | System architecture, screens, DB, API design |
+| security-design | セキュリティ設計書 | Security architecture and threat modeling |
+| detail-design | 詳細設計書 | Modules, classes, API specs, validation rules |
+
+### Test Phase
+
+| Type | Japanese | Description |
+|------|----------|-------------|
+| test-plan | テスト計画書 | Test strategy, scope, schedule |
+| ut-spec | 単体テスト仕様書 | Unit test cases per module |
+| it-spec | 結合テスト仕様書 | Integration test cases |
+| st-spec | システムテスト仕様書 | System-level test cases |
+| uat-spec | 受入テスト仕様書 | User acceptance test cases |
+
+### Supplementary
+
+| Type | Japanese | Description |
+|------|----------|-------------|
 | operation-design | 運用設計書 | Operation procedures and monitoring |
 | migration-design | 移行設計書 | Data/system migration plans |
+| glossary | 用語集 | Project terminology dictionary |
+| crud-matrix | CRUD図 | Create/Read/Update/Delete matrix |
+| traceability-matrix | トレーサビリティ | Requirements-to-test traceability |
 
 ## Template Customization
 
@@ -187,7 +229,7 @@ npm run lint         # Type check
 
 Sekkei MCP Serverは、V字モデルに従って日本語ソフトウェア設計書を生成するためのMCPサーバーです。
 
-11種類のドキュメントテンプレート、15業界対応の用語集、3つのプロジェクトプリセットを搭載。機能一覧→要件定義書→基本設計書→詳細設計書→テスト仕様書のドキュメントチェーンをサポートし、各ドキュメントの出力が次のドキュメントの入力となります。Markdownテンプレートシステム、Excel/PDF/DOCXエクスポート、用語集管理、クロスリファレンスバリデーションを備えています。
+18種類のドキュメントテンプレート（要件定義、NFR、基本設計、セキュリティ設計、詳細設計、UT/IT/ST/UAT仕様書など）、15業界対応の用語集、3つのプロジェクトプリセットを搭載。V字モデルの分岐チェーンをサポートし、各ドキュメントの出力が下流ドキュメントの入力となります。RFPプリセールスワークフロー、Markdownテンプレートシステム、Excel/PDF/DOCXエクスポート、用語集管理、クロスリファレンスバリデーションを備えています。
 
 ## License
 

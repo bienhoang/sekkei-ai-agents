@@ -9,27 +9,42 @@ import { extractAllIds } from "./id-extractor.js";
 import { SekkeiError } from "./errors.js";
 import type { ProjectConfig, ChainRefReport, ChainLinkReport, TraceabilityEntry } from "../types/documents.js";
 
-/** Ordered chain link pairs */
+/** Ordered chain link pairs — branching V-model */
 const CHAIN_PAIRS: [string, string][] = [
-  ["functions-list", "requirements"],
+  // Requirements phase (linear)
+  ["requirements", "nfr"],
+  ["requirements", "functions-list"],
+  // Design phase
   ["requirements", "basic-design"],
+  ["basic-design", "security-design"],
   ["basic-design", "detail-design"],
-  ["detail-design", "test-spec"],
+  // Test phase (V-model symmetric — branching)
+  ["detail-design", "ut-spec"],
+  ["basic-design", "it-spec"],
+  ["basic-design", "st-spec"],
+  ["requirements", "uat-spec"],
+  // Supplementary
+  ["requirements", "operation-design"],
+  ["basic-design", "migration-design"],
 ];
 
 /** ID prefix → doc type that defines it */
 const ID_ORIGIN: Record<string, string> = {
   F: "functions-list",
   REQ: "requirements",
-  NFR: "requirements",
+  NFR: "nfr",
   SCR: "basic-design",
   TBL: "basic-design",
   API: "basic-design",
+  SEC: "security-design",
   CLS: "detail-design",
   DD: "detail-design",
-  UT: "test-spec",
-  IT: "test-spec",
-  ST: "test-spec",
+  PP: "project-plan",
+  TP: "test-plan",
+  UT: "ut-spec",
+  IT: "it-spec",
+  ST: "st-spec",
+  UAT: "uat-spec",
   EV: "test-evidence",
   MTG: "meeting-minutes",
   ADR: "decision-record",
@@ -38,7 +53,7 @@ const ID_ORIGIN: Record<string, string> = {
 };
 
 /** Standard ID regex — same pattern as id-extractor.ts */
-const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|TS|UT|IT|ST|UAT|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
+const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
 
 /** Validate configPath: no path traversal, must end in .yaml/.yml */
 function validateConfigPath(configPath: string): void {
@@ -89,13 +104,20 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
   if (!chain) return docs;
 
   // Single-file entries
-  const singleEntries: [string, { output?: string }][] = [
+  const singleEntries: [string, { output?: string } | undefined][] = [
     ["functions-list", chain.functions_list],
     ["requirements", chain.requirements],
-    ["overview", chain.overview],
+    ["nfr", chain.nfr],
+    ["project-plan", chain.project_plan],
+    ["security-design", chain.security_design],
+    ["test-plan", chain.test_plan],
+    ["ut-spec", chain.ut_spec],
+    ["it-spec", chain.it_spec],
+    ["st-spec", chain.st_spec],
+    ["uat-spec", chain.uat_spec],
+    ["operation-design", chain.operation_design],
+    ["migration-design", chain.migration_design],
   ];
-  if (chain.operation_design) singleEntries.push(["operation-design", chain.operation_design]);
-  if (chain.migration_design) singleEntries.push(["migration-design", chain.migration_design]);
 
   for (const [docType, entry] of singleEntries) {
     if (!entry?.output) continue;
@@ -107,17 +129,16 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
     }
   }
 
-  // Split entries
-  const splitEntries: [string, { system_output?: string; features_output?: string; global_output?: string }][] = [
+  // Split entries (basic-design, detail-design only in v2.0)
+  const splitEntries: [string, { system_output?: string; features_output?: string }][] = [
     ["basic-design", chain.basic_design],
     ["detail-design", chain.detail_design],
-    ["test-spec", chain.test_spec],
   ];
 
   for (const [docType, entry] of splitEntries) {
     if (!entry) continue;
     const parts: string[] = [];
-    for (const dirKey of ["system_output", "features_output", "global_output"] as const) {
+    for (const dirKey of ["system_output", "features_output"] as const) {
       const dirPath = entry[dirKey];
       if (dirPath) {
         const content = await readDirMarkdown(resolve(base, dirPath));
@@ -159,7 +180,11 @@ export function buildIdGraph(docs: Map<string, string>): IdGraph {
 /** Build traceability matrix: for each defined ID, collect downstream references */
 export function buildTraceabilityMatrix(docs: Map<string, string>): TraceabilityEntry[] {
   const matrix: TraceabilityEntry[] = [];
-  const docOrder = ["functions-list", "requirements", "basic-design", "detail-design", "test-spec"];
+  const docOrder = [
+    "requirements", "nfr", "functions-list",
+    "basic-design", "security-design", "detail-design",
+    "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec",
+  ];
 
   for (const [docType, content] of docs) {
     const defined = extractStandardIds(content);

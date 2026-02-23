@@ -169,7 +169,7 @@ export async function handleGenerateDocument(
       : "";
 
     let codeContextBlock = "";
-    if (source_code_path && (doc_type === "detail-design" || doc_type === "test-spec")) {
+    if (source_code_path && (doc_type === "detail-design" || doc_type === "ut-spec")) {
       try {
         const { analyzeTypeScript } = await import("../lib/code-analyzer.js");
         const { formatCodeContext } = await import("../lib/code-context-formatter.js");

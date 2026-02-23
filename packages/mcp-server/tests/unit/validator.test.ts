@@ -39,11 +39,11 @@ describe("validateCompleteness", () => {
     expect(issues).toHaveLength(0);
   });
 
-  it("detects missing sections for test-spec", () => {
+  it("detects missing sections for ut-spec", () => {
     const content = STRUCTURAL + "## テスト設計\n\nSome content.";
-    const issues = validateCompleteness(content, "test-spec");
+    const issues = validateCompleteness(content, "ut-spec");
     expect(issues.length).toBeGreaterThan(0);
-    expect(issues.some((i) => i.message.includes("テストケース仕様"))).toBe(true);
+    expect(issues.some((i) => i.message.includes("単体テストケース"))).toBe(true);
   });
 
   it("detects missing structural section (承認欄)", () => {
@@ -97,9 +97,9 @@ describe("validateTableStructure", () => {
     expect(issues[0].type).toBe("missing_column");
   });
 
-  it("validates test-spec columns", () => {
+  it("validates ut-spec columns", () => {
     const content = "| 版数 | 日付 | 変更内容 | 変更者 |\n| テストケースID | テスト対象 | テスト手順 |";
-    const issues = validateTableStructure(content, "test-spec");
+    const issues = validateTableStructure(content, "ut-spec");
     expect(issues).toHaveLength(0);
   });
 });

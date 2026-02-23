@@ -1,21 +1,35 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, functions-list, requirements, basic-design, detail-design, test-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, functions-list, requirements, nfr, project-plan, basic-design, security-design, detail-design, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
 ---
 
 # Sekkei (設計) Documentation Agent
 
-Generate Japanese software specification documents following the V-model document chain:
-**RFP → 機能一覧 → 要件定義書 → 基本設計書 → 詳細設計書 → テスト仕様書**
+Generate Japanese software specification documents following the V-model document chain.
 
-## Sub-Commands
+## Document Generation Commands
+
+### Requirements Phase
+- `/sekkei:requirements @input`   — 要件定義書
+- `/sekkei:nfr @requirements`     — 非機能要件定義書
+- `/sekkei:functions-list @input` — 機能一覧
+- `/sekkei:project-plan @req`     — プロジェクト計画書
+
+### Design Phase
+- `/sekkei:basic-design @input`     — 基本設計書
+- `/sekkei:security-design @bd`     — セキュリティ設計書
+- `/sekkei:detail-design @input`    — 詳細設計書
+
+### Test Phase
+- `/sekkei:test-plan @req`          — テスト計画書
+- `/sekkei:ut-spec @detail-design`  — 単体テスト仕様書
+- `/sekkei:it-spec @basic-design`   — 結合テスト仕様書
+- `/sekkei:st-spec @basic-design`   — システムテスト仕様書
+- `/sekkei:uat-spec @requirements`  — 受入テスト仕様書
+
+## Other Commands
 
 - `/sekkei:rfp [@project-name]` — Presales RFP lifecycle (analyze → Q&A → proposal → scope freeze)
-- `/sekkei:functions-list @input` — Generate 機能一覧 (Function List) from RFP/input
-- `/sekkei:requirements @input` — Generate 要件定義書 (Requirements Definition)
-- `/sekkei:basic-design @input` — Generate 基本設計書 (Basic Design Document)
-- `/sekkei:detail-design @input` — Generate 詳細設計書 (Detail Design Document)
-- `/sekkei:test-spec @input` — Generate テスト仕様書 (Test Specification)
 - `/sekkei:matrix` — Generate CRUD図 or トレーサビリティマトリックス and export to Excel
 - `/sekkei:sitemap` — Generate サイトマップ (System Structure Map) with page hierarchy
 - `/sekkei:operation-design @input` — Generate 運用設計書 (Operation Design)
@@ -24,7 +38,7 @@ Generate Japanese software specification documents following the V-model documen
 - `/sekkei:status` — Show document chain progress
 - `/sekkei:export @doc --format=xlsx|pdf|docx` — Export document to Excel, PDF, or Word
 - `/sekkei:translate @doc --lang=en` — Translate document with glossary context
-- `/sekkei:glossary [add|list|find|export]` — Manage project terminology
+- `/sekkei:glossary [seed|add|list|find|export|finalize]` — Manage project terminology
 - `/sekkei:update @doc` — Detect upstream changes and impacted sections
 - `/sekkei:diff-visual @before @after` — Generate color-coded revision Excel (朱書き)
 - `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in split mode)
@@ -250,43 +264,152 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    d. Save output to `./sekkei-docs/detail-design.md`
 6. Update chain status: `detail_design.status: complete`
 
-### `/sekkei:test-spec @input`
+### `/sekkei:nfr @requirements`
 
 **Interview questions (ask before generating):**
-- Test levels to cover? (UT, IT, ST, UAT)
-- Test tools/frameworks used?
-- Performance test targets (response time, throughput)?
-- Security test requirements?
+- Which IPA NFUG categories are in scope? (可用性, 性能, セキュリティ, 拡張性, 運用保守性, 移行性)
+- Target SLA values? (uptime %, response time, throughput)
+- Compliance requirements? (個人情報保護法, SOC2, ISO27001, etc.)
 
-0. **Plan trigger check** (see `references/plan-orchestrator.md` §1):
-   - Read `sekkei.config.yaml` → check `split.test-spec` exists
-   - Count 大分類 features from `functions-list.md`
-   - If split enabled AND features >= 3 AND no active plan for `test-spec` in `sekkei-docs/plans/`:
-     → Ask: "Detected {N} features in split mode. Create a generation plan first? [Y/n]"
-     → If Y: run `/sekkei:plan test-spec` → run `/sekkei:implement @{returned-plan-path}`
-     → If N: continue with step 1 below
-1. Read the input (ideally the generated 詳細設計書)
-2. If `sekkei.config.yaml` exists, load project metadata
-3. **Check for split config**: read `sekkei.config.yaml` → `split.test-spec`
-4. **If split enabled:**
-   a. Read `functions-list.md` → extract feature groups
-   b. For each feature:
-      - Call `generate_document` with `scope: "feature"`, `feature_id: "{ID}"`
-      - Save to `features/{feature-id}/test-spec.md`
-   c. Create/update `_index.yaml` manifest (test-spec has no shared sections by default)
-5. **If not split (default):**
-   a. Call MCP tool `generate_document` with `doc_type: "test-spec"`, `language` from config (default: "ja"), and input. Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
-   b. Use the returned template + AI instructions to generate the テスト仕様書
-   c. Follow these rules strictly:
-      - 4-section structure as defined in the template
-      - Test cases: 12-column table per level (UT/IT/ST/UAT)
-      - テスト観点: 正常系/異常系/境界値/パフォーマンス/セキュリティ
-      - ID format: UT-001, IT-001, ST-001, UAT-001
-      - Traceability matrix: REQ-ID → F-ID → テストケースID
-      - Generate 5+ test cases per major function
-      - Cross-reference REQ-xxx, F-xxx IDs from upstream
-   d. Save output to `./sekkei-docs/test-spec.md`
-6. Update chain status: `test_spec.status: complete`
+1. Read the upstream 要件定義書 (or input)
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "nfr"`, `upstream_content` (requirements), and `language` from config
+4. Follow these rules strictly:
+   - ID format: `NFR-001`
+   - Each NFR MUST have a numeric 目標値 (no vague terms — use %, ms, RPS, hours)
+   - Cover all 6 IPA NFUG categories: 可用性, 性能効率性, セキュリティ, 保守性, 移植性, 信頼性
+   - Cross-reference REQ-xxx IDs from 要件定義書
+5. Save output to `{output.directory}/02-requirements/nfr.md`
+6. Update chain status: `nfr.status: complete`
+
+### `/sekkei:security-design @basic-design`
+
+**Interview questions (ask before generating):**
+- Authentication method? (OAuth2, SAML, OpenID Connect, custom)
+- Data classification levels? (公開, 社内, 機密, 極秘)
+- Applicable compliance? (個人情報保護法, PCI-DSS, HIPAA, ISMS)
+
+1. Read the upstream 基本設計書
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "security-design"`, `upstream_content` (basic-design), and `language` from config
+4. Follow these rules strictly:
+   - ID format: `SEC-001`
+   - Address OWASP Top 10 risks explicitly
+   - Specify TLS 1.3+ for all transport, bcrypt (cost≥12) or Argon2id for passwords
+   - Cross-reference API-xxx, SCR-xxx, TBL-xxx IDs from 基本設計書
+5. Save output to `{output.directory}/03-system/security-design.md`
+6. Update chain status: `security_design.status: complete`
+
+### `/sekkei:project-plan @requirements`
+
+**Interview questions (ask before generating):**
+- Team size and composition? (developers, QA, PM, etc.)
+- Target timeline and key milestones?
+- Methodology? (waterfall, hybrid, agile-waterfall)
+- Budget or effort constraints?
+
+1. Read the upstream 要件定義書 (and 機能一覧 if available)
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "project-plan"`, `upstream_content`, and `language` from config
+4. Follow these rules strictly:
+   - ID format: `PP-001`
+   - Include WBS table with task breakdown and owners
+   - Include milestone table with dates and deliverables
+   - Cross-reference REQ-xxx, F-xxx IDs from upstream
+5. Save output to `{output.directory}/02-requirements/project-plan.md`
+6. Update chain status: `project_plan.status: complete`
+
+### `/sekkei:test-plan @requirements`
+
+**Interview questions (ask before generating):**
+- Test scope and what is out of scope?
+- CI/CD integration and automation strategy?
+- Environment constraints? (staging, UAT env, data masking)
+- Testing tools and frameworks?
+
+1. Read the upstream 要件定義書 and 基本設計書 (if available)
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "test-plan"`, `upstream_content`, and `language` from config
+4. Follow these rules strictly:
+   - ID format: `TP-001`
+   - Define entry criteria and exit criteria for each test level (UT, IT, ST, UAT)
+   - Cross-reference REQ-xxx, NFR-xxx IDs from upstream
+5. Save output to `{output.directory}/08-test/test-plan.md`
+6. Update chain status: `test_plan.status: complete`
+
+### `/sekkei:ut-spec @detail-design`
+
+**Interview questions (ask before generating):**
+- Target modules/classes for unit testing?
+- Testing framework? (Jest, JUnit, pytest, etc.)
+- Coverage target (line/branch %)?
+
+1. Read the upstream 詳細設計書 (optionally: `source_code_path` if source exists)
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "ut-spec"`, `upstream_content` (detail-design), and `language` from config
+4. Follow these rules strictly:
+   - ID format: `UT-001`
+   - Cross-reference CLS-xxx and DD-xxx IDs from 詳細設計書
+   - Minimum 5 test cases per module
+   - テスト観点: 正常系 / 異常系 / 境界値 (all three required)
+5. Save output:
+   - Default: `{output.directory}/08-test/ut-spec.md`
+   - Feature scope: `{output.directory}/05-features/{name}/ut-spec.md`
+6. Update chain status: `ut_spec.status: complete`
+
+### `/sekkei:it-spec @basic-design`
+
+**Interview questions (ask before generating):**
+- Integration scope? (API-to-API, screen-to-API, DB integration, external services)
+- Test doubles strategy? (mocks, stubs, contract tests)
+
+1. Read the upstream 基本設計書
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "it-spec"`, `upstream_content` (basic-design), and `language` from config
+4. Follow these rules strictly:
+   - ID format: `IT-001`
+   - Cross-reference API-xxx, SCR-xxx, TBL-xxx IDs from 基本設計書
+   - Verify interface contracts: request/response schemas, error codes
+5. Save output:
+   - Default: `{output.directory}/08-test/it-spec.md`
+   - Feature scope: `{output.directory}/05-features/{name}/it-spec.md`
+6. Update chain status: `it_spec.status: complete`
+
+### `/sekkei:st-spec @basic-design`
+
+**Interview questions (ask before generating):**
+- Key E2E business scenarios to validate?
+- Performance test scope? (load, stress, soak targets)
+- Security test scope? (OWASP, penetration testing)
+
+1. Read the upstream 基本設計書 and 機能一覧 (if available)
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "st-spec"`, `upstream_content`, and `language` from config
+4. Follow these rules strictly:
+   - ID format: `ST-001`
+   - Cross-reference SCR-xxx, TBL-xxx, F-xxx IDs from upstream
+   - Include E2E scenarios, performance targets (numeric), and security test cases
+   - System-level only — no per-feature split
+5. Save output to `{output.directory}/08-test/st-spec.md`
+6. Update chain status: `st_spec.status: complete`
+
+### `/sekkei:uat-spec @requirements`
+
+**Interview questions (ask before generating):**
+- Key business scenarios for acceptance?
+- Who owns acceptance criteria sign-off? (business owner, PO, client)
+- Sign-off process and criteria?
+
+1. Read the upstream 要件定義書 and 非機能要件定義書 (if available)
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "uat-spec"`, `upstream_content`, and `language` from config
+4. Follow these rules strictly:
+   - ID format: `UAT-001`
+   - Cross-reference REQ-xxx and NFR-xxx IDs from upstream
+   - Business scenario-based test cases (not technical)
+   - System-level only — no per-feature split
+5. Save output to `{output.directory}/08-test/uat-spec.md`
+6. Update chain status: `uat_spec.status: complete`
 
 ### `/sekkei:operation-design @input`
 
@@ -436,14 +559,16 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    e. Save output to `./sekkei-docs/{doc-type}.{target_lang}.md`
 5. Report: files translated, glossary terms applied, output paths
 
-### `/sekkei:glossary [add|list|find|export]`
+### `/sekkei:glossary [seed|add|list|find|export|finalize]`
 
 1. Locate `sekkei-docs/glossary.yaml` (create if not exists)
-2. For `add`: ask for JP term, EN term, VI term, context → call `manage_glossary` with action "add"
-3. For `list`: call `manage_glossary` with action "list" → display all terms
-4. For `find`: ask for search query → call with action "find"
-5. For `export`: call with action "export" → display as Markdown table (4 columns: ja/en/vi/context)
-6. For `import`: ask for industry (finance / medical / manufacturing / real-estate / logistics / retail / insurance / education / government / construction / telecom / automotive / energy / food-service / common) → call with action "import", industry → display imported/skipped counts
+2. For `seed`: extract candidate terms from upstream docs (requirements, basic-design) → call `manage_glossary` with action "seed" → show extracted terms for review
+3. For `add`: ask for JP term, EN term, VI term, context → call `manage_glossary` with action "add"
+4. For `list`: call `manage_glossary` with action "list" → display all terms
+5. For `find`: ask for search query → call with action "find"
+6. For `export`: call with action "export" → display as Markdown table (4 columns: ja/en/vi/context)
+7. For `finalize`: lock glossary for translation/export use → call `manage_glossary` with action "finalize" → set `glossary.status: finalized` in config
+8. For `import`: ask for industry (finance / medical / manufacturing / real-estate / logistics / retail / insurance / education / government / construction / telecom / automotive / energy / food-service / common) → call with action "import", industry → display imported/skipped counts
 
 ### `/sekkei:update @doc`
 
@@ -549,13 +674,24 @@ See `references/plan-orchestrator.md` for detailed logic.
 
 ## Document Chain
 
-Documents build on each other. The recommended generation order is:
+Documents build on each other. Each downstream document cross-references IDs from upstream documents.
 
 ```
-RFP/Input → /sekkei:rfp → /sekkei:functions-list → /sekkei:requirements → /sekkei:basic-design → /sekkei:detail-design → /sekkei:test-spec
+RFP (/sekkei:rfp)
+  └─► Requirements (/sekkei:requirements)
+        ├─► NFR (/sekkei:nfr)
+        ├─► Functions List (/sekkei:functions-list)
+        ├─► Project Plan (/sekkei:project-plan)
+        └─► Glossary seed (/sekkei:glossary seed)
+              └─► Basic Design (/sekkei:basic-design)
+                    ├─► Security Design (/sekkei:security-design)
+                    └─► Detail Design (/sekkei:detail-design)
+                          └─► Test Plan (/sekkei:test-plan)
+                                ├─► UT Spec (/sekkei:ut-spec)     ← detail-design
+                                ├─► IT Spec (/sekkei:it-spec)     ← basic-design
+                                ├─► ST Spec (/sekkei:st-spec)     ← basic-design
+                                └─► UAT Spec (/sekkei:uat-spec)   ← requirements
 ```
-
-Each downstream document should cross-reference IDs from upstream documents.
 
 ## Split Mode
 

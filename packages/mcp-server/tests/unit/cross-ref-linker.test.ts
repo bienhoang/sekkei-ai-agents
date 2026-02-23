@@ -43,11 +43,10 @@ const DETAIL_DESIGN = `
 - DD-001 LoginFlow
 `;
 
-const TEST_SPEC = `
-## テストケース仕様
+const UT_SPEC = `
+## 単体テストケース
 - UT-001 LoginController test (CLS-001)
-- IT-001 Login integration (SCR-001, REQ-001)
-- ST-001 System test
+- UT-002 SearchController test (CLS-002)
 `;
 
 // --- Tests ---
@@ -73,35 +72,35 @@ describe("buildIdGraph", () => {
 });
 
 describe("analyzeGraph — orphaned ID detection", () => {
-  it("detects F-003 orphaned when not referenced in requirements", () => {
+  it("detects REQ-003 orphaned when not referenced in basic-design", () => {
     const docs = new Map([
-      ["functions-list", FUNCTIONS_LIST],
-      ["requirements", REQUIREMENTS_PARTIAL],
+      ["requirements", REQUIREMENTS_FULL],
+      ["basic-design", BASIC_DESIGN],
     ]);
     const graph = buildIdGraph(docs);
     const report = analyzeGraph(graph, docs);
 
-    const flReqLink = report.links.find(
-      (l) => l.upstream === "functions-list" && l.downstream === "requirements"
+    const reqBdLink = report.links.find(
+      (l) => l.upstream === "requirements" && l.downstream === "basic-design"
     );
-    expect(flReqLink).toBeDefined();
-    expect(flReqLink!.orphaned_ids).toContain("F-003");
-    expect(flReqLink!.orphaned_ids).not.toContain("F-001");
-    expect(flReqLink!.orphaned_ids).not.toContain("F-002");
+    expect(reqBdLink).toBeDefined();
+    expect(reqBdLink!.orphaned_ids).toContain("REQ-003");
+    expect(reqBdLink!.orphaned_ids).not.toContain("REQ-001");
+    expect(reqBdLink!.orphaned_ids).not.toContain("REQ-002");
   });
 
   it("produces orphaned_ids in report with defined_in and expected_in", () => {
     const docs = new Map([
-      ["functions-list", FUNCTIONS_LIST],
-      ["requirements", REQUIREMENTS_PARTIAL],
+      ["requirements", REQUIREMENTS_FULL],
+      ["basic-design", BASIC_DESIGN],
     ]);
     const graph = buildIdGraph(docs);
     const report = analyzeGraph(graph, docs);
 
-    const orphaned = report.orphaned_ids.find((o) => o.id === "F-003");
+    const orphaned = report.orphaned_ids.find((o) => o.id === "REQ-003");
     expect(orphaned).toBeDefined();
-    expect(orphaned!.defined_in).toBe("functions-list");
-    expect(orphaned!.expected_in).toBe("requirements");
+    expect(orphaned!.defined_in).toBe("requirements");
+    expect(orphaned!.expected_in).toBe("basic-design");
   });
 });
 
@@ -150,34 +149,32 @@ describe("analyzeGraph — missing ID detection", () => {
 });
 
 describe("buildTraceabilityMatrix", () => {
-  it("shows F-001 referenced downstream in requirements", () => {
+  it("shows REQ-001 referenced downstream in basic-design", () => {
     const docs = new Map([
-      ["functions-list", FUNCTIONS_LIST],
       ["requirements", REQUIREMENTS_FULL],
+      ["basic-design", BASIC_DESIGN],
     ]);
     const matrix = buildTraceabilityMatrix(docs);
 
-    const f001 = matrix.find((e) => e.id === "F-001");
-    expect(f001).toBeDefined();
-    expect(f001!.doc_type).toBe("functions-list");
-    expect(f001!.downstream_refs).toContain("requirements");
+    const req001 = matrix.find((e) => e.id === "REQ-001");
+    expect(req001).toBeDefined();
+    expect(req001!.doc_type).toBe("requirements");
+    expect(req001!.downstream_refs).toContain("basic-design");
   });
 
-  it("shows full chain F-001 → requirements → basic-design", () => {
+  it("shows full chain requirements → basic-design → detail-design → ut-spec", () => {
     const docs = new Map([
-      ["functions-list", FUNCTIONS_LIST],
       ["requirements", REQUIREMENTS_FULL],
       ["basic-design", BASIC_DESIGN],
       ["detail-design", DETAIL_DESIGN],
-      ["test-spec", TEST_SPEC],
+      ["ut-spec", UT_SPEC],
     ]);
     const matrix = buildTraceabilityMatrix(docs);
 
-    const f001 = matrix.find((e) => e.id === "F-001");
-    expect(f001).toBeDefined();
-    expect(f001!.downstream_refs).toContain("requirements");
-    // F-001 not directly referenced in basic-design fixture, but present chain
-    expect(f001!.downstream_refs.length).toBeGreaterThan(0);
+    const req001 = matrix.find((e) => e.id === "REQ-001");
+    expect(req001).toBeDefined();
+    expect(req001!.downstream_refs).toContain("basic-design");
+    expect(req001!.downstream_refs.length).toBeGreaterThan(0);
   });
 
   it("returns empty array when no docs provided", () => {
@@ -189,38 +186,35 @@ describe("buildTraceabilityMatrix", () => {
 describe("analyzeGraph — clean chain", () => {
   it("reports no orphaned or missing IDs when all IDs are properly referenced", () => {
     const docs = new Map([
-      ["functions-list", FUNCTIONS_LIST],
-      ["requirements", REQUIREMENTS_FULL],
+      ["requirements", REQUIREMENTS_PARTIAL],
       ["basic-design", BASIC_DESIGN],
-      ["detail-design", DETAIL_DESIGN],
-      ["test-spec", TEST_SPEC],
     ]);
     const graph = buildIdGraph(docs);
     const report = analyzeGraph(graph, docs);
 
-    // requirements should reference all F-xxx from functions-list
-    const flReqLink = report.links.find(
-      (l) => l.upstream === "functions-list" && l.downstream === "requirements"
+    // requirements → basic-design: REQ-001, REQ-002 both referenced in basic-design
+    const reqBdLink = report.links.find(
+      (l) => l.upstream === "requirements" && l.downstream === "basic-design"
     );
-    expect(flReqLink).toBeDefined();
-    expect(flReqLink!.orphaned_ids).toHaveLength(0);
+    expect(reqBdLink).toBeDefined();
+    expect(reqBdLink!.orphaned_ids).toHaveLength(0);
   });
 });
 
 describe("analyzeGraph — partial chain", () => {
   it("skips chain pairs where either doc is absent", () => {
-    // Only functions-list + requirements provided — no basic-design etc.
+    // Only requirements + functions-list provided — no basic-design etc.
     const docs = new Map([
-      ["functions-list", FUNCTIONS_LIST],
       ["requirements", REQUIREMENTS_FULL],
+      ["functions-list", FUNCTIONS_LIST],
     ]);
     const graph = buildIdGraph(docs);
     const report = analyzeGraph(graph, docs);
 
-    // Only 1 link should be analyzed (functions-list → requirements)
+    // Only 1 link should be analyzed (requirements → functions-list)
     expect(report.links).toHaveLength(1);
-    expect(report.links[0].upstream).toBe("functions-list");
-    expect(report.links[0].downstream).toBe("requirements");
+    expect(report.links[0].upstream).toBe("requirements");
+    expect(report.links[0].downstream).toBe("functions-list");
   });
 
   it("returns empty report when no docs provided", () => {
@@ -239,14 +233,14 @@ describe("generateSuggestions", () => {
   it("generates human-readable messages for orphaned IDs", () => {
     const partial = {
       links: [],
-      orphaned_ids: [{ id: "F-003", defined_in: "functions-list", expected_in: "requirements" }],
+      orphaned_ids: [{ id: "REQ-003", defined_in: "requirements", expected_in: "basic-design" }],
       missing_ids: [],
       traceability_matrix: [],
     };
     const suggestions = generateSuggestions(partial);
-    expect(suggestions[0]).toContain("F-003");
-    expect(suggestions[0]).toContain("functions-list");
+    expect(suggestions[0]).toContain("REQ-003");
     expect(suggestions[0]).toContain("requirements");
+    expect(suggestions[0]).toContain("basic-design");
   });
 
   it("generates human-readable messages for missing IDs", () => {

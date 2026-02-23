@@ -40,11 +40,46 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       message: "要件定義書: 非機能要件が1つ以上必要です (NFR-xxx)",
     },
   ],
-  "test-spec": [
+  nfr: [
     {
-      check: "test cases",
-      test: (c) => (c.match(/(?:UT|IT|ST)-\d{3}/g) || []).length >= 3,
-      message: "テスト仕様書: テストケースが3つ以上必要です (UT/IT/ST-xxx)",
+      check: "NFR entries",
+      test: (c: string) => (c.match(/NFR-\d{3}/g) || []).length >= 3,
+      message: "非機能要件定義書: NFR-xxxが3つ以上必要です",
+    },
+  ],
+  "security-design": [
+    {
+      check: "security entries",
+      test: (c: string) => /\|\s*SEC-\d+/.test(c),
+      message: "セキュリティ設計書: SEC-xxxが必要です",
+    },
+  ],
+  "ut-spec": [
+    {
+      check: "UT cases",
+      test: (c: string) => (c.match(/UT-\d{3}/g) || []).length >= 3,
+      message: "単体テスト仕様書: UTケースが3つ以上必要です",
+    },
+  ],
+  "it-spec": [
+    {
+      check: "IT cases",
+      test: (c: string) => (c.match(/IT-\d{3}/g) || []).length >= 3,
+      message: "結合テスト仕様書: ITケースが3つ以上必要です",
+    },
+  ],
+  "st-spec": [
+    {
+      check: "ST cases",
+      test: (c: string) => (c.match(/ST-\d{3}/g) || []).length >= 3,
+      message: "システムテスト仕様書: STケースが3つ以上必要です",
+    },
+  ],
+  "uat-spec": [
+    {
+      check: "UAT cases",
+      test: (c: string) => (c.match(/UAT-\d{3}/g) || []).length >= 3,
+      message: "受入テスト仕様書: UATケースが3つ以上必要です",
     },
   ],
   "functions-list": [

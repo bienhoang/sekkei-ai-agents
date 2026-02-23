@@ -40,23 +40,25 @@ describe("get_chain_status tool", () => {
         "  directory: ./docs/",
         "chain:",
         "  rfp: ./input/rfp.md",
-        "  overview:",
-        "    status: complete",
-        "    output: 01-overview.md",
         "  functions_list:",
         "    status: complete",
         "    output: 04-functions-list.md",
         "  requirements:",
         "    status: in-progress",
+        "  nfr:",
+        "    status: pending",
         "  basic_design:",
         "    status: pending",
         "    system_output: 03-system/",
         "    features_output: 05-features/",
         "  detail_design:",
         "    status: pending",
-        "  test_spec:",
+        "  test_plan:",
         "    status: pending",
-        "    global_output: 08-test/",
+        "  ut_spec:",
+        "    status: pending",
+        "  it_spec:",
+        "    status: pending",
         "  glossary:",
         "    status: pending",
         "    output: 10-glossary.md",
@@ -79,13 +81,12 @@ describe("get_chain_status tool", () => {
 
     const text = result.content[0].text;
     expect(text).toContain("Test Project");
-    expect(text).toContain("overview");
+    expect(text).toContain("requirements");
     expect(text).toContain("functions-list");
     expect(text).toContain("complete");
     expect(text).toContain("in-progress");
     expect(text).toContain("pending");
     expect(text).toContain("system: 03-system/");
-    expect(text).toContain("08-test/");
   });
 
   it("discovers features from filesystem and shows status", async () => {
@@ -97,7 +98,7 @@ describe("get_chain_status tool", () => {
     expect(text).toContain("Feature Status");
     expect(text).toContain("sales-management");
     // basic-design.md exists → ✅, others don't → ⏳
-    expect(text).toMatch(/sales-management.*✅.*⏳.*⏳/);
+    expect(text).toMatch(/sales-management.*✅.*⏳.*⏳.*⏳/);
   });
 
   it("returns error for missing config", async () => {
