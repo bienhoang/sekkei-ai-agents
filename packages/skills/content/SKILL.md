@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: functions-list, requirements, basic-design, detail-design, test-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, functions-list, requirements, basic-design, detail-design, test-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -10,6 +10,7 @@ Generate Japanese software specification documents following the V-model documen
 
 ## Sub-Commands
 
+- `/sekkei:rfp [@project-name]` — Presales RFP lifecycle (analyze → Q&A → proposal → scope freeze)
 - `/sekkei:functions-list @input` — Generate 機能一覧 (Function List) from RFP/input
 - `/sekkei:requirements @input` — Generate 要件定義書 (Requirements Definition)
 - `/sekkei:basic-design @input` — Generate 基本設計書 (Basic Design Document)
@@ -46,6 +47,32 @@ npx sekkei init
 ```
 
 This interactive wizard creates `sekkei.config.yaml`, sets up the output directory, imports industry glossary, and configures Python dependencies for export features. No AI required.
+
+### `/sekkei:rfp [@project-name]`
+
+End-to-end presales workflow. Resumable. Deterministic. File-based state.
+See `references/rfp-command.md` for routing table and UX patterns.
+See `references/rfp-manager.md` for workspace state management.
+See `references/rfp-loop.md` for analysis flows (Flows 1–6).
+
+1. Delegate to MANAGER (`references/rfp-manager.md`): load or initialize workspace at `sekkei-docs/rfp/<project-name>/`
+2. Receive current phase from MANAGER's startup report
+3. Route per routing table in `references/rfp-command.md`:
+   - `RFP_RECEIVED` → Flow 1 (deep analysis)
+   - `ANALYZING` → Flow 2 (Q&A generation)
+   - `QNA_GENERATION` → Ask: wait for client or BUILD_NOW?
+   - `WAITING_CLIENT` → Check for client answers
+   - `DRAFTING` → Flow 3 (draft with assumptions)
+   - `CLIENT_ANSWERED` → Flow 4 (answer impact) → Flow 5 (proposal)
+   - `PROPOSAL_UPDATE` → Flow 5 (proposal update)
+   - `SCOPE_FREEZE` → Flow 6 (freeze checklist + confidence)
+4. Delegate to MANAGER: save output files, update phase in `00_status.md`
+5. Present result to user
+
+**On SCOPE_FREEZE with HIGH/MEDIUM confidence:**
+→ Prompt: "Scope frozen. Confidence: {level}. Run `/sekkei:functions-list` with `05_proposal.md` as input? [Y/n]"
+
+**Resume:** Run `/sekkei:rfp` again — MANAGER detects existing workspace and resumes from last phase.
 
 ### `/sekkei:functions-list @input`
 
@@ -524,7 +551,7 @@ See `references/plan-orchestrator.md` for detailed logic.
 Documents build on each other. The recommended generation order is:
 
 ```
-RFP/Input → /sekkei:functions-list → /sekkei:requirements → /sekkei:basic-design → /sekkei:detail-design → /sekkei:test-spec
+RFP/Input → /sekkei:rfp → /sekkei:functions-list → /sekkei:requirements → /sekkei:basic-design → /sekkei:detail-design → /sekkei:test-spec
 ```
 
 Each downstream document should cross-reference IDs from upstream documents.
@@ -560,6 +587,9 @@ sekkei-docs/
 
 ## References
 
+- `references/rfp-command.md` — RFP entrypoint: routing table, UX patterns, delegation model
+- `references/rfp-manager.md` — RFP workspace: state management, file persistence, recovery
+- `references/rfp-loop.md` — RFP analysis: 6 presales flows, risk detection, Q&A generation
 - `references/doc-standards.md` — Japanese documentation standards and column headers
 - `references/v-model-guide.md` — V-model workflow and chain-of-documents guide
 - `references/plan-orchestrator.md` — Plan orchestration logic for large document generation
