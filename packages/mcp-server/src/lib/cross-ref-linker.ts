@@ -10,7 +10,7 @@ import { SekkeiError } from "./errors.js";
 import type { ProjectConfig, ChainRefReport, ChainLinkReport, TraceabilityEntry } from "../types/documents.js";
 
 /** Ordered chain link pairs — branching V-model */
-const CHAIN_PAIRS: [string, string][] = [
+export const CHAIN_PAIRS: [string, string][] = [
   // Requirements phase (linear)
   ["requirements", "nfr"],
   ["requirements", "functions-list"],
@@ -29,7 +29,7 @@ const CHAIN_PAIRS: [string, string][] = [
 ];
 
 /** ID prefix → doc type that defines it */
-const ID_ORIGIN: Record<string, string> = {
+export const ID_ORIGIN: Record<string, string> = {
   F: "functions-list",
   REQ: "requirements",
   NFR: "nfr",

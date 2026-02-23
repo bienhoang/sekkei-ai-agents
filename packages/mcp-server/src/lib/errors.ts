@@ -19,7 +19,8 @@ export type SekkeiErrorCode =
   | "GOOGLE_EXPORT_FAILED"
   | "BACKLOG_SYNC_FAILED"
   | "RFP_WORKSPACE_ERROR"
-  | "RFP_PHASE_ERROR";
+  | "RFP_PHASE_ERROR"
+  | "CHANGE_REQUEST_ERROR";
 
 export class SekkeiError extends Error {
   constructor(

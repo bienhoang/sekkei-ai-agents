@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, basic-design, security-design, detail-design, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, basic-design, security-design, detail-design, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -39,6 +39,7 @@ Generate Japanese software specification documents following the V-model documen
 - `/sekkei:export @doc --format=xlsx|pdf|docx` — Export document to Excel, PDF, or Word
 - `/sekkei:translate @doc --lang=en` — Translate document with glossary context
 - `/sekkei:glossary [seed|add|list|find|export|finalize]` — Manage project terminology
+- `/sekkei:change` — Change request lifecycle (impact analysis → approval → propagation → validation)
 - `/sekkei:update @doc` — Detect upstream changes and impacted sections
 - `/sekkei:diff-visual @before @after` — Generate color-coded revision Excel (朱書き)
 - `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in split mode)
@@ -85,6 +86,11 @@ Commands: test-plan, ut-spec, it-spec, st-spec, uat-spec
 
 → Read `references/phase-supplementary.md`
 Commands: matrix, sitemap, operation-design, migration-design
+
+### Change Request
+
+→ Read `references/change-request-command.md`
+Commands: change
 
 ### Utilities
 
@@ -151,6 +157,7 @@ sekkei-docs/
 - `references/rfp-command.md` — RFP entrypoint: routing table, UX patterns, delegation model
 - `references/rfp-manager.md` — RFP workspace: state management, file persistence, recovery
 - `references/rfp-loop.md` — RFP analysis: 6 presales flows, risk detection, Q&A generation
+- `references/change-request-command.md` — Change request workflow: impact analysis, propagation, conflict detection
 - `references/doc-standards.md` — Japanese documentation standards and column headers
 - `references/v-model-guide.md` — V-model workflow and chain-of-documents guide
 - `references/plan-orchestrator.md` — Plan orchestration logic for large document generation
