@@ -28,9 +28,11 @@ const { detectStaleness } = await import("../../src/lib/staleness-detector.js");
 const MINIMAL_CONFIG = {
   project: { name: "test", type: "web", stack: [], team_size: 1, language: "ja", keigo: "丁寧語" },
   output: { directory: "output" },
-  chain: { rfp: "", overview: { status: "pending" }, functions_list: { status: "pending" },
+  chain: { rfp: "", functions_list: { status: "pending" },
     requirements: { status: "pending" }, basic_design: { status: "pending" },
-    detail_design: { status: "pending" }, test_spec: { status: "pending" } },
+    detail_design: { status: "pending" }, ut_spec: { status: "pending" },
+    it_spec: { status: "pending" }, st_spec: { status: "pending" },
+    uat_spec: { status: "pending" } },
 };
 
 function configWithFeatureMap(featureMap: Record<string, { label: string; files: string[] }>) {

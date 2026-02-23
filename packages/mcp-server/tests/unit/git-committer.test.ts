@@ -131,6 +131,6 @@ describe("autoCommit", () => {
         cb(Object.assign(new Error("permission denied"), { code: 1 }), "", "permission denied")
       );
 
-    await expect(autoCommit("/locked/output/doc.md", "test-spec")).resolves.toBeUndefined();
+    await expect(autoCommit("/locked/output/doc.md", "ut-spec")).resolves.toBeUndefined();
   });
 });

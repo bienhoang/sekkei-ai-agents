@@ -5,6 +5,7 @@
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { dirname } from "node:path";
+import type { DocType } from "../types/documents.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -29,7 +30,7 @@ export async function isGitRepo(dir: string): Promise<boolean> {
  * @param outputPath - Absolute path to the generated file
  * @param docType - Document type enum value (e.g. "requirements", "basic-design")
  */
-export async function autoCommit(outputPath: string, docType: string): Promise<void> {
+export async function autoCommit(outputPath: string, docType: DocType): Promise<void> {
   const cwd = dirname(outputPath);
 
   try {
