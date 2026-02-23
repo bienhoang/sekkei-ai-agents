@@ -103,14 +103,15 @@ approver: ""
      Rules:
      - ID format: REQ-001, REQ-002... (sequential)
      - 要件カテゴリ: 機能 / データ / インターフェース
-     - Map to function IDs (F-xxx) from 機能一覧 if available
-     - 検証方法: UT (Unit Test) / IT (Integration Test) / ST (System Test) / UAT
+     - 関連RFP項目: trace each requirement back to RFP source section/item
+     - 検証方法: UT / IT / ST / UAT
+     - Do NOT reference F-xxx — functions-list does not exist yet
      - Include at least 10 functional requirements
 -->
 
-| 要件ID | 要件カテゴリ | 要件分類 | 要件名 | 要件詳細説明 | 優先度 | 機能ID | 関連画面 | 検証方法 | 備考 |
-|--------|-------------|---------|--------|-------------|--------|--------|---------|---------|------|
-| REQ-001 | <!-- AI --> | <!-- AI --> | <!-- AI --> | <!-- AI --> | <!-- AI: 高/中/低 --> | <!-- AI: F-xxx --> | <!-- AI --> | <!-- AI: UT,IT --> | <!-- AI --> |
+| 要件ID | 要件カテゴリ | 要件分類 | 要件名 | 要件詳細説明 | 優先度 | 関連RFP項目 | 検証方法 | 備考 |
+|--------|-------------|---------|--------|-------------|--------|------------|---------|------|
+| REQ-001 | <!-- AI --> | <!-- AI --> | <!-- AI --> | <!-- AI --> | <!-- AI: 高/中/低 --> | <!-- AI: RFP source section/item --> | <!-- AI: UT,IT --> | <!-- AI --> |
 
 #### 3.1.4 業務フロー図
 <!-- AI: Mermaid flowchart showing main business process flow.

@@ -31,8 +31,8 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
   "requirements": [
     {
       check: "functional requirements",
-      test: (c) => (c.match(/F-\d{3}/g) || []).length >= 3,
-      message: "要件定義書: 機能要件が3つ以上必要です (F-xxx)",
+      test: (c) => (c.match(/REQ-\d{3}/g) || []).length >= 3,
+      message: "要件定義書: 機能要件が3つ以上必要です (REQ-xxx)",
     },
     {
       check: "NFR entry",

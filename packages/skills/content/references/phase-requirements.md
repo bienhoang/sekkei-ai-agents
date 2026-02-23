@@ -3,27 +3,42 @@
 Command workflows for the requirements phase of the V-model document chain.
 Parent: `SKILL.md` → Workflow Router → Requirements Phase.
 
-**V2 Chain Order:** RFP → requirements → { nfr, functions-list, project-plan }
+**V2 Chain Order:** RFP → requirements → { functions-list, nfr, project-plan } (parallel after requirements)
 
 ## `/sekkei:requirements @input`
 
-**Interview questions (ask before generating):**
-- Are there specific compliance/regulatory requirements?
-- Performance targets (response time, throughput)?
-- Security requirements level?
+**Pre-check:**
+1. Check if `01-rfp/` workspace exists in `{output.directory}`
+2. If exists and @input not provided, auto-load RFP content (02_analysis.md + 06_scope_freeze.md) as primary input
+3. If @input provided, use as primary input; RFP content as supplementary context
 
-1. Read the input (RFP, scope freeze document, or free-text requirements)
-2. If `sekkei.config.yaml` exists, load project metadata and `project_type`
-3. Call MCP tool `generate_document` with `doc_type: "requirements"`, the input content, `project_type`, and `language` from `sekkei.config.yaml project.language` (default: "ja"). Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
-4. Use the returned template + AI instructions to generate the 要件定義書
-5. Follow these rules strictly:
+**Interview questions (ask before generating):**
+- What is the project scope? (confirm from RFP or clarify if no RFP)
+- Are there compliance/regulatory requirements? (個人情報保護法, SOC2, ISO27001, etc.)
+- Performance targets? (response time, concurrent users, uptime SLA)
+- Security requirements level? (basic, enterprise, government)
+- Target user count and scale? (affects NFR numeric targets)
+- Any technology constraints already decided? (platform, language, cloud provider)
+
+1. Read 01-rfp/ workspace content if available (analysis, scope freeze, decisions)
+2. If @input provided, merge with RFP content as additional context
+3. If `sekkei.config.yaml` exists, load project metadata and `project_type`
+4. Call MCP tool `generate_document` with `doc_type: "requirements"`, input content, `project_type`, and `language` from config (default: "ja"). Pass `input_lang` if input not Japanese.
+5. Use the returned template + AI instructions to generate the 要件定義書
+6. Follow these rules strictly:
    - 10-section structure as defined in the template
    - Functional requirements: REQ-001 format
    - Non-functional requirements: NFR-001 format with measurable targets
-   - This is the FIRST document after RFP — it defines REQ-xxx IDs that all downstream docs reference
-   - Include acceptance criteria
-6. Save output to `./sekkei-docs/requirements.md`
-7. Update chain status: `requirements.status: complete`
+   - Trace each requirement back to RFP source via 関連RFP項目 column
+   - Do NOT reference F-xxx — functions-list does not exist yet
+   - This is the FIRST document after RFP — defines REQ-xxx IDs for all downstream docs
+   - Include acceptance criteria for each major requirement
+7. Save output to `{output.directory}/02-requirements/requirements.md`
+8. Update chain status: `requirements.status: complete`
+9. Suggest next steps (can run in parallel):
+   > "Requirements complete. Next steps (can run in parallel):
+   > - `/sekkei:functions-list` — generate 機能一覧 from requirements
+   > - `/sekkei:nfr` — generate detailed 非機能要件 from requirements"
 
 ## `/sekkei:functions-list @requirements`
 
@@ -43,7 +58,7 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
    - 優先度 & 難易度: 高 / 中 / 低
    - Cross-reference REQ-xxx IDs from upstream 要件定義書
    - Generate 10+ functions minimum
-6. Save output to `./sekkei-docs/functions-list.md`
+6. Save output to `{output.directory}/04-functions-list/functions-list.md`
 7. Update `sekkei.config.yaml` chain status: `functions_list.status: complete`
 8. **Count 大分類 feature groups** from the generated `functions-list.md`:
    - Scan for distinct values in the 大分類 column of the 機能一覧 table

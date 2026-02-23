@@ -9,7 +9,7 @@ import type { DocType, KeigoLevel, Language } from "../types/documents.js";
 export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
   "functions-list": [
     "Generate a 機能一覧 (Function List) from the provided input.",
-    "This document is generated AFTER requirements — cross-reference REQ-xxx IDs from upstream 要件定義書.",
+    "This document is generated AFTER requirements. Cross-reference REQ-xxx IDs from upstream 要件定義書 — every F-xxx entry SHOULD map to at least one REQ-xxx.",
     "Use 3-tier hierarchy: 大分類 -> 中分類 -> 小機能.",
     "ID format: [PREFIX]-001 (derive prefix from major category).",
     "Processing types: 入力/照会/帳票/バッチ.",
@@ -20,10 +20,11 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
   requirements: [
     "Generate a 要件定義書 (Requirements Definition) from the provided input.",
     "Follow the 10-section structure defined in the template.",
-    "Functional requirements: REQ-001 format, map to function IDs (F-xxx).",
+    "Functional requirements: REQ-001 format.",
     "Non-functional requirements: NFR-001 format with measurable targets.",
     "Include acceptance criteria for each major requirement.",
-    "This is the FIRST document generated after RFP — it defines REQ-xxx IDs that all downstream docs reference.",
+    "This is the FIRST document after RFP — defines REQ-xxx and NFR-xxx IDs that all downstream docs reference.",
+    "Input comes from 01-rfp workspace (RFP analysis, stakeholder notes, scope freeze). Do NOT reference F-xxx — functions-list does not exist yet.",
     "For 非機能要件: Apply IPA NFUG 6 categories (可用性/性能・拡張性/運用・保守性/移行性/セキュリティ/システム環境・エコロジー). Every NFR-xxx MUST have a specific numeric 目標値. Prohibited vague terms: 高速, 十分, 適切, 高い, 良好.",
   ].join("\n"),
 
@@ -76,7 +77,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "ID format: PP-001. WBS table with phases, tasks, assignees, dates, effort.",
     "Risk management: risk ID, probability, impact, mitigation strategy.",
     "Milestone table with dates and deliverables.",
-    "Cross-reference REQ-xxx, F-xxx IDs from upstream.",
+    "Cross-reference REQ-xxx IDs from upstream 要件定義書. Include F-xxx from 機能一覧 if available.",
   ].join("\n"),
 
   "test-plan": [

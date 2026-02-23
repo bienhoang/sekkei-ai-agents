@@ -33,20 +33,20 @@ describe("validateContentDepth — basic-design", () => {
 });
 
 describe("validateContentDepth — requirements", () => {
-  it("warns when fewer than 3 F-xxx IDs present", () => {
-    const content = "## 機能要件\nF-001 ログイン\nF-002 ログアウト";
+  it("warns when fewer than 3 REQ-xxx IDs present", () => {
+    const content = "## 機能要件\nREQ-001 ログイン\nREQ-002 ログアウト";
     const issues = validateContentDepth(content, "requirements");
-    expect(issues.some((i) => i.message.includes("F-xxx"))).toBe(true);
+    expect(issues.some((i) => i.message.includes("REQ-xxx"))).toBe(true);
   });
 
   it("warns when no NFR-xxx present", () => {
-    const content = "F-001\nF-002\nF-003";
+    const content = "REQ-001\nREQ-002\nREQ-003";
     const issues = validateContentDepth(content, "requirements");
     expect(issues.some((i) => i.message.includes("NFR-xxx"))).toBe(true);
   });
 
-  it("returns no issues with 3+ F-xxx and NFR-001", () => {
-    const content = "F-001 ログイン\nF-002 ログアウト\nF-003 検索\nNFR-001 性能要件";
+  it("returns no issues with 3+ REQ-xxx and NFR-001", () => {
+    const content = "REQ-001 ログイン\nREQ-002 ログアウト\nREQ-003 検索\nNFR-001 性能要件";
     const issues = validateContentDepth(content, "requirements");
     expect(issues).toHaveLength(0);
   });
