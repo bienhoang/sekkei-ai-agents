@@ -3,7 +3,7 @@
  * Covers document types, metadata, request/response shapes, and project config.
  */
 
-export const DOC_TYPES = ["overview", "functions-list", "requirements", "basic-design", "detail-design", "test-spec", "crud-matrix", "traceability-matrix", "operation-design", "migration-design"] as const;
+export const DOC_TYPES = ["overview", "functions-list", "requirements", "basic-design", "detail-design", "test-spec", "crud-matrix", "traceability-matrix", "operation-design", "migration-design", "sitemap"] as const;
 export type DocType = (typeof DOC_TYPES)[number];
 
 export const LANGUAGES = ["ja", "en", "vi"] as const;

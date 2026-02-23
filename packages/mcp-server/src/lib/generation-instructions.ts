@@ -105,6 +105,27 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "移行テスト計画: Reference TBL-xxx IDs for data validation targets.",
     "Cross-reference TBL-xxx, REQ-xxx, and OP-xxx IDs from upstream documents.",
   ].join("\n"),
+
+  "sitemap": [
+    "Generate a サイトマップ (Sitemap / System Structure Map) from the provided input.",
+    "Show the functional structure and page/screen hierarchy of the target system.",
+    "Output TWO sections:",
+    "",
+    "### Section 1: サイトマップツリー (Tree Structure)",
+    "Use indented markdown list to show parent-child hierarchy:",
+    "- トップページ (TOP)",
+    "  - ユーザー管理 (F-001)",
+    "    - ユーザー一覧",
+    "    - ユーザー登録",
+    "  - 注文管理 (F-002)",
+    "",
+    "### Section 2: ページ一覧 (Page/Screen List Table)",
+    "Columns: | ページID | ページ名 | URL/ルート | 親ページ | 関連機能 (F-xxx) | 処理概要 |",
+    "Every page/screen must have a unique ID (PG-001 format).",
+    "Map F-xxx IDs from 機能一覧 to relevant pages where applicable.",
+    "For web systems: include URL paths. For mobile: screen names. For API: endpoint groups. For batch: job categories.",
+    "Include all user-facing pages AND admin/management pages.",
+  ].join("\n"),
 };
 
 /** Default keigo level per document type */
@@ -119,6 +140,7 @@ export const KEIGO_MAP: Record<DocType, KeigoLevel> = {
   "traceability-matrix": "simple",
   "operation-design": "simple",
   "migration-design": "simple",
+  "sitemap": "simple",
 };
 
 /** Build keigo style instruction for AI generation context */

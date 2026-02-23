@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: init, functions-list, requirements, basic-design, detail-design, test-spec, matrix, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: init, functions-list, requirements, basic-design, detail-design, test-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -17,6 +17,7 @@ Generate Japanese software specification documents following the V-model documen
 - `/sekkei:detail-design @input` — Generate 詳細設計書 (Detail Design Document)
 - `/sekkei:test-spec @input` — Generate テスト仕様書 (Test Specification)
 - `/sekkei:matrix` — Generate CRUD図 or トレーサビリティマトリックス and export to Excel
+- `/sekkei:sitemap` — Generate サイトマップ (System Structure Map) with page hierarchy
 - `/sekkei:operation-design @input` — Generate 運用設計書 (Operation Design)
 - `/sekkei:migration-design @input` — Generate 移行設計書 (Migration Design)
 - `/sekkei:validate @doc` — Validate document completeness and cross-references
@@ -330,6 +331,24 @@ When the user invokes a sub-command, follow the corresponding workflow below.
    d. Call `export_document` with `doc_type: "traceability-matrix"`, `format: "xlsx"`
    e. Save to `./sekkei-docs/traceability-matrix.xlsx`
 4. Report: file path, dimensions (rows × columns), coverage summary
+
+### `/sekkei:sitemap`
+
+**Interview questions (ask before generating):**
+- System type? (web/mobile/API/internal system/SaaS)
+- Scope? (full system or specific module/feature)
+- Functions-list available? (for F-xxx cross-references)
+
+1. If functions-list exists, read `functions-list.md` to extract F-xxx IDs
+2. If source code available, analyze routes/pages structure for reference
+3. Call MCP tool `generate_document` with `doc_type: "sitemap"`, include:
+   - User's system description as `input_content`
+   - Functions-list content as `upstream_content` (if available)
+   - Code analysis results (if available)
+4. AI generates: tree structure (hierarchical list) + page list table (PG-xxx IDs)
+5. Save to `./sekkei-docs/sitemap.md`
+6. Optionally call `export_document` with `doc_type: "sitemap"`, `format: "xlsx"` or `"pdf"`
+7. Report: file path, total pages/screens count, hierarchy depth
 
 ### `/sekkei:validate @doc`
 

@@ -64,6 +64,7 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
     "移行方針", "データ移行計画", "システム切替手順",
     "ロールバック計画", "移行テスト計画",
   ],
+  "sitemap": [],
 };
 
 /** Expected upstream ID types for cross-reference validation */
@@ -78,6 +79,7 @@ const UPSTREAM_ID_TYPES: Record<DocType, string[]> = {
   "traceability-matrix": ["REQ", "SCR", "API"],
   "operation-design": ["NFR", "REQ"],
   "migration-design": ["TBL", "REQ", "OP"],
+  "sitemap": ["F"],
 };
 
 /** Required table columns (partial match) per doc type */
@@ -95,6 +97,7 @@ const REQUIRED_COLUMNS: Record<DocType, string[][]> = {
   "traceability-matrix": [],
   "operation-design": [REVISION_HISTORY_COLUMNS, ["OP-ID", "手順名", "担当者"]],
   "migration-design": [REVISION_HISTORY_COLUMNS, ["MIG-ID", "対象データ", "移行方法"]],
+  "sitemap": [],
 };
 
 /** Check that all required sections exist as headings in the content */
