@@ -126,6 +126,67 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "For web systems: include URL paths. For mobile: screen names. For API: endpoint groups. For batch: job categories.",
     "Include all user-facing pages AND admin/management pages.",
   ].join("\n"),
+
+  "test-evidence": [
+    "Generate a テストエビデンス (Test Evidence) collection template from the provided test specification.",
+    "Cross-reference UT/IT/ST/UAT test case IDs from the upstream test-spec document.",
+    "Generate one evidence row per test case using EV-001 format.",
+    "Required sections per test level (UT/IT/ST/UAT):",
+    "| エビデンスID | テストケースID | テスト項目 | 期待結果 | 実施結果 | スクリーンショット | 合否 | テスター | 実施日 |",
+    "Include a summary section with pass/fail counts per test level.",
+    "Every test case ID from upstream MUST have a corresponding evidence entry.",
+  ].join("\n"),
+
+  "meeting-minutes": [
+    "Generate a 議事録 (Meeting Minutes) from the provided meeting notes.",
+    "Structure the raw notes into formal meeting record format.",
+    "Use MTG-001 format for meeting ID.",
+    "Required sections:",
+    "1. 会議情報 — date, time, location, purpose",
+    "2. 出席者 — attendees table with role and organization",
+    "3. 議題 — numbered agenda items",
+    "4. 決定事項 — decisions table linking to document IDs (REQ-xxx, SCR-xxx) where applicable",
+    "5. アクション項目 — action items table: assignee, deadline, status (未着手/進行中/完了)",
+    "Every decision MUST reference affected document IDs if applicable.",
+    "Action items MUST include assignee and deadline.",
+  ].join("\n"),
+
+  "decision-record": [
+    "Generate a 設計判断記録 (Architecture Decision Record / ADR) from the provided discussion notes.",
+    "Use ADR-001 format for decision record ID.",
+    "Required sections:",
+    "1. コンテキスト — background and problem statement",
+    "2. 検討事項 — options table: | 選択肢 | メリット | デメリット | 判定 (採用/却下) |",
+    "3. 決定内容 — selected option with rationale",
+    "4. 影響範囲 — consequences (positive and negative), affected document IDs",
+    "5. 参加者 — participants list with roles",
+    "At least 2 options MUST be listed. Decision MUST reference affected document IDs.",
+  ].join("\n"),
+
+  "interface-spec": [
+    "Generate a IF仕様書 (Interface Specification) from the provided input.",
+    "Use IF-001 format for interface specification ID.",
+    "Required sections:",
+    "1. インターフェース概要 — name, owner, consumer, purpose",
+    "2. データフォーマット — request/response schema tables",
+    "3. プロトコル — communication protocol, authentication, encoding",
+    "4. エラーハンドリング — error codes, retry policy, timeout",
+    "5. SLA定義 — availability, latency targets, throughput",
+    "6. 承認 — approval chain for both parties",
+    "Each interface MUST clearly define both sides' responsibilities.",
+  ].join("\n"),
+
+  "screen-design": [
+    "Generate a 画面設計書 (Screen Design Document) from the provided input.",
+    "Required sections:",
+    "1. 画面一覧 — screen list table with SCR-xxx IDs",
+    "2. 画面遷移図 — Mermaid stateDiagram-v2 for screen transitions",
+    "3. コンポーネントカタログ — reusable UI component definitions",
+    "4. 画面詳細 — per-screen spec: layout, items, validation, events",
+    "5. API連携 — screen event ↔ API-xxx mapping table",
+    "Cross-reference SCR-xxx and API-xxx IDs from basic-design if upstream doc is provided.",
+    "Include Mermaid state diagrams for screen transition flows.",
+  ].join("\n"),
 };
 
 /** Default keigo level per document type */
@@ -141,6 +202,11 @@ export const KEIGO_MAP: Record<DocType, KeigoLevel> = {
   "operation-design": "simple",
   "migration-design": "simple",
   "sitemap": "simple",
+  "test-evidence": "simple",
+  "meeting-minutes": "丁寧語",
+  "decision-record": "simple",
+  "interface-spec": "丁寧語",
+  "screen-design": "simple",
 };
 
 /** Build keigo style instruction for AI generation context */
@@ -235,6 +301,44 @@ export function formatGlossaryForContext(result: Record<string, unknown>): strin
     `| Japanese | English | Vietnamese | Context |`,
     `|---------|---------|------------|---------|`,
     ...rows,
+  ].join("\n");
+}
+
+/** Build AI confidence annotation instruction block */
+export function buildConfidenceInstruction(): string {
+  return [
+    "## Confidence Annotations",
+    "For each section, add an HTML comment indicating confidence level:",
+    "<!-- confidence: 高 | source: {ID} --> — directly stated in input",
+    "<!-- confidence: 中 | source: {ID or context} --> — reasonably inferred from context",
+    "<!-- confidence: 低 | source: assumed --> — extrapolated or assumed",
+    "At the end of the document, add a confidence summary table:",
+    "| 信頼度 | セクション数 | 割合 |",
+    "|--------|-------------|------|",
+  ].join("\n");
+}
+
+/** Build source traceability instruction block */
+export function buildTraceabilityInstruction(): string {
+  return [
+    "## Source Traceability",
+    "For each paragraph or requirement statement, add an HTML comment tracing to its source:",
+    "<!-- source: REQ-003 --> — traces to upstream document ID",
+    "<!-- source: input:section:N --> — traces to input content section N",
+    "Every requirement statement MUST trace to an input source.",
+    "No section should lack source attribution.",
+  ].join("\n");
+}
+
+/** Build learning annotation instruction block */
+export function buildLearningInstruction(): string {
+  return [
+    "## Learning Annotations",
+    "Add educational HTML comments explaining WHY each section exists:",
+    "<!-- learn: この承認欄はISO 9001品質管理要件に基づく -->",
+    "<!-- learn: 改訂履歴はJIS X 0160:2021で必須とされる -->",
+    "Reference ISO standards, IPA guidelines, or SIer conventions where applicable.",
+    "These annotations help new engineers understand document structure rationale.",
   ].join("\n");
 }
 

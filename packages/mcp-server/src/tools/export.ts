@@ -44,6 +44,8 @@ const inputSchema = {
     .describe("Enable 朱書き (redline) diff highlighting in Excel: additions=green, deletions=red+strikethrough"),
   old_path: z.string().max(500).optional()
     .describe("Path to the previous version file (required when diff_mode=true)"),
+  read_only: z.boolean().optional()
+    .describe("Strip internal metadata (confidence, traceability, learning annotations) for external sharing"),
 };
 
 export interface ExportDocumentArgs {
@@ -59,12 +61,13 @@ export interface ExportDocumentArgs {
   diff_mode?: boolean;
   old_path?: string;
   config_path?: string;
+  read_only?: boolean;
 }
 
 export async function handleExportDocument(
   args: ExportDocumentArgs
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
-  const { content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path } = args;
+  const { content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path, read_only } = args;
   try {
     logger.info({ doc_type, format, output_path, source, diff_mode }, "Exporting document");
 
@@ -94,6 +97,10 @@ export async function handleExportDocument(
           };
         }
         exportContent = content;
+      }
+      if (read_only) {
+        const { sanitizeForReadOnly } = await import("../lib/content-sanitizer.js");
+        exportContent = sanitizeForReadOnly(exportContent);
       }
       try {
         const { readFile } = await import("node:fs/promises");
@@ -163,6 +170,12 @@ export async function handleExportDocument(
         };
       }
       exportContent = content;
+    }
+
+    // Sanitize content for read-only export (strip internal metadata)
+    if (read_only) {
+      const { sanitizeForReadOnly } = await import("../lib/content-sanitizer.js");
+      exportContent = sanitizeForReadOnly(exportContent);
     }
 
     const isMatrix = doc_type === "crud-matrix" || doc_type === "traceability-matrix";
@@ -257,8 +270,8 @@ export function registerExportDocumentTool(server: McpServer): void {
     "export_document",
     "Export a Markdown specification document to Excel (.xlsx), PDF, Word (.docx), or Google Sheets (gsheet)",
     inputSchema,
-    async ({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path }) => {
-      return handleExportDocument({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path });
+    async ({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path, read_only }) => {
+      return handleExportDocument({ content, doc_type, format, output_path, project_name, source, manifest_path, feature_name, template_path, diff_mode, old_path, config_path, read_only });
     }
   );
 }

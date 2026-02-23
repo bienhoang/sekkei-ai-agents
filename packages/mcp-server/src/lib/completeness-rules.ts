@@ -54,4 +54,18 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       message: "機能一覧: 機能テーブルにF-xxxが必要です",
     },
   ],
+  "test-evidence": [
+    {
+      check: "evidence entry",
+      test: (c) => /\|\s*EV-\d{3}/.test(c),
+      message: "テストエビデンス: エビデンスエントリにEV-xxxが必要です",
+    },
+  ],
+  "screen-design": [
+    {
+      check: "screen table",
+      test: (c) => /\|\s*SCR-\d+/.test(c),
+      message: "画面設計書: 画面一覧テーブルにSCR-xxxが必要です",
+    },
+  ],
 };

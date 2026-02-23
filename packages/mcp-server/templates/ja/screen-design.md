@@ -5,11 +5,17 @@ language: ja
 parent: basic-design
 description: "画面設計書 — 各画面の詳細仕様"
 sections:
+  - revision-history
+  - approval
+  - screen-list
+  - screen-transition-diagram
+  - component-catalog
   - screen-layout
   - screen-items
   - validation-rules
   - event-list
   - screen-transition
+  - api-mapping
   - permissions
 status: draft
 author: ""
@@ -17,19 +23,52 @@ reviewer: ""
 approver: ""
 ---
 
-<!-- NOTE: This template is NOT loaded via loadTemplate/generate_document (screen-design is not in DOC_TYPES).
-     It serves as a reference structure for SKILL.md's buildScreenDesignInstruction()-driven generation
-     and as a customization point via SEKKEI_TEMPLATE_OVERRIDE_DIR for future direct loading. -->
+# 画面設計書
 
-# 画面設計書 — {画面名} (SCR-XXX-001)
+## 改訂履歴
 
-## 1. 画面レイアウト
+| 版数 | 日付 | 変更内容 | 変更者 |
+|------|------|----------|--------|
+| 1.0 | yyyy-mm-dd | 初版作成 | |
+
+## 承認欄
+
+| 役割 | 氏名 | 日付 |
+|------|------|------|
+| 作成者 | | |
+| 確認者 | | |
+| 承認者 | | |
+
+## 画面一覧
+
+| 画面ID | 画面名 | 概要 | 関連API | 備考 |
+|--------|--------|------|---------|------|
+| SCR-001 | | | | |
+
+## 画面遷移図
+
+```mermaid
+stateDiagram-v2
+    [*] --> ログイン
+    ログイン --> ダッシュボード
+    ダッシュボード --> [*]
+```
+
+## コンポーネントカタログ
+
+| コンポーネントID | コンポーネント名 | 型 | 用途 | 使用画面 |
+|----------------|----------------|-----|------|---------|
+| | | | | |
+
+## 画面詳細 — {画面名} (SCR-XXX-001)
+
+### 画面レイアウト
 
 <!-- AI: Provide a structured YAML layout block (see instructions).
      The YAML will be auto-rendered to a PNG mockup with numbered annotations.
      After rendering, this section will contain an image: ![SCR-xxx](./images/SCR-xxx.png) -->
 
-## 2. 画面項目定義
+## 画面項目定義
 
 <!-- AI: Define all screen items/fields.
      - 型: text / number / date / select / checkbox / textarea / file / hidden
@@ -38,7 +77,7 @@ approver: ""
 | # | 項目ID | 項目名 | 型 | 必須 | 初期値 | 備考 |
 |----|--------|--------|-----|------|--------|------|
 
-## 3. バリデーション一覧
+## バリデーション一覧
 
 <!-- AI: Define validation rules for each input field.
      - タイミング: onBlur / onSubmit / onChange
@@ -47,7 +86,7 @@ approver: ""
 | 項目ID | ルール | メッセージ | タイミング |
 |--------|--------|------------|-----------|
 
-## 4. イベント一覧
+## イベント一覧
 
 <!-- AI: List all screen events and their actions.
      - トリガー: ボタンクリック / ページロード / フォーム送信 / etc. -->
@@ -55,7 +94,7 @@ approver: ""
 | トリガー | アクション | 遷移先/処理 |
 |----------|-----------|------------|
 
-## 5. 画面遷移
+## 画面遷移
 
 <!-- AI: Define screen transitions.
      Reference SCR-xxx IDs for source/destination screens. -->
@@ -63,10 +102,13 @@ approver: ""
 | 遷移元 | 遷移先 | 条件 |
 |--------|--------|------|
 
-## 6. 権限
+## API連携
 
-<!-- AI: Define role-based permissions.
-     - Cell values: ○ (permitted) / × (denied) / - (not applicable) -->
+| 画面ID | イベント | API-ID | メソッド | エンドポイント | 備考 |
+|--------|---------|--------|---------|-------------|------|
+| | | | | | |
+
+## 権限
 
 | ロール | 閲覧 | 編集 | 削除 |
 |--------|------|------|------|

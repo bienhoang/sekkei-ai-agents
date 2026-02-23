@@ -18,6 +18,9 @@ import {
   buildKeigoInstruction,
   buildOutputLanguageInstruction,
   formatGlossaryForContext,
+  buildConfidenceInstruction,
+  buildTraceabilityInstruction,
+  buildLearningInstruction,
 } from "../lib/generation-instructions.js";
 import { callPython } from "../lib/python-bridge.js";
 import { extractAllIds } from "../lib/id-extractor.js";
@@ -49,6 +52,12 @@ const inputSchema = {
   source_code_path: z.string().max(500).optional()
     .refine((p) => !p || !p.includes(".."), { message: "Path must not contain .." })
     .describe("Path to source code directory for code-aware generation (TypeScript projects)"),
+  include_confidence: z.boolean().default(true).optional()
+    .describe("Include AI confidence annotations (高/中/低) per section (default: true)"),
+  include_traceability: z.boolean().default(true).optional()
+    .describe("Include source traceability annotations per paragraph (default: true)"),
+  ticket_ids: z.array(z.string().max(50)).max(20).optional()
+    .describe("Related ticket IDs (e.g., PROJ-123) to reference in the document"),
 };
 
 /** Build upstream IDs injection block for cross-reference constraints */
@@ -128,6 +137,9 @@ export interface GenerateDocumentArgs {
   output_path?: string;
   config_path?: string;
   source_code_path?: string;
+  include_confidence?: boolean;
+  include_traceability?: boolean;
+  ticket_ids?: string[];
   templateDir?: string;
   overrideDir?: string;
 }
@@ -137,7 +149,8 @@ export async function handleGenerateDocument(
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
   const { doc_type, input_content, project_name, language, input_lang, keigo_override,
     upstream_content, project_type, feature_name, scope, output_path, config_path,
-    source_code_path, templateDir: tDir, overrideDir } = args;
+    source_code_path, include_confidence, include_traceability, ticket_ids,
+    templateDir: tDir, overrideDir } = args;
   try {
     const { loadConfig } = await import("../config.js");
     const cfg = loadConfig();
@@ -221,6 +234,37 @@ export async function handleGenerateDocument(
       sections.push(``, codeContextBlock);
     }
 
+    // Trust features: confidence and traceability annotations (default: on)
+    if (include_confidence !== false) {
+      sections.push(``, buildConfidenceInstruction());
+    }
+    if (include_traceability !== false) {
+      sections.push(``, buildTraceabilityInstruction());
+    }
+
+    // Ticket linking
+    if (ticket_ids && ticket_ids.length > 0) {
+      sections.push(
+        ``,
+        `## Related Tickets`,
+        `Include these ticket references in the document header and cross-reference them in requirements and acceptance criteria:`,
+        ...ticket_ids.map((id) => `- ${id}`),
+      );
+    }
+
+    // Config-driven features: learning mode and simple mode
+    if (config_path) {
+      try {
+        const raw = await readFile(config_path, "utf-8");
+        const projectCfg = parseYaml(raw) as ProjectConfig;
+        if (projectCfg?.learning_mode === true) {
+          sections.push(``, buildLearningInstruction());
+        }
+      } catch {
+        // config read failed — skip learning mode
+      }
+    }
+
     sections.push(
       ``,
       `## Template`,
@@ -282,8 +326,8 @@ export function registerGenerateDocumentTool(server: McpServer, templateDir: str
     "generate_document",
     "Generate a Japanese specification document using template + AI instructions",
     inputSchema,
-    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path }) => {
-      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, templateDir, overrideDir });
+    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids }) => {
+      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, templateDir, overrideDir });
     }
   );
 }

@@ -30,10 +30,15 @@ const ID_ORIGIN: Record<string, string> = {
   UT: "test-spec",
   IT: "test-spec",
   ST: "test-spec",
+  EV: "test-evidence",
+  MTG: "meeting-minutes",
+  ADR: "decision-record",
+  IF: "interface-spec",
+  PG: "sitemap",
 };
 
 /** Standard ID regex — same pattern as id-extractor.ts */
-const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|TS|UT|IT|ST|UAT|OP|MIG)-(\d{1,4})\b/g;
+const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|TS|UT|IT|ST|UAT|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
 
 /** Validate configPath: no path traversal, must end in .yaml/.yml */
 function validateConfigPath(configPath: string): void {

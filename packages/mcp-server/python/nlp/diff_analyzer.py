@@ -107,6 +107,41 @@ def build_changes_list(old_content: str, new_content: str, diff: dict) -> list[d
     return changes
 
 
+def build_line_level_diffs(old_content: str, new_content: str, diff: dict) -> list[dict]:
+    """Build line-level diffs within modified sections using SequenceMatcher."""
+    import difflib
+
+    old_sections = extract_sections(old_content)
+    new_sections = extract_sections(new_content)
+    line_diffs = []
+
+    for section in diff["modified_sections"]:
+        old_text = old_sections.get(section, "")
+        new_text = new_sections.get(section, "")
+        old_lines = old_text.split("\n")
+        new_lines = new_text.split("\n")
+
+        matcher = difflib.SequenceMatcher(None, old_lines, new_lines)
+        section_diffs = []
+
+        for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+            if tag == "equal":
+                continue
+            section_diffs.append({
+                "type": tag,  # "replace", "insert", "delete"
+                "old_lines": old_lines[i1:i2] if tag in ("replace", "delete") else [],
+                "new_lines": new_lines[j1:j2] if tag in ("replace", "insert") else [],
+            })
+
+        if section_diffs:
+            line_diffs.append({
+                "section": section,
+                "diffs": section_diffs,
+            })
+
+    return line_diffs
+
+
 def build_revision_history_row(diff: dict) -> dict:
     """Generate a suggested 改訂履歴 row from diff results."""
     parts = []
@@ -190,6 +225,7 @@ def analyze(upstream_old: str, upstream_new: str, downstream: str, revision_mode
         result["changes"] = changes
         result["revision_history_row"] = build_revision_history_row(diff)
         result["marked_document"] = build_marked_document(upstream_new, changes)
+        result["line_diffs"] = build_line_level_diffs(upstream_old, upstream_new, diff)
 
     return result
 

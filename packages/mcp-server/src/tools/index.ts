@@ -11,6 +11,8 @@ import { registerTranslateDocumentTool } from "./translate.js";
 import { registerGlossaryTool } from "./glossary.js";
 import { registerUpdateTool } from "./update.js";
 import { registerValidateChain } from "./validate-chain.js";
+import { registerSimulateImpactTool } from "./simulate-impact.js";
+import { registerImportDocumentTool } from "./import-document.js";
 
 export function registerAllTools(server: McpServer, templateDir: string, templateOverrideDir?: string): void {
   registerGetTemplateTool(server, templateDir, templateOverrideDir);
@@ -22,4 +24,6 @@ export function registerAllTools(server: McpServer, templateDir: string, templat
   registerGlossaryTool(server);
   registerUpdateTool(server);
   registerValidateChain(server);
+  registerSimulateImpactTool(server);
+  registerImportDocumentTool(server);
 }

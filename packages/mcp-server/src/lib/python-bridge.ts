@@ -12,7 +12,7 @@ const PYTHON_DIR = resolve(__dirname, "../../python");
 const CLI_PATH = resolve(PYTHON_DIR, "cli.py");
 const TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 const MAX_BUFFER = 10 * 1024 * 1024; // 10MB
-const VALID_ACTIONS = ["export-excel", "export-pdf", "export-docx", "glossary", "diff", "export-matrix"] as const;
+const VALID_ACTIONS = ["export-excel", "export-pdf", "export-docx", "glossary", "diff", "export-matrix", "import-excel"] as const;
 
 /** Find python3 executable (venv or system) */
 function getPythonPath(): string {

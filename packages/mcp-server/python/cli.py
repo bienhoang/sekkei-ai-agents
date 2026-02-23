@@ -69,6 +69,14 @@ def main():
                 input_data.get("project_name", ""),
             )
 
+        elif action == "import-excel":
+            from import_pkg.excel_importer import import_excel
+            result = import_excel(
+                input_data["file_path"],
+                doc_type_hint=input_data.get("doc_type_hint"),
+                sheet_name=input_data.get("sheet_name"),
+            )
+
         else:
             result = {"error": f"Unknown action: {action}"}
 

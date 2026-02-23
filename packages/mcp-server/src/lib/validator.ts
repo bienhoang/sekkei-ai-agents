@@ -65,6 +65,27 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
     "ロールバック計画", "移行テスト計画",
   ],
   "sitemap": [],
+  "test-evidence": [
+    "改訂履歴", "承認欄",
+    "単体テスト (UT) エビデンス", "テストエビデンスサマリー",
+  ],
+  "meeting-minutes": [
+    "改訂履歴",
+    "会議情報", "出席者", "議題", "決定事項", "アクション項目",
+  ],
+  "decision-record": [
+    "改訂履歴",
+    "コンテキスト", "検討事項", "決定内容", "影響範囲",
+  ],
+  "interface-spec": [
+    "改訂履歴", "承認欄",
+    "インターフェース概要", "データフォーマット", "プロトコル",
+    "エラーハンドリング", "SLA定義",
+  ],
+  "screen-design": [
+    "改訂履歴", "承認欄",
+    "画面一覧", "画面遷移図",
+  ],
 };
 
 /** Expected upstream ID types for cross-reference validation */
@@ -80,6 +101,11 @@ const UPSTREAM_ID_TYPES: Record<DocType, string[]> = {
   "operation-design": ["NFR", "REQ"],
   "migration-design": ["TBL", "REQ", "OP"],
   "sitemap": ["F"],
+  "test-evidence": ["UT", "IT", "ST", "UAT"],
+  "meeting-minutes": [],
+  "decision-record": [],
+  "interface-spec": ["API"],
+  "screen-design": ["SCR", "API"],
 };
 
 /** Required table columns (partial match) per doc type */
@@ -98,6 +124,11 @@ const REQUIRED_COLUMNS: Record<DocType, string[][]> = {
   "operation-design": [REVISION_HISTORY_COLUMNS, ["OP-ID", "手順名", "担当者"]],
   "migration-design": [REVISION_HISTORY_COLUMNS, ["MIG-ID", "対象データ", "移行方法"]],
   "sitemap": [],
+  "test-evidence": [REVISION_HISTORY_COLUMNS, ["エビデンスID", "テストケースID"]],
+  "meeting-minutes": [REVISION_HISTORY_COLUMNS],
+  "decision-record": [REVISION_HISTORY_COLUMNS],
+  "interface-spec": [REVISION_HISTORY_COLUMNS, ["IF-ID"]],
+  "screen-design": [REVISION_HISTORY_COLUMNS, ["画面ID"]],
 };
 
 /** Check that all required sections exist as headings in the content */

@@ -3,7 +3,7 @@
  * Covers document types, metadata, request/response shapes, and project config.
  */
 
-export const DOC_TYPES = ["overview", "functions-list", "requirements", "basic-design", "detail-design", "test-spec", "crud-matrix", "traceability-matrix", "operation-design", "migration-design", "sitemap"] as const;
+export const DOC_TYPES = ["overview", "functions-list", "requirements", "basic-design", "detail-design", "test-spec", "crud-matrix", "traceability-matrix", "operation-design", "migration-design", "sitemap", "test-evidence", "meeting-minutes", "decision-record", "interface-spec", "screen-design"] as const;
 export type DocType = (typeof DOC_TYPES)[number];
 
 export const LANGUAGES = ["ja", "en", "vi"] as const;
@@ -38,6 +38,15 @@ export const LIFECYCLE_LABELS: Record<LifecycleStatus, string> = {
   obsolete: "廃版",
 };
 
+/** Approval chain entry for digital ハンコ workflow */
+export interface ApprovalEntry {
+  role: string;
+  name: string;
+  date: string;
+  status: "pending" | "approved" | "rejected";
+  comment?: string;
+}
+
 /** YAML frontmatter parsed from template files */
 export interface DocumentMeta {
   doc_type: DocType;
@@ -49,6 +58,9 @@ export interface DocumentMeta {
   author?: string;
   reviewer?: string;
   approver?: string;
+  approved_date?: string;
+  related_tickets?: string[];
+  approvals?: ApprovalEntry[];
 }
 
 /** Template loaded from disk: frontmatter + markdown body */
@@ -115,6 +127,12 @@ export interface ProjectConfig {
     auth_type: "service_account" | "oauth2";
     folder_id?: string;
   };
+  /** Approval chain per doc type */
+  approval_chain?: Record<string, string[]>;
+  /** UI mode: simple (Excel-like) or power (full markdown) */
+  ui_mode?: "simple" | "power";
+  /** Learning mode: add educational annotations */
+  learning_mode?: boolean;
   /** Nulab Backlog integration config */
   backlog?: {
     space_key: string;
@@ -206,5 +224,22 @@ export interface ChainRefReport {
   missing_ids: { id: string; referenced_in: string; expected_from: string }[];
   traceability_matrix: TraceabilityEntry[];
   suggestions: string[];
+}
+
+// --- Impact Cascade Types ---
+
+export interface ImpactEntry {
+  doc_type: string;
+  section: string;
+  referenced_ids: string[];
+  severity: "high" | "medium" | "low";
+}
+
+export interface ImpactReport {
+  changed_ids: string[];
+  affected_docs: ImpactEntry[];
+  total_affected_sections: number;
+  dependency_graph: string;
+  suggested_actions: string[];
 }
 
