@@ -18,7 +18,7 @@ const inputSchema = {
     .describe("Workspace action: create | status | transition | write | read"),
   workspace_path: z.string().max(500)
     .refine((p) => !p.includes(".."), { message: "workspace_path must not contain .." })
-    .describe("Path to project root (workspace created under sekkei-docs/rfp/<project>)"),
+    .describe("Path to project root (workspace created under sekkei-docs/01-rfp/<project>)"),
   project_name: z.string().max(100).optional()
     .describe("Project name for create action (kebab-case)"),
   phase: z.enum(RFP_PHASES).optional()

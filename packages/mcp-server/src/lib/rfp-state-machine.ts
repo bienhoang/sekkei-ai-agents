@@ -65,7 +65,7 @@ export function validateTransition(from: RfpPhase, to: RfpPhase): boolean {
 
 export async function createWorkspace(basePath: string, projectName: string): Promise<string> {
   validateProjectName(projectName);
-  const wsPath = join(basePath, "sekkei-docs", "rfp", projectName);
+  const wsPath = join(basePath, "sekkei-docs", "01-rfp", projectName);
   await mkdir(wsPath, { recursive: true });
 
   const now = new Date().toISOString().slice(0, 10);

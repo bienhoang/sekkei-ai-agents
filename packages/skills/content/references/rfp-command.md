@@ -86,10 +86,9 @@ If re-entering a phase where output file exists:
 
 # SEKKEI CHAIN INTEGRATION
 
-- Workspace: `sekkei-docs/rfp/<project-name>/`
+- Workspace: `sekkei-docs/01-rfp/<project-name>/`
 - Handoff: `05_proposal.md` → input for `/sekkei:functions-list`
 - Supplementary context: `02_analysis.md`
-- RFP workspace stays separate from spec docs (presales ≠ specifications)
 
 ---
 

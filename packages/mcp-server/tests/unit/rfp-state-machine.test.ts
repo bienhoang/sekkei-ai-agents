@@ -53,7 +53,7 @@ describe("rfp-state-machine", () => {
     });
 
     it("sets initial phase to RFP_RECEIVED", async () => {
-      const ws = join(tmpDir, "sekkei-docs", "rfp", "test-project");
+      const ws = join(tmpDir, "sekkei-docs", "01-rfp", "test-project");
       const status = await readStatus(ws);
       expect(status.phase).toBe("RFP_RECEIVED");
       expect(status.project).toBe("test-project");
@@ -68,7 +68,7 @@ describe("rfp-state-machine", () => {
   // --- Status Read/Write ---
   describe("readStatus / writeStatus", () => {
     it("round-trips status data", async () => {
-      const ws = join(tmpDir, "sekkei-docs", "rfp", "test-project");
+      const ws = join(tmpDir, "sekkei-docs", "01-rfp", "test-project");
       const status: RfpStatus = {
         project: "test-project",
         phase: "ANALYZING",
@@ -87,7 +87,7 @@ describe("rfp-state-machine", () => {
 
   // --- File Write Rules ---
   describe("writeWorkspaceFile", () => {
-    const ws = () => join(tmpDir, "sekkei-docs", "rfp", "test-project");
+    const ws = () => join(tmpDir, "sekkei-docs", "01-rfp", "test-project");
 
     it("appends to append-only files", async () => {
       await writeWorkspaceFile(ws(), "01_raw_rfp.md", "First content");

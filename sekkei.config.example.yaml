@@ -20,7 +20,7 @@ export:
   excel_template: ""   # Optional: path to company .xlsx template (e.g. "./templates/company.xlsx")
 
 chain:
-  rfp: ""
+  rfp: ""                                     # RFP workspace output: 01-rfp/<project-name>/
   # Requirements phase
   requirements:       { status: pending, output: "02-requirements/requirements.md" }
   nfr:                { status: pending, output: "02-requirements/nfr.md" }
