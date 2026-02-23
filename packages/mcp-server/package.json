@@ -1,6 +1,6 @@
 {
   "name": "sekkei-mcp-server",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "MCP Server for generating Japanese software specification documents following V-model",
   "type": "module",
   "main": "dist/index.js",
@@ -69,7 +69,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bienhoang/sekkei-ai-agents.git",
+    "url": "git+https://github.com/bienhoang/sekkei-ai-agents.git",
     "directory": "packages/mcp-server"
   },
   "homepage": "https://github.com/bienhoang/sekkei-ai-agents/tree/main/packages/mcp-server",

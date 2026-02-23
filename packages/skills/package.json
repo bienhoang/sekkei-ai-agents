@@ -1,6 +1,6 @@
 {
   "name": "sekkei-skills",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Claude Code skills for generating Japanese specification documents (設計書)",
   "type": "module",
   "bin": {

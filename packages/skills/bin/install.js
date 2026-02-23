@@ -6,7 +6,6 @@
 import { mkdir, cp } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { os } from 'node:os';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const HOME = process.env.HOME || process.env.USERPROFILE;
