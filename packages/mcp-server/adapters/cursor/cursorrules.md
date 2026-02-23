@@ -37,3 +37,17 @@ When user asks for Japanese specification documents (設計書, 機能一覧, �
 2. Use `generate_document` with user's input content
 3. Use `validate_document` to check completeness
 4. Use `export_document` to create Excel or PDF deliverables
+
+## RFP Presales Workflow
+
+Use `manage_rfp_workspace` tool + `rfp://instructions/*` resources for presales lifecycle.
+
+**8 Phases:** RFP_RECEIVED → ANALYZING → QNA_GENERATION → WAITING_CLIENT → DRAFTING/CLIENT_ANSWERED → PROPOSAL_UPDATE → SCOPE_FREEZE
+
+**Orchestration:**
+1. `manage_rfp_workspace(action: "status")` → get current phase
+2. Read `rfp://instructions/routing` → get phase→flow mapping
+3. Read `rfp://instructions/{flow}` → get analysis instructions (analyze/questions/draft/impact/proposal/freeze)
+4. Execute analysis per instructions
+5. `manage_rfp_workspace(action: "write", filename, content)` → save output
+6. `manage_rfp_workspace(action: "transition", phase)` → advance phase

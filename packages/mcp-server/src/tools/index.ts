@@ -13,6 +13,7 @@ import { registerUpdateTool } from "./update.js";
 import { registerValidateChain } from "./validate-chain.js";
 import { registerSimulateImpactTool } from "./simulate-impact.js";
 import { registerImportDocumentTool } from "./import-document.js";
+import { registerRfpWorkspaceTool } from "./rfp-workspace.js";
 
 export function registerAllTools(server: McpServer, templateDir: string, templateOverrideDir?: string): void {
   registerGetTemplateTool(server, templateDir, templateOverrideDir);
@@ -26,4 +27,5 @@ export function registerAllTools(server: McpServer, templateDir: string, templat
   registerValidateChain(server);
   registerSimulateImpactTool(server);
   registerImportDocumentTool(server);
+  registerRfpWorkspaceTool(server);
 }

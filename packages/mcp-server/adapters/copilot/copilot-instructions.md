@@ -24,6 +24,19 @@ functions-list, requirements, basic-design, detail-design, test-spec
 - Always validate before exporting
 - Follow V-model chain: RFP -> functions-list -> requirements -> basic-design -> detail-design -> test-spec
 
+## RFP Presales Workflow
+
+Use `manage_rfp_workspace` tool + `rfp://instructions/*` resources for presales lifecycle.
+
+**Phases:** RFP_RECEIVED → ANALYZING → QNA_GENERATION → WAITING_CLIENT → DRAFTING/CLIENT_ANSWERED → PROPOSAL_UPDATE → SCOPE_FREEZE
+
+**Orchestration:**
+1. `manage_rfp_workspace(action: "status")` → get current phase
+2. Read `rfp://instructions/routing` → phase→flow mapping
+3. Read `rfp://instructions/{flow}` → analysis instructions
+4. Execute analysis → `manage_rfp_workspace(action: "write")` → save
+5. `manage_rfp_workspace(action: "transition")` → advance phase
+
 ## When to Activate
 
-Activate when user mentions: 設計書, 機能一覧, 要件定義書, 基本設計書, 詳細設計書, テスト仕様書, or asks for Japanese software documentation.
+Activate when user mentions: 設計書, 機能一覧, 要件定義書, 基本設計書, 詳細設計書, テスト仕様書, RFP分析, or asks for Japanese software documentation.

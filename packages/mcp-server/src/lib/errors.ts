@@ -17,7 +17,9 @@ export type SekkeiErrorCode =
   | "STALENESS_ERROR"
   | "STRUCTURE_RULES_ERROR"
   | "GOOGLE_EXPORT_FAILED"
-  | "BACKLOG_SYNC_FAILED";
+  | "BACKLOG_SYNC_FAILED"
+  | "RFP_WORKSPACE_ERROR"
+  | "RFP_PHASE_ERROR";
 
 export class SekkeiError extends Error {
   constructor(

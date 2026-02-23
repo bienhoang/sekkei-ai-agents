@@ -155,6 +155,33 @@ export interface ProjectConfig {
   };
 }
 
+// --- RFP Workspace Types ---
+
+export const RFP_PHASES = [
+  "RFP_RECEIVED", "ANALYZING", "QNA_GENERATION", "WAITING_CLIENT",
+  "DRAFTING", "CLIENT_ANSWERED", "PROPOSAL_UPDATE", "SCOPE_FREEZE",
+] as const;
+export type RfpPhase = (typeof RFP_PHASES)[number];
+
+export const RFP_FILES = [
+  "00_status.md", "01_raw_rfp.md", "02_analysis.md", "03_questions.md",
+  "04_client_answers.md", "05_proposal.md", "06_scope_freeze.md", "07_decisions.md",
+] as const;
+export type RfpFile = (typeof RFP_FILES)[number];
+
+export interface RfpStatus {
+  project: string;
+  phase: RfpPhase;
+  last_update: string;
+  next_action: string;
+  blocking_issues: string[];
+  assumptions: string[];
+}
+
+export interface RfpFileInventory {
+  files: Record<string, { exists: boolean; size: number }>;
+}
+
 // --- Manifest Types (Document Splitting) ---
 
 export const SPLIT_DOC_TYPES = ["basic-design", "detail-design", "test-spec"] as const;
