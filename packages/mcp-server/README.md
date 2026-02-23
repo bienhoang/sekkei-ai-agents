@@ -40,7 +40,7 @@ npx sekkei-setup
 npx sekkei init
 
 # 3. Generate your first document
-/sekkei:functions-list @rfp.md
+/sekkei:requirements @rfp.md
 ```
 
 ## Platform Setup
@@ -129,8 +129,8 @@ cp adapters/copilot/copilot-instructions.md .github/
 
 | Type | Japanese | Description |
 |------|----------|-------------|
-| functions-list | 機能一覧 | 10-column table (大分類→中分類→小機能 hierarchy) |
 | requirements | 要件定義書 | Functional and non-functional requirements |
+| functions-list | 機能一覧 | 10-column table (大分類→中分類→小機能 hierarchy) |
 | nfr | 非機能要件定義書 | Performance, security, availability requirements |
 | project-plan | プロジェクト計画書 | Project timeline, milestones, resource plan |
 

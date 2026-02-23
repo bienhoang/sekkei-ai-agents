@@ -14,26 +14,28 @@ Sekkei generates structured Japanese specification documents (設計書) from RF
                           │
                     ┌─────┴─────┐
                     ▼           ▼
-              機能一覧        用語集
-              Function List   Glossary
-                    │
-                    ▼
-              要件定義書 ──────────────────► 受入テスト仕様書
-              Requirements                  UAT Spec
+              要件定義書       用語集
+              Requirements    Glossary
                     │
               ┌─────┼──────────┐
               ▼     ▼          ▼
-            NFR   基本設計書    セキュリティ設計書
-                  Basic Design Security Design
-                    │
-              ┌─────┼─────┐
-              ▼     ▼     ▼
-         詳細設計書 IT仕様書 ST仕様書
-         Detail    IT Spec  ST Spec
+         機能一覧  NFR        プロジェクト計画書
+         Function  Non-Func   Project Plan
+         List      Req
               │
               ▼
-         UT仕様書
-         UT Spec
+         基本設計書 ──────────────────► 受入テスト仕様書
+         Basic Design                  UAT Spec
+              │
+        ┌─────┴──────────┐
+        ▼                ▼
+  セキュリティ設計書    詳細設計書
+  Security Design      Detail Design
+                            │
+                       ┌────┼────┐
+                       ▼    ▼    ▼
+                    UT仕様書 IT仕様書 ST仕様書
+                    UT Spec  IT Spec  ST Spec
 ```
 
 Additional types: プロジェクト計画書, テスト計画書, 運用設計書, 移行設計書, CRUD図, トレーサビリティ, サイトマップ.
@@ -139,8 +141,8 @@ Built with citty. Available commands:
 |---------|-------------|
 | `npx sekkei init` | Initialize project config (CLI) |
 | `/sekkei:rfp @rfp.md` | RFP analysis and presales workflow |
-| `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
 | `/sekkei:requirements @input` | Generate 要件定義書 (Requirements) |
+| `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
 | `/sekkei:nfr @input` | Generate 非機能要件定義書 (Non-Functional Requirements) |
 | `/sekkei:project-plan @input` | Generate プロジェクト計画書 (Project Plan) |
 

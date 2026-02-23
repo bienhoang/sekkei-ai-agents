@@ -32,8 +32,8 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 |---------|-------------|
 | `npx sekkei init` | Initialize project config (CLI) |
 | `/sekkei:rfp @rfp.md` | RFP analysis and presales workflow |
-| `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
 | `/sekkei:requirements @input` | Generate 要件定義書 (Requirements Definition) |
+| `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
 | `/sekkei:nfr @input` | Generate 非機能要件定義書 (Non-Functional Requirements) |
 | `/sekkei:project-plan @input` | Generate プロジェクト計画書 (Project Plan) |
 
@@ -123,7 +123,7 @@ Skills invoke MCP tools via Claude Code's MCP integration. Ensure `sekkei-mcp-se
 
 sekkei-skillsは、Claude Codeのスラッシュコマンドで日本語設計書を生成するスキルです。
 
-V字モデルのドキュメントチェーン（機能一覧→要件定義書→NFR→基本設計書→セキュリティ設計書→詳細設計書→UT/IT/ST/UAT仕様書）に沿って、各種設計書を順番に生成できます。30のサブコマンドで、RFP分析・初期化・生成・検証・エクスポート・翻訳・プレビューまでの全ワークフローをカバーします。
+V字モデルのドキュメントチェーン（要件定義書→機能一覧→NFR→基本設計書→セキュリティ設計書→詳細設計書→UT/IT/ST/UAT仕様書）に沿って、各種設計書を順番に生成できます。30のサブコマンドで、RFP分析・初期化・生成・検証・エクスポート・翻訳・プレビューまでの全ワークフローをカバーします。
 
 ## License
 
