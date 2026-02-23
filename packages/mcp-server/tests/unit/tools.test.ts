@@ -199,6 +199,45 @@ describe("generate_document tool", () => {
   });
 });
 
+describe("generate_document split mode guard", () => {
+  let server: McpServer;
+
+  beforeAll(() => {
+    server = new McpServer({ name: "test", version: "0.0.1" });
+    registerGenerateDocumentTool(server, TEMPLATE_DIR);
+  });
+
+  it("rejects scope param for requirements doc type", async () => {
+    const result = await callTool(server, "generate_document", {
+      doc_type: "requirements",
+      input_content: "test input",
+      scope: "shared",
+    });
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("not supported");
+  });
+
+  it("rejects scope param for functions-list doc type", async () => {
+    const result = await callTool(server, "generate_document", {
+      doc_type: "functions-list",
+      input_content: "test input",
+      scope: "feature",
+      feature_name: "test-feature",
+    });
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("not supported");
+  });
+
+  it("accepts scope param for basic-design doc type", async () => {
+    const result = await callTool(server, "generate_document", {
+      doc_type: "basic-design",
+      input_content: "test input",
+      scope: "shared",
+    });
+    expect(result.isError).toBeUndefined();
+  });
+});
+
 describe("export_document tool — input validation", () => {
   let server: McpServer;
 

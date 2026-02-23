@@ -11,11 +11,11 @@ export interface StructureIssue {
 }
 
 const REQUIRED_FILES = [
-  "04-functions-list.md", "10-glossary.md",
+  "10-glossary.md",
 ];
 const REQUIRED_DIRS = [
-  "01-rfp", "02-requirements", "03-system", "05-features", "06-data",
-  "07-operations", "08-test", "09-ui",
+  "01-rfp", "02-requirements", "03-system", "04-functions-list", "05-features",
+  "06-data", "07-operations", "08-test", "09-ui",
 ];
 const VERSION_SUFFIX_RE = /-(v\d+|final|last|old|new|copy)\./i;
 const NON_ASCII_RE = /[^\x00-\x7F]/;

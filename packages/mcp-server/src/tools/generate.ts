@@ -97,6 +97,11 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
   },
 };
 
+/** Doc types that support split generation (scope param) */
+const SPLIT_ALLOWED: ReadonlySet<DocType> = new Set([
+  "basic-design", "detail-design", "ut-spec", "it-spec",
+]);
+
 function buildSplitInstructions(
   docType: DocType, scope: "shared" | "feature",
   featureName?: string
@@ -151,6 +156,13 @@ export async function handleGenerateDocument(
     upstream_content, project_type, feature_name, scope, output_path, config_path,
     source_code_path, include_confidence, include_traceability, ticket_ids,
     templateDir: tDir, overrideDir } = args;
+  if (scope && !SPLIT_ALLOWED.has(doc_type)) {
+    return {
+      content: [{ type: "text" as const, text: `Split mode (scope) not supported for ${doc_type}. Supported: ${[...SPLIT_ALLOWED].join(", ")}` }],
+      isError: true,
+    };
+  }
+
   try {
     const { loadConfig } = await import("../config.js");
     const cfg = loadConfig();

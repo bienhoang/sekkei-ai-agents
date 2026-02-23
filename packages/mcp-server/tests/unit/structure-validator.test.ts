@@ -8,8 +8,8 @@ let tmpDir: string;
 
 /** Create a valid scaffold for testing */
 async function createValidScaffold(dir: string): Promise<void> {
-  const files = ["04-functions-list.md", "10-glossary.md"];
-  const dirs = ["01-rfp", "02-requirements", "03-system", "05-features", "06-data", "07-operations", "08-test", "09-ui"];
+  const files = ["10-glossary.md"];
+  const dirs = ["01-rfp", "02-requirements", "03-system", "04-functions-list", "05-features", "06-data", "07-operations", "08-test", "09-ui"];
 
   for (const f of files) {
     await writeFile(join(dir, f), `# ${f}\n`, "utf-8");
@@ -39,10 +39,10 @@ describe("validateNumberedStructure", () => {
   it("reports missing required files", async () => {
     await createValidScaffold(tmpDir);
     const { rm: rmFile } = await import("node:fs/promises");
-    await rmFile(join(tmpDir, "04-functions-list.md"));
+    await rmFile(join(tmpDir, "10-glossary.md"));
 
     const issues = await validateNumberedStructure(tmpDir);
-    expect(issues.some(i => i.message.includes("04-functions-list.md"))).toBe(true);
+    expect(issues.some(i => i.message.includes("10-glossary.md"))).toBe(true);
   });
 
   it("reports missing required directories", async () => {

@@ -57,7 +57,7 @@ describe("validateCrossRefs", () => {
   it("reports missing upstream IDs", () => {
     const upstream = "F-001, F-002, F-003";
     const current = "References F-001 and F-003 from upstream.";
-    const report = validateCrossRefs(current, upstream, "requirements");
+    const report = validateCrossRefs(current, upstream, "basic-design");
     expect(report.missing).toEqual(["F-002"]);
     expect(report.coverage).toBe(67); // 2/3
   });
@@ -65,13 +65,20 @@ describe("validateCrossRefs", () => {
   it("reports orphaned IDs in current doc", () => {
     const upstream = "F-001";
     const current = "References F-001 and F-999 which is not upstream.";
-    const report = validateCrossRefs(current, upstream, "requirements");
+    const report = validateCrossRefs(current, upstream, "basic-design");
     expect(report.orphaned).toEqual(["F-999"]);
   });
 
   it("returns 100% coverage when no upstream types expected", () => {
     const report = validateCrossRefs("content", "upstream", "functions-list");
     expect(report.coverage).toBe(100);
+  });
+
+  it("returns 100% coverage for requirements (no upstream ID types)", () => {
+    const report = validateCrossRefs("F-001 content", "F-001, F-002", "requirements");
+    expect(report.coverage).toBe(100);
+    expect(report.missing).toHaveLength(0);
+    expect(report.upstream_ids).toHaveLength(0);
   });
 
   it("validates detail-design against basic-design IDs", () => {
@@ -124,11 +131,11 @@ describe("validateDocument (integration)", () => {
   });
 
   it("returns issues with cross-ref report when upstream provided", () => {
-    const upstream = "F-001, F-002, F-003";
-    const current = "# 要件定義書\n## 改訂履歴\n| 版数 | 日付 | 変更内容 | 変更者 |\n## 承認欄\n## 配布先\n## 用語集\n## 概要\n## 機能要件\n| 要件ID | 要件名 |\n## 非機能要件\nReferences F-001.";
-    const result = validateDocument(current, "requirements", upstream);
+    const upstream = "REQ-001, REQ-002, REQ-003";
+    const current = STRUCTURAL + "## 概要\n## システム構成\n## 業務フロー\n## 画面設計\n## DB設計\n## 外部インターフェース\n| 画面ID | x |\n| テーブルID | x |\n| API | x |\nReferences REQ-001.";
+    const result = validateDocument(current, "basic-design", upstream);
     expect(result.cross_ref_report).toBeDefined();
-    expect(result.cross_ref_report!.missing).toContain("F-002");
+    expect(result.cross_ref_report!.missing).toContain("REQ-002");
   });
 });
 

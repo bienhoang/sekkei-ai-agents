@@ -56,12 +56,12 @@ describe("validate_document tool", () => {
   });
 
   it("includes cross-reference report when upstream provided", async () => {
-    const current = "# 要件定義書\n## 概要\n## 機能要件\n| 要件ID | 要件名 |\n## 非機能要件\nRef F-001.";
-    const upstream = "F-001, F-002";
+    const current = "# NFR\n## 概要\n## 非機能要件\nRef REQ-001.";
+    const upstream = "REQ-001, REQ-002";
 
     const result = await callTool(server, "validate_document", {
       content: current,
-      doc_type: "requirements",
+      doc_type: "nfr",
       upstream_content: upstream,
     });
 

@@ -229,6 +229,31 @@ describe("analyzeGraph — partial chain", () => {
   });
 });
 
+describe("NFR origin from requirements", () => {
+  it("does not flag NFR-xxx in requirements as orphaned in nfr link", () => {
+    const docs = new Map([
+      ["requirements", "## 非機能要件\n- NFR-001 可用性\n- NFR-002 性能\n- REQ-001 ログイン"],
+      ["nfr", "## 詳細\n- NFR-001 99.9% uptime\n- NFR-002 性能 response <200ms\n"],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+    // NFR IDs originate from both nfr and requirements — should not be orphaned
+    const orphanedNfr = report.orphaned_ids.filter(o => o.id.startsWith("NFR-"));
+    expect(orphanedNfr).toHaveLength(0);
+  });
+
+  it("includes NFR-xxx from requirements in traceability matrix", () => {
+    const docs = new Map([
+      ["requirements", "## 非機能要件\n- NFR-001 可用性\n- REQ-001 ログイン"],
+      ["basic-design", "## 設計\nNFR-001 based design\n"],
+    ]);
+    const matrix = buildTraceabilityMatrix(docs);
+    const nfrEntry = matrix.find(e => e.id === "NFR-001");
+    expect(nfrEntry).toBeDefined();
+    expect(nfrEntry!.doc_type).toBe("requirements");
+  });
+});
+
 describe("generateSuggestions", () => {
   it("generates human-readable messages for orphaned IDs", () => {
     const partial = {

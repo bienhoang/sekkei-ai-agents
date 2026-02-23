@@ -13,7 +13,7 @@ export function resolveOutputPath(
   if (docType === "requirements")        return "02-requirements/requirements.md";
   if (docType === "nfr")                 return "02-requirements/nfr.md";
   if (docType === "project-plan")        return "02-requirements/project-plan.md";
-  if (docType === "functions-list")      return "04-functions-list.md";
+  if (docType === "functions-list")      return "04-functions-list/functions-list.md";
 
   // Design phase
   if (docType === "basic-design") {

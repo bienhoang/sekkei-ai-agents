@@ -42,7 +42,7 @@ describe("get_chain_status tool", () => {
         "  rfp: ./input/rfp.md",
         "  functions_list:",
         "    status: complete",
-        "    output: 04-functions-list.md",
+        "    output: 04-functions-list/functions-list.md",
         "  requirements:",
         "    status: in-progress",
         "  nfr:",

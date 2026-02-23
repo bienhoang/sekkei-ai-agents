@@ -29,10 +29,10 @@ export const CHAIN_PAIRS: [string, string][] = [
 ];
 
 /** ID prefix → doc type that defines it */
-export const ID_ORIGIN: Record<string, string> = {
+export const ID_ORIGIN: Record<string, string | string[]> = {
   F: "functions-list",
   REQ: "requirements",
-  NFR: "nfr",
+  NFR: ["nfr", "requirements"],
   SCR: "basic-design",
   TBL: "basic-design",
   API: "basic-design",
@@ -54,6 +54,13 @@ export const ID_ORIGIN: Record<string, string> = {
   IF: "interface-spec",
   PG: "sitemap",
 };
+
+/** Check if a prefix originates from the given doc type */
+function isOriginOf(prefix: string, docType: string): boolean {
+  const origin = ID_ORIGIN[prefix];
+  if (Array.isArray(origin)) return origin.includes(docType);
+  return origin === docType;
+}
 
 /** Standard ID regex — same pattern as id-extractor.ts */
 const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
@@ -194,7 +201,7 @@ export function buildTraceabilityMatrix(docs: Map<string, string>): Traceability
     for (const id of defined) {
       // Only trace IDs that originate from this doc type
       const prefix = id.split("-")[0];
-      if (ID_ORIGIN[prefix] !== docType) continue;
+      if (!isOriginOf(prefix, docType)) continue;
 
       // Find the position of this docType in the chain
       const originIdx = docOrder.indexOf(docType);
@@ -242,7 +249,7 @@ export function analyzeGraph(graph: IdGraph, docs: Map<string, string>): ChainRe
     for (const id of upNode.defined) {
       const prefix = id.split("-")[0];
       // Only check IDs that originate from this upstream doc
-      if (ID_ORIGIN[prefix] !== upstreamType) continue;
+      if (!isOriginOf(prefix, upstreamType)) continue;
       if (!downNode.referenced.has(id)) {
         link.orphaned_ids.push(id);
         allOrphaned.push({ id, defined_in: upstreamType, expected_in: downstreamType });
@@ -252,7 +259,7 @@ export function analyzeGraph(graph: IdGraph, docs: Map<string, string>): ChainRe
     // Missing: referenced in downstream with upstream prefix but not defined upstream
     for (const id of downNode.referenced) {
       const prefix = id.split("-")[0];
-      if (ID_ORIGIN[prefix] !== upstreamType) continue;
+      if (!isOriginOf(prefix, upstreamType)) continue;
       if (!upNode.defined.has(id)) {
         link.missing_ids.push(id);
         allMissing.push({ id, referenced_in: downstreamType, expected_from: upstreamType });

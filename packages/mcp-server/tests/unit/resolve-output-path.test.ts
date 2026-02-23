@@ -15,8 +15,8 @@ describe("resolveOutputPath", () => {
     expect(resolveOutputPath("project-plan")).toBe("02-requirements/project-plan.md");
   });
 
-  it("returns 04-functions-list.md for functions-list", () => {
-    expect(resolveOutputPath("functions-list")).toBe("04-functions-list.md");
+  it("returns 04-functions-list/functions-list.md for functions-list", () => {
+    expect(resolveOutputPath("functions-list")).toBe("04-functions-list/functions-list.md");
   });
 
   // Design phase

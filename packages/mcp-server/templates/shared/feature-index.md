@@ -15,5 +15,5 @@
 ## 関連ドキュメント
 
 - [システム設計](../../03-system/index.md)
-- [機能一覧](../../04-functions-list.md)
+- [機能一覧](../../04-functions-list/functions-list.md)
 - [テスト計画](../../08-test/index.md)

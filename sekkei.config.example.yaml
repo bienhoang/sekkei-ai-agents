@@ -45,7 +45,7 @@ chain:
   # Requirements phase (要件定義)
   requirements:       { status: pending, output: "02-requirements/requirements.md" }
   nfr:                { status: pending, output: "02-requirements/nfr.md" }
-  functions_list:     { status: pending, output: "04-functions-list.md" }
+  functions_list:     { status: pending, output: "04-functions-list/functions-list.md" }
   project_plan:       { status: pending, output: "02-requirements/project-plan.md" }
   # Design phase (設計)
   basic_design:

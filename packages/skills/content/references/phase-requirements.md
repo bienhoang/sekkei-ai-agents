@@ -7,10 +7,13 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
 
 ## `/sekkei:requirements @input`
 
-**Pre-check:**
-1. Check if `01-rfp/` workspace exists in `{output.directory}`
-2. If exists and @input not provided, auto-load RFP content (02_analysis.md + 06_scope_freeze.md) as primary input
-3. If @input provided, use as primary input; RFP content as supplementary context
+**Prerequisite check (MUST run before interview):**
+1. If `@input` argument provided by user → input source confirmed, proceed
+2. If no `@input`:
+   a. Check if `{output.directory}/01-rfp/` directory exists and contains `.md` files
+   b. If exists → auto-load `02_analysis.md` + `06_scope_freeze.md` as input, proceed
+3. If neither condition met → **ABORT**. Do NOT proceed to interview. Tell user:
+   > "No input source available. Either provide input with `@input` or run `/sekkei:rfp` first to create the RFP workspace in `01-rfp/`."
 
 **Interview questions (ask before generating):**
 - What is the project scope? (confirm from RFP or clarify if no RFP)
@@ -34,8 +37,12 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
    - This is the FIRST document after RFP — defines REQ-xxx IDs for all downstream docs
    - Include acceptance criteria for each major requirement
 7. Save output to `{output.directory}/02-requirements/requirements.md`
-8. Update chain status: `requirements.status: complete`
-9. Suggest next steps (can run in parallel):
+8. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "requirements"`, `status: "complete"`, `output: "02-requirements/requirements.md"`
+9. Call MCP tool `validate_document` with the saved file content and `doc_type: "requirements"`. Show results:
+   - If no issues: "Validation passed."
+   - If warnings: show them as non-blocking warnings
+   - If errors: show them but do NOT abort — document already saved
+10. Suggest next steps (can run in parallel):
    > "Requirements complete. Next steps (can run in parallel):
    > - `/sekkei:functions-list` — generate 機能一覧 from requirements
    > - `/sekkei:nfr` — generate detailed 非機能要件 from requirements"
@@ -59,13 +66,14 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
    - Cross-reference REQ-xxx IDs from upstream 要件定義書
    - Generate 10+ functions minimum
 6. Save output to `{output.directory}/04-functions-list/functions-list.md`
-7. Update `sekkei.config.yaml` chain status: `functions_list.status: complete`
-8. **Count 大分類 feature groups** from the generated `functions-list.md`:
+7. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "functions_list"`, `status: "complete"`, `output: "04-functions-list/functions-list.md"`
+8. Call MCP tool `validate_document` with saved content and `doc_type: "functions-list"`. Show results as non-blocking.
+9. **Count 大分類 feature groups** from the generated `functions-list.md`:
    - Scan for distinct values in the 大分類 column of the 機能一覧 table
    - Derive a short feature ID for each (2–5 uppercase letters, e.g., "AUTH", "SALES", "REPORT")
-9. **If count >= 3**, prompt the user:
+10. **If count >= 3**, prompt the user:
    > "Detected {N} feature groups: {list}. Enable split mode? Split generates separate files per feature for basic-design, detail-design, and test-spec. Recommended for projects with 3+ features. [Y/n]"
-10. **If user confirms split:**
+11. **If user confirms split:**
     a. Uncomment/rewrite the `split:` block in `sekkei.config.yaml` with defaults:
        ```yaml
        split:
@@ -89,7 +97,7 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
        ```
        Then for each feature, add an entry to the manifest's feature list.
     d. Confirm: "Split mode enabled. Created {N} feature directories. Run `/sekkei:basic-design` to generate split documents."
-11. **If user declines split (or count < 3):** proceed without changes. Monolithic flow remains default.
+12. **If user declines split (or count < 3):** proceed without changes. Monolithic flow remains default.
 
 ## `/sekkei:nfr @requirements`
 
@@ -107,7 +115,8 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
    - Cover all 6 IPA NFUG categories: 可用性, 性能効率性, セキュリティ, 保守性, 移植性, 信頼性
    - Cross-reference REQ-xxx IDs from 要件定義書
 5. Save output to `{output.directory}/02-requirements/nfr.md`
-6. Update chain status: `nfr.status: complete`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "nfr"`, `status: "complete"`, `output: "02-requirements/nfr.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "nfr"`. Show results as non-blocking.
 
 ## `/sekkei:project-plan @requirements`
 
@@ -126,4 +135,5 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
    - Include milestone table with dates and deliverables
    - Cross-reference REQ-xxx, F-xxx IDs from upstream
 5. Save output to `{output.directory}/02-requirements/project-plan.md`
-6. Update chain status: `project_plan.status: complete`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "project_plan"`, `status: "complete"`, `output: "02-requirements/project-plan.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "project-plan"`. Show results as non-blocking.

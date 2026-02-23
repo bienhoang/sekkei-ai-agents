@@ -119,7 +119,7 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
 /** Expected upstream ID types for cross-reference validation */
 const UPSTREAM_ID_TYPES: Record<DocType, string[]> = {
   "functions-list": [],
-  requirements: ["F"],
+  requirements: [],
   nfr: ["REQ"],
   "project-plan": ["REQ", "F"],
   "basic-design": ["REQ", "F"],
