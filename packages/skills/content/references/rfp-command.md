@@ -23,10 +23,31 @@ Entrypoint delegates to State for all file ops, to Analysis for all thinking.
 ```
 1. Delegate to MANAGER → load workspace / initialize
 2. Receive current phase from MANAGER's startup report
-3. Route per routing table below
-4. Delegate to MANAGER → save output, update phase
-5. Present result to user
+3. Display PROGRESS DASHBOARD (below)
+4. Route per routing table
+5. Delegate to MANAGER → save output, update phase
+6. Present result to user
 ```
+
+---
+
+# PROGRESS DASHBOARD
+
+On every startup and phase change, display:
+
+```
+=== RFP Lifecycle: {project-name} ===
+[*] RFP Received        01_raw_rfp.md ({size})
+[*] Analysis             02_analysis.md ({size})
+[*] Q&A Generation       03_questions.md ({size})  Round {N}
+[ ] Client Answers       04_client_answers.md
+[ ] Proposal             05_proposal.md
+[ ] Scope Freeze         06_scope_freeze.md
+---
+Current: {PHASE} | Next: {next_action}
+```
+
+`[*]` = file has content. `[ ]` = empty/pending. Show file sizes. Show Q&A round if > 0.
 
 ---
 
@@ -60,27 +81,52 @@ Paste RFP.
 
 ### QNA_GENERATION complete
 ```
-Questions generated. Send to client.
-When client replies, run /sekkei:rfp again.
+Questions generated ({count} questions: {P1_count} critical, {P2_count} architecture, {P3_count} operation).
+
+Options:
+  1. Send questions to client, run /sekkei:rfp when they reply
+  2. Type BUILD_NOW to draft proposal with assumptions
+  3. Type BACK to re-run analysis with adjustments
+  4. Type SHOW to review current questions
 ```
 
 ### WAITING_CLIENT
 ```
-Client replied? Paste answer or type BUILD_NOW.
+Q&A Round {N} — waiting for client response.
+
+Options:
+  1. Paste client answers (recommended)
+  2. Type BUILD_NOW to draft proposal with current assumptions
+  3. Type BACK to regenerate questions
+  4. Type SHOW to review what was sent
 ```
 
 ### SCOPE_FREEZE complete
 ```
 Scope frozen. Confidence: {HIGH|MEDIUM|LOW}.
-→ HIGH/MEDIUM: Run /sekkei:functions-list? [Y/n]
-→ LOW: Do not proceed. Resolve blocking issues first.
+Handoff Readiness: {score}%
+
+→ HIGH/MEDIUM: Run /sekkei:functions-list to begin V-model chain. [Y/n]
+→ LOW: Resolve blocking issues first. Type BACK to revise.
 ```
 
 ### Overwrite check
-If re-entering a phase where output file exists:
 ```
-{filename} exists. Overwrite? [Y/n]
+{filename} exists ({size}).
+Options:
+  1. Overwrite with new version
+  2. View diff of changes first
+  3. Keep existing, skip this step
 ```
+
+### Navigation Keywords
+
+| Keyword | Action |
+|---------|--------|
+| `SHOW` | Display current phase output summary |
+| `BACK` | Go to previous phase (uses back action with force) |
+| `SKIP_QNA` | From QNA_GENERATION, jump to DRAFTING |
+| `BUILD_NOW` | Draft proposal without client answers |
 
 ---
 
@@ -89,6 +135,7 @@ If re-entering a phase where output file exists:
 - Workspace: `sekkei-docs/01-rfp/<project-name>/`
 - Handoff: `05_proposal.md` → input for `/sekkei:functions-list`
 - Supplementary context: `02_analysis.md`
+- On scope freeze with HIGH/MEDIUM confidence, offer to run `generate-config` action
 
 ---
 

@@ -7,8 +7,8 @@ Output: Updated `02_analysis.md`
 
 ## 1. Answer Impact Analysis
 
-| Answer | Changes Architecture? | Changes Cost? | Changes Timeline? |
-|--------|----------------------|---------------|-------------------|
+| Answer | Changes Architecture? | Changes Cost? | Changes Timeline? | Effort Delta |
+|--------|----------------------|---------------|-------------------|--------------|
 
 ## 2. Updated Requirement Set
 Rewrite corrected requirements incorporating answers.

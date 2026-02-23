@@ -8,14 +8,16 @@ import { RFP_PHASES, RFP_FILES } from "../types/documents.js";
 import {
   createWorkspace, readStatus, writeStatus, writeWorkspaceFile,
   readWorkspaceFile, getFileInventory, recoverPhase, validateTransition,
+  isBackwardTransition, appendDecision, getPhaseHistory, getPreviousPhase,
+  generateConfigFromWorkspace,
 } from "../lib/rfp-state-machine.js";
 import { logger } from "../lib/logger.js";
 
-const RFP_ACTIONS = ["create", "status", "transition", "write", "read"] as const;
+const RFP_ACTIONS = ["create", "status", "transition", "write", "read", "history", "back", "generate-config"] as const;
 
 const inputSchema = {
   action: z.enum(RFP_ACTIONS)
-    .describe("Workspace action: create | status | transition | write | read"),
+    .describe("Workspace action: create | status | transition | write | read | history | back | generate-config"),
   workspace_path: z.string().max(500)
     .refine((p) => !p.includes(".."), { message: "workspace_path must not contain .." })
     .describe("Path to project root (workspace created under sekkei-docs/01-rfp/<project>)"),
@@ -27,6 +29,10 @@ const inputSchema = {
     .describe("File to read/write (e.g. 02_analysis.md)"),
   content: z.string().max(500_000).optional()
     .describe("Content for write action"),
+  reason: z.string().max(500).optional()
+    .describe("Reason for transition (logged to 07_decisions.md)"),
+  force: z.boolean().optional()
+    .describe("Required true for backward transitions"),
 };
 
 interface RfpWorkspaceArgs {
@@ -36,6 +42,8 @@ interface RfpWorkspaceArgs {
   phase?: (typeof RFP_PHASES)[number];
   filename?: (typeof RFP_FILES)[number];
   content?: string;
+  reason?: string;
+  force?: boolean;
 }
 
 type ToolResult = { content: Array<{ type: "text"; text: string }>; isError?: boolean };
@@ -66,9 +74,61 @@ export async function handleRfpWorkspace(args: RfpWorkspaceArgs): Promise<ToolRe
         if (!validateTransition(current.phase, args.phase)) {
           return err(`Invalid transition: ${current.phase} → ${args.phase}`);
         }
+        // Backward transitions require force flag
+        if (isBackwardTransition(current.phase, args.phase) && !args.force) {
+          return err(`Backward transition ${current.phase} → ${args.phase} requires force: true`);
+        }
         const now = new Date().toISOString().slice(0, 10);
-        await writeStatus(args.workspace_path, { ...current, phase: args.phase, last_update: now });
-        return ok(JSON.stringify({ success: true, from: current.phase, to: args.phase }));
+        // Increment qna_round when entering QNA_GENERATION
+        const qnaRound = args.phase === "QNA_GENERATION"
+          ? current.qna_round + 1 : current.qna_round;
+        const historyEntry = { phase: args.phase, entered: now, ...(args.reason ? { reason: args.reason } : {}) };
+        await writeStatus(args.workspace_path, {
+          ...current,
+          phase: args.phase,
+          last_update: now,
+          qna_round: qnaRound,
+          phase_history: [...current.phase_history, historyEntry],
+        });
+        // Auto-log decision
+        await appendDecision(args.workspace_path, current.phase, args.phase, args.reason);
+        return ok(JSON.stringify({
+          success: true, from: current.phase, to: args.phase,
+          backward: isBackwardTransition(current.phase, args.phase),
+          qna_round: qnaRound,
+        }));
+      }
+
+      case "history": {
+        const history = await getPhaseHistory(args.workspace_path);
+        return ok(JSON.stringify({ phase_history: history }));
+      }
+
+      case "back": {
+        const prev = await getPreviousPhase(args.workspace_path);
+        if (!prev) {
+          return err("No previous phase to go back to");
+        }
+        const cur = await readStatus(args.workspace_path);
+        if (!validateTransition(cur.phase, prev)) {
+          return err(`Cannot go back: ${cur.phase} → ${prev} is not a valid transition`);
+        }
+        if (isBackwardTransition(cur.phase, prev) && !args.force) {
+          return err(`Backward navigation ${cur.phase} → ${prev} requires force: true`);
+        }
+        const now = new Date().toISOString().slice(0, 10);
+        const qnaRound = prev === "QNA_GENERATION" ? cur.qna_round + 1 : cur.qna_round;
+        const reason = args.reason ?? "Back navigation";
+        const historyEntry = { phase: prev, entered: now, reason };
+        await writeStatus(args.workspace_path, {
+          ...cur,
+          phase: prev,
+          last_update: now,
+          qna_round: qnaRound,
+          phase_history: [...cur.phase_history, historyEntry],
+        });
+        await appendDecision(args.workspace_path, cur.phase, prev, reason);
+        return ok(JSON.stringify({ success: true, from: cur.phase, to: prev, backward: true }));
       }
 
       case "write": {
@@ -85,6 +145,15 @@ export async function handleRfpWorkspace(args: RfpWorkspaceArgs): Promise<ToolRe
         }
         const text = await readWorkspaceFile(args.workspace_path, args.filename);
         return ok(text);
+      }
+
+      case "generate-config": {
+        const st = await readStatus(args.workspace_path);
+        if (st.phase !== "SCOPE_FREEZE" && st.phase !== "PROPOSAL_UPDATE") {
+          return err("generate-config requires SCOPE_FREEZE or PROPOSAL_UPDATE phase");
+        }
+        const configYaml = await generateConfigFromWorkspace(args.workspace_path);
+        return ok(JSON.stringify({ success: true, config: configYaml }));
       }
 
       default:
@@ -107,9 +176,9 @@ function err(text: string): ToolResult {
 export function registerRfpWorkspaceTool(server: McpServer): void {
   server.tool(
     "manage_rfp_workspace",
-    "Manage RFP presales workspace (create, status, transition, write, read)",
+    "Manage RFP presales workspace (create, status, transition, write, read, history, back, generate-config)",
     inputSchema,
-    async ({ action, workspace_path, project_name, phase, filename, content }) => {
+    async ({ action, workspace_path, project_name, phase, filename, content, reason, force }) => {
       return handleRfpWorkspace({
         action: action as RfpWorkspaceArgs["action"],
         workspace_path,
@@ -117,6 +186,8 @@ export function registerRfpWorkspaceTool(server: McpServer): void {
         phase: phase as RfpWorkspaceArgs["phase"],
         filename: filename as RfpWorkspaceArgs["filename"],
         content,
+        reason: reason as string | undefined,
+        force: force as boolean | undefined,
       });
     },
   );

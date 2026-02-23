@@ -226,6 +226,12 @@ export const RFP_FILES = [
 ] as const;
 export type RfpFile = (typeof RFP_FILES)[number];
 
+export interface PhaseEntry {
+  phase: RfpPhase;
+  entered: string;  // ISO date
+  reason?: string;  // why transitioned
+}
+
 export interface RfpStatus {
   project: string;
   phase: RfpPhase;
@@ -233,6 +239,8 @@ export interface RfpStatus {
   next_action: string;
   blocking_issues: string[];
   assumptions: string[];
+  qna_round: number;            // starts at 0, incremented on each QNA_GENERATION entry
+  phase_history: PhaseEntry[];   // ordered list of phase transitions
 }
 
 export interface RfpFileInventory {

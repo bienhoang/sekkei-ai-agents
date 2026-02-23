@@ -37,7 +37,7 @@ describe("formatStalenessReport — markdown structure", () => {
           linesChanged: 120,
           lastDocUpdate: "2026-01-01T00:00:00.000Z",
           daysSinceDocUpdate: 53,
-          affectedDocTypes: ["functions-list", "requirements"],
+          affectedDocTypes: ["functions-list", "basic-design"],
         },
       ],
       overallScore: 75,
@@ -140,7 +140,7 @@ describe("formatStalenessReport — markdown structure", () => {
           linesChanged: 300,
           lastDocUpdate: null,
           daysSinceDocUpdate: 90,
-          affectedDocTypes: ["functions-list", "requirements"],
+          affectedDocTypes: ["functions-list", "basic-design"],
         },
         {
           featureId: "F-002",
@@ -161,7 +161,7 @@ describe("formatStalenessReport — markdown structure", () => {
     const output = formatStalenessReport(report);
     expect(output).toContain("## Recommended Actions");
     expect(output).toContain("F-001");
-    expect(output).toContain("functions-list, requirements");
+    expect(output).toContain("functions-list, basic-design");
     // F-002 should not appear in recommended actions (score 10)
     const actionsSection = output.split("## Recommended Actions")[1] ?? "";
     expect(actionsSection).not.toContain("F-002");

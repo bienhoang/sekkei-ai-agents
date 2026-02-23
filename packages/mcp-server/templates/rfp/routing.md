@@ -12,6 +12,23 @@
 | `PROPOSAL_UPDATE` | Generate/update proposal | proposal |
 | `SCOPE_FREEZE` | Finalize + handoff prompt | freeze |
 
+## Navigation Keywords
+
+| Keyword | From Phase | Target | Notes |
+|---------|-----------|--------|-------|
+| `SHOW` | Any | — | Display current phase output summary |
+| `BACK` | Any (except RFP_RECEIVED) | Previous phase | Uses back action, requires force |
+| `SKIP_QNA` | QNA_GENERATION | DRAFTING | Draft with assumptions, skip client Q&A |
+| `BUILD_NOW` | WAITING_CLIENT | DRAFTING | Draft without waiting for answers |
+
+## Backward Transition Paths
+
+| From | To | Use Case |
+|------|----|----------|
+| `CLIENT_ANSWERED` | `ANALYZING` | Client answers reveal scope change, re-analyze |
+| `CLIENT_ANSWERED` | `QNA_GENERATION` | Need follow-up questions after answers |
+| `PROPOSAL_UPDATE` | `QNA_GENERATION` | Multi-round Q&A, proposal needs more info |
+
 ## Engineering Principles (always enforce)
 
 - MVP-first

@@ -9,6 +9,7 @@ import type { DocType, KeigoLevel, Language } from "../types/documents.js";
 export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
   "functions-list": [
     "Generate a 機能一覧 (Function List) from the provided input.",
+    "This document is generated AFTER requirements — cross-reference REQ-xxx IDs from upstream 要件定義書.",
     "Use 3-tier hierarchy: 大分類 -> 中分類 -> 小機能.",
     "ID format: [PREFIX]-001 (derive prefix from major category).",
     "Processing types: 入力/照会/帳票/バッチ.",
@@ -22,7 +23,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Functional requirements: REQ-001 format, map to function IDs (F-xxx).",
     "Non-functional requirements: NFR-001 format with measurable targets.",
     "Include acceptance criteria for each major requirement.",
-    "Cross-reference function IDs from 機能一覧 if upstream doc is provided.",
+    "This is the FIRST document generated after RFP — it defines REQ-xxx IDs that all downstream docs reference.",
     "For 非機能要件: Apply IPA NFUG 6 categories (可用性/性能・拡張性/運用・保守性/移行性/セキュリティ/システム環境・エコロジー). Every NFR-xxx MUST have a specific numeric 目標値. Prohibited vague terms: 高速, 十分, 適切, 高い, 良好.",
   ].join("\n"),
 

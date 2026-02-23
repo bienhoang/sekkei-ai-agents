@@ -6,23 +6,30 @@ import { readFile, writeFile, mkdir, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
-import type { RfpPhase, RfpStatus, RfpFileInventory } from "../types/documents.js";
+import type { RfpPhase, RfpStatus, RfpFileInventory, PhaseEntry } from "../types/documents.js";
 import { RFP_PHASES, RFP_FILES } from "../types/documents.js";
 
 // --- Constants ---
 
 const PROJECT_NAME_RE = /^[a-z0-9][a-z0-9-]*$/;
 
-/** Valid phase transitions (directed graph) */
+/** Valid phase transitions (directed graph, includes backward edges) */
 export const ALLOWED_TRANSITIONS: ReadonlyMap<RfpPhase, readonly RfpPhase[]> = new Map([
   ["RFP_RECEIVED", ["ANALYZING"]],
   ["ANALYZING", ["QNA_GENERATION"]],
   ["QNA_GENERATION", ["WAITING_CLIENT"]],
   ["WAITING_CLIENT", ["DRAFTING", "CLIENT_ANSWERED"]],
   ["DRAFTING", ["PROPOSAL_UPDATE"]],
-  ["CLIENT_ANSWERED", ["PROPOSAL_UPDATE"]],
-  ["PROPOSAL_UPDATE", ["SCOPE_FREEZE"]],
+  ["CLIENT_ANSWERED", ["PROPOSAL_UPDATE", "ANALYZING", "QNA_GENERATION"]],
+  ["PROPOSAL_UPDATE", ["SCOPE_FREEZE", "QNA_GENERATION"]],
   ["SCOPE_FREEZE", []],
+]);
+
+/** Backward transition edges — require explicit intent */
+export const BACKWARD_TRANSITIONS = new Set<string>([
+  "CLIENT_ANSWERED->ANALYZING",
+  "CLIENT_ANSWERED->QNA_GENERATION",
+  "PROPOSAL_UPDATE->QNA_GENERATION",
 ]);
 
 /** File write mode rules */
@@ -61,6 +68,10 @@ export function validateTransition(from: RfpPhase, to: RfpPhase): boolean {
   return allowed ? allowed.includes(to) : false;
 }
 
+export function isBackwardTransition(from: RfpPhase, to: RfpPhase): boolean {
+  return BACKWARD_TRANSITIONS.has(`${from}->${to}`);
+}
+
 // --- Workspace Creation ---
 
 export async function createWorkspace(basePath: string, projectName: string): Promise<string> {
@@ -76,6 +87,8 @@ export async function createWorkspace(basePath: string, projectName: string): Pr
     next_action: "Paste RFP content into 01_raw_rfp.md",
     blocking_issues: [],
     assumptions: [],
+    qna_round: 0,
+    phase_history: [{ phase: "RFP_RECEIVED", entered: now }],
   };
   await writeStatus(wsPath, initialStatus);
 
@@ -140,6 +153,23 @@ function parseStatusYaml(raw: string): RfpStatus {
     throw new SekkeiError("RFP_PHASE_ERROR", `Invalid phase in status file: "${phase}"`);
   }
 
+  // Parse qna_round (backward compat: default 0)
+  const qnaRound = data.qna_round ? parseInt(data.qna_round as string, 10) : 0;
+
+  // Parse phase_history (backward compat: default [])
+  let phaseHistory: PhaseEntry[] = [];
+  if (data.phase_history && Array.isArray(data.phase_history)) {
+    // phase_history is stored as YAML list of "phase:date:reason" strings
+    phaseHistory = (data.phase_history as string[]).map(entry => {
+      const parts = entry.split("|");
+      return {
+        phase: parts[0] as RfpPhase,
+        entered: parts[1] ?? "",
+        ...(parts[2] ? { reason: parts[2] } : {}),
+      };
+    });
+  }
+
   return {
     project: (data.project as string) ?? "",
     phase: phase as RfpPhase,
@@ -147,11 +177,13 @@ function parseStatusYaml(raw: string): RfpStatus {
     next_action: (data.next_action as string) ?? "",
     blocking_issues: (data.blocking_issues as string[]) ?? [],
     assumptions: (data.assumptions as string[]) ?? [],
+    qna_round: qnaRound,
+    phase_history: phaseHistory,
   };
 }
 
 function sanitizeYamlScalar(v: string): string {
-  return v.replace(/[\r\n]/g, " ");
+  return v.replace(/[\r\n|]/g, " ");
 }
 
 function serializeStatusYaml(status: RfpStatus): string {
@@ -162,13 +194,55 @@ function serializeStatusYaml(status: RfpStatus): string {
     `last_update: ${status.last_update}`,
     `next_action: ${sanitizeYamlScalar(status.next_action)}`,
     "blocking_issues:",
-    ...status.blocking_issues.map(i => `  - ${i}`),
+    ...status.blocking_issues.map(i => `  - ${sanitizeYamlScalar(i)}`),
     "assumptions:",
-    ...status.assumptions.map(a => `  - ${a}`),
+    ...status.assumptions.map(a => `  - ${sanitizeYamlScalar(a)}`),
+    `qna_round: ${status.qna_round}`,
+    "phase_history:",
+    ...status.phase_history.map(e =>
+      `  - ${e.phase}|${e.entered}${e.reason ? `|${sanitizeYamlScalar(e.reason)}` : ""}`
+    ),
     "---",
     "",
   ];
   return lines.join("\n");
+}
+
+// --- History & Navigation ---
+
+export async function getPhaseHistory(workspacePath: string): Promise<PhaseEntry[]> {
+  const status = await readStatus(workspacePath);
+  return status.phase_history;
+}
+
+export async function getPreviousPhase(workspacePath: string): Promise<RfpPhase | null> {
+  const status = await readStatus(workspacePath);
+  if (status.phase_history.length < 2) return null;
+  return status.phase_history[status.phase_history.length - 2].phase;
+}
+
+// --- Decision Logging ---
+
+export async function appendDecision(
+  workspacePath: string,
+  from: RfpPhase,
+  to: RfpPhase,
+  reason?: string,
+): Promise<void> {
+  const filePath = join(workspacePath, "07_decisions.md");
+  const now = new Date().toISOString().slice(0, 10);
+  const entry = [
+    `## ${now} — Phase: ${from} → ${to}`,
+    `- **Decision:** ${reason ?? "Phase progression"}`,
+    `- **Impact:** ${isBackwardTransition(from, to) ? "Re-entering earlier phase for revision" : "Forward progression"}`,
+    "",
+  ].join("\n");
+
+  let existing = "";
+  try { existing = await readFile(filePath, "utf-8"); } catch { /* new file */ }
+  const separator = existing.trim() ? "\n\n" : "";
+  await writeFile(filePath, existing + separator + entry, "utf-8");
+  logger.debug({ from, to }, "Decision logged");
 }
 
 // --- File Operations ---
@@ -234,6 +308,110 @@ function mergeChecklist(existing: string, incoming: string): string {
     result.push(`${k}: ${v}`);
   }
   return result.join("\n");
+}
+
+// --- Config Generation ---
+
+const SYSTEM_TYPE_MAP: Record<string, string> = {
+  "crud tool": "web", "crud": "web",
+  "workflow system": "internal-system", "workflow": "internal-system",
+  "matching platform": "web",
+  "internal ops": "internal-system", "internal": "internal-system",
+  "saas product": "saas", "saas": "saas",
+  "e-commerce": "web", "ecommerce": "web",
+  "mobile": "mobile", "api": "api", "desktop": "desktop",
+  "lp": "lp", "batch": "batch",
+};
+
+function detectSystemType(analysisContent: string): string {
+  const lower = analysisContent.toLowerCase();
+  for (const [keyword, projectType] of Object.entries(SYSTEM_TYPE_MAP)) {
+    if (lower.includes(keyword)) return projectType;
+  }
+  return "web";
+}
+
+interface FeatureSeed {
+  id: string;
+  name: string;
+  display: string;
+  priority?: string;
+  complexity?: string;
+}
+
+function extractFeatureSeeds(proposalContent: string): FeatureSeed[] {
+  const features: FeatureSeed[] = [];
+  const lines = proposalContent.split("\n");
+  let inFeatureSection = false;
+  let foundTableRows = false;
+  for (const line of lines) {
+    if (/^##\s+Feature Seed/.test(line)) { inFeatureSection = true; foundTableRows = false; continue; }
+    if (!inFeatureSection) continue;
+    // Skip empty lines before table starts
+    if (!foundTableRows && line.trim() === "") continue;
+    // Skip header + separator rows
+    if (line.startsWith("|") && (line.includes("---") || line.includes("ID"))) continue;
+    // Data rows
+    if (line.startsWith("|")) {
+      foundTableRows = true;
+      const cols = line.split("|").map(c => c.trim().replace(/[\r\n]/g, " ")).filter(Boolean);
+      if (cols.length >= 3) {
+        features.push({
+          id: cols[0], name: cols[1], display: cols[2],
+          ...(cols[3] ? { priority: cols[3] } : {}),
+          ...(cols[4] ? { complexity: cols[4] } : {}),
+        });
+      }
+    }
+    // Empty line after table data ends section
+    if (foundTableRows && line.trim() === "") break;
+  }
+  return features;
+}
+
+export async function generateConfigFromWorkspace(workspacePath: string): Promise<string> {
+  const status = await readStatus(workspacePath);
+
+  let analysisContent = "";
+  try { analysisContent = await readFile(join(workspacePath, "02_analysis.md"), "utf-8"); } catch { /* ok */ }
+  let proposalContent = "";
+  try { proposalContent = await readFile(join(workspacePath, "05_proposal.md"), "utf-8"); } catch { /* ok */ }
+
+  const projectType = detectSystemType(analysisContent);
+  const features = extractFeatureSeeds(proposalContent);
+
+  const featuresYaml = features.length > 0
+    ? features.map(f =>
+      `  - id: ${f.id}\n    name: ${f.name}\n    display: "${f.display}"`
+    ).join("\n")
+    : "  # No features detected — add manually";
+
+  const config = [
+    "# Auto-generated from RFP analysis. Review and edit before proceeding.",
+    "project:",
+    `  name: "${status.project}"`,
+    `  type: "${projectType}"`,
+    "  stack: []",
+    "  team_size: 0",
+    "  language: ja",
+    "  keigo: 丁寧語",
+    "",
+    "output:",
+    "  directory: ./sekkei-docs",
+    "",
+    "chain:",
+    `  rfp: "01-rfp/${status.project}/05_proposal.md"`,
+    "  functions_list: { status: pending }",
+    "  requirements: { status: pending }",
+    "  basic_design: { status: pending }",
+    "  detail_design: { status: pending }",
+    "",
+    "features:",
+    featuresYaml,
+    "",
+  ].join("\n");
+
+  return config;
 }
 
 // --- Phase Recovery ---

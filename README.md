@@ -69,8 +69,8 @@ npx sekkei-setup    # Auto-detect editor and configure MCP
 
 ```
 npx sekkei init                           # Create project config (run in terminal)
-/sekkei:functions-list @rfp.md            # Generate function list
-/sekkei:requirements @functions-list.md   # Generate requirements
+/sekkei:requirements @rfp.md              # Generate requirements (first after RFP)
+/sekkei:functions-list @requirements.md   # Generate function list
 /sekkei:nfr @requirements.md              # Generate non-functional requirements
 /sekkei:basic-design @requirements.md     # Generate basic design
 /sekkei:detail-design @basic-design.md    # Generate detail design

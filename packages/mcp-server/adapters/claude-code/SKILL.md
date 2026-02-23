@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, functions-list, requirements, nfr, project-plan, basic-design, security-design, detail-design, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, basic-design, security-design, detail-design, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -85,7 +85,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 5. Call `manage_rfp_workspace(action: "transition", phase: "<next>")` → advance phase
 
 **On SCOPE_FREEZE with HIGH/MEDIUM confidence:**
-→ Prompt: "Scope frozen. Confidence: {level}. Run `/sekkei:functions-list` with `05_proposal.md` as input? [Y/n]"
+→ Prompt: "Scope frozen. Confidence: {level}. Run `/sekkei:requirements` with `05_proposal.md` as input? [Y/n]"
 
 **Resume:** Run `/sekkei:rfp` again — tool detects existing workspace and resumes from last phase.
 
@@ -148,7 +148,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 1. Read the input (ideally the generated 機能一覧 or RFP)
 2. If `sekkei.config.yaml` exists, load project metadata and `project_type`
-3. Read upstream 機能一覧 output file from chain config. Call MCP tool `generate_document` with `doc_type: "requirements"`, `upstream_content` (functions-list content), `project_type`, and `language` from `sekkei.config.yaml project.language` (default: "ja"). Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
+3. Call MCP tool `generate_document` with `doc_type: "requirements"`, the input content, `project_type`, and `language` from `sekkei.config.yaml project.language` (default: "ja"). Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese. Requirements is the FIRST doc after RFP — it defines REQ-xxx IDs.
 4. Use the returned template + AI instructions to generate the 要件定義書
 5. Follow these rules strictly:
    - 10-section structure as defined in the template

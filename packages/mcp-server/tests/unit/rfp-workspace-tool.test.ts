@@ -103,4 +103,97 @@ describe("manage_rfp_workspace tool", () => {
     });
     expect(result.isError).toBe(true);
   });
+
+  // --- History Action ---
+  describe("history action", () => {
+    it("returns phase history after transitions", async () => {
+      const result = await callTool(server, "manage_rfp_workspace", {
+        action: "history", workspace_path: wsPath,
+      });
+      expect(result.isError).toBeUndefined();
+      const data = JSON.parse(result.content[0].text);
+      expect(data.phase_history.length).toBeGreaterThan(0);
+    });
+  });
+
+  // --- Back Action ---
+  describe("back action", () => {
+    it("returns error on first phase (no previous)", async () => {
+      // Create a fresh workspace to test back from RFP_RECEIVED
+      const freshResult = await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: tmpDir, project_name: "back-test",
+      });
+      const freshWs = JSON.parse(freshResult.content[0].text).workspace;
+      const result = await callTool(server, "manage_rfp_workspace", {
+        action: "back", workspace_path: freshWs,
+      });
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain("No previous phase");
+    });
+  });
+
+  // --- Backward Transition Force ---
+  describe("backward transitions", () => {
+    let bwWsPath: string;
+
+    it("setup: create workspace and advance to CLIENT_ANSWERED", async () => {
+      const r = await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: tmpDir, project_name: "backward-test",
+      });
+      bwWsPath = JSON.parse(r.content[0].text).workspace;
+      // Advance: RFP_RECEIVED -> ANALYZING -> QNA -> WAITING -> CLIENT_ANSWERED
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "ANALYZING" });
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "QNA_GENERATION" });
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "WAITING_CLIENT" });
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "CLIENT_ANSWERED" });
+    });
+
+    it("rejects backward without force", async () => {
+      const result = await callTool(server, "manage_rfp_workspace", {
+        action: "transition", workspace_path: bwWsPath, phase: "ANALYZING",
+      });
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain("requires force: true");
+    });
+
+    it("allows backward with force", async () => {
+      const result = await callTool(server, "manage_rfp_workspace", {
+        action: "transition", workspace_path: bwWsPath, phase: "ANALYZING", force: true,
+      });
+      expect(result.isError).toBeUndefined();
+      const data = JSON.parse(result.content[0].text);
+      expect(data.backward).toBe(true);
+      expect(data.from).toBe("CLIENT_ANSWERED");
+      expect(data.to).toBe("ANALYZING");
+    });
+  });
+
+  // --- QNA Round ---
+  describe("qna_round increment", () => {
+    it("increments on QNA_GENERATION transition", async () => {
+      const r = await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: tmpDir, project_name: "qna-round-test",
+      });
+      const qnaWs = JSON.parse(r.content[0].text).workspace;
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: qnaWs, phase: "ANALYZING" });
+      const qnaResult = await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: qnaWs, phase: "QNA_GENERATION" });
+      const data = JSON.parse(qnaResult.content[0].text);
+      expect(data.qna_round).toBe(1);
+    });
+  });
+
+  // --- Generate Config ---
+  describe("generate-config action", () => {
+    it("rejects when not at SCOPE_FREEZE/PROPOSAL_UPDATE", async () => {
+      const r = await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: tmpDir, project_name: "genconfig-test",
+      });
+      const gcWs = JSON.parse(r.content[0].text).workspace;
+      const result = await callTool(server, "manage_rfp_workspace", {
+        action: "generate-config", workspace_path: gcWs,
+      });
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain("requires SCOPE_FREEZE");
+    });
+  });
 });

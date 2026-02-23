@@ -18,3 +18,17 @@ Generate with:
 |--------|-----------|------|
 
 - **Updated MVP definition**
+
+## Feature Seed
+
+| ID | Name | Display | Priority | Complexity |
+|----|------|---------|----------|------------|
+
+IDs: 3-letter uppercase code (e.g., SAL, INV). Maps to `features[]` in sekkei.config.yaml.
+
+## Cost Breakdown (Rough Estimate)
+
+| Phase | Effort Range | Risk Factor | Adjusted Range |
+|-------|-------------|-------------|----------------|
+
+**Label: "Rough presales estimate. Refine after requirements phase."**

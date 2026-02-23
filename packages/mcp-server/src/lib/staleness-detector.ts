@@ -67,7 +67,7 @@ function calcScore(daysSince: number, numFiles: number, linesChanged: number): n
 
 /** Determine affected doc types based on feature ID prefix */
 function getAffectedDocTypes(featureId: string): string[] {
-  if (featureId.startsWith("F-")) return ["functions-list", "requirements"];
+  if (featureId.startsWith("F-")) return ["functions-list", "basic-design"];
   if (featureId.startsWith("REQ-")) return ["requirements", "basic-design"];
   if (featureId.startsWith("SCR-")) return ["basic-design", "detail-design"];
   if (featureId.startsWith("TBL-")) return ["basic-design", "detail-design"];

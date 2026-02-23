@@ -66,22 +66,52 @@ Detect especially:
 
 **DO NOT propose architecture in this flow.**
 
+### 6. Effort Estimation (Rough Presales)
+Per complexity dimension, assign T-shirt size (S/M/L/XL):
+
+| Dimension | Score | T-Shirt | Estimated Person-Days |
+|-----------|-------|---------|----------------------|
+
+Ranges: S=1-5d, M=5-15d, L=15-40d, XL=40d+. Sum for total range.
+**Label: "Rough presales estimate, not commitment."**
+
+### 7. Technology Risk
+Flag stack choices with known pitfalls. Format:
+
+| Technology | Risk | Mitigation |
+|------------|------|------------|
+
+### 8. Industry Context
+If project config has `industry`, load glossary from `glossaries/{industry}.yaml` for domain term alignment.
+
 ---
 
 # FLOW 2 — QUESTIONS
 
 Input: `01_raw_rfp.md` + `02_analysis.md`
 
-Generate three groups for `03_questions.md`:
+Generate three groups for `03_questions.md`. Each question gets ID: Q-001, Q-002, ... (sequential across groups).
+Each question has priority: P1 (must-answer), P2 (should-answer), P3 (nice-to-know).
 
-### CRITICAL QUESTIONS
+### CRITICAL QUESTIONS (P1)
 Must answer before safe estimate. Unanswered = high contract risk.
 
-### ARCHITECTURE QUESTIONS
+| ID | Priority | Question | Preferred Answer Format |
+|----|----------|----------|------------------------|
+
+### ARCHITECTURE QUESTIONS (P2)
 Affect system design decisions.
 
-### OPERATION QUESTIONS
+| ID | Priority | Question | Preferred Answer Format |
+|----|----------|----------|------------------------|
+
+### OPERATION QUESTIONS (P2/P3)
 Affect usability and workflow design.
+
+| ID | Priority | Question | Preferred Answer Format |
+|----|----------|----------|------------------------|
+
+Answer format types: yes/no, choice list, free text, number, date.
 
 Rules:
 - Short, direct questions
@@ -119,8 +149,8 @@ Input: `04_client_answers.md` + `02_analysis.md`
 
 ### 1. Answer Impact Analysis
 
-| Answer | Changes Architecture? | Changes Cost? | Changes Timeline? |
-|--------|----------------------|---------------|-------------------|
+| Answer | Changes Architecture? | Changes Cost? | Changes Timeline? | Effort Delta |
+|--------|----------------------|---------------|-------------------|--------------|
 
 ### 2. Updated Requirement Set
 Rewrite corrected requirements incorporating answers.
@@ -152,6 +182,20 @@ Generate `05_proposal.md` with:
 
 - **Updated MVP definition**
 
+### Feature Seed
+
+| ID | Name | Display | Priority | Complexity |
+|----|------|---------|----------|------------|
+
+IDs: 3-letter uppercase code (e.g., SAL, INV). Maps to `features[]` in sekkei.config.yaml.
+
+### Cost Breakdown (Rough Estimate)
+
+| Phase | Effort Range | Risk Factor | Adjusted Range |
+|-------|-------------|-------------|----------------|
+
+**Label: "Rough presales estimate. Refine after requirements phase."**
+
 ---
 
 # FLOW 6 — SCOPE FREEZE
@@ -160,13 +204,20 @@ Input: `02_analysis.md`, `05_proposal.md`
 
 Generate `06_scope_freeze.md` with:
 
-### Scope Freeze Checklist
+### Scope Freeze Checklist (Base)
 - workflow_defined: YES/NO
 - user_roles_confirmed: YES/NO
 - auth_method_confirmed: YES/NO
 - admin_capabilities_defined: YES/NO
 - export_format_confirmed: YES/NO
 - notification_behavior_defined: YES/NO
+
+### Dynamic Checklist (by System Type from analysis)
+Add items based on detected system type:
+- **SaaS**: multi_tenant_confirmed, billing_model_defined, trial_flow_defined
+- **E-commerce**: payment_gateway_confirmed, inventory_sync_defined, shipping_logic_defined
+- **Workflow**: approval_chain_defined, escalation_rules_confirmed, sla_defined
+- **Internal ops**: data_migration_plan, legacy_integration_confirmed
 
 ### Contract Danger Points
 Clauses that must be clarified before signing.
@@ -175,6 +226,10 @@ Clauses that must be clarified before signing.
 - **LOW** → do not sign yet
 - **MEDIUM** → sign only with change control clause
 - **HIGH** → safe to proceed
+
+### Handoff Readiness Score
+Calculate: (completed_checklist_items / total_checklist_items) × 100.
+Score ≥80 = ready. Score 50-79 = conditional. Score <50 = not ready.
 
 ---
 

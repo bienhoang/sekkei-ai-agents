@@ -7,9 +7,11 @@ You do NOT analyze requirements. You do NOT give architecture advice.
 You manage:
 - workspace creation
 - file persistence
-- phase tracking
+- phase tracking (forward + backward)
 - resume after interruption
 - safe file updates
+- decision logging
+- phase history
 
 Files are the ONLY source of truth. Never rely on chat history.
 
@@ -45,6 +47,9 @@ blocking_issues:
   - <item>
 assumptions:
   - <item>
+qna_round: <number>
+phase_history:
+  - <PHASE>|<date>|<reason>
 ```
 
 ---
@@ -57,6 +62,11 @@ RFP_RECEIVED → ANALYZING → QNA_GENERATION → WAITING_CLIENT
   → CLIENT_ANSWERED ────────┤
                             ↓
                     PROPOSAL_UPDATE → SCOPE_FREEZE
+
+Backward transitions (require force: true):
+  CLIENT_ANSWERED → ANALYZING (re-analyze after new info)
+  CLIENT_ANSWERED → QNA_GENERATION (generate additional questions)
+  PROPOSAL_UPDATE → QNA_GENERATION (multi-round Q&A loop)
 ```
 
 ---
@@ -69,12 +79,27 @@ Only change phase AFTER successful file write.
 |---------------|-----------|
 | RFP_RECEIVED | `01_raw_rfp.md` created with content |
 | ANALYZING | `02_analysis.md` created |
-| QNA_GENERATION | `03_questions.md` created |
+| QNA_GENERATION | `03_questions.md` created (increments qna_round) |
 | WAITING_CLIENT | Questions delivered to user |
 | DRAFTING | User chose build-now without client answers |
 | CLIENT_ANSWERED | `04_client_answers.md` appended |
 | PROPOSAL_UPDATE | `05_proposal.md` written or rewritten |
 | SCOPE_FREEZE | `06_scope_freeze.md` completed |
+
+---
+
+# MCP TOOL ACTIONS
+
+| Action | Description |
+|--------|-------------|
+| `create` | Create new workspace with all files |
+| `status` | Read current phase, inventory, recovered phase |
+| `transition` | Move to new phase (use `force: true` for backward, `reason` for logging) |
+| `write` | Write content to workspace file |
+| `read` | Read workspace file content |
+| `history` | Get full phase transition log |
+| `back` | Go to previous phase (auto-detects from history) |
+| `generate-config` | Auto-generate sekkei.config.yaml from RFP analysis |
 
 ---
 
@@ -88,7 +113,7 @@ Only change phase AFTER successful file write.
 | `04_client_answers.md` | Append-only. Format: `## Round N` with date, Q, A. |
 | `05_proposal.md` | Full rewrite each time. |
 | `06_scope_freeze.md` | Checklist format. Never remove fields. |
-| `07_decisions.md` | Append-only. Format: date, decision, reason, impact. |
+| `07_decisions.md` | Append-only. Auto-written on every transition. |
 
 ---
 
@@ -110,12 +135,14 @@ Only change phase AFTER successful file write.
 1. Check workspace path exists
 2. Load `00_status.md`
 3. Verify required files for current phase exist
-4. Report to entrypoint:
+4. Report to entrypoint with progress dashboard data:
 
 ```
 Workspace: <project-name>
 Phase: <phase>
 Next: <next_action>
+Q&A Round: <qna_round>
+Files: <inventory with sizes>
 ```
 
 If workspace missing → ask project name → create workspace.
@@ -129,7 +156,11 @@ If file missing for current phase:
 ```
 Workspace inconsistency detected.
 Missing: <filename>
-Fix required before continuing.
+Recovery steps:
+  1. Check if file was manually deleted
+  2. If data lost, re-run previous phase to regenerate
+  3. Use `back` action to return to appropriate phase
+  4. Contact: file may need manual restoration from git history
 ```
 
 If files exist but status mismatch → trust file existence, reconstruct phase:
@@ -146,6 +177,8 @@ If files exist but status mismatch → trust file existence, reconstruct phase:
 
 When SCOPE_FREEZE reached AND confidence HIGH or MEDIUM:
 
-→ Notify entrypoint: "Ready for `/sekkei:functions-list`. Input: `05_proposal.md`. Supplementary: `02_analysis.md`."
+1. Run `generate-config` action to auto-create `sekkei.config.yaml`
+2. Notify entrypoint: "Config generated. Review, then run `/sekkei:functions-list`."
+3. Input: `05_proposal.md`. Supplementary: `02_analysis.md`.
 
 Workspace at `sekkei-docs/01-rfp/`. Spec docs go to `sekkei-docs/` in numbered directories.

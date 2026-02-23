@@ -80,8 +80,8 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 npx sekkei init
 
 # 2. Generate documents following V-model chain
-/sekkei:functions-list @rfp.md          # RFP → 機能一覧
-/sekkei:requirements @functions-list.md  # 機能一覧 → 要件定義書
+/sekkei:requirements @rfp.md             # RFP → 要件定義書
+/sekkei:functions-list @requirements.md  # 要件定義書 → 機能一覧
 /sekkei:nfr @requirements.md             # 要件定義書 → NFR
 /sekkei:basic-design @requirements.md    # 要件定義書 → 基本設計書
 /sekkei:detail-design @basic-design.md   # 基本設計書 → 詳細設計書

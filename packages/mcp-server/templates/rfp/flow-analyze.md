@@ -21,15 +21,7 @@ Types: Explicit, Implicit, Domain, Missing, Risk
 Categorize: CRUD tool / workflow system / matching platform / internal ops / SaaS product / other.
 
 ## 4. Complexity Radar (0-5)
-Score 7 dimensions:
-- UI complexity
-- Backend logic
-- Workflow need
-- Identity/auth
-- Realtime/notification
-- Admin tooling
-- Integration risk
-
+Score: UI complexity, Backend logic, Workflow need, Identity/auth, Realtime/notification, Admin tooling, Integration risk.
 State: **true complexity vs client expectation**.
 
 ## 5. Hidden Risks
@@ -43,3 +35,21 @@ Detect especially:
 - Speed priority without budget clarity
 
 **DO NOT propose architecture in this flow.**
+
+## 6. Effort Estimation (Rough Presales)
+Per complexity dimension, assign T-shirt size (S/M/L/XL):
+
+| Dimension | Score | T-Shirt | Estimated Person-Days |
+|-----------|-------|---------|----------------------|
+
+Ranges: S=1-5d, M=5-15d, L=15-40d, XL=40d+. Sum for total range.
+**Label: "Rough presales estimate, not commitment."**
+
+## 7. Technology Risk
+Flag stack choices with known pitfalls. Format:
+
+| Technology | Risk | Mitigation |
+|------------|------|------------|
+
+## 8. Industry Context
+If project config has `industry`, load glossary from `glossaries/{industry}.yaml` for domain term alignment.
