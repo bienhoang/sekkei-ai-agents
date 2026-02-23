@@ -73,6 +73,10 @@ describe("manage_rfp_workspace tool", () => {
   });
 
   it("transition: advances phase with valid transition", async () => {
+    await callTool(server, "manage_rfp_workspace", {
+      action: "write", workspace_path: wsPath,
+      filename: "01_raw_rfp.md", content: "# RFP\nTest RFP content",
+    });
     const result = await callTool(server, "manage_rfp_workspace", {
       action: "transition", workspace_path: wsPath, phase: "ANALYZING",
     });
@@ -141,10 +145,13 @@ describe("manage_rfp_workspace tool", () => {
         action: "create", workspace_path: tmpDir, project_name: "backward-test",
       });
       bwWsPath = JSON.parse(r.content[0].text).workspace;
-      // Advance: RFP_RECEIVED -> ANALYZING -> QNA -> WAITING -> CLIENT_ANSWERED
+      // Write required content before each forward transition
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwWsPath, filename: "01_raw_rfp.md", content: "# RFP" });
       await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "ANALYZING" });
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwWsPath, filename: "02_analysis.md", content: "# Analysis" });
       await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "QNA_GENERATION" });
       await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "WAITING_CLIENT" });
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwWsPath, filename: "04_client_answers.md", content: "# Answers" });
       await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "CLIENT_ANSWERED" });
     });
 
@@ -175,7 +182,9 @@ describe("manage_rfp_workspace tool", () => {
         action: "create", workspace_path: tmpDir, project_name: "qna-round-test",
       });
       const qnaWs = JSON.parse(r.content[0].text).workspace;
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: qnaWs, filename: "01_raw_rfp.md", content: "# RFP" });
       await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: qnaWs, phase: "ANALYZING" });
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: qnaWs, filename: "02_analysis.md", content: "# Analysis" });
       const qnaResult = await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: qnaWs, phase: "QNA_GENERATION" });
       const data = JSON.parse(qnaResult.content[0].text);
       expect(data.qna_round).toBe(1);

@@ -16,20 +16,26 @@ const PROJECT_NAME_RE = /^[a-z0-9][a-z0-9-]*$/;
 /** Valid phase transitions (directed graph, includes backward edges) */
 export const ALLOWED_TRANSITIONS: ReadonlyMap<RfpPhase, readonly RfpPhase[]> = new Map([
   ["RFP_RECEIVED", ["ANALYZING"]],
-  ["ANALYZING", ["QNA_GENERATION"]],
-  ["QNA_GENERATION", ["WAITING_CLIENT"]],
-  ["WAITING_CLIENT", ["DRAFTING", "CLIENT_ANSWERED"]],
-  ["DRAFTING", ["PROPOSAL_UPDATE"]],
+  ["ANALYZING", ["QNA_GENERATION", "RFP_RECEIVED"]],
+  ["QNA_GENERATION", ["WAITING_CLIENT", "DRAFTING", "ANALYZING"]],
+  ["WAITING_CLIENT", ["DRAFTING", "CLIENT_ANSWERED", "QNA_GENERATION"]],
+  ["DRAFTING", ["PROPOSAL_UPDATE", "WAITING_CLIENT"]],
   ["CLIENT_ANSWERED", ["PROPOSAL_UPDATE", "ANALYZING", "QNA_GENERATION"]],
-  ["PROPOSAL_UPDATE", ["SCOPE_FREEZE", "QNA_GENERATION"]],
-  ["SCOPE_FREEZE", []],
+  ["PROPOSAL_UPDATE", ["SCOPE_FREEZE", "QNA_GENERATION", "CLIENT_ANSWERED"]],
+  ["SCOPE_FREEZE", ["PROPOSAL_UPDATE"]],
 ]);
 
 /** Backward transition edges — require explicit intent */
 export const BACKWARD_TRANSITIONS = new Set<string>([
+  "ANALYZING->RFP_RECEIVED",
+  "QNA_GENERATION->ANALYZING",
+  "WAITING_CLIENT->QNA_GENERATION",
+  "DRAFTING->WAITING_CLIENT",
   "CLIENT_ANSWERED->ANALYZING",
   "CLIENT_ANSWERED->QNA_GENERATION",
   "PROPOSAL_UPDATE->QNA_GENERATION",
+  "PROPOSAL_UPDATE->CLIENT_ANSWERED",
+  "SCOPE_FREEZE->PROPOSAL_UPDATE",
 ]);
 
 /** File write mode rules */
@@ -54,6 +60,41 @@ export const FLOW_FILE_MAP = {
   proposal:  { reads: ["01_raw_rfp.md", "02_analysis.md", "03_questions.md", "04_client_answers.md"], writes: ["05_proposal.md"] },
   freeze:    { reads: ["02_analysis.md", "05_proposal.md"], writes: ["06_scope_freeze.md"] },
 } as const;
+
+/** Default next_action text per phase — auto-set on transition */
+export const PHASE_NEXT_ACTION: ReadonlyMap<RfpPhase, string> = new Map([
+  ["RFP_RECEIVED", "Paste RFP content into 01_raw_rfp.md"],
+  ["ANALYZING", "Run deep analysis on RFP"],
+  ["QNA_GENERATION", "Review questions, send to client or BUILD_NOW"],
+  ["WAITING_CLIENT", "Paste client answers or BUILD_NOW"],
+  ["DRAFTING", "Draft proposal with assumptions"],
+  ["CLIENT_ANSWERED", "Analyze client answers impact"],
+  ["PROPOSAL_UPDATE", "Generate/update proposal"],
+  ["SCOPE_FREEZE", "Review scope freeze checklist"],
+]);
+
+/** Required non-empty files before entering a phase (forward only) */
+const PHASE_REQUIRED_CONTENT: ReadonlyMap<RfpPhase, readonly string[]> = new Map([
+  ["ANALYZING", ["01_raw_rfp.md"]],
+  ["QNA_GENERATION", ["02_analysis.md"]],
+  ["CLIENT_ANSWERED", ["04_client_answers.md"]],
+  ["PROPOSAL_UPDATE", ["02_analysis.md"]],
+  ["SCOPE_FREEZE", ["05_proposal.md"]],
+]);
+
+export async function validatePhaseContent(
+  workspacePath: string, targetPhase: RfpPhase,
+): Promise<string | null> {
+  const required = PHASE_REQUIRED_CONTENT.get(targetPhase);
+  if (!required) return null;
+  const inv = await getFileInventory(workspacePath);
+  for (const file of required) {
+    if (!inv.files[file]?.exists || inv.files[file]?.size === 0) {
+      return `Cannot enter ${targetPhase}: ${file} is empty. Write content first.`;
+    }
+  }
+  return null;
+}
 
 // --- Validation ---
 

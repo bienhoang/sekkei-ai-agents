@@ -57,16 +57,25 @@ phase_history:
 # PHASE ENUM
 
 ```
-RFP_RECEIVED → ANALYZING → QNA_GENERATION → WAITING_CLIENT
-  → DRAFTING (no answers) ─┐
-  → CLIENT_ANSWERED ────────┤
-                            ↓
-                    PROPOSAL_UPDATE → SCOPE_FREEZE
+RFP_RECEIVED ⇄ ANALYZING ⇄ QNA_GENERATION ⇄ WAITING_CLIENT
+                                 ↓ (skip)        ↕
+                              DRAFTING ───────────┘
+                                 ↓
+  CLIENT_ANSWERED → PROPOSAL_UPDATE ⇄ SCOPE_FREEZE
+       ↕ ↗              ↕
+    ANALYZING      QNA_GENERATION
+    QNA_GENERATION CLIENT_ANSWERED
 
 Backward transitions (require force: true):
-  CLIENT_ANSWERED → ANALYZING (re-analyze after new info)
-  CLIENT_ANSWERED → QNA_GENERATION (generate additional questions)
-  PROPOSAL_UPDATE → QNA_GENERATION (multi-round Q&A loop)
+  ANALYZING → RFP_RECEIVED
+  QNA_GENERATION → ANALYZING
+  WAITING_CLIENT → QNA_GENERATION
+  DRAFTING → WAITING_CLIENT
+  CLIENT_ANSWERED → ANALYZING
+  CLIENT_ANSWERED → QNA_GENERATION
+  PROPOSAL_UPDATE → QNA_GENERATION
+  PROPOSAL_UPDATE → CLIENT_ANSWERED
+  SCOPE_FREEZE → PROPOSAL_UPDATE
 ```
 
 ---

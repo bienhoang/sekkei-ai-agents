@@ -1,7 +1,4 @@
-/**
- * MCP tool handler for RFP workspace management.
- * Actions: create, status, transition, write, read.
- */
+/** MCP tool handler for RFP workspace management. */
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { RFP_PHASES, RFP_FILES } from "../types/documents.js";
@@ -9,7 +6,7 @@ import {
   createWorkspace, readStatus, writeStatus, writeWorkspaceFile,
   readWorkspaceFile, getFileInventory, recoverPhase, validateTransition,
   isBackwardTransition, appendDecision, getPhaseHistory, getPreviousPhase,
-  generateConfigFromWorkspace,
+  generateConfigFromWorkspace, PHASE_NEXT_ACTION, validatePhaseContent,
 } from "../lib/rfp-state-machine.js";
 import { logger } from "../lib/logger.js";
 
@@ -78,6 +75,11 @@ export async function handleRfpWorkspace(args: RfpWorkspaceArgs): Promise<ToolRe
         if (isBackwardTransition(current.phase, args.phase) && !args.force) {
           return err(`Backward transition ${current.phase} → ${args.phase} requires force: true`);
         }
+        // Content validation for forward transitions only
+        if (!isBackwardTransition(current.phase, args.phase)) {
+          const contentErr = await validatePhaseContent(args.workspace_path, args.phase);
+          if (contentErr) return err(contentErr);
+        }
         const now = new Date().toISOString().slice(0, 10);
         // Increment qna_round when entering QNA_GENERATION
         const qnaRound = args.phase === "QNA_GENERATION"
@@ -87,6 +89,7 @@ export async function handleRfpWorkspace(args: RfpWorkspaceArgs): Promise<ToolRe
           ...current,
           phase: args.phase,
           last_update: now,
+          next_action: PHASE_NEXT_ACTION.get(args.phase) ?? current.next_action,
           qna_round: qnaRound,
           phase_history: [...current.phase_history, historyEntry],
         });
@@ -105,6 +108,7 @@ export async function handleRfpWorkspace(args: RfpWorkspaceArgs): Promise<ToolRe
       }
 
       case "back": {
+        // prev = last visited phase from history (not topological predecessor)
         const prev = await getPreviousPhase(args.workspace_path);
         if (!prev) {
           return err("No previous phase to go back to");
@@ -124,6 +128,7 @@ export async function handleRfpWorkspace(args: RfpWorkspaceArgs): Promise<ToolRe
           ...cur,
           phase: prev,
           last_update: now,
+          next_action: PHASE_NEXT_ACTION.get(prev) ?? cur.next_action,
           qna_round: qnaRound,
           phase_history: [...cur.phase_history, historyEntry],
         });
