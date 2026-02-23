@@ -20,6 +20,7 @@ const inputSchema = {
   cr_id: z.string().max(20).optional()
     .describe("CR ID (e.g. CR-260224-001). Required for all except create/list"),
   config_path: z.string().max(500).optional()
+    .refine(p => !p || !p.includes(".."), { message: "no path traversal" })
     .refine(p => !p || /\.ya?ml$/i.test(p), { message: "must be .yaml/.yml" })
     .describe("Path to sekkei.config.yaml (for analyze/propagate_next/validate)"),
   origin_doc: z.string().max(50).optional()
