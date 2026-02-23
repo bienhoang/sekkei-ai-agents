@@ -38,10 +38,6 @@ def main():
                 input_data.get("project_name", ""),
             )
 
-        elif action == "glossary":
-            from nlp.glossary import handle_action
-            result = handle_action(input_data["action"], input_data)
-
         elif action == "diff":
             from nlp.diff_analyzer import analyze
             result = analyze(

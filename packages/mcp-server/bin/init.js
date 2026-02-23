@@ -115,6 +115,27 @@ async function main() {
         ],
       });
     },
+    industry: () =>
+      p.select({
+        message: "業種テンプレート（用語集インポート）",
+        options: [
+          { value: "none", label: "なし（スキップ）" },
+          { value: "finance", label: "金融" },
+          { value: "medical", label: "医療" },
+          { value: "manufacturing", label: "製造" },
+          { value: "automotive", label: "自動車" },
+          { value: "real-estate", label: "不動産" },
+          { value: "logistics", label: "物流" },
+          { value: "retail", label: "小売" },
+          { value: "insurance", label: "保険" },
+          { value: "education", label: "教育" },
+          { value: "government", label: "官公庁" },
+          { value: "construction", label: "建設" },
+          { value: "telecom", label: "通信" },
+          { value: "energy", label: "エネルギー" },
+          { value: "food-service", label: "飲食" },
+        ],
+      }),
     outputDir: () =>
       p.text({
         message: "出力ディレクトリ",
@@ -145,6 +166,7 @@ async function main() {
       language: project.language,
       keigo: project.keigo,
       preset: project.preset,
+      industry: project.industry !== "none" ? project.industry : undefined,
     },
     output: {
       directory: outDir,
@@ -165,6 +187,22 @@ async function main() {
   const yamlContent = stringify(config);
   writeFileSync(CONFIG_FILE, yamlContent, "utf-8");
   p.log.success(`${CONFIG_FILE} を生成しました`);
+
+  // Import industry glossary (native TS — no Python required)
+  if (project.industry && project.industry !== "none") {
+    try {
+      const { importIndustry, loadGlossary, saveGlossary } = await import("../dist/lib/glossary-native.js");
+      const glossaryPath = resolve(outDir, "glossary.yaml");
+      const { mkdirSync } = await import("node:fs");
+      mkdirSync(outDir, { recursive: true });
+      const glossary = loadGlossary(glossaryPath);
+      const { imported } = importIndustry(project.industry, glossary);
+      saveGlossary(glossary, glossaryPath);
+      p.log.success(`${project.industry} 用語集をインポートしました（${imported} 件）`);
+    } catch {
+      p.log.warn("用語集インポートに失敗しました（スキップ）");
+    }
+  }
 
   // Editor setup
   const s = p.spinner();

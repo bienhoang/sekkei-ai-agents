@@ -22,7 +22,7 @@ import {
   buildTraceabilityInstruction,
   buildLearningInstruction,
 } from "../lib/generation-instructions.js";
-import { callPython } from "../lib/python-bridge.js";
+import { loadGlossary } from "../lib/glossary-native.js";
 import { extractAllIds } from "../lib/id-extractor.js";
 import { resolveOutputPath } from "../lib/resolve-output-path.js";
 import { autoCommit } from "../lib/git-committer.js";
@@ -191,8 +191,8 @@ export async function handleGenerateDocument(
     if (input_lang && input_lang !== "ja") {
       let glossaryTerms = "";
       try {
-        const result = await callPython("glossary", { action: "list" });
-        glossaryTerms = formatGlossaryForContext(result);
+        const glossary = loadGlossary("glossary.yaml");
+        glossaryTerms = formatGlossaryForContext(glossary as unknown as Record<string, unknown>);
       } catch {
         logger.warn("Glossary load failed, proceeding without terms");
       }

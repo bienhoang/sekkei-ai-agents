@@ -4,7 +4,7 @@
  */
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { callPython } from "../lib/python-bridge.js";
+import { loadGlossary } from "../lib/glossary-native.js";
 import { logger } from "../lib/logger.js";
 
 const inputSchema = {
@@ -26,11 +26,8 @@ export function registerTranslateDocumentTool(server: McpServer): void {
       let glossaryTerms: string[] = [];
       if (glossary_path) {
         try {
-          const result = await callPython("glossary", {
-            action: "list",
-            project_path: glossary_path,
-          });
-          const terms = (result.terms ?? []) as Array<{ ja: string; en: string; context?: string }>;
+          const glossary = loadGlossary(glossary_path);
+          const terms = glossary.terms;
           glossaryTerms = terms.map(
             (t) => `${t.ja} → ${t.en}${t.context ? ` (${t.context})` : ""}`
           );

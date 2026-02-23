@@ -1,7 +1,8 @@
 /**
  * TS -> Python subprocess bridge. Calls Python CLI with JSON input/output.
  */
-import { execFile } from "node:child_process";
+import { execFile, execFileSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { logger } from "./logger.js";
@@ -12,12 +13,32 @@ const PYTHON_DIR = resolve(__dirname, "../../python");
 const CLI_PATH = resolve(PYTHON_DIR, "cli.py");
 const TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 const MAX_BUFFER = 10 * 1024 * 1024; // 10MB
-const VALID_ACTIONS = ["export-excel", "export-pdf", "export-docx", "glossary", "diff", "export-matrix", "import-excel"] as const;
+const VALID_ACTIONS = ["export-excel", "export-pdf", "export-docx", "diff", "export-matrix", "import-excel"] as const;
 
-/** Find python3 executable (venv or system) */
+/** Find python3 executable — checks venv, env var, then system python. */
 function getPythonPath(): string {
+  // 1. Explicit env var override
+  if (process.env.SEKKEI_PYTHON) {
+    if (!existsSync(process.env.SEKKEI_PYTHON)) {
+      throw new SekkeiError("CONFIG_ERROR", `SEKKEI_PYTHON points to missing file: ${process.env.SEKKEI_PYTHON}`);
+    }
+    return process.env.SEKKEI_PYTHON;
+  }
+
+  // 2. Project venv
   const venvPython = resolve(PYTHON_DIR, ".venv/bin/python3");
-  return process.env.SEKKEI_PYTHON ?? venvPython;
+  if (existsSync(venvPython)) return venvPython;
+
+  // 3. System python3 fallback
+  try {
+    execFileSync("python3", ["--version"], { stdio: "pipe" });
+    return "python3";
+  } catch { /* not available */ }
+
+  throw new SekkeiError(
+    "CONFIG_ERROR",
+    "Python not found. Run 'npx sekkei init' to set up the Python venv, or set SEKKEI_PYTHON env var.",
+  );
 }
 
 export interface PythonResult {

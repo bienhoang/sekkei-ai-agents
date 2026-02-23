@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: init, functions-list, requirements, basic-design, detail-design, test-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: functions-list, requirements, basic-design, detail-design, test-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -10,7 +10,6 @@ Generate Japanese software specification documents following the V-model documen
 
 ## Sub-Commands
 
-- `/sekkei:init` — Initialize project config (`sekkei.config.yaml`)
 - `/sekkei:functions-list @input` — Generate 機能一覧 (Function List) from RFP/input
 - `/sekkei:requirements @input` — Generate 要件定義書 (Requirements Definition)
 - `/sekkei:basic-design @input` — Generate 基本設計書 (Basic Design Document)
@@ -38,30 +37,15 @@ Generate Japanese software specification documents following the V-model documen
 
 When the user invokes a sub-command, follow the corresponding workflow below.
 
-### `/sekkei:init`
+### Project Setup (prerequisite)
 
-1. Ask the user for project details: name, type (web/mobile/api/desktop/lp/internal-system/saas/batch), tech stack, team size
-2. Ask for keigo preference: 丁寧語 (polite) / 謙譲語 (humble) / simple
-3. Ask for output language: ja (Japanese) / en (English) / vi (Vietnamese). Default: ja. This controls the language of ALL generated documents.
-4. Ask for industry domain: finance / medical / manufacturing / real-estate / logistics / retail / insurance / education / government / construction / telecom / automotive / energy / food-service / none
-5. Create `sekkei.config.yaml` in the project root with the provided values. Set `project.language` to the selected output language.
-   Append the following commented split block at the end of the config file (verbatim):
-   ```yaml
-   # Document splitting — uncomment to enable for large projects (recommended: >= 3 feature groups)
-   # split:
-   #   basic-design:
-   #     shared: [system-architecture, database-design, external-interface, non-functional-design, technology-rationale]
-   #     per_feature: [overview, business-flow, screen-design, report-design, functions-list]
-   #   detail-design:
-   #     shared: [system-architecture, database-design]
-   #     per_feature: [overview, module-design, class-design, api-detail, processing-flow]
-   #   test-spec:
-   #     shared: []
-   #     per_feature: [unit-test, integration-test, system-test, acceptance-test]
-   ```
-6. Create output directory (`./sekkei-docs/` by default)
-7. If industry != none: call `manage_glossary(action: "import", industry: <choice>, project_path: "./sekkei-docs/glossary.yaml")` to seed project glossary with industry terms
-8. Confirm initialization complete
+Before using any sub-command, initialize the project via CLI:
+
+```bash
+npx sekkei init
+```
+
+This interactive wizard creates `sekkei.config.yaml`, sets up the output directory, imports industry glossary, and configures Python dependencies for export features. No AI required.
 
 ### `/sekkei:functions-list @input`
 

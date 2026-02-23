@@ -3,8 +3,7 @@
  */
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { callPython } from "../lib/python-bridge.js";
-import { SekkeiError } from "../lib/errors.js";
+import { handleGlossaryAction } from "../lib/glossary-native.js";
 import { logger } from "../lib/logger.js";
 
 const GLOSSARY_ACTIONS = ["add", "list", "find", "export", "import"] as const;
@@ -46,16 +45,7 @@ export async function handleGlossary(
   try {
     logger.info({ action, project_path }, "Managing glossary");
 
-    const result = await callPython("glossary", {
-      action,
-      project_path,
-      ja: ja ?? "",
-      en: en ?? "",
-      vi: vi ?? "",
-      context: context ?? "",
-      query: query ?? "",
-      industry: industry ?? "",
-    });
+    const result = handleGlossaryAction(action, { project_path, ja, en, vi, context, query, industry });
 
     let text: string;
     if (action === "export" && result.content) {
@@ -66,7 +56,7 @@ export async function handleGlossary(
 
     return { content: [{ type: "text", text }] };
   } catch (err) {
-    const message = err instanceof SekkeiError ? err.toClientMessage() : "Glossary operation failed";
+    const message = err instanceof Error ? err.message : "Glossary operation failed";
     logger.error({ err, action }, "manage_glossary failed");
     return { content: [{ type: "text", text: message }], isError: true };
   }
