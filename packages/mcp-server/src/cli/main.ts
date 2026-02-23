@@ -16,7 +16,7 @@ import { updateCommand } from "./commands/update.js";
 const main = defineCommand({
   meta: {
     name: "sekkei",
-    version: "1.0.0",
+    version: "1.1.0",
     description: "Sekkei — AI Documentation Agent CLI for Japanese V-model spec documents",
   },
   subCommands: {

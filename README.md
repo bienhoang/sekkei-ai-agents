@@ -1,31 +1,67 @@
 # Sekkei (設計) - AI Documentation Agent
 
-[![npm sekkei-mcp-server](https://img.shields.io/npm/v/sekkei-mcp-server)](https://www.npmjs.com/package/sekkei-mcp-server)
-[![npm sekkei-preview](https://img.shields.io/npm/v/sekkei-preview)](https://www.npmjs.com/package/sekkei-preview)
-[![npm sekkei-skills](https://img.shields.io/npm/v/sekkei-skills)](https://www.npmjs.com/package/sekkei-skills)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-green)](https://nodejs.org)
 
-MCP Server + AI Skills for generating Japanese software specification documents following the V-model hierarchy.
+AI-powered generation of Japanese software specification documents following the V-model hierarchy. Works as an MCP server with Claude Code, Cursor, and VS Code/Copilot.
 
-## Overview
+## What It Does
 
-Sekkei generates structured Japanese specification documents (設計書) from RFP/requirements input using the **Chain-of-Documents** pattern — each document's output becomes the next document's input:
+Sekkei generates structured Japanese specification documents (設計書) from RFP/requirements using a **Chain-of-Documents** pattern — each document's output feeds the next:
 
 ```
 RFP → 機能一覧 → 要件定義書 → 基本設計書 → 詳細設計書 → テスト仕様書
-       (Function    (Requirements   (Basic         (Detail        (Test
-        List)        Definition)     Design)        Design)        Specification)
+       Function    Requirements   Basic         Detail        Test
+       List        Definition     Design        Design        Specification
 ```
+
+Additional document types: サイトマップ (Sitemap), 運用設計書 (Operation Design), 移行設計書 (Migration Design), CRUD図, トレーサビリティマトリックス.
 
 ## Packages
 
-| Package | Description | npm |
-|---------|-------------|-----|
-| [sekkei-mcp-server](./packages/mcp-server/) | Core MCP server — document generation, validation, export | [![npm](https://img.shields.io/npm/v/sekkei-mcp-server?label=)](https://www.npmjs.com/package/sekkei-mcp-server) |
-| [sekkei-preview](./packages/preview/) | VitePress live preview + WYSIWYG editor | [![npm](https://img.shields.io/npm/v/sekkei-preview?label=)](https://www.npmjs.com/package/sekkei-preview) |
-| [sekkei-skills](./packages/skills/) | Claude Code slash commands (`/sekkei:*`) | [![npm](https://img.shields.io/npm/v/sekkei-skills?label=)](https://www.npmjs.com/package/sekkei-skills) |
+| Package | Version | Description |
+|---------|---------|-------------|
+| [sekkei-mcp-server](./packages/mcp-server/) | 1.1.0 | Core MCP server — document generation, validation, export, CLI |
+| [sekkei-preview](./packages/preview/) | 0.2.0 | VitePress live preview + Milkdown WYSIWYG editor |
+| [sekkei-skills](./packages/skills/) | 1.1.0 | Claude Code slash commands (`/sekkei:*`) |
 
-### How They Work Together
+## Quick Start
+
+### Install (Local Dev)
+
+```bash
+git clone <repo-url> && cd sekkei
+chmod +x install.sh && ./install.sh
+# With Python export support:
+./install.sh --with-python
+```
+
+### Install (npm)
+
+```bash
+npm install -g sekkei-mcp-server
+npx sekkei-skills   # Install Claude Code skill
+npx sekkei-setup    # Auto-detect editor and configure MCP
+```
+
+### Generate Documents
+
+```
+/sekkei:init                              # Create project config
+/sekkei:functions-list @rfp.md            # Generate function list
+/sekkei:requirements @functions-list.md   # Generate requirements
+/sekkei:basic-design @requirements.md     # Generate basic design
+/sekkei:detail-design @basic-design.md    # Generate detail design
+/sekkei:test-spec @detail-design.md       # Generate test spec
+```
+
+### Preview
+
+```bash
+npx sekkei-preview   # Live preview in browser
+```
+
+## Architecture
 
 ```
 ┌─────────────────┐     MCP (STDIO)     ┌──────────────────┐
@@ -46,53 +82,68 @@ RFP → 機能一覧 → 要件定義書 → 基本設計書 → 詳細設計書
                                          └──────────────────┘
 ```
 
-## Quick Start
+### MCP Server
 
-### 1. Install
+- **Transport**: STDIO (stdout reserved for JSON-RPC, logs to stderr)
+- **9 MCP Tools**: `generate_document`, `get_template`, `validate_document`, `get_chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`
+- **12 Templates**: Japanese (ja) with YAML frontmatter — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
+- **Python Bridge**: `execFile`-based (no shell injection) for Excel/PDF/DOCX export via `SEKKEI_INPUT` env var
 
-```bash
-npm install -g sekkei-mcp-server
-npx sekkei-skills # Install Claude Code skills
-```
+### CLI (`sekkei` command)
 
-Or use directly with npx:
+Built with citty. Available commands:
 
-```bash
-npx sekkei-mcp-server
-npx sekkei-skills
-```
+| Command | Description |
+|---------|-------------|
+| `sekkei generate` | Generate documents from CLI |
+| `sekkei validate` | Validate document completeness |
+| `sekkei export` | Export to Excel/PDF/DOCX |
+| `sekkei status` | Show chain progress |
+| `sekkei glossary` | Manage terminology |
+| `sekkei watch` | Watch for changes |
+| `sekkei version` | Version + environment health check |
+| `sekkei update` | Update Sekkei installation |
+| `sekkei uninstall` | Remove Sekkei from system |
 
-### 2. Setup
+## Slash Commands (Claude Code)
 
-```bash
-npx sekkei-setup
-```
+23 sub-commands covering the full V-model workflow:
 
-Auto-detects your editor (Claude Code, Cursor, VS Code/Copilot) and configures MCP integration.
-
-### 3. Generate
-
-```
-/sekkei:init                              # Create project config
-/sekkei:functions-list @rfp.md            # Generate function list
-/sekkei:requirements @functions-list.md   # Generate requirements
-```
-
-### 4. Preview
-
-```bash
-npx sekkei-preview  # Live preview in browser
-```
+| Command | Description |
+|---------|-------------|
+| `/sekkei:init` | Initialize project config |
+| `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
+| `/sekkei:requirements @input` | Generate 要件定義書 (Requirements) |
+| `/sekkei:basic-design @input` | Generate 基本設計書 (Basic Design) |
+| `/sekkei:detail-design @input` | Generate 詳細設計書 (Detail Design) |
+| `/sekkei:test-spec @input` | Generate テスト仕様書 (Test Spec) |
+| `/sekkei:matrix` | Generate CRUD図 or トレーサビリティ |
+| `/sekkei:sitemap` | Generate サイトマップ (System Structure Map) |
+| `/sekkei:operation-design @input` | Generate 運用設計書 (Operation Design) |
+| `/sekkei:migration-design @input` | Generate 移行設計書 (Migration Design) |
+| `/sekkei:validate @doc` | Validate completeness and cross-references |
+| `/sekkei:status` | Show document chain progress |
+| `/sekkei:export @doc --format=xlsx\|pdf\|docx` | Export document |
+| `/sekkei:translate @doc --lang=en` | Translate with glossary context |
+| `/sekkei:glossary` | Manage project terminology |
+| `/sekkei:update @doc` | Detect upstream changes |
+| `/sekkei:diff-visual @before @after` | Color-coded revision Excel (朱書き) |
+| `/sekkei:plan @doc-type` | Create generation plan for large docs |
+| `/sekkei:implement @plan-path` | Execute generation plan phase by phase |
+| `/sekkei:preview` | Start VitePress preview server |
+| `/sekkei:version` | Show version + health check |
+| `/sekkei:uninstall` | Remove Sekkei from Claude Code |
+| `/sekkei:rebuild` | Rebuild and re-install skill + MCP |
 
 ## Platform Setup
 
 ### Claude Code
 
 ```bash
-npx sekkei-skills  # Auto-install skill
+npx sekkei-skills   # Auto-install skill
 ```
 
-Add MCP server to `~/.claude/settings.json`:
+Add to `~/.claude/settings.json`:
 
 ```json
 {
@@ -105,26 +156,18 @@ Add MCP server to `~/.claude/settings.json`:
 ### Cursor
 
 ```bash
+npx sekkei-setup   # Auto-detect and configure
+# Or manually:
 mkdir -p .cursor/mcp && cp adapters/cursor/mcp.json .cursor/mcp/mcp.json
 ```
 
 ### VS Code / Copilot
 
 ```bash
+npx sekkei-setup
+# Or manually:
 mkdir -p .github && cp adapters/copilot/copilot-instructions.md .github/
 ```
-
-## Sub-Commands (Claude Code)
-
-19 slash commands covering the full V-model workflow: `init`, `functions-list`, `requirements`, `basic-design`, `detail-design`, `test-spec`, `validate`, `status`, `export`, `translate`, `glossary`, `update`, `preview`, `matrix`, `operation-design`, `migration-design`, `diff-visual`, `plan`, `implement`.
-
-See [sekkei-skills README](./packages/skills/README.md) for the full command reference with descriptions.
-
-## MCP Tools & Resources
-
-9 MCP tools for document generation, validation, chain verification, export, translation, and more. 11 template resources for direct template access.
-
-See [sekkei-mcp-server README](./packages/mcp-server/README.md#mcp-tools) for full reference.
 
 ## Template Customization
 
@@ -134,30 +177,56 @@ Override default templates with company-specific versions:
 export SEKKEI_TEMPLATE_OVERRIDE_DIR=./company-templates
 ```
 
-Resolution order: override dir → default templates. See [mcp-server docs](./packages/mcp-server/README.md#template-customization) for details.
+Resolution order: override dir → default templates. Templates use Markdown with YAML frontmatter.
+
+## Build & Test
+
+```bash
+# From sekkei/ root (monorepo)
+npm run build           # Build all packages
+npm test                # Run tests (mcp-server)
+
+# From packages/mcp-server/
+npm run build           # tsc compile
+npm run lint            # tsc --noEmit (type check)
+npm test                # Jest with ESM
+npm run test:unit       # Unit tests only
+```
 
 ## Project Structure
 
 ```
 sekkei/
-├── package.json             # Root: npm workspaces
-├── tsconfig.base.json       # Shared TypeScript config
+├── package.json                 # Root: npm workspaces
+├── tsconfig.base.json           # Shared TypeScript config
+├── install.sh                   # Local install script for Claude Code
+├── sekkei.config.example.yaml   # Template for project config
 ├── packages/
-│   ├── mcp-server/          # sekkei-mcp-server (npm)
-│   │   ├── src/             # TypeScript source (tools, resources, lib)
-│   │   ├── templates/       # 11 doc templates (ja), 15 glossaries, 3 presets
-│   │   ├── python/          # Python export layer (Excel, PDF, DOCX)
-│   │   ├── bin/setup.js     # Setup script (npx sekkei-setup)
-│   │   └── adapters/        # Platform-specific configs
-│   ├── preview/             # sekkei-preview (npm)
-│   │   ├── src/             # CLI, VitePress config generator
-│   │   ├── theme/           # Custom VitePress theme + Vue
-│   │   └── plugins/         # VitePress plugins
-│   └── skills/              # sekkei-skills (npm)
-│       ├── bin/install.js   # Install script (npx sekkei-skills)
-│       └── content/         # SKILL.md and references
-└── sekkei.config.example.yaml
+│   ├── mcp-server/              # sekkei-mcp-server
+│   │   ├── src/
+│   │   │   ├── tools/           # 9 MCP tool handlers
+│   │   │   ├── resources/       # Template URI resources
+│   │   │   ├── lib/             # Core logic (template-loader, python-bridge, etc.)
+│   │   │   └── cli/             # CLI commands (citty-based)
+│   │   ├── templates/ja/        # 12 Japanese doc templates
+│   │   ├── python/              # Export layer (Excel, PDF, DOCX, glossary, diff)
+│   │   ├── bin/                 # setup.js, init.js, cli.js
+│   │   └── adapters/            # Platform configs (Claude Code, Cursor, Copilot)
+│   ├── preview/                 # sekkei-preview
+│   │   ├── src/                 # CLI, VitePress config generator
+│   │   ├── theme/               # Custom VitePress theme + Vue components
+│   │   └── plugins/             # VitePress plugins
+│   └── skills/                  # sekkei-skills
+│       ├── bin/install.js       # Skill installer
+│       └── content/SKILL.md     # 23 sub-commands + workflow router
+└── .github/                     # CI/CD
 ```
+
+## Requirements
+
+- **Node.js** >= 20.0.0
+- **Python 3** (optional) — only for Excel/PDF/DOCX export
+  - Dependencies: `openpyxl`, `weasyprint`, `mistune`, `pyyaml`
 
 ## FAQ
 
@@ -165,13 +234,16 @@ sekkei/
 A: Only for Excel/PDF/DOCX export. Core document generation and validation work without Python.
 
 **Q: Can I customize templates?**
-A: Yes. Set `SEKKEI_TEMPLATE_OVERRIDE_DIR` to a directory with your custom templates.
+A: Yes. Set `SEKKEI_TEMPLATE_OVERRIDE_DIR` to your custom templates directory.
 
 **Q: What languages are supported?**
-A: Templates are in Japanese (ja). Use `/sekkei:translate` to translate generated documents to any language.
+A: Templates are in Japanese (ja). Use `/sekkei:translate` to translate to any language.
 
 **Q: Does it work with Cursor/Copilot?**
-A: Yes. Run `npx sekkei-setup` or manually copy adapter files from `adapters/`.
+A: Yes. Run `npx sekkei-setup` or manually copy adapter files.
+
+**Q: How do I update?**
+A: Run `sekkei update` or `/sekkei:rebuild` in Claude Code.
 
 ## License
 
