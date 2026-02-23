@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: init, functions-list, requirements, basic-design, detail-design, test-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: init, functions-list, requirements, basic-design, detail-design, test-spec, matrix, sitemap, operation-design, migration-design, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -30,6 +30,9 @@ Generate Japanese software specification documents following the V-model documen
 - `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in split mode)
 - `/sekkei:implement @plan-path` — Execute a generation plan phase by phase
 - `/sekkei:preview` — Start VitePress docs preview server
+- `/sekkei:version` — Show version and environment health check
+- `/sekkei:uninstall` — Remove Sekkei from Claude Code
+- `/sekkei:rebuild` — Rebuild and re-install Sekkei skill + MCP (runs `sekkei update` CLI)
 
 ## Workflow Router
 
@@ -509,6 +512,28 @@ See `references/plan-orchestrator.md` for detailed logic.
 5. After all phases complete: run `/sekkei:validate` on generated documents
 6. Update plan.md status to `completed`
 7. Report: generation summary (phases completed, files generated, validation results)
+
+### `/sekkei:version`
+
+1. Run CLI: `npx sekkei version` (or `node <path>/dist/cli/main.js version`)
+2. Display the health check output to the user
+3. If any items show \u2717, suggest remediation steps
+4. For JSON output: `npx sekkei version --json`
+
+### `/sekkei:uninstall`
+
+1. Confirm with user: "This will remove Sekkei skill, commands, and MCP entry from Claude Code. Proceed?"
+2. If confirmed: run `npx sekkei uninstall --force`
+3. Display removal summary
+4. Note: "Package remains installed. Run `npm uninstall -g sekkei-mcp-server` to fully remove."
+
+### `/sekkei:rebuild`
+
+1. Run CLI: `npx sekkei update`
+2. Display build + copy progress
+3. Show post-update health check
+4. If health check passes: "Update complete. Restart Claude Code to activate."
+5. Use `--skip-build` to skip the build step: `npx sekkei update --skip-build`
 
 ## Document Chain
 

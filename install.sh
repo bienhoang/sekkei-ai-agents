@@ -141,6 +141,7 @@ create_subcmd "basic-design" "Generate 基本設計書 (Basic Design)" "@input"
 create_subcmd "detail-design" "Generate 詳細設計書 (Detail Design)" "@input"
 create_subcmd "test-spec" "Generate テスト仕様書 (Test Spec)" "@input"
 create_subcmd "matrix" "Generate CRUD図 or トレーサビリティ" ""
+create_subcmd "sitemap" "Generate サイトマップ (System Structure Map)" ""
 create_subcmd "operation-design" "Generate 運用設計書" "@input"
 create_subcmd "migration-design" "Generate 移行設計書" "@input"
 create_subcmd "validate" "Validate document completeness" "@doc"
@@ -151,7 +152,9 @@ create_subcmd "glossary" "Manage project terminology" "[add|list|find|export|imp
 create_subcmd "update" "Detect upstream changes" "@doc"
 create_subcmd "diff-visual" "Color-coded revision Excel (朱書き)" "@before @after"
 create_subcmd "preview" "Start VitePress docs preview (--edit for WYSIWYG)" "[--edit] [--docs path] [--port N]"
-ok "Created 17 sub-commands → /sekkei:*"
+create_subcmd "version" "Show version and health check" ""
+create_subcmd "uninstall" "Remove Sekkei from Claude Code" "[--force]"
+ok "Created 20 sub-commands → /sekkei:*"
 
 # ── 4. Register MCP Server ─────────────────────────────────────────────
 step "Registering MCP server in Claude Code settings"
