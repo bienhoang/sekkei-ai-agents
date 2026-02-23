@@ -3,10 +3,9 @@
  */
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { readCR, writeCR, transitionCR, listCRs } from "../lib/cr-state-machine.js";
+import { readCR, writeCR, transitionCR } from "../lib/cr-state-machine.js";
 import { computePropagationOrder } from "../lib/cr-propagation.js";
 import { generateBackfillSuggestions } from "../lib/cr-backfill.js";
-import { detectConflicts } from "../lib/cr-conflict-detector.js";
 import { loadChainDocs, validateChain } from "../lib/cross-ref-linker.js";
 import { findAffectedSections, buildImpactReport } from "../lib/impact-analyzer.js";
 import { logger } from "../lib/logger.js";

@@ -18,6 +18,7 @@ const inputSchema = {
     .refine(p => !p.includes(".."), { message: "no path traversal" })
     .describe("Project root path"),
   cr_id: z.string().max(20).optional()
+    .refine(p => !p || /^CR-\d{6}-\d{3}$/.test(p), { message: "must match CR-YYMMDD-NNN format" })
     .describe("CR ID (e.g. CR-260224-001). Required for all except create/list"),
   config_path: z.string().max(500).optional()
     .refine(p => !p || !p.includes(".."), { message: "no path traversal" })

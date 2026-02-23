@@ -45,11 +45,13 @@ async function handleCreate(args: ChangeRequestArgs): Promise<ToolResult> {
     // IDs in new but not in old = added; IDs in both but content differs = changed
     changedIds = [...newIds].filter(id => !oldIds.has(id));
     // Also detect IDs present in both (potential updates) by checking surrounding context
+    const oldLines = args.old_content.split("\n");
+    const newLines = args.new_content.split("\n");
     for (const id of newIds) {
       if (oldIds.has(id) && !changedIds.includes(id)) {
         // Simple heuristic: if the line containing the ID changed, it's modified
-        const oldLine = args.old_content.split("\n").find(l => l.includes(id)) ?? "";
-        const newLine = args.new_content.split("\n").find(l => l.includes(id)) ?? "";
+        const oldLine = oldLines.find(l => l.includes(id)) ?? "";
+        const newLine = newLines.find(l => l.includes(id)) ?? "";
         if (oldLine !== newLine) changedIds.push(id);
       }
     }
