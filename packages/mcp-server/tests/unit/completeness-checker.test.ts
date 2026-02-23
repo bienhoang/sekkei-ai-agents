@@ -106,8 +106,8 @@ const VALID_FUNCTIONS_LIST = [
   "## 配布先",
   "## 用語集",
   "## 機能一覧",
-  "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 処理分類 | 優先度 | 難易度 | 備考 |",
-  "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規商品を登録する | 入力 | 高 | 中 | |",
+  "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 関連要件ID | 処理分類 | 優先度 | 難易度 | 備考 |",
+  "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規商品を登録する | REQ-001 | 入力 | 高 | 中 | |",
 ].join("\n");
 
 describe("validateDocument — backward compatibility (no check_completeness flag)", () => {
@@ -142,8 +142,8 @@ describe("validateDocument — check_completeness: true", () => {
 
   it("returns no completeness issues for functions-list with F-xxx row", () => {
     const content = VALID_FUNCTIONS_LIST.replace(
-      "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規商品を登録する | 入力 | 高 | 中 | |",
-      "| 1 | 商品管理 | 商品登録 | F-001 | 商品登録 | 新規商品を登録する | 入力 | 高 | 中 | |"
+      "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規商品を登録する | REQ-001 | 入力 | 高 | 中 | |",
+      "| 1 | 商品管理 | 商品登録 | F-001 | 商品登録 | 新規商品を登録する | REQ-001 | 入力 | 高 | 中 | |"
     );
     const result = validateDocument(content, "functions-list", undefined, { check_completeness: true });
     const completenessIssues = result.issues.filter((i) => i.type === "completeness");

@@ -9,11 +9,12 @@ import type { DocType, KeigoLevel, Language } from "../types/documents.js";
 export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
   "functions-list": [
     "Generate a 機能一覧 (Function List) from the provided input.",
-    "This document is generated AFTER requirements. Cross-reference REQ-xxx IDs from upstream 要件定義書 — every F-xxx entry SHOULD map to at least one REQ-xxx.",
+    "This document is generated AFTER requirements. Cross-reference REQ-xxx IDs from upstream 要件定義書.",
     "Use 3-tier hierarchy: 大分類 -> 中分類 -> 小機能.",
-    "ID format: [PREFIX]-001 (derive prefix from major category).",
+    "ID format: F-001, F-002... (sequential, NOT prefix-based).",
+    "Every F-xxx MUST map to at least one REQ-xxx in the 関連要件ID column.",
     "Processing types: 入力/照会/帳票/バッチ.",
-    "Priority: 高/中/低. Fill all 10 columns per row.",
+    "Priority: 高/中/低. Fill all 11 columns per row.",
     "Generate at least 10 functions covering the scope described.",
   ].join("\n"),
 
@@ -52,6 +53,8 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
 
   nfr: [
     "Generate a 非機能要件定義書 (Non-Functional Requirements) from requirements.",
+    "The upstream 要件定義書 already defines initial NFR-xxx entries (one per IPA category). Use those same IDs and elaborate each with detailed analysis, metrics, and measurement methods.",
+    "Add new sequential NFR-xxx IDs for any additional requirements not covered in upstream.",
     "Follow IPA NFUG 6-category framework exactly:",
     "可用性, 性能・拡張性, 運用・保守性, 移行性, セキュリティ, システム環境・エコロジー.",
     "ID format: NFR-001. Each NFR MUST have a specific numeric 目標値.",

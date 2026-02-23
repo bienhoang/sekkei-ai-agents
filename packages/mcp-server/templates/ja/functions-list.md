@@ -64,7 +64,8 @@ approver: ""
 <!-- AI: Generate rows from input content.
      Rules:
      - Use 3-tier hierarchy: 大分類 (subsystem) -> 中分類 (functional category) -> 小機能 (individual function)
-     - ID format: [PREFIX]-001 where PREFIX is 2-3 char abbreviation of 大分類 (e.g., SAL for 営業管理)
+     - ID format: F-001, F-002... (sequential). Each F-xxx MUST map to at least one REQ-xxx via 関連要件ID column
+     - 関連要件ID: comma-separated REQ-xxx IDs from upstream 要件定義書 that this function implements
      - 処理分類 must be one of: 入力 (Input) / 照会 (Inquiry) / 帳票 (Report) / バッチ (Batch)
      - 優先度: 高 (High) / 中 (Medium) / 低 (Low)
      - 難易度: 高 / 中 / 低
@@ -74,9 +75,9 @@ approver: ""
      - Group related functions under same 大分類/中分類
 -->
 
-| No. | 大分類 | 中分類 | 機能ID | 機能名 | 機能概要 | 処理分類 | 優先度 | 難易度 | 備考 |
-|-----|--------|--------|--------|--------|----------|----------|--------|--------|------|
-| 1 | <!-- AI --> | <!-- AI --> | <!-- AI: PREFIX-001 --> | <!-- AI --> | <!-- AI --> | <!-- AI: 入力/照会/帳票/バッチ --> | <!-- AI: 高/中/低 --> | <!-- AI: 高/中/低 --> | <!-- AI --> |
+| No. | 大分類 | 中分類 | 機能ID | 機能名 | 機能概要 | 関連要件ID | 処理分類 | 優先度 | 難易度 | 備考 |
+|-----|--------|--------|--------|--------|----------|------------|----------|--------|--------|------|
+| 1 | <!-- AI --> | <!-- AI --> | <!-- AI: F-001 --> | <!-- AI --> | <!-- AI --> | <!-- AI: REQ-001, REQ-002 --> | <!-- AI: 入力/照会/帳票/バッチ --> | <!-- AI: 高/中/低 --> | <!-- AI: 高/中/低 --> | <!-- AI --> |
 
 ## 集計
 

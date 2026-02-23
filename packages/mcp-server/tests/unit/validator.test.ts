@@ -70,7 +70,7 @@ describe("validateCrossRefs", () => {
   });
 
   it("returns 100% coverage when no upstream types expected", () => {
-    const report = validateCrossRefs("content", "upstream", "functions-list");
+    const report = validateCrossRefs("content", "upstream", "meeting-minutes");
     expect(report.coverage).toBe(100);
   });
 
@@ -92,7 +92,7 @@ describe("validateCrossRefs", () => {
 
 describe("validateTableStructure", () => {
   it("passes when required columns present", () => {
-    const content = "| 版数 | 日付 | 変更内容 | 変更者 |\n| 大分類 | 中分類 | 機能ID | 機能名 | 処理分類 |";
+    const content = "| 版数 | 日付 | 変更内容 | 変更者 |\n| 大分類 | 中分類 | 機能ID | 機能名 | 関連要件ID | 処理分類 |";
     const issues = validateTableStructure(content, "functions-list");
     expect(issues).toHaveLength(0);
   });
@@ -122,8 +122,8 @@ describe("validateDocument (integration)", () => {
       "## 配布先",
       "## 用語集",
       "",
-      "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 処理分類 | 優先度 | 難易度 | 備考 |",
-      "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規商品を登録する | 入力 | 高 | 中 | |",
+      "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 関連要件ID | 処理分類 | 優先度 | 難易度 | 備考 |",
+      "| 1 | 商品管理 | 商品登録 | F-001 | 商品登録 | 新規商品を登録する | REQ-001 | 入力 | 高 | 中 | |",
     ].join("\n");
     const result = validateDocument(content, "functions-list");
     expect(result.valid).toBe(true);
