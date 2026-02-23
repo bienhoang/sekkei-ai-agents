@@ -10,7 +10,6 @@ Generate Japanese software specification documents following the V-model documen
 
 ## Sub-Commands
 
-- `/sekkei:init` — Initialize project config + numbered scaffold
 - `/sekkei:overview @input` — Generate プロジェクト概要 (01-overview.md)
 - `/sekkei:functions-list @input` — Generate 機能一覧 (04-functions-list.md)
 - `/sekkei:requirements @input` — Generate 要件定義書 (02-requirements.md)
@@ -28,60 +27,15 @@ Generate Japanese software specification documents following the V-model documen
 
 When the user invokes a sub-command, follow the corresponding workflow below.
 
-### `/sekkei:init`
+### Project Setup (prerequisite)
 
-**Interview (ask all before writing anything):**
-1. Project name?
-2. Project type? (web / mobile / api / desktop / lp / internal-system / saas / batch)
-3. Tech stack? (comma-separated, e.g. TypeScript, React, PostgreSQL)
-4. Team size? (number)
-5. Output language? (ja / en / vi — default: ja)
-6. Keigo preference? (丁寧語 / 謙譲語 / simple — default: 丁寧語)
-7. Output directory name? (default: docs/)
-8. Initial feature list? (comma-separated display names, e.g. 販売管理, ユーザー管理)
-   — For each: confirm or edit the auto-derived kebab-case folder name
+Before using any sub-command, initialize the project via CLI:
 
-**Steps:**
+```bash
+npx sekkei init
+```
 
-1. Auto-derive kebab names for each feature:
-   - Strip non-ASCII, lowercase, replace spaces/underscores with `-`
-   - Example: "販売管理" → ask user to provide ASCII name → "sales-management"
-   - Assign short mnemonic ID (SAL, USR, etc.) — 2-5 uppercase letters
-   - Kebab names must match `^[a-z][a-z0-9-]{1,49}$`; no two features may share the same name
-
-2. Write `sekkei.config.yaml` in project root using the numbered chain schema:
-   - Set `output.directory` to the user's chosen directory (prefix `./` if relative)
-   - All chain entries set to `status: pending`
-   - Features are discovered at runtime from `05-features/` subdirectories — do NOT add a `features:` array to config
-
-3. Create output directory if it does not exist
-
-4. Create scaffold files (skip any that already exist):
-
-   **Top-level single-file placeholders:**
-   - `{output-dir}/01-overview.md` — `# Overview\n\n<!-- pending: run /sekkei:overview -->`
-   - `{output-dir}/02-requirements.md` — `# 要件定義書\n\n<!-- pending: run /sekkei:requirements -->`
-   - `{output-dir}/04-functions-list.md` — `# 機能一覧\n\n<!-- pending: run /sekkei:functions-list -->`
-   - `{output-dir}/10-glossary.md` — `# 用語集\n\n<!-- pending: run /sekkei:glossary -->`
-
-   **Folder index files (use section-index.md template):**
-   - `{output-dir}/03-system/index.md` — title "システム設計"
-   - `{output-dir}/05-features/index.md` — title "機能設計"
-   - `{output-dir}/06-data/index.md` — title "データ設計"
-   - `{output-dir}/07-operations/index.md` — title "運用設計"
-   - `{output-dir}/08-test/index.md` — title "テスト計画"
-   - `{output-dir}/09-ui/index.md` — title "UI/UXガイドライン"
-
-   **Feature folder placeholders** (for each feature):
-   - Create `{output-dir}/05-features/{feature-name}/` directory
-   - Write `{output-dir}/05-features/{feature-name}/index.md` using feature-index.md template
-
-5. Print confirmation:
-   - Config written: `sekkei.config.yaml`
-   - Output directory: `{output-dir}/`
-   - Files created: list all files
-   - Features registered: list name + display
-   - Next step: "Run `/sekkei:functions-list @{rfp-file}` to begin"
+This interactive wizard creates `sekkei.config.yaml`, sets up the output directory, imports industry glossary, and configures dependencies.
 
 ### `/sekkei:overview @input`
 

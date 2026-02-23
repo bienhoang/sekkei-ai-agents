@@ -47,7 +47,7 @@ npx sekkei-setup    # Auto-detect editor and configure MCP
 ### Generate Documents
 
 ```
-/sekkei:init                              # Create project config
+npx sekkei init                           # Create project config (run in terminal)
 /sekkei:functions-list @rfp.md            # Generate function list
 /sekkei:requirements @functions-list.md   # Generate requirements
 /sekkei:basic-design @requirements.md     # Generate basic design
@@ -111,7 +111,7 @@ Built with citty. Available commands:
 
 | Command | Description |
 |---------|-------------|
-| `/sekkei:init` | Initialize project config |
+| `npx sekkei init` | Initialize project config (CLI) |
 | `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
 | `/sekkei:requirements @input` | Generate 要件定義書 (Requirements) |
 | `/sekkei:basic-design @input` | Generate 基本設計書 (Basic Design) |

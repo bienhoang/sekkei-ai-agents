@@ -35,8 +35,8 @@ npx sekkei-mcp-server
 # 1. Setup MCP integration for your editor
 npx sekkei-setup
 
-# 2. Initialize a project
-/sekkei:init
+# 2. Initialize a project (run in terminal)
+npx sekkei init
 
 # 3. Generate your first document
 /sekkei:functions-list @rfp.md

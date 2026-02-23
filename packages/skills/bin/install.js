@@ -25,7 +25,7 @@ async function install() {
 
         console.log('✅ Sekkei skills installed successfully!');
         console.log('\nRestart Claude Code to use the new skills.');
-        console.log('Then you can use /sekkei:init to start a project.');
+        console.log('Then run "npx sekkei init" in your project folder to start.');
     } catch (err) {
         console.error('❌ Failed to install Sekkei skills:', err.message);
         process.exit(1);

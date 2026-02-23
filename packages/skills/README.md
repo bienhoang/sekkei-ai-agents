@@ -28,7 +28,7 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 
 | Command | Description |
 |---------|-------------|
-| `/sekkei:init` | Initialize project config (`sekkei.config.yaml`) |
+| `npx sekkei init` | Initialize project config (CLI) |
 | `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
 | `/sekkei:requirements @input` | Generate 要件定義書 (Requirements Definition) |
 | `/sekkei:basic-design @input` | Generate 基本設計書 (Basic Design) |
@@ -51,8 +51,8 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 ## Workflow Example
 
 ```bash
-# 1. Initialize project
-/sekkei:init
+# 1. Initialize project (run in terminal)
+npx sekkei init
 
 # 2. Generate documents following V-model chain
 /sekkei:functions-list @rfp.md          # RFP → 機能一覧

@@ -254,7 +254,7 @@ echo "  MCP:    $MCP_ENTRY"
 echo "  Config: $SETTINGS_FILE"
 echo ""
 echo "  Restart Claude Code to activate the MCP server."
-echo "  Then use /sekkei:init to start a new project."
+echo "  Then run 'npx sekkei init' in your project folder to start."
 if [[ -n "$PREVIEW_CLI" ]]; then
   echo "  Preview: node $PREVIEW_CLI"
   echo -e "  \033[2mPreview docs: node $PREVIEW_CLI [--edit]  (run from your project root)${RESET}"
