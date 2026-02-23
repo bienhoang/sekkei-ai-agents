@@ -122,7 +122,7 @@ See [sekkei-skills README](./packages/skills/README.md) for the full command ref
 
 ## MCP Tools & Resources
 
-8 MCP tools for document generation, validation, export, translation, and more. 5 template resources for direct template access.
+9 MCP tools for document generation, validation, chain verification, export, translation, and more. 11 template resources for direct template access.
 
 See [sekkei-mcp-server README](./packages/mcp-server/README.md#mcp-tools) for full reference.
 
@@ -145,8 +145,8 @@ sekkei/
 ├── packages/
 │   ├── mcp-server/          # sekkei-mcp-server (npm)
 │   │   ├── src/             # TypeScript source (tools, resources, lib)
-│   │   ├── templates/       # Document templates (ja, shared)
-│   │   ├── python/          # Python export layer (Excel, PDF)
+│   │   ├── templates/       # 11 doc templates (ja), 15 glossaries, 3 presets
+│   │   ├── python/          # Python export layer (Excel, PDF, DOCX)
 │   │   ├── bin/setup.js     # Setup script (npx sekkei-setup)
 │   │   └── adapters/        # Platform-specific configs
 │   ├── preview/             # sekkei-preview (npm)
@@ -162,7 +162,7 @@ sekkei/
 ## FAQ
 
 **Q: Do I need Python?**
-A: Only for Excel/PDF export. Core document generation and validation work without Python.
+A: Only for Excel/PDF/DOCX export. Core document generation and validation work without Python.
 
 **Q: Can I customize templates?**
 A: Yes. Set `SEKKEI_TEMPLATE_OVERRIDE_DIR` to a directory with your custom templates.

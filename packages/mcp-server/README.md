@@ -8,10 +8,13 @@ MCP Server for generating Japanese software specification documents (設計書) 
 
 ## Features
 
-- **8 MCP tools** — generate, validate, export, translate, glossary, and more
+- **9 MCP tools** — generate, validate, chain-validate, export, translate, glossary, and more
 - **V-model chain** — RFP → 機能一覧 → 要件定義書 → 基本設計書 → 詳細設計書 → テスト仕様書
+- **11 document templates** — functions-list, requirements, basic/detail design, test-spec, screen-design, CRUD/traceability matrix, operation/migration design, overview
+- **15 industry glossaries** — automotive, finance, medical, manufacturing, retail, and more
+- **3 presets** — standard, enterprise, agile project configurations
 - **Template system** — Markdown templates with YAML frontmatter, override support
-- **Excel/PDF export** — IPA-standard 4-sheet Excel, PDF with Japanese fonts
+- **Excel/PDF/DOCX export** — IPA-standard 4-sheet Excel, PDF with Japanese fonts, Word
 - **Multi-platform** — Claude Code, Cursor, VS Code/Copilot via adapters
 
 ## Installation
@@ -81,26 +84,41 @@ cp adapters/copilot/copilot-instructions.md .github/
 | `translate_document` | Prepares translation context with glossary for AI translation |
 | `manage_glossary` | CRUD operations for project terminology glossary |
 | `analyze_update` | Diffs upstream changes and finds downstream impacts |
+| `validate_chain` | Validates cross-references across the entire document chain |
 
 ## MCP Resources
 
+Dynamic template resources via `templates://{doc_type}/{language}` URI pattern:
+
 | URI | Description |
 |-----|-------------|
+| `templates://overview/ja` | プロジェクト概要 template |
 | `templates://functions-list/ja` | 機能一覧 template |
 | `templates://requirements/ja` | 要件定義書 template |
 | `templates://basic-design/ja` | 基本設計書 template |
 | `templates://detail-design/ja` | 詳細設計書 template |
 | `templates://test-spec/ja` | テスト仕様書 template |
+| `templates://screen-design/ja` | 画面設計書 template |
+| `templates://crud-matrix/ja` | CRUD図 template |
+| `templates://traceability-matrix/ja` | トレーサビリティマトリックス template |
+| `templates://operation-design/ja` | 運用設計書 template |
+| `templates://migration-design/ja` | 移行設計書 template |
 
 ## Document Types
 
 | Type | Japanese | Structure |
 |------|----------|-----------|
+| overview | プロジェクト概要 | Project summary and scope |
 | functions-list | 機能一覧 | 10-column table (大分類→中分類→小機能 hierarchy) |
 | requirements | 要件定義書 | 10 sections (概要 through 附録) |
 | basic-design | 基本設計書 | 10 sections with 3 key tables (画面, DB, API) |
 | detail-design | 詳細設計書 | 10 sections (modules, classes, API specs, validation) |
 | test-spec | テスト仕様書 | 4 sections (test design, cases per level UT/IT/ST/UAT, traceability) |
+| screen-design | 画面設計書 | Screen layouts and UI specifications |
+| crud-matrix | CRUD図 | Create/Read/Update/Delete matrix |
+| traceability-matrix | トレーサビリティ | Requirements-to-test traceability |
+| operation-design | 運用設計書 | Operation procedures and monitoring |
+| migration-design | 移行設計書 | Data/system migration plans |
 
 ## Template Customization
 
@@ -114,7 +132,19 @@ cp templates/ja/functions-list.md company-templates/ja/functions-list.md
 
 Resolution order: override dir → default templates.
 
-## Export (Excel/PDF)
+## Industry Glossaries
+
+15 built-in glossaries for domain-specific terminology:
+
+`automotive`, `common`, `construction`, `education`, `energy`, `finance`, `food-service`, `government`, `insurance`, `logistics`, `manufacturing`, `medical`, `real-estate`, `retail`, `telecom`
+
+Set via `industry` field in `sekkei.config.yaml`.
+
+## Project Presets
+
+3 configuration presets: `standard`, `enterprise`, `agile` — pre-configured project settings for different development methodologies.
+
+## Export (Excel/PDF/DOCX)
 
 Requires Python 3.9+ with dependencies:
 
@@ -123,7 +153,9 @@ cd python
 python3 -m pip install -r requirements.txt
 ```
 
-Excel output follows IPA-standard 4-sheet structure: 表紙 (Cover), 更新履歴 (History), 目次 (TOC), 本文 (Content).
+- **Excel (.xlsx)**: IPA-standard 4-sheet structure — 表紙 (Cover), 更新履歴 (History), 目次 (TOC), 本文 (Content)
+- **PDF**: Japanese fonts, professional layout via WeasyPrint
+- **Word (.docx)**: Standard document format
 
 ## Environment Variables
 
@@ -155,7 +187,7 @@ npm run lint         # Type check
 
 Sekkei MCP Serverは、V字モデルに従って日本語ソフトウェア設計書を生成するためのMCPサーバーです。
 
-機能一覧→要件定義書→基本設計書→詳細設計書→テスト仕様書のドキュメントチェーンをサポートし、各ドキュメントの出力が次のドキュメントの入力となります。Markdownテンプレートシステム、Excel/PDFエクスポート、用語集管理、クロスリファレンスバリデーションを備えています。
+11種類のドキュメントテンプレート、15業界対応の用語集、3つのプロジェクトプリセットを搭載。機能一覧→要件定義書→基本設計書→詳細設計書→テスト仕様書のドキュメントチェーンをサポートし、各ドキュメントの出力が次のドキュメントの入力となります。Markdownテンプレートシステム、Excel/PDF/DOCXエクスポート、用語集管理、クロスリファレンスバリデーションを備えています。
 
 ## License
 
