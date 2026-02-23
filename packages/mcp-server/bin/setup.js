@@ -149,7 +149,7 @@ function checkPython() {
 }
 
 /** Main setup flow */
-export async function runEditorSetup() {
+export async function runEditorSetup({ skipPython = false } = {}) {
   log("");
   log(`${BOLD}Sekkei Setup${RESET}`);
   log("Configuring MCP server integration for detected editors...");
@@ -161,7 +161,7 @@ export async function runEditorSetup() {
     warn("No supported editors detected.");
     log("  Supported: Claude Code, Cursor, VS Code (Copilot)");
     log("  You can manually configure MCP. See: https://github.com/bienhoang/sekkei#setup");
-    checkPython();
+    if (!skipPython) checkPython();
     return;
   }
 
@@ -186,11 +186,11 @@ export async function runEditorSetup() {
     log("");
   }
 
-  checkPython();
+  if (!skipPython) checkPython();
 
   log("");
   log(`${BOLD}${GREEN}Setup complete!${RESET}`);
-  log("  Run 'sekkei-mcp' or 'npx @sekkei/mcp-server' to start the MCP server.");
+  log("  Run 'sekkei-mcp' or 'npx sekkei-mcp-server' to start the MCP server.");
   log("");
 }
 

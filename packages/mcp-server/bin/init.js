@@ -2,19 +2,22 @@
 
 /**
  * npx sekkei init — Interactive project setup wizard.
+ * Supports 3 CLI languages: English, Japanese, Vietnamese.
  */
 
 import * as p from "@clack/prompts";
 import { stringify } from "yaml";
-import { existsSync, writeFileSync } from "node:fs";
-import { execFileSync, execSync } from "node:child_process";
-import { dirname, resolve } from "node:path";
+import { existsSync, writeFileSync, readFileSync, mkdirSync } from "node:fs";
+import { dirname, resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execSync } from "node:child_process";
+import { homedir } from "node:os";
 import { runEditorSetup } from "./setup.js";
+import { t } from "./init/i18n.js";
+import { askLanguage, askProject, askStacks, askDocOptions, showSummary } from "./init/prompts.js";
+import { installDeps } from "./init/deps.js";
 
 const CONFIG_FILE = "sekkei.config.yaml";
-
-// Resolve paths relative to this bin script
 const __init_dirname = dirname(fileURLToPath(import.meta.url));
 const MCP_DIR = resolve(__init_dirname, "..");
 const PYTHON_DIR = resolve(MCP_DIR, "python");
@@ -22,156 +25,82 @@ const DIST_DIR = resolve(MCP_DIR, "dist");
 
 // Parse flags
 const skipDeps = process.argv.includes("--skip-deps");
-
-// Parse --preset flag
 const presetArg = process.argv.find((a) => a.startsWith("--preset"));
 const presetValue = presetArg?.includes("=")
   ? presetArg.split("=")[1]
   : process.argv[process.argv.indexOf("--preset") + 1];
 
 async function main() {
-  p.intro("Sekkei セットアップ");
+  p.intro("Sekkei");
 
-  // Check existing config
+  // 1. CLI language (first prompt — determines all subsequent UI text)
+  const lang = await askLanguage();
+  if (p.isCancel(lang)) { p.cancel("Cancelled"); process.exit(0); }
+
+  // 2. Check existing config
   if (existsSync(CONFIG_FILE)) {
     const overwrite = await p.confirm({
-      message: `${CONFIG_FILE} は既に存在します。上書きしますか？`,
+      message: t(lang, "overwrite"),
       initialValue: false,
     });
     if (p.isCancel(overwrite) || !overwrite) {
-      p.cancel("セットアップを中止しました");
+      p.cancel(t(lang, "cancel"));
       process.exit(0);
     }
   }
 
-  const project = await p.group({
-    name: () =>
-      p.text({
-        message: "プロジェクト名",
-        placeholder: "my-project",
-        validate: (v) => (!v ? "プロジェクト名を入力してください" : undefined),
-      }),
-    type: () =>
-      p.select({
-        message: "プロジェクト種別",
-        options: [
-          { value: "web", label: "Web アプリケーション" },
-          { value: "mobile", label: "モバイルアプリ" },
-          { value: "api", label: "API / バックエンド" },
-          { value: "desktop", label: "デスクトップアプリ" },
-          { value: "lp", label: "ランディングページ" },
-          { value: "internal-system", label: "社内システム" },
-          { value: "saas", label: "SaaS" },
-          { value: "batch", label: "バッチ処理" },
-        ],
-      }),
-    stack: () =>
-      p.multiselect({
-        message: "技術スタック（複数選択可）",
-        options: [
-          { value: "react", label: "React" },
-          { value: "vue", label: "Vue.js" },
-          { value: "nextjs", label: "Next.js" },
-          { value: "nodejs", label: "Node.js" },
-          { value: "python", label: "Python" },
-          { value: "java", label: "Java" },
-          { value: "go", label: "Go" },
-          { value: "ruby", label: "Ruby" },
-          { value: "postgresql", label: "PostgreSQL" },
-          { value: "mysql", label: "MySQL" },
-          { value: "mongodb", label: "MongoDB" },
-        ],
-        required: false,
-      }),
-    language: () =>
-      p.select({
-        message: "ドキュメント言語",
-        options: [
-          { value: "ja", label: "日本語" },
-          { value: "en", label: "English" },
-          { value: "vi", label: "Tiếng Việt" },
-        ],
-      }),
-    keigo: () =>
-      p.select({
-        message: "敬語レベル",
-        options: [
-          { value: "丁寧語", label: "丁寧語（ですます調）" },
-          { value: "謙譲語", label: "謙譲語（謙遜語）" },
-          { value: "simple", label: "常体（である調）" },
-        ],
-      }),
-    preset: () => {
-      // Skip interactive prompt if --preset flag provided with valid value
-      if (presetValue && ["enterprise", "standard", "agile"].includes(presetValue)) {
-        return Promise.resolve(presetValue);
-      }
-      return p.select({
-        message: "テンプレートプリセット",
-        options: [
-          { value: "enterprise", label: "大手SI / 官公庁向け（Enterprise）" },
-          { value: "standard", label: "中堅SI / SES向け（Standard）" },
-          { value: "agile", label: "アジャイル / スタートアップ（Agile）" },
-        ],
-      });
-    },
-    industry: () =>
-      p.select({
-        message: "業種テンプレート（用語集インポート）",
-        options: [
-          { value: "none", label: "なし（スキップ）" },
-          { value: "finance", label: "金融" },
-          { value: "medical", label: "医療" },
-          { value: "manufacturing", label: "製造" },
-          { value: "automotive", label: "自動車" },
-          { value: "real-estate", label: "不動産" },
-          { value: "logistics", label: "物流" },
-          { value: "retail", label: "小売" },
-          { value: "insurance", label: "保険" },
-          { value: "education", label: "教育" },
-          { value: "government", label: "官公庁" },
-          { value: "construction", label: "建設" },
-          { value: "telecom", label: "通信" },
-          { value: "energy", label: "エネルギー" },
-          { value: "food-service", label: "飲食" },
-        ],
-      }),
-    outputDir: () =>
-      p.text({
-        message: "出力ディレクトリ",
-        placeholder: "./output",
-        initialValue: "./output",
-      }),
-  });
+  // 3–6. Prompt loop with summary + redo
+  let project = await askProject(lang);
+  if (!project || p.isCancel(project)) { p.cancel(t(lang, "cancel")); process.exit(0); }
 
-  // Check for cancellation
-  if (p.isCancel(project)) {
-    p.cancel("セットアップを中止しました");
-    process.exit(0);
+  let stack = await askStacks(lang, project.type);
+  if (p.isCancel(stack)) { p.cancel(t(lang, "cancel")); process.exit(0); }
+
+  let docOpts = await askDocOptions(lang, presetValue);
+  if (!docOpts || p.isCancel(docOpts)) { p.cancel(t(lang, "cancel")); process.exit(0); }
+
+  // Summary + redo loop
+  let confirmed = false;
+  while (!confirmed) {
+    const action = await showSummary(lang, project, stack, docOpts);
+    if (action === "cancel") { p.cancel(t(lang, "cancel")); process.exit(0); }
+    if (action === "ok") { confirmed = true; break; }
+    if (action === "project") {
+      const redo = await askProject(lang, project);
+      if (redo && !p.isCancel(redo)) {
+        project = redo;
+        // Re-ask stacks if project type changed (different conditional sections)
+        stack = await askStacks(lang, project.type, stack);
+        if (p.isCancel(stack)) { p.cancel(t(lang, "cancel")); process.exit(0); }
+      }
+    } else if (action === "stack") {
+      const redo = await askStacks(lang, project.type, stack);
+      if (!p.isCancel(redo)) stack = redo;
+    } else if (action === "doc") {
+      const redo = await askDocOptions(lang, presetValue, docOpts);
+      if (redo && !p.isCancel(redo)) docOpts = redo;
+    }
   }
 
-  // Validate output dir (no path traversal)
-  const outDir = String(project.outputDir || "./output");
+  const outDir = String(docOpts.outputDir || "./output");
   if (outDir.includes("..")) {
-    p.cancel("出力ディレクトリに '..' は使用できません");
+    p.cancel(t(lang, "path_invalid"));
     process.exit(1);
   }
 
-  // Build config
+  // 7. Write config YAML
   const config = {
     project: {
       name: project.name,
       type: project.type,
-      stack: project.stack || [],
-      language: project.language,
-      keigo: project.keigo,
-      preset: project.preset,
-      industry: project.industry !== "none" ? project.industry : undefined,
+      stack: stack || [],
+      language: docOpts.language,
+      keigo: docOpts.keigo,
+      preset: docOpts.preset,
+      team_size: 1,
+      industry: docOpts.industry !== "none" ? docOpts.industry : undefined,
     },
-    output: {
-      directory: outDir,
-      engine: "node",
-    },
+    output: { directory: outDir },
     chain: {
       rfp: "",
       overview: { status: "pending" },
@@ -182,109 +111,74 @@ async function main() {
       test_spec: { status: "pending" },
     },
   };
+  writeFileSync(CONFIG_FILE, stringify(config), "utf-8");
+  p.log.success(t(lang, "config_written"));
 
-  // Write YAML
-  const yamlContent = stringify(config);
-  writeFileSync(CONFIG_FILE, yamlContent, "utf-8");
-  p.log.success(`${CONFIG_FILE} を生成しました`);
-
-  // Import industry glossary (native TS — no Python required)
-  if (project.industry && project.industry !== "none") {
+  // 8. Import industry glossary
+  if (config.project.industry) {
     try {
-      const { importIndustry, loadGlossary, saveGlossary } = await import("../dist/lib/glossary-native.js");
+      const { importIndustry, loadGlossary, saveGlossary } = await import(
+        "../dist/lib/glossary-native.js"
+      );
       const glossaryPath = resolve(outDir, "glossary.yaml");
-      const { mkdirSync } = await import("node:fs");
       mkdirSync(outDir, { recursive: true });
       const glossary = loadGlossary(glossaryPath);
-      const { imported } = importIndustry(project.industry, glossary);
+      const { imported } = importIndustry(config.project.industry, glossary);
       saveGlossary(glossary, glossaryPath);
-      p.log.success(`${project.industry} 用語集をインポートしました（${imported} 件）`);
+      p.log.success(`${imported}${t(lang, "glossary_imported")}`);
     } catch {
-      p.log.warn("用語集インポートに失敗しました（スキップ）");
+      p.log.warn(t(lang, "glossary_fail"));
     }
   }
 
-  // Editor setup
+  // 9. Editor setup (skip Python check — handled by installDeps)
   const s = p.spinner();
-  s.start("エディタ設定を検出中...");
+  s.start(t(lang, "editor_detect"));
   try {
-    await runEditorSetup();
-    s.stop("エディタ設定完了");
+    await runEditorSetup({ skipPython: true });
+    s.stop(t(lang, "editor_done"));
   } catch {
-    s.stop("エディタ設定をスキップしました");
+    s.stop(t(lang, "editor_skip"));
   }
 
-  // Auto-install dependencies (unless --skip-deps)
-  if (skipDeps) {
-    p.note(
-      [
-        "PDF出力を利用する場合:",
-        "  npx playwright install chromium",
-        "",
-        "Python拡張機能（用語集・差分）を利用する場合:",
-        "  pip install -r python/requirements.txt",
-      ].join("\n"),
-      "セットアップ後の手順"
-    );
-  } else {
-    const ds = p.spinner();
+  // 10. Install dependencies
+  await installDeps(lang, { pythonDir: PYTHON_DIR, mcpDir: MCP_DIR, distDir: DIST_DIR }, skipDeps);
 
-    // a. Python venv
-    ds.start("Python venv をセットアップ中...");
-    try {
-      const pythonCmd = (() => {
-        try { execSync("python3 --version", { stdio: "pipe" }); return "python3"; } catch { /* empty */ }
-        try { execSync("python --version", { stdio: "pipe" }); return "python"; } catch { /* empty */ }
-        return null;
-      })();
-      if (pythonCmd) {
-        const venvDir = resolve(PYTHON_DIR, ".venv");
-        if (!existsSync(venvDir)) {
-          execFileSync(pythonCmd, ["-m", "venv", venvDir], { stdio: "pipe" });
-        }
-        const reqFile = resolve(PYTHON_DIR, "requirements.txt");
-        if (existsSync(reqFile)) {
-          execFileSync(resolve(venvDir, "bin", "pip"), ["install", "-q", "-r", reqFile], { stdio: "pipe", timeout: 120000 });
-        }
-        ds.stop("Python venv セットアップ完了");
-      } else {
-        ds.stop("Python が見つかりません — エクスポート機能は利用不可");
-      }
-    } catch {
-      ds.stop("Python venv セットアップ失敗（スキップ）");
+  // 11. Auto-register MCP server in Claude Code settings
+  const claudeDir = join(homedir(), ".claude");
+  const settingsPath = join(claudeDir, "settings.json");
+  try {
+    const venvPython = resolve(PYTHON_DIR, ".venv", "bin", "python3");
+    const mcpEntry = {
+      command: "node",
+      args: [resolve(DIST_DIR, "index.js")],
+      env: {
+        SEKKEI_TEMPLATE_DIR: resolve(MCP_DIR, "templates"),
+        SEKKEI_PYTHON: venvPython,
+      },
+    };
+    let settings = {};
+    if (existsSync(settingsPath)) {
+      settings = JSON.parse(readFileSync(settingsPath, "utf-8"));
     }
-
-    // b. Playwright chromium
-    ds.start("Playwright chromium をインストール中...");
-    try {
-      execSync("npx playwright install chromium", { cwd: MCP_DIR, stdio: "pipe", timeout: 180000 });
-      ds.stop("Playwright chromium インストール完了");
-    } catch {
-      ds.stop("Playwright インストール失敗 — PDF出力は利用不可");
-    }
-
-    // c. npm build (if dist/ missing)
-    if (!existsSync(resolve(DIST_DIR, "index.js"))) {
-      ds.start("MCP server をビルド中...");
-      try {
-        execSync("npm run build", { cwd: MCP_DIR, stdio: "pipe", timeout: 60000 });
-        ds.stop("ビルド完了");
-      } catch {
-        ds.stop("ビルド失敗 — 手動で npm run build を実行してください");
-      }
-    }
-
-    // d. Health check summary
-    try {
-      const { checkHealth, formatHealthReport } = await import("../dist/cli/commands/health-check.js");
-      const report = await checkHealth();
-      p.note(formatHealthReport(report), "環境ステータス");
-    } catch {
-      // health-check module may not be built yet — skip gracefully
-    }
+    settings.mcpServers = settings.mcpServers || {};
+    settings.mcpServers.sekkei = mcpEntry;
+    mkdirSync(claudeDir, { recursive: true });
+    writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + "\n", "utf-8");
+    p.log.success(t(lang, "mcp_registered"));
+  } catch {
+    p.log.warn(t(lang, "mcp_register_fail"));
   }
 
-  p.outro("設定完了！");
+  // 12. Regenerate command stubs (sekkei update)
+  try {
+    execSync("node bin/cli.js update", { cwd: MCP_DIR, stdio: "pipe", timeout: 10_000 });
+    p.log.success(t(lang, "commands_updated"));
+  } catch {
+    // update command may not be built yet
+  }
+
+  p.outro(t(lang, "setup_done"));
 }
 
 main().catch((err) => {

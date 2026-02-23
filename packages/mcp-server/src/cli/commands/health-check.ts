@@ -24,7 +24,7 @@ export interface HealthReport {
 
 // ── Path helpers ───────────────────────────────────────────────────────
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PKG_ROOT = resolve(__dirname, "..", "..");
+const PKG_ROOT = resolve(__dirname, "..", "..", "..");
 const CLAUDE_DIR = join(homedir(), ".claude");
 
 const EXPECTED_SUBCMD_COUNT = 20;
