@@ -26,7 +26,7 @@ Sekkei is an MCP server that generates Japanese software specification documents
 MCP Client (Claude/Cursor/Copilot)
   → STDIO transport
     → McpServer (server.ts)
-      → Tools (8 handlers in tools/)
+      → Tools (12 handlers in tools/)
       → Resources (template URIs in resources/)
         → Template Loader (lib/template-loader.ts)
           → Template Resolver (lib/template-resolver.ts) — override dir → default fallback
@@ -37,7 +37,7 @@ MCP Client (Claude/Cursor/Copilot)
 ### Key Invariants
 
 - **Stdout is sacred**: Logger writes to fd 2 only. Never `console.log` in server code.
-- **Python bridge**: TS calls Python via `execFile` (not `exec` — prevents shell injection). Input passed via `SEKKEI_INPUT` env var as JSON. Only 4 actions whitelisted: `export-excel`, `export-pdf`, `glossary`, `diff`.
+- **Python bridge**: TS calls Python via `execFile` (not `exec` — prevents shell injection). Input passed via `SEKKEI_INPUT` env var as JSON. 7 actions whitelisted: `export-excel`, `export-pdf`, `export-docx`, `export-matrix`, `glossary`, `diff`, `import-excel`.
 - **Template override**: `resolveTemplatePath()` checks override dir first with path containment validation, falls back to default `templates/{lang}/{doc-type}.md`.
 - **Zod schemas on all tool inputs**: Enums constrain `doc_type` and `language` to valid values. All paths validated with regex refinements.
 - **SekkeiError**: All errors use typed codes and `toClientMessage()` for client-safe output (no stack traces leaked).
@@ -45,7 +45,9 @@ MCP Client (Claude/Cursor/Copilot)
 ### Document Chain (V-Model)
 
 ```
-RFP → functions-list → requirements → basic-design → detail-design → test-spec
+RFP → requirements → nfr/functions-list/project-plan
+  → basic-design → security-design/detail-design
+  → test-plan → ut-spec/it-spec/st-spec/uat-spec
 ```
 
 Each document type has: a Markdown template (`templates/ja/`), generation instructions (in `generate.ts`), validation rules (in `validator.ts`), and cross-reference ID patterns (in `id-extractor.ts`).

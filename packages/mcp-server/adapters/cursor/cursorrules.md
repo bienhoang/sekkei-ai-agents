@@ -7,11 +7,15 @@ You have access to the Sekkei MCP server for generating Japanese software specif
 - `get_template(doc_type, language)` — Get raw Markdown template for a doc type
 - `generate_document(doc_type, input_content, project_name, language)` — Generate spec document with AI instructions
 - `validate_document(content, doc_type, upstream_content)` — Validate document completeness and cross-references
-- `export_document(content, doc_type, format, output_path, project_name)` — Export to Excel (.xlsx) or PDF
+- `validate_chain(config_path)` — Full chain validation across all documents
+- `export_document(content, doc_type, format, output_path, project_name)` — Export to Excel (.xlsx), PDF, or DOCX
 - `translate_document(content, source_lang, target_lang, glossary_path)` — Translate with glossary context
 - `manage_glossary(action, project_path, ja, en, context, query)` — Manage terminology glossary (add/list/find/export/seed/finalize)
 - `analyze_update(upstream_old, upstream_new, downstream)` — Analyze upstream changes for downstream impact
+- `simulate_change_impact(doc_id, change_type, config_path)` — Simulate spec change cascade effects
+- `import_document(source_path, doc_type, output_path)` — Import Excel/Markdown specs into Sekkei
 - `get_chain_status(config_path)` — Get V-model document chain progress
+- `manage_rfp_workspace(action, workspace_path, project_name, filename, content, phase)` — RFP presales lifecycle
 
 ## Document Types
 
@@ -25,7 +29,7 @@ You have access to the Sekkei MCP server for generating Japanese software specif
 `test-plan` | `ut-spec` | `it-spec` | `st-spec` | `uat-spec`
 
 ### Supplementary
-`crud-matrix` | `traceability-matrix` | `operation-design` | `migration-design` | `sitemap`
+`crud-matrix` | `traceability-matrix` | `operation-design` | `migration-design` | `sitemap` | `test-evidence` | `meeting-minutes` | `decision-record` | `interface-spec` | `screen-design`
 
 ## V-Model Chain Order
 
@@ -60,7 +64,7 @@ When user asks for Japanese specification documents (設計書, 機能一覧, �
 
 Use `manage_rfp_workspace` tool + `rfp://instructions/*` resources for presales lifecycle.
 
-**8 Phases:** RFP_RECEIVED → ANALYZING → QNA_GENERATION → WAITING_CLIENT → DRAFTING/CLIENT_ANSWERED → PROPOSAL_UPDATE → SCOPE_FREEZE
+**8 Phases:** RFP_RECEIVED → ANALYZING → QNA_GENERATION → WAITING_CLIENT → DRAFTING → CLIENT_ANSWERED → PROPOSAL_UPDATE → SCOPE_FREEZE
 
 **Orchestration:**
 1. `manage_rfp_workspace(action: "status")` → get current phase
