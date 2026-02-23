@@ -14,8 +14,11 @@ export const CHAIN_PAIRS: [string, string][] = [
   // Requirements phase (linear)
   ["requirements", "nfr"],
   ["requirements", "functions-list"],
+  ["requirements", "project-plan"],
+  ["functions-list", "project-plan"],
   // Design phase
   ["requirements", "basic-design"],
+  ["functions-list", "basic-design"],
   ["basic-design", "security-design"],
   ["basic-design", "detail-design"],
   // Test phase (V-model symmetric — branching)
@@ -140,7 +143,7 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
   }
 
   // Split entries (basic-design, detail-design only in v2.0)
-  const splitEntries: [string, { system_output?: string; features_output?: string }][] = [
+  const splitEntries: [string, { output?: string; system_output?: string; features_output?: string }][] = [
     ["basic-design", chain.basic_design],
     ["detail-design", chain.detail_design],
   ];
@@ -191,7 +194,7 @@ export function buildIdGraph(docs: Map<string, string>): IdGraph {
 export function buildTraceabilityMatrix(docs: Map<string, string>): TraceabilityEntry[] {
   const matrix: TraceabilityEntry[] = [];
   const docOrder = [
-    "requirements", "nfr", "functions-list",
+    "requirements", "nfr", "functions-list", "project-plan",
     "basic-design", "security-design", "detail-design",
     "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec",
   ];

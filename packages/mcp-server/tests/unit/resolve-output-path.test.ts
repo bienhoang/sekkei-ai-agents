@@ -85,7 +85,11 @@ describe("resolveOutputPath", () => {
     expect(resolveOutputPath("traceability-matrix")).toBe("08-test/traceability-matrix.md");
   });
 
-  it("returns undefined for basic-design feature without feature name", () => {
-    expect(resolveOutputPath("basic-design", "feature")).toBeUndefined();
+  it("returns 03-system/basic-design.md for basic-design monolithic (no scope)", () => {
+    expect(resolveOutputPath("basic-design")).toBe("03-system/basic-design.md");
+  });
+
+  it("returns monolithic default for basic-design feature without feature name", () => {
+    expect(resolveOutputPath("basic-design", "feature")).toBe("03-system/basic-design.md");
   });
 });

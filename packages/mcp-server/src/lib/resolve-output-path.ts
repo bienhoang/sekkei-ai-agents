@@ -19,6 +19,7 @@ export function resolveOutputPath(
   if (docType === "basic-design") {
     if (scope === "shared")  return "03-system/";
     if (scope === "feature" && featureName) return `05-features/${featureName}/basic-design.md`;
+    return "03-system/basic-design.md";
   }
   if (docType === "security-design")     return "03-system/security-design.md";
   if (docType === "detail-design") {

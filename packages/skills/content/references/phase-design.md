@@ -5,6 +5,14 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 
 ## `/sekkei:basic-design @input`
 
+**Prerequisite check (MUST run before interview):**
+1. Check `{output.directory}/02-requirements/requirements.md` exists
+   - If missing → ABORT: "Requirements not found. Run `/sekkei:requirements` first."
+2. Check `{output.directory}/04-functions-list/functions-list.md` exists
+   - If missing → WARN: "Functions-list not found. Basic-design will only reference REQ-xxx IDs.
+     Run `/sekkei:functions-list` first for complete cross-referencing."
+   - Continue (not blocking)
+
 **Interview questions (ask before generating):**
 - What architecture pattern? (monolith, microservices, serverless)
 - Key external system integrations?
@@ -19,21 +27,25 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
      → If Y: run `/sekkei:plan basic-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
 1. Read the input (ideally the generated 要件定義書 or requirements summary)
-2. If `sekkei.config.yaml` exists, load project metadata
+2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
 3. **Check for split config**: read `sekkei.config.yaml` → `split.basic-design`
 4. **If split enabled:**
-   a. Read `functions-list.md` → extract feature groups (大分類)
-   b. Create output directories: `shared/`, `features/{feature-id}/`
-   c. For each shared section in split config:
-      - Call `generate_document` with `scope: "shared"`
+   a. **Load upstream content:**
+      - Read `{output.directory}/02-requirements/requirements.md` → req_content
+      - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
+      - upstream = req_content + "\n\n" + fl_content (or just req_content if no FL)
+   b. Read `functions-list.md` → extract feature groups (大分類)
+   c. Create output directories: `shared/`, `features/{feature-id}/`
+   d. For each shared section in split config:
+      - Call `generate_document` with `scope: "shared"`, `upstream_content: upstream`
       - Save to `shared/{section-name}.md`
-   d. For each feature from functions-list:
+   e. For each feature from functions-list:
       i. Generate feature basic-design:
-         - Call `generate_document(doc_type: "basic-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: {feature_input})`
+         - Call `generate_document(doc_type: "basic-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: {feature_input}, upstream_content: upstream)`
          - Save output to `features/{feature-id}/basic-design.md`
       ii. Generate per-feature screen-design (split mode only):
          - Construct screen_input = Screen Design Document Instructions (see below) + "\n\n## Feature Requirements\n" + {feature_input}
-         - Call `generate_document(doc_type: "basic-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: screen_input)`
+         - Call `generate_document(doc_type: "basic-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: screen_input, upstream_content: upstream)`
          - Save output to `features/{feature-id}/screen-design.md`
       iii. Render screen mockup images (auto):
          - If `screen-design.md` contains YAML layout blocks in section 1:
@@ -44,7 +56,7 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
          - If Playwright not available, skip rendering; YAML block stays as-is (still readable)
          - Log rendered paths to stderr
       iv. Update `_index.yaml` manifest entry for this feature to list both basic-design.md and screen-design.md files
-   e. Create/update `_index.yaml` manifest via manifest-manager
+   f. Create/update `_index.yaml` manifest via manifest-manager
 
 **Screen Design Rules (split mode only):**
 - Screen IDs use format SCR-{FEATURE_ID}-{seq} (e.g., SCR-AUTH-001)
@@ -53,17 +65,30 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 - Do NOT add per-screen sections to basic-design.md in split mode — reference screen-design.md instead
 - The Screen Design Document Instructions block is provided by `buildScreenDesignInstruction(featureId, language)` from `generation-instructions.ts` — pass the project language from config
 5. **If not split (default):**
-   a. Call MCP tool `generate_document` with `doc_type: "basic-design"`, `language` from config (default: "ja"), and input. Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
-   b. Use the returned template + AI instructions to generate the 基本設計書
-   c. Follow these rules strictly:
+   a. **Load upstream content:**
+      - Read `{output.directory}/02-requirements/requirements.md` → req_content
+      - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
+      - upstream = req_content + "\n\n" + fl_content (or just req_content if no FL)
+   b. Call MCP tool `generate_document` with `doc_type: "basic-design"`, `language` from config,
+      `input_content: @input`, `upstream_content: upstream`, `project_type` from config
+   c. Use the returned template + AI instructions to generate the 基本設計書
+   d. Follow these rules strictly:
       - 10-section structure as defined in the template
       - Screen list: SCR-001 format (8 columns)
       - Table definitions: TBL-001 format (8 columns)
       - API list: API-001 format (8 columns)
       - Include Mermaid diagrams for architecture and ER diagrams
-      - Cross-reference REQ-xxx IDs from 要件定義書
-   d. Save output to `./sekkei-docs/basic-design.md`
-6. Update chain status: `basic_design.status: complete`
+      - Cross-reference REQ-xxx and F-xxx IDs from upstream documents
+   e. Save output to `{output.directory}/03-system/basic-design.md`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "basic_design"`,
+   `status: "complete"`, `output: "03-system/basic-design.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "basic-design"`.
+   Show results as non-blocking.
+8. Suggest next steps:
+   > "Basic design complete. Next steps:
+   > - `/sekkei:detail-design` — generate 詳細設計書
+   > - `/sekkei:security-design` — generate セキュリティ設計書
+   > - `/sekkei:validate @basic-design` — validate cross-references"
 
 ## `/sekkei:security-design @basic-design`
 

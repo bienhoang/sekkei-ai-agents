@@ -50,6 +50,7 @@ chain:
   # Design phase (設計)
   basic_design:
     status: pending
+    output: "03-system/basic-design.md"
     system_output: "03-system/"
     features_output: "05-features/"
   security_design:    { status: pending, output: "03-system/security-design.md" }

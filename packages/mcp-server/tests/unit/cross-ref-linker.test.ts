@@ -201,6 +201,50 @@ describe("analyzeGraph — clean chain", () => {
   });
 });
 
+describe("analyzeGraph — functions-list → basic-design chain pair", () => {
+  it("detects orphaned F-xxx IDs not referenced in basic-design", () => {
+    const docs = new Map([
+      ["functions-list", FUNCTIONS_LIST],
+      ["basic-design", BASIC_DESIGN],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const flBdLink = report.links.find(
+      (l) => l.upstream === "functions-list" && l.downstream === "basic-design"
+    );
+    expect(flBdLink).toBeDefined();
+    // F-003 is defined in functions-list but not referenced in basic-design
+    expect(flBdLink!.orphaned_ids).toContain("F-003");
+    // F-001 and F-002 are not in basic-design either (basic-design uses REQ-xxx, SCR-xxx, etc.)
+    expect(flBdLink!.orphaned_ids).toContain("F-001");
+    expect(flBdLink!.orphaned_ids).toContain("F-002");
+  });
+
+  it("reports no orphaned F-xxx when all are referenced in basic-design", () => {
+    const bdWithFIds = `
+## 画面設計
+- SCR-001 ログイン画面 (REQ-001, F-001)
+- SCR-002 検索画面 (REQ-002, F-002)
+- SCR-003 レポート画面 (F-003)
+- TBL-001 ユーザーテーブル
+- API-001 認証API
+`;
+    const docs = new Map([
+      ["functions-list", FUNCTIONS_LIST],
+      ["basic-design", bdWithFIds],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const flBdLink = report.links.find(
+      (l) => l.upstream === "functions-list" && l.downstream === "basic-design"
+    );
+    expect(flBdLink).toBeDefined();
+    expect(flBdLink!.orphaned_ids).toHaveLength(0);
+  });
+});
+
 describe("analyzeGraph — partial chain", () => {
   it("skips chain pairs where either doc is absent", () => {
     // Only requirements + functions-list provided — no basic-design etc.

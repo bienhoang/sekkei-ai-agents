@@ -120,20 +120,34 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
 
 ## `/sekkei:project-plan @requirements`
 
+**Prerequisite check (MUST run before interview):**
+1. Load `sekkei.config.yaml` — read `chain.requirements.status` and `chain.requirements.output`
+2. If `chain.requirements.status` != "complete" → **ABORT**. Tell user:
+   > "Requirements not complete. Run `/sekkei:requirements` first."
+3. Read requirements content from `chain.requirements.output` path
+4. Check `chain.functions_list.status` — if "complete", also read `chain.functions_list.output` content
+5. Concatenate both as `upstream_content` (requirements first, then functions-list if available)
+
 **Interview questions (ask before generating):**
 - Team size and composition? (developers, QA, PM, etc.)
 - Target timeline and key milestones?
 - Methodology? (waterfall, hybrid, agile-waterfall)
 - Budget or effort constraints?
 
-1. Read the upstream 要件定義書 (and 機能一覧 if available)
-2. Load `sekkei.config.yaml` — get `output.directory` and `language`
-3. Call MCP tool `generate_document` with `doc_type: "project-plan"`, `upstream_content`, and `language` from config
-4. Follow these rules strictly:
+1. Use `upstream_content` prepared in prerequisite check above
+2. Call MCP tool `generate_document` with `doc_type: "project-plan"`, `upstream_content` (requirements + optional functions-list), and `language` from config
+3. Follow these rules strictly:
    - ID format: `PP-001`
    - Include WBS table with task breakdown and owners
    - Include milestone table with dates and deliverables
-   - Cross-reference REQ-xxx, F-xxx IDs from upstream
-5. Save output to `{output.directory}/02-requirements/project-plan.md`
-6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "project_plan"`, `status: "complete"`, `output: "02-requirements/project-plan.md"`
-7. Call MCP tool `validate_document` with saved content and `doc_type: "project-plan"`. Show results as non-blocking.
+   - Cross-reference REQ-xxx IDs from upstream 要件定義書
+   - Cross-reference F-xxx IDs from 機能一覧 if available in upstream_content
+4. Save output to `{output.directory}/02-requirements/project-plan.md`
+5. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "project_plan"`, `status: "complete"`, `output: "02-requirements/project-plan.md"`
+6. Call MCP tool `validate_document` with saved content, `doc_type: "project-plan"`, and `upstream_content` (same content from prerequisite). Show results:
+   - If no issues: "Validation passed."
+   - If warnings: show as non-blocking warnings
+   - If errors: show but do NOT abort — document already saved
+7. Suggest next steps:
+   > "Project plan complete. Next steps:
+   > - `/sekkei:basic-design` — generate 基本設計書 from requirements + functions-list"

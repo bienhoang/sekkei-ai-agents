@@ -175,14 +175,15 @@ describe("generate_document tool", () => {
     expect(result.content[0].text).toContain("05-features/sales-management/basic-design.md");
   });
 
-  it("generate_document without split params returns original behavior", async () => {
+  it("generate_document without split params returns monolithic behavior with output path", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "basic-design",
       input_content: "Test input",
       project_name: "Test",
     });
     expect(result.content[0].text).not.toContain("Split Mode");
-    expect(result.content[0].text).not.toContain("Output Path");
+    expect(result.content[0].text).toContain("Output Path");
+    expect(result.content[0].text).toContain("03-system/basic-design.md");
   });
 
   it("generate_document with doc_type=nfr returns nfr context", async () => {

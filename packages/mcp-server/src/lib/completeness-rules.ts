@@ -89,6 +89,13 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       message: "機能一覧: 機能テーブルにF-xxxが必要です",
     },
   ],
+  "project-plan": [
+    {
+      check: "PP entries",
+      test: (c: string) => (c.match(/PP-\d{3}/g) || []).length >= 3,
+      message: "プロジェクト計画書: WBSにPP-xxxが3つ以上必要です",
+    },
+  ],
   "test-evidence": [
     {
       check: "evidence entry",
