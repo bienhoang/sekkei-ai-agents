@@ -1,5 +1,17 @@
 # Sekkei project configuration — V-model v2.0 numbered structure
 # Copy to sekkei.config.yaml and fill in your project details.
+#
+# Output directory structure (v2.0):
+#   01-rfp/           — RFP workspace
+#   02-requirements/  — requirements.md, nfr.md, project-plan.md
+#   03-system/        — basic-design shared (system-architecture, security-design, etc.)
+#   04-functions-list.md
+#   05-features/      — per-feature: basic-design.md, detail-design.md, ut-spec.md, it-spec.md
+#   06-data/          — migration-design
+#   07-operations/    — operation-design
+#   08-test/          — test-plan.md, ut-spec.md, it-spec.md, st-spec.md, uat-spec.md
+#   09-ui/            — screen-design, interface-spec
+#   10-glossary.md
 
 project:
   name: "My Project"
@@ -12,6 +24,7 @@ project:
   language: ja     # Output language: ja (Japanese) | en (English) | vi (Vietnamese)
   keigo: 丁寧語    # 丁寧語 | 謙譲語 | simple
   industry: ""     # Optional: finance | medical | manufacturing | real-estate
+  # preset: standard  # Optional: enterprise | standard | agile
 
 output:
   directory: ./docs/   # User-named during init (default: docs/)
@@ -19,14 +32,22 @@ output:
 export:
   excel_template: ""   # Optional: path to company .xlsx template (e.g. "./templates/company.xlsx")
 
+# autoCommit: false      # Auto-commit generated documents to git
+# ui_mode: power         # simple (Excel-like) | power (full markdown)
+# learning_mode: false   # Add educational annotations to generated documents
+
+# approval_chain:        # Approval chain per doc type (digital ハンコ workflow)
+#   requirements: ["PM", "CTO"]
+#   basic-design: ["Tech Lead", "CTO"]
+
 chain:
   rfp: ""                                     # RFP workspace output: 01-rfp/<project-name>/
-  # Requirements phase
+  # Requirements phase (要件定義)
   requirements:       { status: pending, output: "02-requirements/requirements.md" }
   nfr:                { status: pending, output: "02-requirements/nfr.md" }
   functions_list:     { status: pending, output: "04-functions-list.md" }
   project_plan:       { status: pending, output: "02-requirements/project-plan.md" }
-  # Design phase
+  # Design phase (設計)
   basic_design:
     status: pending
     system_output: "03-system/"
@@ -35,13 +56,13 @@ chain:
   detail_design:
     status: pending
     features_output: "05-features/"
-  # Test phase
+  # Test phase (テスト)
   test_plan:          { status: pending, output: "08-test/test-plan.md" }
   ut_spec:            { status: pending, output: "08-test/ut-spec.md" }
   it_spec:            { status: pending, output: "08-test/it-spec.md" }
   st_spec:            { status: pending, output: "08-test/st-spec.md" }
   uat_spec:           { status: pending, output: "08-test/uat-spec.md" }
-  # Supplementary
+  # Supplementary (補足)
   migration_design:   { status: pending, output: "06-data/" }
   operation_design:   { status: pending, output: "07-operations/" }
   glossary:           { status: pending, output: "10-glossary.md" }
