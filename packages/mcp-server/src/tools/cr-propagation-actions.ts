@@ -8,6 +8,7 @@ import { computePropagationOrder } from "../lib/cr-propagation.js";
 import { generateBackfillSuggestions } from "../lib/cr-backfill.js";
 import { loadChainDocs, validateChain } from "../lib/cross-ref-linker.js";
 import { findAffectedSections, buildImpactReport } from "../lib/impact-analyzer.js";
+import { SekkeiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
 import type { ChangeRequestArgs, ToolResult } from "./change-request.js";
 import { ok, err } from "./change-request.js";
@@ -91,6 +92,15 @@ export async function handlePropagateNext(args: ChangeRequestArgs): Promise<Tool
   }
 
   const current = await readCR(filePath);
+
+  const MAX_PROPAGATION_STEPS = 20;
+  if (current.propagation_steps.length > MAX_PROPAGATION_STEPS) {
+    throw new SekkeiError(
+      "CHANGE_REQUEST_ERROR",
+      `propagation_steps count (${current.propagation_steps.length}) exceeds maximum of ${MAX_PROPAGATION_STEPS}. CR may be corrupted.`
+    );
+  }
+
   const idx = current.propagation_index;
 
   if (idx >= current.propagation_steps.length) {

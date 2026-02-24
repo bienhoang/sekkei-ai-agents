@@ -241,6 +241,67 @@ describe("manage_plan tool", () => {
       expect(data[0]).toHaveProperty("doc_type");
       expect(data[0]).toHaveProperty("status");
     });
+
+    it("returns stored plan_id instead of regenerated id", async () => {
+      const result = await call({ action: "list", workspace_path: tmpDir });
+      const data = parseResult(result);
+      expect(data[0].plan_id).toMatch(/^\d{8}-basic-design-generation$/);
+      // Should be the actual stored plan_id, not "unknown"
+      expect(data[0].plan_id).not.toBe("unknown");
+    });
+  });
+
+  // --- cancel ---
+  describe("cancel", () => {
+    let cancelDir: string;
+    let cancelPlanId: string;
+
+    beforeAll(async () => {
+      cancelDir = await mkdtemp(join(tmpdir(), "sekkei-cancel-"));
+      const ccfg = join(cancelDir, "sekkei.config.yaml");
+      await writeFile(ccfg, CONFIG_YAML, "utf-8");
+      const result = await call({
+        action: "create",
+        workspace_path: cancelDir,
+        config_path: ccfg,
+        doc_type: "basic-design",
+        features: FEATURES,
+      });
+      cancelPlanId = parseResult(result).plan_id;
+    });
+
+    afterAll(async () => {
+      await rm(cancelDir, { recursive: true, force: true });
+    });
+
+    it("cancels a pending plan", async () => {
+      const result = await call({
+        action: "cancel",
+        workspace_path: cancelDir,
+        plan_id: cancelPlanId,
+      });
+      expect(result.isError).toBeUndefined();
+      const data = parseResult(result);
+      expect(data.status).toBe("cancelled");
+    });
+
+    it("rejects cancelling an already-cancelled plan", async () => {
+      const result = await call({
+        action: "cancel",
+        workspace_path: cancelDir,
+        plan_id: cancelPlanId,
+      });
+      expect(result.isError).toBe(true);
+      expect(result.content[0].text).toContain("already cancelled");
+    });
+
+    it("rejects cancel without plan_id", async () => {
+      const result = await call({
+        action: "cancel",
+        workspace_path: cancelDir,
+      });
+      expect(result.isError).toBe(true);
+    });
   });
 
   // --- detect ---

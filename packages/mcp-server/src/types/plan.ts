@@ -29,6 +29,7 @@ export interface PlanPhase {
 }
 
 export interface GenerationPlan {
+  plan_id?: string;       // directory name — persisted in YAML frontmatter
   title: string;
   doc_type: string;       // basic-design | detail-design | test-spec
   status: PlanStatus;

@@ -399,6 +399,107 @@ console.log("message");
 console.error("error");
 ```
 
+## State Machines & Plan Management
+
+### Change Request State Machine
+
+CR lifecycle follows strict state transitions (in `src/lib/cr-state-machine.ts`):
+
+```
+DRAFT → SUBMITTED → ANALYZING → APPROVED → PROPAGATING → COMPLETED
+  ↑                               ↓
+  └──────────── REJECTED ─────────┘
+```
+
+**Transition rules:**
+- Only forward transitions allowed (no backtracking)
+- Each transition updates timestamp and optional metadata
+- Git checkpoint created before propagation (rollback-safe)
+
+**Pattern:**
+```typescript
+export interface ChangeRequest {
+  id: string;
+  status: "draft" | "submitted" | "analyzing" | "approved" | "propagating" | "completed" | "rejected";
+  created_at: number;
+  updated_at: number;
+  doc_type: DocType;
+  summary: string;
+  // ... context-specific fields
+}
+
+// Transition function
+export async function transitionCR(cr: ChangeRequest, newStatus: string) {
+  const valid = VALID_TRANSITIONS[cr.status];
+  if (!valid.includes(newStatus)) {
+    throw new SekkeiError("CR_INVALID_TRANSITION", `Cannot go from ${cr.status} to ${newStatus}`);
+  }
+  cr.status = newStatus;
+  cr.updated_at = Date.now();
+}
+```
+
+### Plan State Machine
+
+Generation plans track multi-phase document workflows (in `src/lib/plan-state.ts`):
+
+```
+PENDING → IN_PROGRESS → COMPLETED
+   ↓           ↓
+ CANCELLED  SUSPENDED
+```
+
+**Key fields:**
+- `plan_id` — directory name (not timestamp-based, for reliability)
+- `phases` — array of phase objects with status and completion %
+- `feature_file_map` — for staleness tracking
+- Safe phase iteration (phases sorted deterministically)
+
+**Pattern:**
+```typescript
+export interface GenerationPlan {
+  plan_id: string;
+  status: "pending" | "in_progress" | "completed" | "suspended" | "cancelled";
+  created_at: number;
+  phases: {
+    key: string; // "phase-01-requirements"
+    doc_type: DocType;
+    status: "pending" | "in_progress" | "complete";
+    output_path: string;
+  }[];
+  feature_file_map?: Record<string, string>; // For staleness detection
+}
+
+// Safe iteration
+const sortedPhases = plan.phases.sort((a, b) => a.key.localeCompare(b.key));
+for (const phase of sortedPhases) {
+  // Process phase...
+}
+```
+
+### CR Propagation Safety
+
+**Max steps guard:** Prevent infinite loops in `propagate_next` action
+```typescript
+export const MAX_PROPAGATION_STEPS = 20; // Fail-safe at 2× expected steps
+
+// In propagation loop:
+if (propagationStep >= MAX_PROPAGATION_STEPS) {
+  throw new SekkeiError("CR_PROPAGATION_LIMIT", "Max propagation steps exceeded");
+}
+```
+
+**Bounds checking:** Always check array access before using
+```typescript
+// ✅ Correct order
+if (step >= list.length) throw error;
+const item = list[step]; // Safe
+
+// ❌ Wrong
+const item = list[step];
+if (step >= list.length) throw error; // Too late
+```
+
 ## Schema & Validation
 
 ### Zod Schemas

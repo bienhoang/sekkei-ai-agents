@@ -17,6 +17,7 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["requirements", "project-plan"],
   ["functions-list", "project-plan"],
   // Design phase
+  ["nfr", "basic-design"],
   ["requirements", "basic-design"],
   ["functions-list", "basic-design"],
   ["requirements", "security-design"],
@@ -50,6 +51,12 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["requirements", "traceability-matrix"],
   ["basic-design", "traceability-matrix"],
   ["functions-list", "sitemap"],
+  // screen-design and interface-spec chain integration
+  ["basic-design", "screen-design"],
+  ["basic-design", "interface-spec"],
+  ["requirements", "interface-spec"],
+  // functions-list feeds test planning scope
+  ["functions-list", "test-plan"],
 ];
 
 /** ID prefix → doc type that defines it */
@@ -78,6 +85,34 @@ export const ID_ORIGIN: Record<string, string | string[]> = {
   IF: "interface-spec",
   PG: "sitemap",
 };
+
+/**
+ * Derive upstream ID prefixes for a doc type from CHAIN_PAIRS + ID_ORIGIN.
+ * Returns sorted array of prefixes that originate from upstream docs.
+ * Overrides replace the derived set for specific doc types (edge cases).
+ */
+export function deriveUpstreamIdTypes(
+  docType: string,
+  overrides?: Record<string, string[]>
+): string[] {
+  if (overrides?.[docType]) {
+    return overrides[docType].slice().sort();
+  }
+
+  const upstreams = CHAIN_PAIRS
+    .filter(([, down]) => down === docType)
+    .map(([up]) => up);
+
+  const prefixes = new Set<string>();
+  for (const [prefix, origin] of Object.entries(ID_ORIGIN)) {
+    const origins = Array.isArray(origin) ? origin : [origin];
+    if (origins.some(o => upstreams.includes(o))) {
+      prefixes.add(prefix);
+    }
+  }
+
+  return [...prefixes].sort();
+}
 
 /** Check if a prefix originates from the given doc type */
 function isOriginOf(prefix: string, docType: string): boolean {

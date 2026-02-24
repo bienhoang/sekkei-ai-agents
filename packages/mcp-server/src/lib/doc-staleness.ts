@@ -44,11 +44,11 @@ export async function loadChainDocPaths(configPath: string): Promise<Map<string,
   }
 
   // Dual-mode entries: prefer single-file output for staleness (simpler timestamp)
-  const dualEntries: [string, { output?: string; system_output?: string } | undefined][] = [
+  const dualEntries: [string, { output?: string; system_output?: string; features_output?: string } | undefined][] = [
     ["basic-design", chain.basic_design],
     ["detail-design", chain.detail_design],
-    ["ut-spec", chain.ut_spec as { output?: string; system_output?: string } | undefined],
-    ["it-spec", chain.it_spec as { output?: string; system_output?: string } | undefined],
+    ["ut-spec", chain.ut_spec as { output?: string; system_output?: string; features_output?: string } | undefined],
+    ["it-spec", chain.it_spec as { output?: string; system_output?: string; features_output?: string } | undefined],
   ];
 
   for (const [docType, entry] of dualEntries) {
@@ -56,8 +56,12 @@ export async function loadChainDocPaths(configPath: string): Promise<Map<string,
     if (entry.output) {
       paths.set(docType, resolve(base, entry.output));
     } else if (entry.system_output) {
-      // Use system_output dir as representative path for split docs
+      // For split docs, store system_output as path; features_output handled in checkChainStaleness
       paths.set(docType, resolve(base, entry.system_output));
+      // Store features_output path too if present (keyed with suffix)
+      if (entry.features_output) {
+        paths.set(`${docType}:features`, resolve(base, entry.features_output));
+      }
     }
   }
 
@@ -92,7 +96,15 @@ export async function checkChainStaleness(configPath: string): Promise<Staleness
       if (dateCache.has(docType)) return dateCache.get(docType) ?? null;
       const path = docPaths.get(docType);
       if (!path) { dateCache.set(docType, null); return null; }
-      const date = await gitLastModified(repoRoot, path);
+      let date = await gitLastModified(repoRoot, path);
+      // For split-docs, take max of system_output and features_output timestamps
+      const featPath = docPaths.get(`${docType}:features`);
+      if (featPath) {
+        const featDate = await gitLastModified(repoRoot, featPath);
+        if (featDate && (!date || new Date(featDate) > new Date(date))) {
+          date = featDate;
+        }
+      }
       dateCache.set(docType, date);
       return date;
     }
@@ -138,7 +150,15 @@ export async function checkDocStaleness(configPath: string, docType: string): Pr
 
     const downPath = docPaths.get(docType);
     if (!downPath) return [];
-    const downDate = await gitLastModified(repoRoot, downPath);
+    let downDate = await gitLastModified(repoRoot, downPath);
+    // For split-docs, take max of system_output and features_output timestamps
+    const featPath = docPaths.get(`${docType}:features`);
+    if (featPath) {
+      const featDate = await gitLastModified(repoRoot, featPath);
+      if (featDate && (!downDate || new Date(featDate) > new Date(downDate))) {
+        downDate = featDate;
+      }
+    }
     if (!downDate) return [];
 
     for (const [upstream] of relevantPairs) {

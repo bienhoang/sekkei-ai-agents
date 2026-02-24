@@ -78,7 +78,10 @@ export async function handleChainStatus(
     { phase: "requirements", label: "要件定義", keys: ["requirements", "nfr", "functions_list", "project_plan"] },
     { phase: "design", label: "設計", keys: ["basic_design", "security_design", "detail_design"] },
     { phase: "test", label: "テスト", keys: ["test_plan", "ut_spec", "it_spec", "st_spec", "uat_spec"] },
-    { phase: "supplementary", label: "補足", keys: ["operation_design", "migration_design", "glossary"] },
+    { phase: "supplementary", label: "補足", keys: [
+      "operation_design", "migration_design", "glossary",
+      "test_evidence", "meeting_minutes", "decision_record",
+    ]},
   ];
 
   for (const group of CHAIN_DISPLAY_ORDER) {

@@ -1,7 +1,9 @@
 /**
  * Migrate sekkei.config.yaml from v1 (overview + test-spec) to v2.0 chain structure.
  * Pure function — no I/O. Operates on YAML string content.
+ * Also: migrateConfigKeys for underscore→hyphen chain key migration.
  */
+import { readFile, writeFile } from "node:fs/promises";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 
 /**
@@ -70,4 +72,51 @@ export function migrateConfig(yamlContent: string): string {
   config.chain = orderedChain;
 
   return stringifyYaml(config, { lineWidth: 120 });
+}
+
+export interface MigrationResult {
+  migrated: string[];
+  skipped: string[];
+  warnings: string[];
+}
+
+/**
+ * Migrate underscore chain keys to hyphen equivalents in sekkei.config.yaml.
+ * Idempotent: running twice produces same result.
+ * Warning: YAML comments will be lost due to stringify round-trip.
+ */
+export async function migrateConfigKeys(configPath: string): Promise<MigrationResult> {
+  const raw = await readFile(configPath, "utf-8");
+  const config = parseYaml(raw) as Record<string, unknown>;
+  const chain = (config.chain ?? {}) as Record<string, unknown>;
+
+  const migrated: string[] = [];
+  const skipped: string[] = [];
+  const warnings: string[] = [
+    "YAML comments will be lost during migration (yaml.stringify round-trip). Back up your config first.",
+  ];
+
+  const keysToDelete: string[] = [];
+  for (const key of Object.keys(chain)) {
+    if (key.includes("_")) {
+      const hyphenKey = key.replace(/_/g, "-");
+      if (chain[hyphenKey] !== undefined) {
+        skipped.push(key);
+      } else {
+        chain[hyphenKey] = chain[key];
+        keysToDelete.push(key);
+        migrated.push(`${key} → ${hyphenKey}`);
+      }
+    }
+  }
+  for (const key of keysToDelete) {
+    delete chain[key];
+  }
+
+  if (migrated.length > 0) {
+    config.chain = chain;
+    await writeFile(configPath, stringifyYaml(config, { lineWidth: 120 }), "utf-8");
+  }
+
+  return { migrated, skipped, warnings };
 }

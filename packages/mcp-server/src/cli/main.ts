@@ -15,6 +15,7 @@ import { watchCommand } from "./commands/watch.js";
 import { versionCommand } from "./commands/version.js";
 import { uninstallCommand } from "./commands/uninstall.js";
 import { updateCommand } from "./commands/update.js";
+import { migrateCommand } from "./commands/migrate.js";
 
 const __cli_dirname = dirname(fileURLToPath(import.meta.url));
 const pkgJson = JSON.parse(readFileSync(resolve(__cli_dirname, "..", "..", "package.json"), "utf-8"));
@@ -35,6 +36,7 @@ const main = defineCommand({
     version: versionCommand,
     uninstall: uninstallCommand,
     update: updateCommand,
+    migrate: migrateCommand,
   },
 });
 

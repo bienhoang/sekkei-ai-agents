@@ -166,6 +166,8 @@ export interface ProjectConfig {
   };
   /** Auto-commit generated documents to git. Default: false */
   autoCommit?: boolean;
+  /** If true, append staleness advisory after document generation */
+  autoValidate?: boolean;
   /** Feature-to-file mapping for staleness detection */
   feature_file_map?: Record<string, { label: string; files: string[] }>;
   /** Google Workspace export config */

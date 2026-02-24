@@ -8,7 +8,7 @@ import { handlePlanAction } from "./plan-actions.js";
 import { logger } from "../lib/logger.js";
 
 export const PLAN_ACTIONS = [
-  "create", "status", "list", "execute", "update", "detect",
+  "create", "status", "list", "execute", "update", "detect", "cancel",
 ] as const;
 
 const inputSchema = {

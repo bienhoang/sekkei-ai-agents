@@ -52,7 +52,7 @@ sekkei/
 │   │   │   │   ├── mockup-renderer.ts # Render mockup with styling (Phase A, 122 LOC)
 │   │   │   │   ├── excel-template-filler.ts # Named-range Excel filling (Phase A, 168 LOC)
 │   │   │   │   ├── font-manager.ts    # PDF CJK font support (Phase A, 53 LOC)
-│   │   │   │   ├── cross-ref-linker.ts # Link cross-references (289 LOC)
+│   │   │   │   ├── cross-ref-linker.ts # V-model CHAIN_PAIRS (57 edges), ID extraction, deriveUpstreamIdTypes (v2.1 audit fixes)
 │   │   │   │   ├── completeness-rules.ts # Document completeness checks (71 LOC)
 │   │   │   │   ├── keigo-validator.ts # Japanese politeness validation (199 LOC)
 │   │   │   │   ├── cr-state-machine.ts # CR state machine, YAML persistence, CRUD (180 LOC)
@@ -290,6 +290,74 @@ Shared health check module (used by version + update commands):
 - Submodules: init/i18n.js (214 LOC), init/prompts.js (193 LOC), init/options.js (169 LOC), init/deps.js (92 LOC)
 - Multi-language wizard (en/ja/vi), auto-installs Python venv + Playwright, generates `sekkei.config.yaml`
 - Supports `--preset` and `--skip-deps` flags
+
+#### `src/cli/commands/migrate.ts` (NEW v2.1)
+`sekkei migrate` CLI command for config schema migration:
+- Migrates YAML config underscore keys (functions_list, test_spec) to hyphen format (functions-list, test-spec)
+- Removes old underscore keys after migration (key cleanup)
+- Warns user about YAML comment loss during round-trip
+- Manual invocation only (not auto-run during init/update)
+
+## Phase 2.1: V-Model Chain Audit Fixes (NEW)
+
+**Date:** 2026-02-24 | **Status:** Complete | **Test Suite:** 556/556 pass
+
+### Chain Topology Improvements
+
+**New CHAIN_PAIRS (57 total, +4 from v2.0):**
+- `["nfr", "basic-design"]` — NFR requirements shape system architecture
+- `["basic-design", "screen-design"]` — Screen design is downstream of basic design
+- `["basic-design", "interface-spec"]` — Interface spec depends on basic design
+- `["requirements", "interface-spec"]` — Interface spec also depends on requirements
+- `["functions-list", "test-plan"]` — Function inventory feeds test scope estimation
+
+**Note:** Removed self-referential `["screen-design", "screen-design"]` to maintain DAG correctness.
+
+**Updated CHAIN_DISPLAY_ORDER:**
+- Added `test_evidence`, `meeting_minutes`, `decision_record` to supplementary group
+- These doc types now visible in `chain_status` tool output
+
+### ID System Unification
+
+**`deriveUpstreamIdTypes` function (NEW):**
+- Replaces hand-maintained `UPSTREAM_ID_TYPES` constant
+- Derives upstream ID prefixes directly from `CHAIN_PAIRS`
+- Automatically adds 17 new cross-ref validation rules for test specs and supplementary docs
+
+**Unified ID extraction:**
+- `extractIds()` — standard ID patterns (F-, REQ-, API-, etc.)
+- `extractAllIds()` — includes custom ID prefixes via CUSTOM_ID_PATTERN
+- Both used consistently across validator, CR propagation, and staleness detection
+
+### Plan Management & CR Propagation Fixes
+
+**Plan action improvements:**
+- Fixed `handleList` plan_id generation (uses directory names, not timestamp-based IDs)
+- Fixed `handlePlanAction` undefined phase_key edge case
+- Added phase sorting for deterministic plan iteration
+
+**CR propagation safety:**
+- Added `MAX_PROPAGATION_STEPS=20` guard to prevent runaway propagation
+- Fixed `propagate_next` bounds check before array access
+
+### Staleness Detection Enhancement
+
+**Split-document staleness fix:**
+- `checkDocStaleness` now detects split-mode docs via `features_output` presence
+- Correctly identifies stale basic-design and detail-design variants
+- Applied to both `checkChainStaleness` and `checkDocStaleness` paths
+
+### Configuration Management
+
+**Auto-validate option (NEW):**
+- `autoValidate` config flag triggers staleness advisory after generation
+- Lightweight non-blocking validation (staleness only, not full content validation)
+- Prevents chain inconsistencies without circular tool invocation
+
+**Config migration (`migrateConfigKeys`):**
+- Handles underscore→hyphen key transitions in YAML configs
+- Cleans up old underscore keys after migration
+- Called via `sekkei migrate` CLI command (manual, explicit)
 
 ## Key Files & Modules
 
@@ -686,12 +754,14 @@ npm run test:unit    # Unit tests only
 - pyyaml
 - jinja2 (optional)
 
-## Recent Changes (v2.0 — V-Model Chain Restructure)
+## Recent Changes (v2.0 — V-Model Chain Restructure + v2.1 Audit Fixes)
 
 ### DOC_TYPES Changes (22 types)
 
 **Removed:** `overview`, `test-spec`
 **Added:** `nfr`, `security-design`, `project-plan`, `test-plan`, `ut-spec`, `it-spec`, `st-spec`, `uat-spec`
+
+**v2.1 Status:** All 22 types now fully integrated into CHAIN_PAIRS and CHAIN_DISPLAY_ORDER (screen-design, interface-spec, and meta-docs now visible in chain validation)
 
 ```typescript
 // v2.0 DOC_TYPES
@@ -713,15 +783,23 @@ Four phases organizing document types:
 
 **Types:** `PHASES`, `Phase`, `PHASE_MAP`, `PHASE_LABELS`
 
-### V-Model Chain Structure (NEW)
+### V-Model Chain Structure (v2.0 + v2.1 Audit Fixes)
 
 ```
-RFP → requirements → nfr/functions-list/project-plan
-  → basic-design → security-design/detail-design
-  → test-plan → ut-spec/it-spec/st-spec/uat-spec
+RFP → requirements → nfr/functions-list/project-plan/interface-spec
+  → basic-design ← nfr
+    → security-design/detail-design/screen-design/interface-spec
+  → test-plan ← functions-list
+    → ut-spec/it-spec/st-spec/uat-spec
 ```
 
-Branching after requirements (3 parallel paths) and design (2 parallel).
+**v2.1 improvements:**
+- Added `nfr → basic-design` (NFR shapes system architecture)
+- Added `basic-design → screen-design`, `basic-design → interface-spec` (supplementary doc integration)
+- Added `requirements → interface-spec` (interface spec depends on requirements too)
+- Added `functions-list → test-plan` (function inventory feeds test scope)
+- Total CHAIN_PAIRS: 57 edges (was 53)
+- Branching after requirements (4 parallel paths) and design (3 parallel)
 
 ### Output Directory Structure (UPDATED)
 

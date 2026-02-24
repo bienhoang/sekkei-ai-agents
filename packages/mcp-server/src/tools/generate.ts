@@ -428,8 +428,27 @@ export async function handleGenerateDocument(
       } catch { /* non-blocking */ }
     }
 
+    // Advisory staleness check — non-blocking
+    let advisoryOutput = finalOutput;
+    if (config_path) {
+      try {
+        const raw2 = await readFile(config_path, "utf-8");
+        const cfg2 = parseYaml(raw2) as ProjectConfig;
+        if (cfg2?.autoValidate) {
+          const { checkDocStaleness } = await import("../lib/doc-staleness.js");
+          const stale = await checkDocStaleness(config_path, doc_type);
+          if (stale && stale.length > 0) {
+            const advisory = stale.map(w => `- ${w.message}`).join("\n");
+            advisoryOutput += `\n\n---\n**Staleness Advisory (自動チェック):**\n${advisory}`;
+          }
+        }
+      } catch (e) {
+        logger.warn({ err: e }, "auto-validate staleness check failed");
+      }
+    }
+
     return {
-      content: [{ type: "text", text: finalOutput }],
+      content: [{ type: "text", text: advisoryOutput }],
     };
   } catch (err) {
     const message =

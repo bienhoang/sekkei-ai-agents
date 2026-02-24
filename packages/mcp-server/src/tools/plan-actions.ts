@@ -155,6 +155,7 @@ async function handleCreate(args: PlanArgs): Promise<ToolResult> {
   const now = new Date().toISOString().slice(0, 10);
 
   const plan: GenerationPlan = {
+    plan_id: planId,
     title: `${doc_type} Generation Plan`,
     doc_type,
     status: "pending",
@@ -208,7 +209,7 @@ async function handleList(args: PlanArgs): Promise<ToolResult> {
   const summary = plans.map(p => {
     const completed = p.phases.filter(ph => ph.status === "completed" || ph.status === "skipped").length;
     return {
-      plan_id: generatePlanId(p.doc_type), // reconstruct from created date + doc_type
+      plan_id: p.plan_id ?? "unknown",
       doc_type: p.doc_type,
       status: p.status,
       feature_count: p.feature_count,
@@ -404,6 +405,36 @@ async function handleExecute(args: PlanArgs): Promise<ToolResult> {
   }, null, 2));
 }
 
+async function handleCancel(args: PlanArgs): Promise<ToolResult> {
+  const { workspace_path, plan_id } = args;
+  if (!plan_id) return err("plan_id is required for cancel");
+
+  const plansDir = getPlanDir(workspace_path);
+  const planDir = join(plansDir, plan_id);
+  const planFile = join(planDir, "plan.md");
+
+  let plan: GenerationPlan;
+  try {
+    plan = await readPlan(planFile);
+  } catch (e) {
+    const msg = e instanceof SekkeiError ? e.toClientMessage() : `Plan not found: ${plan_id}`;
+    return err(msg);
+  }
+
+  if (plan.status === "completed") {
+    return err(`Cannot cancel a completed plan: ${plan_id}`);
+  }
+  if (plan.status === "cancelled") {
+    return err(`Plan already cancelled: ${plan_id}`);
+  }
+
+  plan.status = "cancelled";
+  plan.updated = new Date().toISOString().slice(0, 10);
+  await writePlan(planDir, plan);
+
+  return ok(JSON.stringify({ plan_id, status: "cancelled" }, null, 2));
+}
+
 // --- Dispatch ---
 
 export async function handlePlanAction(args: PlanArgs): Promise<ToolResult> {
@@ -414,6 +445,7 @@ export async function handlePlanAction(args: PlanArgs): Promise<ToolResult> {
     case "execute": return handleExecute(args);
     case "update":  return handleUpdate(args);
     case "detect":  return handleDetect(args);
+    case "cancel":  return handleCancel(args);
     default:        return err(`Unknown action: ${args.action}`);
   }
 }

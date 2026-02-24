@@ -46,6 +46,7 @@ export async function readPlan(planFilePath: string): Promise<GenerationPlan> {
   }
 
   return {
+    plan_id: (data.plan_id as string) ?? undefined,
     title: (data.title as string) ?? "",
     doc_type: (data.doc_type as string) ?? "",
     status: status as GenerationPlan["status"],
@@ -61,6 +62,7 @@ export async function readPlan(planFilePath: string): Promise<GenerationPlan> {
 
 export async function writePlan(planDir: string, plan: GenerationPlan): Promise<void> {
   const frontmatter = stringify({
+    plan_id: plan.plan_id ?? null,
     title: plan.title,
     doc_type: plan.doc_type,
     status: plan.status,

@@ -579,6 +579,27 @@ describe("analyzeGraph — test-plan → uat-spec chain pair", () => {
   });
 });
 
+describe("CHAIN_PAIRS — Phase 1 additions", () => {
+  it("includes nfr → basic-design pair", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["nfr", "basic-design"]);
+  });
+  it("includes basic-design → screen-design pair", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["basic-design", "screen-design"]);
+  });
+  it("includes basic-design → interface-spec pair", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["basic-design", "interface-spec"]);
+  });
+  it("includes requirements → interface-spec pair", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["requirements", "interface-spec"]);
+  });
+  it("includes functions-list → test-plan pair", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["functions-list", "test-plan"]);
+  });
+  it("does NOT include self-referential screen-design pair", () => {
+    expect(CHAIN_PAIRS).not.toContainEqual(["screen-design", "screen-design"]);
+  });
+});
+
 describe("CHAIN_PAIRS — detail-design traceability pairs", () => {
   it("includes functions-list → detail-design chain pair", () => {
     const pair = CHAIN_PAIRS.find(

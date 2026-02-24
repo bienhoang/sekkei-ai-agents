@@ -4,7 +4,9 @@
 import { readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import type { DocType, KeigoLevel, Manifest } from "../types/documents.js";
+import { DOC_TYPES } from "../types/documents.js";
 import { extractIds, extractIdsByType } from "./id-extractor.js";
+import { deriveUpstreamIdTypes } from "./cross-ref-linker.js";
 import { SekkeiError } from "./errors.js";
 import { validateKeigoComprehensive } from "./keigo-validator.js";
 import { CONTENT_DEPTH_RULES } from "./completeness-rules.js";
@@ -116,31 +118,23 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
   ],
 };
 
-/** Expected upstream ID types for cross-reference validation */
-const UPSTREAM_ID_TYPES: Record<DocType, string[]> = {
-  "functions-list": ["REQ"],
-  requirements: [],
-  nfr: ["REQ", "NFR"],
-  "project-plan": ["REQ", "F"],
-  "basic-design": ["REQ", "F"],
-  "security-design": ["REQ", "NFR", "API", "SCR", "TBL"],
-  "detail-design": ["SCR", "TBL", "API"],
-  "test-plan": ["REQ", "F", "NFR"],
-  "ut-spec": ["CLS", "DD"],
-  "it-spec": ["API", "SCR", "TBL"],
-  "st-spec": ["SCR", "TBL", "F"],
-  "uat-spec": ["REQ", "NFR"],
-  "crud-matrix": ["F", "TBL"],
-  "traceability-matrix": ["REQ", "SCR", "API"],
-  "operation-design": ["NFR", "REQ"],
-  "migration-design": ["TBL", "REQ", "OP"],
-  "sitemap": ["F"],
-  "test-evidence": ["UT", "IT", "ST", "UAT"],
-  "meeting-minutes": [],
-  "decision-record": [],
-  "interface-spec": ["API"],
-  "screen-design": ["SCR", "API"],
+/**
+ * Edge-case overrides where pure derivation from CHAIN_PAIRS is wrong:
+ * - nfr: NFR prefix is self-referential (requirements doc also defines NFR-xxx)
+ * - security-design: SEC originates from security-design itself, not upstream
+ */
+const UPSTREAM_OVERRIDES: Partial<Record<DocType, string[]>> = {
+  nfr: ["NFR", "REQ"],
+  "security-design": ["API", "NFR", "REQ", "SCR", "TBL"],
 };
+
+/** Computed once at module load from CHAIN_PAIRS + ID_ORIGIN */
+const UPSTREAM_ID_TYPES: Record<DocType, string[]> = Object.fromEntries(
+  (DOC_TYPES as readonly string[]).map(dt => [
+    dt,
+    deriveUpstreamIdTypes(dt, UPSTREAM_OVERRIDES as Record<string, string[]>),
+  ])
+) as Record<DocType, string[]>;
 
 /** Required table columns (partial match) per doc type */
 /** 改訂履歴 table columns required in ALL document types */

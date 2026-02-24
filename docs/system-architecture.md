@@ -85,46 +85,50 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 
 ## Document Chain (V-Model) — v2.0
 
-### Branching Chain Structure
+### Branching Chain Structure with Chain Pairs (v2.1 audit fixes)
 
 ```
 RFP (提案依頼書)
   ↓
 Requirements (要件定義書)
-  ↓
-├─ NFR (非機能要件)
-├─ Functions List (機能一覧)
-└─ Project Plan (プロジェクト計画)
+  ├─→ NFR (非機能要件)
+  ├─→ Functions List (機能一覧)
+  ├─→ Project Plan (プロジェクト計画)
+  └─→ Interface Spec (インターフェース仕様書) [NEW]
   ↓
 Basic Design (基本設計書) ← Split into system + features
-  ↓
-├─ Security Design (セキュリティ設計書)
-└─ Detail Design (詳細設計書) ← Split by feature
+  ├─← NFR (非機能要件) [NEW edge]
+  ├─→ Security Design (セキュリティ設計書)
+  ├─→ Detail Design (詳細設計書) ← Split by feature
+  ├─→ Screen Design (画面設計書) [NEW edge]
+  └─→ Interface Spec [NEW edge]
   ↓
 Test Plan (テスト計画)
-  ↓
-├─ UT Spec (単体テスト仕様書)
-├─ IT Spec (結合テスト仕様書)
-├─ ST Spec (システムテスト仕様書)
-└─ UAT Spec (受入テスト仕様書)
+  ├─← Functions List [NEW edge]
+  ├─→ UT Spec (単体テスト仕様書)
+  ├─→ IT Spec (結合テスト仕様書)
+  ├─→ ST Spec (システムテスト仕様書)
+  └─→ UAT Spec (受入テスト仕様書)
   ↓
 [Supplementary in parallel]:
   ├─ Test Evidence (テストエビデンス)
   ├─ Meeting Minutes (議事録)
   ├─ Architecture Decision Records (設計決定記録)
-  ├─ Interface Specifications (インターフェース仕様書)
   ├─ Screen Design (画面設計書)
+  ├─ Interface Spec (インターフェース仕様書)
   ├─ Operation Design (運用設計書)
   └─ Migration Design (移行設計書)
   ↓
 Glossary (用語集)
 ```
 
-**Key Changes:**
-- Removed `overview` document type
-- Linear chain now branches: requirements → 3 parallel doc types → design → 2 parallel design types → test → 4 parallel test specs
-- Test specs symmetric to design: UT/IT/ST/UAT map to detail-design, ST also maps to basic-design
-- All supplementary docs (evidence, meetings, decisions) generated in parallel, not sequential
+**Key Changes (v2.1 audit):**
+- Added `nfr → basic-design` edge (NFR shapes system architecture)
+- Added `basic-design → screen-design`, `basic-design → interface-spec`, `requirements → interface-spec` edges (chain integration for supplementary docs)
+- Added `functions-list → test-plan` edge (function inventory feeds test scope estimation)
+- Added `test_evidence`, `meeting_minutes`, `decision_record` to CHAIN_DISPLAY_ORDER for visibility in chain status
+- Removed self-referential `screen-design → screen-design` pair (DAG correctness)
+- Total CHAIN_PAIRS: 57 edges (up from 53)
 
 ### Output Structure (Numbered Format) — v2.0
 

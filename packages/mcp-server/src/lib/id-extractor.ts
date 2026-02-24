@@ -20,7 +20,8 @@ const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP
 /** Also match custom-prefix IDs like SAL-001, ACC-001 */
 const CUSTOM_ID_PATTERN = /\b([A-Z]{2,5})-(\d{1,4})\b/g;
 
-/** Extract all standard IDs from markdown content, grouped by type */
+/** Extract all standard IDs from markdown content, grouped by type.
+ *  Custom-prefix IDs (not in ID_TYPES) are collected into an "OTHER" bucket. */
 export function extractIds(content: string): Map<string, string[]> {
   const result = new Map<string, string[]>();
 
@@ -32,6 +33,17 @@ export function extractIds(content: string): Map<string, string[]> {
       existing.push(id);
     }
     result.set(type, existing);
+  }
+
+  // Capture custom prefixes not in ID_TYPES into OTHER bucket
+  const knownPrefixes = new Set<string>(ID_TYPES as readonly string[]);
+  for (const match of content.matchAll(CUSTOM_ID_PATTERN)) {
+    const prefix = match[1];
+    if (!knownPrefixes.has(prefix)) {
+      const existing = result.get("OTHER") ?? [];
+      if (!existing.includes(match[0])) existing.push(match[0]);
+      result.set("OTHER", existing);
+    }
   }
 
   return result;

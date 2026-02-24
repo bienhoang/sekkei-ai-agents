@@ -1,5 +1,6 @@
 import { describe, it, expect } from "@jest/globals";
 import { extractIds, extractAllIds, extractIdsByType } from "../../src/lib/id-extractor.js";
+import { deriveUpstreamIdTypes } from "../../src/lib/cross-ref-linker.js";
 
 describe("extractIds", () => {
   it("extracts standard IDs grouped by type", () => {
@@ -44,6 +45,51 @@ describe("extractAllIds", () => {
     expect(result.has("SAL-001")).toBe(true);
     expect(result.has("ACC-002")).toBe(true);
     expect(result.has("USR-003")).toBe(true);
+  });
+});
+
+describe("extractIds — OTHER bucket", () => {
+  it("puts custom prefix SAL-001 in OTHER bucket", () => {
+    const result = extractIds("REQ-001 SAL-001 ACC-002");
+    expect(result.get("REQ")).toContain("REQ-001");
+    expect(result.get("OTHER")).toContain("SAL-001");
+    expect(result.get("OTHER")).toContain("ACC-002");
+  });
+
+  it("does not put known prefixes in OTHER bucket", () => {
+    const result = extractIds("REQ-001 F-002 SCR-003");
+    expect(result.has("OTHER")).toBe(false);
+  });
+});
+
+describe("deriveUpstreamIdTypes", () => {
+  it("includes TP and TS for ut-spec", () => {
+    const prefixes = deriveUpstreamIdTypes("ut-spec");
+    expect(prefixes).toContain("TP");
+    expect(prefixes).toContain("TS");
+  });
+
+  it("includes F and REQ for detail-design", () => {
+    const prefixes = deriveUpstreamIdTypes("detail-design");
+    expect(prefixes).toContain("F");
+    expect(prefixes).toContain("REQ");
+  });
+
+  it("returns override for nfr (NFR, REQ)", () => {
+    const overrides = { nfr: ["NFR", "REQ"] };
+    const prefixes = deriveUpstreamIdTypes("nfr", overrides);
+    expect(prefixes).toEqual(["NFR", "REQ"]);
+  });
+
+  it("does not include SEC for security-design when overridden", () => {
+    const overrides = { "security-design": ["API", "NFR", "REQ", "SCR", "TBL"] };
+    const prefixes = deriveUpstreamIdTypes("security-design", overrides);
+    expect(prefixes).not.toContain("SEC");
+  });
+
+  it("returns empty array for requirements (no upstream)", () => {
+    const prefixes = deriveUpstreamIdTypes("requirements");
+    expect(prefixes).toEqual([]);
   });
 });
 
