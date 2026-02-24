@@ -45,14 +45,35 @@ interface Props {
   onEditorReady?: (editor: Editor, scrollContainer: HTMLElement | null) => void
 }
 
-/** Rewrite relative image paths to /docs-assets/ route */
-function rewriteImagePaths(md: string, filePath: string): string {
+/** Resolve a relative src path against the current file's directory */
+function resolveAssetPath(src: string, filePath: string): string {
+  if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/')) return src
   const dir = filePath.includes('/') ? filePath.substring(0, filePath.lastIndexOf('/')) : ''
-  return md.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_match, alt, src) => {
-    if (src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/')) return _match
-    const resolved = dir ? `${dir}/${src}` : src
-    return `![${alt}](/docs-assets/${resolved})`
+  const resolved = dir ? `${dir}/${src}` : src
+  return `/docs-assets/${resolved}`
+}
+
+/** Rewrite relative image paths to /docs-assets/ route (markdown + HTML img tags) */
+function rewriteImagePaths(md: string, filePath: string): string {
+  // Rewrite markdown images: ![alt](src)
+  let result = md.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_match, alt, src) => {
+    return `![${alt}](${resolveAssetPath(src, filePath)})`
   })
+  // Convert HTML <img> tags to markdown images (handles <p align="center"><img ...></p> patterns)
+  result = result.replace(/<p[^>]*>\s*<img\s+([^>]*)\/?\s*>\s*<\/p>/gi, (_match, attrs) => {
+    const srcMatch = attrs.match(/src=["']([^"']+)["']/)
+    const altMatch = attrs.match(/alt=["']([^"']+)["']/)
+    if (!srcMatch) return _match
+    return `![${altMatch?.[1] ?? ''}](${resolveAssetPath(srcMatch[1], filePath)})`
+  })
+  // Also handle standalone <img> tags not wrapped in <p>
+  result = result.replace(/<img\s+([^>]*)\/?\s*>/gi, (_match, attrs) => {
+    const srcMatch = attrs.match(/src=["']([^"']+)["']/)
+    const altMatch = attrs.match(/alt=["']([^"']+)["']/)
+    if (!srcMatch) return _match
+    return `![${altMatch?.[1] ?? ''}](${resolveAssetPath(srcMatch[1], filePath)})`
+  })
+  return result
 }
 
 function useMediaQuery(maxWidth: number) {
@@ -197,6 +218,37 @@ export function TiptapEditor({ path, content, readonly = false, onDirty, fullscr
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [editor, readonly, toggleToolbar])
+
+  // Handle link clicks: readonly → single click; editing → Cmd/Ctrl+Click
+  useEffect(() => {
+    const container = scrollRef.current
+    if (!container) return
+    const handler = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest('a')
+      if (!anchor) return
+      const href = anchor.getAttribute('href')
+      if (!href) return
+      // In edit mode, require Cmd/Ctrl to follow links
+      if (!readonly && !(e.metaKey || e.ctrlKey)) return
+      e.preventDefault()
+      // Internal .md link → navigate within app
+      if (href.endsWith('.md') || href.includes('.md#')) {
+        const mdPath = href.replace(/^\.\//, '')
+        const dir = path.includes('/') ? path.substring(0, path.lastIndexOf('/')) : ''
+        const resolved = dir ? `${dir}/${mdPath}` : mdPath
+        onSelect?.(resolved.split('#')[0])
+      } else if (href.startsWith('http://') || href.startsWith('https://')) {
+        window.open(href, '_blank', 'noopener')
+      } else if (href.startsWith('#')) {
+        // Anchor link — scroll to heading
+        const id = href.slice(1)
+        const heading = container.querySelector(`[id="${id}"], [data-id="${id}"]`)
+        heading?.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
+    container.addEventListener('click', handler)
+    return () => container.removeEventListener('click', handler)
+  }, [readonly, path, onSelect])
 
   if (!editor) return null
 

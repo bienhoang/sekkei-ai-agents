@@ -354,6 +354,13 @@
 .ProseMirror sub { font-size: 0.75em; }
 .ProseMirror sup { font-size: 0.75em; }
 
+/* ── Links (clickable in readonly, Cmd+click in edit) ── */
+.ProseMirror a {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* ── Images ── */
 .ProseMirror img {
   max-width: 100%;
@@ -364,6 +371,19 @@
 
 [data-theme="light"] .ProseMirror img {
   border-color: #e5e7eb;
+}
+
+/* ── SystemBar mode badge (light mode) ── */
+[data-theme="light"] .mode-badge-guide {
+  background: #dbeafe !important;
+  color: #1d4ed8 !important;
+  border-color: #bfdbfe !important;
+}
+
+[data-theme="light"] .mode-badge-workspace {
+  background: #d1fae5 !important;
+  color: #047857 !important;
+  border-color: #a7f3d0 !important;
 }
 
 /* ── Mermaid ── */

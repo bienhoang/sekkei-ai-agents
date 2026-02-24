@@ -25,9 +25,7 @@ export function AppHeader({ searchQuery, onSearchChange, theme, onToggleTheme }:
     <header className="flex items-center gap-4 px-4 h-14 border-b border-[var(--c-divider)] bg-[var(--c-bg-soft)] shrink-0">
       {/* Logo */}
       <div className="flex items-center gap-2.5 shrink-0">
-        <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-white text-sm font-bold select-none">
-          設
-        </div>
+        <img src="/logo.svg" alt="Sekkei" className="w-7 h-7" />
         <span className="text-[var(--c-text-1)] font-semibold text-sm tracking-tight">Sekkei</span>
       </div>
 

@@ -181,7 +181,7 @@ function TableMenu({ editor, inTable, onClose }: { editor: Editor; inTable: bool
       <div className="fixed inset-0 z-40" onClick={onClose} />
       <div className="absolute top-full left-0 mt-1 z-50 bg-[var(--c-bg-mute)] border border-[var(--c-divider)] rounded-lg shadow-xl py-1 min-w-[160px]">
         {!inTable && (
-          <MenuItem label="Insert 3\u00D73 table" onClick={() => run(() =>
+          <MenuItem label="Insert table" onClick={() => run(() =>
             editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
           )} />
         )}

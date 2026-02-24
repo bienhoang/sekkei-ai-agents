@@ -34,21 +34,15 @@ export async function scanTree(docsRoot: string, dir = docsRoot): Promise<TreeNo
     return true
   })
 
+  // index.md always first, then interleave files and dirs sorted numerically
+  const indexIdx = visible.findIndex((e: Dirent) => e.isFile() && e.name === 'index.md')
+  const indexEntry = indexIdx >= 0 ? visible.splice(indexIdx, 1)[0] : null
+
   visible.sort((a: Dirent, b: Dirent) =>
     a.name.localeCompare(b.name, undefined, { numeric: true })
   )
 
-  const dirs = visible.filter(e => e.isDirectory())
-  const files = visible.filter(e => e.isFile())
-
-  // index.md always first within files
-  const indexIdx = files.findIndex(f => f.name === 'index.md')
-  if (indexIdx > 0) {
-    const [indexFile] = files.splice(indexIdx, 1)
-    files.unshift(indexFile)
-  }
-
-  const ordered = [...dirs, ...files]
+  const ordered = indexEntry ? [indexEntry, ...visible] : visible
 
   const nodes: TreeNode[] = []
   for (const entry of ordered) {
