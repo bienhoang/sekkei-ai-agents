@@ -8,6 +8,7 @@ interface Props {
   onSave: () => void
   fullscreen?: boolean
   onToggleFullscreen?: () => void
+  onToggleToolbar?: () => void
   chars?: number
   words?: number
 }
@@ -19,7 +20,7 @@ interface ToolBtn {
   active?: boolean
 }
 
-export function EditorToolbar({ editor, dirty, saving, onSave, fullscreen, onToggleFullscreen, chars = 0, words = 0 }: Props) {
+export function EditorToolbar({ editor, dirty, saving, onSave, fullscreen, onToggleFullscreen, onToggleToolbar, chars = 0, words = 0 }: Props) {
   const [showTableMenu, setShowTableMenu] = useState(false)
   const inTable = editor.isActive('table')
 
@@ -92,8 +93,8 @@ export function EditorToolbar({ editor, dirty, saving, onSave, fullscreen, onTog
   const allGroups = [historyBtns, formatBtns, headingBtns, alignBtns, listBtns, insertBtns]
 
   return (
-    <div className="border-b border-zinc-800/60 bg-zinc-900/80 backdrop-blur-sm">
-      <div className="flex items-center gap-0.5 px-3 py-1.5 flex-wrap">
+    <div className="border-b border-[var(--c-divider)] bg-[var(--c-bg-soft)]">
+      <div className="flex items-center gap-0.5 px-4 py-2 flex-wrap">
         {allGroups.map((group, gi) => (
           <Fragment key={gi}>
             {gi > 0 && <Divider />}
@@ -114,6 +115,10 @@ export function EditorToolbar({ editor, dirty, saving, onSave, fullscreen, onTog
         <Divider />
         {utilBtns.map(b => <Btn key={b.title} {...b} />)}
 
+        {onToggleToolbar && (
+          <Btn label={'\u25B2'} title="Hide toolbar (Cmd+Shift+T)" action={onToggleToolbar} />
+        )}
+
         {onToggleFullscreen && (
           <Btn
             label={fullscreen ? '\u2716' : '\u26F6'}
@@ -126,7 +131,7 @@ export function EditorToolbar({ editor, dirty, saving, onSave, fullscreen, onTog
         <div className="flex-1" />
 
         {/* Char count */}
-        <span className="text-[10px] text-zinc-600 mr-3 hidden sm:inline tabular-nums">
+        <span className="text-[10px] text-[var(--c-text-4)] mr-3 hidden sm:inline tabular-nums">
           {words}w / {chars}c
         </span>
 
@@ -136,7 +141,7 @@ export function EditorToolbar({ editor, dirty, saving, onSave, fullscreen, onTog
         <button
           onClick={onSave}
           disabled={!dirty || saving}
-          className="px-3 py-1 rounded-md text-xs font-medium bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          className="px-3 py-1.5 rounded-md text-xs font-medium bg-indigo-600 text-white hover:bg-indigo-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
           title="Save (Cmd+S)"
         >
           {saving ? 'Saving\u2026' : 'Save'}
@@ -146,16 +151,16 @@ export function EditorToolbar({ editor, dirty, saving, onSave, fullscreen, onTog
   )
 }
 
-/* ── Reusable button ── */
+/* ── Reusable button (larger size) ── */
 function Btn({ label, title, action, active }: ToolBtn) {
   return (
     <button
       title={title}
       onClick={action}
-      className={`px-1.5 py-1 rounded-md text-xs font-mono transition-all cursor-pointer ${
+      className={`px-2.5 py-1.5 rounded-md text-sm font-mono transition-all cursor-pointer ${
         active
-          ? 'bg-indigo-600/30 text-indigo-300'
-          : 'text-zinc-400 hover:text-zinc-100 hover:bg-zinc-700/50'
+          ? 'bg-[var(--c-brand-soft)] text-indigo-400'
+          : 'text-[var(--c-text-2)] hover:text-[var(--c-text-1)] hover:bg-[var(--c-bg-alt)]'
       }`}
     >
       {label}
@@ -163,9 +168,9 @@ function Btn({ label, title, action, active }: ToolBtn) {
   )
 }
 
-/* ── Divider ── */
+/* ── Divider (taller) ── */
 function Divider() {
-  return <div className="w-px h-4 bg-zinc-700/50 mx-1" />
+  return <div className="w-px h-6 bg-[var(--c-divider-light)] mx-1" />
 }
 
 /* ── Table operations dropdown ── */
@@ -175,7 +180,7 @@ function TableMenu({ editor, inTable, onClose }: { editor: Editor; inTable: bool
   return (
     <>
       <div className="fixed inset-0 z-40" onClick={onClose} />
-      <div className="absolute top-full left-0 mt-1 z-50 bg-zinc-800 border border-zinc-700 rounded-lg shadow-xl py-1 min-w-[160px]">
+      <div className="absolute top-full left-0 mt-1 z-50 bg-[var(--c-bg-mute)] border border-[var(--c-divider)] rounded-lg shadow-xl py-1 min-w-[160px]">
         {!inTable && (
           <MenuItem label="Insert 3\u00D73 table" onClick={() => run(() =>
             editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
@@ -187,11 +192,11 @@ function TableMenu({ editor, inTable, onClose }: { editor: Editor; inTable: bool
             <MenuItem label="Add row above" onClick={() => run(() => editor.chain().focus().addRowBefore().run())} />
             <MenuItem label="Add column right" onClick={() => run(() => editor.chain().focus().addColumnAfter().run())} />
             <MenuItem label="Add column left" onClick={() => run(() => editor.chain().focus().addColumnBefore().run())} />
-            <div className="h-px bg-zinc-700 my-1" />
+            <div className="h-px bg-[var(--c-divider)] my-1" />
             <MenuItem label="Delete row" onClick={() => run(() => editor.chain().focus().deleteRow().run())} danger />
             <MenuItem label="Delete column" onClick={() => run(() => editor.chain().focus().deleteColumn().run())} danger />
             <MenuItem label="Delete table" onClick={() => run(() => editor.chain().focus().deleteTable().run())} danger />
-            <div className="h-px bg-zinc-700 my-1" />
+            <div className="h-px bg-[var(--c-divider)] my-1" />
             <MenuItem label="Toggle header row" onClick={() => run(() => editor.chain().focus().toggleHeaderRow().run())} />
             <MenuItem label="Merge/split cells" onClick={() => run(() => editor.chain().focus().mergeOrSplit().run())} />
           </>
@@ -208,7 +213,7 @@ function MenuItem({ label, onClick, danger }: { label: string; onClick: () => vo
       className={`block w-full text-left px-3 py-1.5 text-xs transition-colors ${
         danger
           ? 'text-red-400 hover:bg-red-900/30'
-          : 'text-zinc-300 hover:bg-zinc-700/50'
+          : 'text-[var(--c-text-2)] hover:bg-[var(--c-bg-alt)]'
       }`}
     >
       {label}

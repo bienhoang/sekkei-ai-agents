@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./notion-blocks.css";
 @plugin "@tailwindcss/typography";
 
 @theme {
@@ -7,20 +8,97 @@
   --leading-relaxed: 1.8;
 }
 
+/* ── Theme CSS Variables ── */
+:root {
+  --c-bg: #09090b;
+  --c-bg-soft: #18181b;
+  --c-bg-mute: #27272a;
+  --c-bg-alt: rgba(39, 42, 55, 0.5);
+  --c-divider: rgba(39, 42, 55, 0.6);
+  --c-divider-light: rgba(63, 63, 70, 0.5);
+  --c-text-1: #f4f4f5;
+  --c-text-2: #a1a1aa;
+  --c-text-3: #71717a;
+  --c-text-4: #52525b;
+  --c-brand: #818cf8;
+  --c-brand-soft: rgba(79, 70, 229, 0.2);
+}
+
+[data-theme="light"] {
+  --c-bg: #ffffff;
+  --c-bg-soft: #f9fafb;
+  --c-bg-mute: #f3f4f6;
+  --c-bg-alt: rgba(243, 244, 246, 0.8);
+  --c-divider: #e5e7eb;
+  --c-divider-light: #e5e7eb;
+  --c-text-1: #111827;
+  --c-text-2: #4b5563;
+  --c-text-3: #6b7280;
+  --c-text-4: #9ca3af;
+  --c-brand: #4f46e5;
+  --c-brand-soft: rgba(79, 70, 229, 0.1);
+}
+
 /* ── Scrollbar ── */
 * {
   scrollbar-width: thin;
   scrollbar-color: theme(colors.zinc.700) transparent;
 }
 
+[data-theme="light"] * {
+  scrollbar-color: #d1d5db transparent;
+}
+
 /* ── Prose overrides for JP documents ── */
 .prose { line-height: var(--leading-relaxed); }
+
+/* Dark mode prose (default) */
+.prose {
+  --tw-prose-body: #d4d4d8;
+  --tw-prose-headings: #f4f4f5;
+  --tw-prose-lead: #a1a1aa;
+  --tw-prose-links: #818cf8;
+  --tw-prose-bold: #f4f4f5;
+  --tw-prose-counters: #a1a1aa;
+  --tw-prose-bullets: #71717a;
+  --tw-prose-hr: #3f3f46;
+  --tw-prose-quotes: #d4d4d8;
+  --tw-prose-quote-borders: #3f3f46;
+  --tw-prose-captions: #a1a1aa;
+  --tw-prose-kbd: #f4f4f5;
+  --tw-prose-code: #f4f4f5;
+  --tw-prose-pre-code: #d4d4d8;
+  --tw-prose-pre-bg: #18181b;
+  --tw-prose-th-borders: #3f3f46;
+  --tw-prose-td-borders: #27272a;
+}
+
+/* Light mode prose */
+[data-theme="light"] .prose {
+  --tw-prose-body: #374151;
+  --tw-prose-headings: #111827;
+  --tw-prose-lead: #6b7280;
+  --tw-prose-links: #4f46e5;
+  --tw-prose-bold: #111827;
+  --tw-prose-counters: #6b7280;
+  --tw-prose-bullets: #9ca3af;
+  --tw-prose-hr: #e5e7eb;
+  --tw-prose-quotes: #374151;
+  --tw-prose-quote-borders: #d1d5db;
+  --tw-prose-captions: #6b7280;
+  --tw-prose-kbd: #111827;
+  --tw-prose-code: #111827;
+  --tw-prose-pre-code: #d4d4d8;
+  --tw-prose-pre-bg: #1e1e2e;
+  --tw-prose-th-borders: #d1d5db;
+  --tw-prose-td-borders: #e5e7eb;
+}
 
 /* ── Tiptap core ── */
 .ProseMirror { outline: none; }
 .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  color: theme(colors.zinc.600);
+  color: var(--c-text-4);
   pointer-events: none;
   float: left;
   height: 0;
@@ -60,10 +138,34 @@
   background: theme(colors.zinc.800/50);
 }
 
-/* Selected cell highlight */
 .ProseMirror table .selectedCell {
   background: theme(colors.indigo.900/30);
   border-color: theme(colors.indigo.500/50);
+}
+
+/* Light mode tables */
+[data-theme="light"] .ProseMirror table th,
+[data-theme="light"] .ProseMirror table td {
+  border-color: #e5e7eb;
+}
+
+[data-theme="light"] .ProseMirror table th {
+  background: #f9fafb;
+  color: #111827;
+}
+
+[data-theme="light"] .ProseMirror table td {
+  background: #ffffff;
+  color: #374151;
+}
+
+[data-theme="light"] .ProseMirror table tr:hover td {
+  background: #f3f4f6;
+}
+
+[data-theme="light"] .ProseMirror table .selectedCell {
+  background: rgba(79, 70, 229, 0.1);
+  border-color: rgba(79, 70, 229, 0.3);
 }
 
 /* ── Code block styling ── */
@@ -93,7 +195,16 @@
   font-family: var(--font-mono);
 }
 
-/* ── Syntax highlighting (lowlight / hljs classes) ── */
+[data-theme="light"] .code-block {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .code-lang-badge {
+  color: #94a3b8;
+}
+
+/* ── Syntax highlighting (lowlight / hljs classes) — Dark ── */
 .hljs-comment,
 .hljs-quote { color: #636da6; font-style: italic; }
 
@@ -137,6 +248,47 @@
 .hljs-emphasis { font-style: italic; }
 .hljs-strong { font-weight: 700; }
 
+/* ── Syntax highlighting — Light ── */
+[data-theme="light"] .hljs-comment,
+[data-theme="light"] .hljs-quote { color: #6a737d; }
+
+[data-theme="light"] .hljs-keyword,
+[data-theme="light"] .hljs-selector-tag,
+[data-theme="light"] .hljs-type { color: #d73a49; }
+
+[data-theme="light"] .hljs-string,
+[data-theme="light"] .hljs-attr,
+[data-theme="light"] .hljs-addition { color: #22863a; }
+
+[data-theme="light"] .hljs-number,
+[data-theme="light"] .hljs-literal { color: #005cc5; }
+
+[data-theme="light"] .hljs-built_in,
+[data-theme="light"] .hljs-builtin-name { color: #005cc5; }
+
+[data-theme="light"] .hljs-function .hljs-title,
+[data-theme="light"] .hljs-title.function_ { color: #6f42c1; }
+
+[data-theme="light"] .hljs-variable,
+[data-theme="light"] .hljs-template-variable { color: #24292e; }
+
+[data-theme="light"] .hljs-name,
+[data-theme="light"] .hljs-tag { color: #22863a; }
+
+[data-theme="light"] .hljs-attribute { color: #6f42c1; }
+
+[data-theme="light"] .hljs-regexp { color: #032f62; }
+
+[data-theme="light"] .hljs-symbol,
+[data-theme="light"] .hljs-bullet { color: #005cc5; }
+
+[data-theme="light"] .hljs-meta { color: #6a737d; }
+
+[data-theme="light"] .hljs-deletion { color: #d73a49; }
+
+[data-theme="light"] .hljs-section,
+[data-theme="light"] .hljs-title { color: #005cc5; }
+
 /* ── Task list (checkboxes) ── */
 .ProseMirror ul[data-type="taskList"] {
   list-style: none;
@@ -166,6 +318,10 @@
   transition: all 0.15s;
 }
 
+[data-theme="light"] .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
+  border-color: #d1d5db;
+}
+
 .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"]:checked {
   background: theme(colors.indigo.600);
   border-color: theme(colors.indigo.600);
@@ -177,12 +333,21 @@
   color: theme(colors.zinc.500);
 }
 
+[data-theme="light"] .ProseMirror ul[data-type="taskList"] li[data-checked="true"] > div > p {
+  color: #9ca3af;
+}
+
 /* ── Highlight ── */
 .ProseMirror mark {
   background: theme(colors.yellow.500/30);
   color: theme(colors.yellow.200);
   padding: 0.1em 0.2em;
   border-radius: 0.15em;
+}
+
+[data-theme="light"] .ProseMirror mark {
+  background: rgba(234, 179, 8, 0.3);
+  color: #92400e;
 }
 
 /* ── Subscript / Superscript ── */
@@ -195,6 +360,10 @@
   height: auto;
   border-radius: 0.5rem;
   border: 1px solid theme(colors.zinc.700/50);
+}
+
+[data-theme="light"] .ProseMirror img {
+  border-color: #e5e7eb;
 }
 
 /* ── Mermaid ── */

@@ -1,0 +1,42 @@
+/* ── Slash Menu ── */
+.slash-menu {
+  z-index: 50;
+}
+
+/* ── Bubble Toolbar ── */
+.bubble-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  background: var(--c-bg-mute);
+  border: 1px solid var(--c-divider);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 40;
+}
+
+[data-theme="light"] .bubble-toolbar {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Block hover highlight (subtle, Notion-like) ── */
+.ProseMirror > *:hover {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+[data-theme="light"] .ProseMirror > *:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* ── Toolbar slide animation ── */
+.toolbar-enter {
+  animation: toolbar-slide-down 0.15s ease-out;
+}
+
+@keyframes toolbar-slide-down {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

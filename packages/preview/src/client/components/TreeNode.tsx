@@ -20,10 +20,10 @@ export function TreeNode({ node, activePath, onSelect, depth = 0 }: Props) {
       <div>
         <button
           onClick={() => setOpen(o => !o)}
-          className="flex items-center gap-1.5 w-full px-2 py-1.5 text-left text-[13px] text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 rounded-md transition-colors group"
+          className="flex items-center gap-1.5 w-full px-2 py-1.5 text-left text-[13px] text-[var(--c-text-2)] hover:text-[var(--c-text-1)] hover:bg-[var(--c-bg-alt)] rounded-md transition-colors group"
           style={{ paddingLeft: `${8 + indent}px` }}
         >
-          <span className={`text-[10px] w-3 shrink-0 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'} text-zinc-500 group-hover:text-zinc-400`}>▾</span>
+          <span className={`text-[10px] w-3 shrink-0 transition-transform ${isOpen ? 'rotate-0' : '-rotate-90'} text-[var(--c-text-3)] group-hover:text-[var(--c-text-2)]`}>▾</span>
           <span className="truncate font-medium">{formatDirName(node.name)}</span>
         </button>
         {isOpen && node.children?.map(child => (
@@ -41,15 +41,15 @@ export function TreeNode({ node, activePath, onSelect, depth = 0 }: Props) {
       onClick={() => onSelect(node.path)}
       className={`flex items-center gap-1.5 w-full px-2 py-1.5 text-left text-[13px] rounded-md transition-colors group ${
         isActive
-          ? 'bg-indigo-600/20 text-indigo-300 border-l-2 border-indigo-400'
-          : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+          ? 'bg-[var(--c-brand-soft)] text-indigo-400 border-l-2 border-indigo-400'
+          : 'text-[var(--c-text-2)] hover:text-[var(--c-text-1)] hover:bg-[var(--c-bg-alt)]'
       }`}
       style={{ paddingLeft: `${20 + indent}px` }}
       title={node.name}
     >
       <span className="truncate">
-        <span className={isActive ? 'text-zinc-100' : 'text-zinc-300 group-hover:text-zinc-100'}>{title}</span>
-        <span className="text-zinc-600 text-[11px] ml-1">({raw})</span>
+        <span className={isActive ? 'text-[var(--c-text-1)]' : 'text-[var(--c-text-2)] group-hover:text-[var(--c-text-1)]'}>{title}</span>
+        <span className="text-[var(--c-text-4)] text-[11px] ml-1">({raw})</span>
       </span>
     </button>
   )
