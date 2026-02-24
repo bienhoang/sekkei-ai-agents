@@ -42,12 +42,21 @@ jobs:
         run: npx turbo run build
 
       - name: Create Release PR or Publish
+        id: changesets
         uses: changesets/action@v1
         with:
           version: npm run changeset:version
-          publish: npm run changeset:publish
+          publish: npm run changeset:publish -- --no-git-tag
           title: 'chore: version packages'
           commit: 'chore: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and push tags
+        if: steps.changesets.outputs.published == 'true'
+        run: |
+          for pkg in $(echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -r '.[] | "\(.name)@\(.version)"'); do
+            git tag "$pkg" 2>/dev/null && echo "Created tag $pkg" || echo "Tag $pkg already exists locally"
+            git push origin "$pkg" 2>/dev/null && echo "Pushed tag $pkg" || echo "Tag $pkg already exists on remote, skipping"
+          done
