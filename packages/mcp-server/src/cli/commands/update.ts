@@ -69,6 +69,7 @@ const SUBCMD_DEFS: [string, string, string][] = [
   ["plan", "Create generation plan for large documents", "@doc-type"],
   ["implement", "Execute a generation plan phase by phase", "@plan-path"],
   ["rebuild", "Rebuild and re-install Sekkei skill + MCP", "[--skip-build]"],
+  ["doctor", "Check installation health and fix suggestions", ""],
 ];
 
 /** Number of expected sub-command stubs — used by health-check */

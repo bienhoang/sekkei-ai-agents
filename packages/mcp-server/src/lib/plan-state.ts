@@ -7,13 +7,14 @@ import { join } from "node:path";
 import { parse, stringify } from "yaml"; // stringify used in writePlan body
 import { SekkeiError } from "./errors.js";
 import { renderPhaseFile } from "./plan-phase-template.js";
+import { DEFAULT_WORKSPACE_DIR } from "./constants.js";
 import type { GenerationPlan, PlanPhase, PhaseStatus, PlanFeature, PhaseType } from "../types/plan.js";
 import { PLAN_STATUSES } from "../types/plan.js";
 
 // --- Path Helpers ---
 
 export function getPlanDir(basePath: string): string {
-  return join(basePath, "sekkei-docs", "plans");
+  return join(basePath, DEFAULT_WORKSPACE_DIR, "plans");
 }
 
 export function generatePlanId(docType: string): string {
@@ -261,7 +262,7 @@ async function readDirMarkdown(dirPath: string): Promise<string> {
 
 /**
  * Assemble upstream context content for a phase.
- * Reads sekkei-docs/ files relative to workspacePath.
+ * Reads workspace-docs/ files relative to workspacePath.
  */
 export async function assembleUpstream(
   workspacePath: string,
@@ -271,7 +272,7 @@ export async function assembleUpstream(
 ): Promise<string> {
   if (phaseType === "validation") return "";
 
-  const docsBase = join(workspacePath, "sekkei-docs");
+  const docsBase = join(workspacePath, DEFAULT_WORKSPACE_DIR);
   const requirementsPath = join(docsBase, "requirements.md");
   const functionsListPath = join(docsBase, "functions-list.md");
 

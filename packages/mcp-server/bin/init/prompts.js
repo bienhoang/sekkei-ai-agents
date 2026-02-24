@@ -147,8 +147,8 @@ export async function askDocOptions(lang, presetValue, prev) {
 
   const outputDir = await p.text({
     message: t(lang, "output_dir"),
-    placeholder: "./output",
-    initialValue: prev?.outputDir ?? "./output",
+    placeholder: "./workspace-docs",
+    initialValue: prev?.outputDir ?? "./workspace-docs",
   });
   if (p.isCancel(outputDir)) return outputDir;
 

@@ -49,7 +49,7 @@ describe("manage_plan tool", () => {
     await writeFile(configPath, CONFIG_YAML, "utf-8");
 
     // Write functions-list.md with 3+ ## headers (features)
-    const docsDir = join(tmpDir, "sekkei-docs");
+    const docsDir = join(tmpDir, "workspace-docs");
     await mkdir(docsDir, { recursive: true });
     functionsListPath = join(docsDir, "functions-list.md");
     await writeFile(functionsListPath, [
@@ -335,7 +335,7 @@ describe("manage_plan tool", () => {
       const fewFeaturesDir = await mkdtemp(join(tmpdir(), "sekkei-few-"));
       const cfg = join(fewFeaturesDir, "sekkei.config.yaml");
       await writeFile(cfg, CONFIG_YAML, "utf-8");
-      const docs = join(fewFeaturesDir, "sekkei-docs");
+      const docs = join(fewFeaturesDir, "workspace-docs");
       await mkdir(docs, { recursive: true });
       await writeFile(join(docs, "functions-list.md"), "# FL\n## Feature A\nF-001", "utf-8");
       try {

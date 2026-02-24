@@ -4,6 +4,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { logger } from "./logger.js";
+import { DEFAULT_WORKSPACE_DIR } from "./constants.js";
 
 export interface ChangelogEntry {
   date: string;
@@ -68,7 +69,7 @@ export async function appendGlobalChangelog(
   workspacePath: string,
   entry: ChangelogEntry,
 ): Promise<void> {
-  const changelogPath = join(workspacePath, "sekkei-docs", "CHANGELOG.md");
+  const changelogPath = join(workspacePath, DEFAULT_WORKSPACE_DIR, "CHANGELOG.md");
   try {
     await mkdir(dirname(changelogPath), { recursive: true });
     let content: string;

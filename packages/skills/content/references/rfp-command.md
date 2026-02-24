@@ -132,7 +132,7 @@ Options:
 
 # SEKKEI CHAIN INTEGRATION
 
-- Workspace: `sekkei-docs/01-rfp/<project-name>/`
+- Workspace: `workspace-docs/01-rfp/<project-name>/`
 - Handoff: `05_proposal.md` → input for `/sekkei:functions-list`
 - Supplementary context: `02_analysis.md`
 - On scope freeze with HIGH/MEDIUM confidence, offer to run `generate-config` action

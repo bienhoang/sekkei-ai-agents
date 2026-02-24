@@ -5,7 +5,7 @@ import { parse as parseYaml } from 'yaml';
 /**
  * Resolve docs directory with priority:
  * 1. --docs CLI flag
- * 2. ./sekkei-docs/ in CWD
+ * 2. ./workspace-docs/ in CWD (or legacy ./sekkei-docs/)
  * 3. sekkei.config.yaml → output.directory
  * 4. Error
  */
@@ -21,10 +21,14 @@ export function resolveDocsDir(cliDocsFlag?: string): string {
     return abs;
   }
 
-  // Priority 2: ./sekkei-docs/ convention
-  const conventionDir = join(cwd, 'sekkei-docs');
+  // Priority 2: ./workspace-docs/ convention (with sekkei-docs legacy fallback)
+  const conventionDir = join(cwd, 'workspace-docs');
   if (existsSync(conventionDir)) {
     return conventionDir;
+  }
+  const legacyDir = join(cwd, 'sekkei-docs');
+  if (existsSync(legacyDir)) {
+    return legacyDir;
   }
 
   // Priority 3: sekkei.config.yaml
@@ -46,7 +50,7 @@ export function resolveDocsDir(cliDocsFlag?: string): string {
   }
 
   throw new Error(
-    'No docs directory found. Use --docs <path>, create ./sekkei-docs/, or set output.directory in sekkei.config.yaml'
+    'No docs directory found. Use --docs <path>, create ./workspace-docs/, or set output.directory in sekkei.config.yaml'
   );
 }
 

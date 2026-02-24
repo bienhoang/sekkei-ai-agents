@@ -55,7 +55,7 @@ describe("rfp-state-machine", () => {
     });
 
     it("sets initial phase to RFP_RECEIVED", async () => {
-      const ws = join(tmpDir, "sekkei-docs", "01-rfp", "test-project");
+      const ws = join(tmpDir, "workspace-docs", "01-rfp", "test-project");
       const status = await readStatus(ws);
       expect(status.phase).toBe("RFP_RECEIVED");
       expect(status.project).toBe("test-project");
@@ -70,7 +70,7 @@ describe("rfp-state-machine", () => {
   // --- Status Read/Write ---
   describe("readStatus / writeStatus", () => {
     it("round-trips status data with new fields", async () => {
-      const ws = join(tmpDir, "sekkei-docs", "01-rfp", "test-project");
+      const ws = join(tmpDir, "workspace-docs", "01-rfp", "test-project");
       const status: RfpStatus = {
         project: "test-project",
         phase: "ANALYZING",
@@ -97,7 +97,7 @@ describe("rfp-state-machine", () => {
 
   // --- File Write Rules ---
   describe("writeWorkspaceFile", () => {
-    const ws = () => join(tmpDir, "sekkei-docs", "01-rfp", "test-project");
+    const ws = () => join(tmpDir, "workspace-docs", "01-rfp", "test-project");
 
     it("appends to append-only files", async () => {
       await writeWorkspaceFile(ws(), "01_raw_rfp.md", "First content");
@@ -194,7 +194,7 @@ describe("rfp-state-machine", () => {
   // --- Q&A Round Tracking ---
   describe("qna_round tracking", () => {
     it("initial workspace has qna_round 0", async () => {
-      const ws = join(tmpDir, "sekkei-docs", "01-rfp", "test-project");
+      const ws = join(tmpDir, "workspace-docs", "01-rfp", "test-project");
       const status = await readStatus(ws);
       // We set it to 2 in the round-trip test, so re-create for clean test
       await writeStatus(ws, { ...status, qna_round: 0, phase_history: status.phase_history });
@@ -203,7 +203,7 @@ describe("rfp-state-machine", () => {
     });
 
     it("persists qna_round across read/write", async () => {
-      const ws = join(tmpDir, "sekkei-docs", "01-rfp", "test-project");
+      const ws = join(tmpDir, "workspace-docs", "01-rfp", "test-project");
       const status = await readStatus(ws);
       await writeStatus(ws, { ...status, qna_round: 3 });
       const read = await readStatus(ws);
@@ -222,7 +222,7 @@ describe("rfp-state-machine", () => {
     });
 
     it("includes backward impact label", async () => {
-      const ws = join(tmpDir, "sekkei-docs", "01-rfp", "decision-test");
+      const ws = join(tmpDir, "workspace-docs", "01-rfp", "decision-test");
       await appendDecision(ws, "CLIENT_ANSWERED", "ANALYZING", "Scope changed");
       const content = await readWorkspaceFile(ws, "07_decisions.md");
       expect(content).toContain("Re-entering earlier phase for revision");

@@ -44,7 +44,7 @@ npx @bienhoang/sekkei-preview
 sekkei-preview [options]
 
 Options:
-  --docs-dir <path>   Path to sekkei-docs directory (default: ./sekkei-docs)
+  --docs-dir <path>   Path to workspace-docs directory (default: ./workspace-docs)
   --port <number>     Preview server port (default: 5173)
 ```
 
@@ -54,7 +54,7 @@ The CLI reads `sekkei.config.yaml` from the project root to generate VitePress c
 
 1. Reads `sekkei.config.yaml` to discover generated documents
 2. Generates VitePress config with sidebar from document chain
-3. Serves the `sekkei-docs/` directory as a VitePress site
+3. Serves the `workspace-docs/` directory as a VitePress site
 4. Milkdown editor provides WYSIWYG editing with live preview
 
 ## Ecosystem

@@ -280,7 +280,7 @@ describe("plan-state", () => {
 
     beforeAll(async () => {
       upstreamBase = await mkdtemp(join(tmpdir(), "sekkei-upstream-"));
-      const docsBase = join(upstreamBase, "sekkei-docs");
+      const docsBase = join(upstreamBase, "workspace-docs");
       await mkdir(docsBase, { recursive: true });
       await mkdir(join(docsBase, "shared"), { recursive: true });
       await mkdir(join(docsBase, "features", "sal"), { recursive: true });

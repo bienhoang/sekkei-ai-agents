@@ -5,6 +5,7 @@
 import { readFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { parse } from "yaml";
+import { DEFAULT_WORKSPACE_DIR } from "../lib/constants.js";
 import type { PlanArgs, ToolResult } from "./plan.js";
 import { ok, err } from "./plan.js";
 import {
@@ -247,7 +248,7 @@ async function handleDetect(args: PlanArgs): Promise<ToolResult> {
   // 2. Count 大分類 features in functions-list.md
   let featureCount = 0;
   try {
-    const functionsListPath = join(workspace_path, "sekkei-docs", "functions-list.md");
+    const functionsListPath = join(workspace_path, DEFAULT_WORKSPACE_DIR, "functions-list.md");
     const content = await readFile(functionsListPath, "utf-8");
     const matches = content.match(/^## .+/gm);
     featureCount = matches ? matches.length : 0;
@@ -359,7 +360,7 @@ async function handleExecute(args: PlanArgs): Promise<ToolResult> {
 
   // Validation phase: return validate_document command
   if (phaseDetail.type === "validation") {
-    const manifestPath = join(workspace_path, "sekkei-docs", "manifest.yaml");
+    const manifestPath = join(workspace_path, DEFAULT_WORKSPACE_DIR, "manifest.yaml");
     return ok(JSON.stringify({
       phase: phaseInfo,
       command: {
@@ -383,9 +384,9 @@ async function handleExecute(args: PlanArgs): Promise<ToolResult> {
   const scope = phaseDetail.type === "shared" ? "shared" : "feature";
   const featureName = phaseEntry.feature_id ?? undefined;
 
-  // Resolve output path relative to sekkei-docs
+  // Resolve output path relative to workspace-docs
   const relPath = resolveOutputPath(plan.doc_type as DocType, scope, featureName);
-  const outputPath = relPath ? join(workspace_path, "sekkei-docs", relPath) : undefined;
+  const outputPath = relPath ? join(workspace_path, DEFAULT_WORKSPACE_DIR, relPath) : undefined;
 
   return ok(JSON.stringify({
     phase: phaseInfo,

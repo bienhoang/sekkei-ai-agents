@@ -154,7 +154,8 @@ create_subcmd "diff-visual" "Color-coded revision Excel (朱書き)" "@before @a
 create_subcmd "preview" "Start VitePress docs preview (--edit for WYSIWYG)" "[--edit] [--docs path] [--port N]"
 create_subcmd "version" "Show version and health check" ""
 create_subcmd "uninstall" "Remove Sekkei from Claude Code" "[--force]"
-ok "Created 20 sub-commands → /sekkei:*"
+create_subcmd "doctor" "Check installation health and fix suggestions" ""
+ok "Created 21 sub-commands → /sekkei:*"
 
 # ── 4. Register MCP Server ─────────────────────────────────────────────
 step "Registering MCP server in Claude Code settings"
@@ -254,7 +255,7 @@ echo "  MCP:    $MCP_ENTRY"
 echo "  Config: $SETTINGS_FILE"
 echo ""
 echo "  Restart Claude Code to activate the MCP server."
-echo "  Then run 'npx sekkei init' in your project folder to start."
+echo "  Then run 'sekkei init' in your project folder to start."
 if [[ -n "$PREVIEW_CLI" ]]; then
   echo "  Preview: node $PREVIEW_CLI"
   echo -e "  \033[2mPreview docs: node $PREVIEW_CLI [--edit]  (run from your project root)${RESET}"

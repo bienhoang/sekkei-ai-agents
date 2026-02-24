@@ -106,7 +106,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    - 処理分類: 入力 / 照会 / 帳票 / バッチ
    - 優先度 & 難易度: 高 / 中 / 低
    - Generate 10+ functions minimum
-6. Save output to `./sekkei-docs/functions-list.md`
+6. Save output to `./workspace-docs/functions-list.md`
 7. Update `sekkei.config.yaml` chain status: `functions_list.status: complete`
 8. **Count 大分類 feature groups** from the generated `functions-list.md`:
    - Scan for distinct values in the 大分類 column of the 機能一覧 table
@@ -156,7 +156,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    - Non-functional requirements: NFR-001 format with measurable targets
    - Cross-reference F-xxx IDs from 機能一覧 if available
    - Include acceptance criteria
-6. Save output to `./sekkei-docs/requirements.md`
+6. Save output to `./workspace-docs/requirements.md`
 7. Update chain status: `requirements.status: complete`
 
 ### `/sekkei:basic-design @input`
@@ -170,7 +170,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 0. **Plan trigger check** (see `references/plan-orchestrator.md` §1):
    - Read `sekkei.config.yaml` → check `split.basic-design` exists
    - Count 大分類 features from `functions-list.md`
-   - If split enabled AND features >= 3 AND no active plan for `basic-design` in `sekkei-docs/plans/`:
+   - If split enabled AND features >= 3 AND no active plan for `basic-design` in `workspace-docs/plans/`:
      → Ask: "Detected {N} features in split mode. Create a generation plan first? [Y/n]"
      → If Y: run `/sekkei:plan basic-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
@@ -218,7 +218,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
       - API list: API-001 format (8 columns)
       - Include Mermaid diagrams for architecture and ER diagrams
       - Cross-reference REQ-xxx IDs from 要件定義書
-   d. Save output to `./sekkei-docs/basic-design.md`
+   d. Save output to `./workspace-docs/basic-design.md`
 6. Update chain status: `basic_design.status: complete`
 
 ### `/sekkei:detail-design @input`
@@ -252,7 +252,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 0. **Plan trigger check** (see `references/plan-orchestrator.md` §1):
    - Read `sekkei.config.yaml` → check `split.detail-design` exists
    - Count 大分類 features from `functions-list.md`
-   - If split enabled AND features >= 3 AND no active plan for `detail-design` in `sekkei-docs/plans/`:
+   - If split enabled AND features >= 3 AND no active plan for `detail-design` in `workspace-docs/plans/`:
      → Ask: "Detected {N} features in split mode. Create a generation plan first? [Y/n]"
      → If Y: run `/sekkei:plan detail-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
@@ -682,7 +682,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 #### If `@doc` specified (single document validation):
 
-1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory` (default: `sekkei-docs`)
+1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory` (default: `workspace-docs`)
 2. **Resolve doc path**: `{output.directory}/{doc-type-dir}/{doc-type}.md`
    - Check for split mode: look for `_index.yaml` in `{output.directory}/{doc-type-dir}/`
 3. **Determine upstream doc type** from V-model chain:
@@ -743,7 +743,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 3. **If manifest exists and doc type is split:**
    a. Load `_index.yaml` via manifest-manager
    b. Get document entry for the specified doc type
-   c. Load glossary once from `sekkei-docs/glossary.yaml`
+   c. Load glossary once from `workspace-docs/glossary.yaml`
    d. Create target directory: `translations/{lang}/`
    e. For each shared file in manifest:
       - Read file content
@@ -758,11 +758,11 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    g. Create `translations/{lang}/_index.yaml` mirroring source structure
    h. Update source `_index.yaml` translations[] entry
 4. **If no manifest (monolithic):**
-   a. If `sekkei-docs/glossary.yaml` exists, load glossary path
+   a. If `workspace-docs/glossary.yaml` exists, load glossary path
    b. Call MCP tool `translate_document` with content, source_lang, target_lang, glossary_path
    c. Use the returned translation context + glossary terms to translate
    d. Preserve all Markdown formatting, tables, and ID references
-   e. Save output to `./sekkei-docs/{doc-type}.{target_lang}.md`
+   e. Save output to `./workspace-docs/{doc-type}.{target_lang}.md`
 5. Report: files translated, glossary terms applied, output paths
 
 ### `/sekkei:glossary [add|list|find|export|import]`
@@ -809,13 +809,13 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    - Rows marked with `【変更】` → yellow highlight in Excel
    - Rows marked with `【削除】` → strikethrough + gray in Excel
 6. Display: change summary, impacted sections, suggested 改訂履歴 row
-7. Save revision Excel to `./sekkei-docs/{doc-type}-revision.xlsx`
+7. Save revision Excel to `./workspace-docs/{doc-type}-revision.xlsx`
 
 ### `/sekkei:preview`
 
 1. Run `npx @bienhoang/sekkei-preview` from the project root (or `node <sekkei-path>/packages/sekkei-preview/dist/cli.js`).
-2. Docs dir resolved automatically: `--docs` flag → `sekkei-docs/` in CWD → `sekkei.config.yaml output.directory`.
-3. If `sekkei-docs/index.md` missing, CLI auto-generates a homepage from `_index.yaml`.
+2. Docs dir resolved automatically: `--docs` flag → `workspace-docs/` in CWD → `sekkei.config.yaml output.directory`.
+3. If `workspace-docs/index.md` missing, CLI auto-generates a homepage from `_index.yaml`.
 4. Commands:
    - `npx @bienhoang/sekkei-preview` — dev server (default, hot-reload)
    - `npx @bienhoang/sekkei-preview --edit` — dev server with WYSIWYG editing enabled
@@ -835,7 +835,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    - YAML frontmatter preserved automatically (not shown in editor)
    - Japanese IME input supported
 7. Without `--edit` flag, preview is read-only (no edit button shown).
-8. Without `--guide`, preview serves V-model spec docs from `sekkei-docs/`.
+8. Without `--guide`, preview serves V-model spec docs from `workspace-docs/`.
 
 ### `/sekkei:plan @doc-type`
 
@@ -847,11 +847,11 @@ See `references/plan-orchestrator.md` for detailed logic.
 3. Read `functions-list.md` → extract 大分類 feature groups with IDs
 4. **Survey Round 1 — Scope**: Present features via `AskUserQuestion` (multiSelect). User selects features to include and sets priority order.
 5. **Survey Round 2 — Detail**: For each selected feature, ask via `AskUserQuestion`: complexity (simple/medium/complex), special requirements, external dependencies, custom instructions.
-6. **Generate plan**: Create `sekkei-docs/plans/YYYYMMDD-{doc-type}-generation/` directory with:
+6. **Generate plan**: Create `workspace-docs/plans/YYYYMMDD-{doc-type}-generation/` directory with:
    - `plan.md` — YAML frontmatter (title, doc_type, status, features, feature_count, split_mode, created, phases) + overview + phases table
    - Phase files per mapping in `references/plan-orchestrator.md` §4
 7. Display plan summary table → ask user to review
-8. Report: "Plan created at `sekkei-docs/plans/YYYYMMDD-{doc-type}-generation/`. Run `/sekkei:implement @{plan-path}` to execute."
+8. Report: "Plan created at `workspace-docs/plans/YYYYMMDD-{doc-type}-generation/`. Run `/sekkei:implement @{plan-path}` to execute."
 
 ### `/sekkei:implement @plan-path`
 
@@ -921,7 +921,7 @@ When `sekkei.config.yaml` contains a `split` section, generation commands (basic
 
 **Structure:**
 ```
-sekkei-docs/
+workspace-docs/
 ├── _index.yaml          # Manifest (auto-generated)
 ├── functions-list.md    # Always monolithic
 ├── requirements.md      # Always monolithic

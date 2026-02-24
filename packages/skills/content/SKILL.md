@@ -124,7 +124,7 @@ When `sekkei.config.yaml` contains a `split` section, generation commands (basic
 
 **Structure:**
 ```
-sekkei-docs/
+workspace-docs/
 ├── _index.yaml          # Manifest (auto-generated)
 ├── functions-list.md    # Always monolithic
 ├── requirements.md      # Always monolithic

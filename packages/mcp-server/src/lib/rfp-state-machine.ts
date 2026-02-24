@@ -6,6 +6,7 @@ import { readFile, writeFile, mkdir, stat } from "node:fs/promises";
 import { join } from "node:path";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
+import { DEFAULT_WORKSPACE_DIR } from "./constants.js";
 import type { RfpPhase, RfpStatus, RfpFileInventory, PhaseEntry } from "../types/documents.js";
 import { RFP_PHASES, RFP_FILES } from "../types/documents.js";
 
@@ -117,7 +118,7 @@ export function isBackwardTransition(from: RfpPhase, to: RfpPhase): boolean {
 
 export async function createWorkspace(basePath: string, projectName: string): Promise<string> {
   validateProjectName(projectName);
-  const wsPath = join(basePath, "sekkei-docs", "01-rfp", projectName);
+  const wsPath = join(basePath, DEFAULT_WORKSPACE_DIR, "01-rfp", projectName);
   await mkdir(wsPath, { recursive: true });
 
   const now = new Date().toISOString().slice(0, 10);
@@ -438,7 +439,7 @@ export async function generateConfigFromWorkspace(workspacePath: string): Promis
     "  keigo: 丁寧語",
     "",
     "output:",
-    "  directory: ./sekkei-docs",
+    `  directory: ./${DEFAULT_WORKSPACE_DIR}`,
     "",
     "chain:",
     `  rfp: "01-rfp/${status.project}/05_proposal.md"`,

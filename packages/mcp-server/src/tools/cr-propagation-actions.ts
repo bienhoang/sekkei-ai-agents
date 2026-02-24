@@ -3,6 +3,7 @@
  */
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { DEFAULT_WORKSPACE_DIR } from "../lib/constants.js";
 import { readCR, writeCR, transitionCR } from "../lib/cr-state-machine.js";
 import { computePropagationOrder } from "../lib/cr-propagation.js";
 import { generateBackfillSuggestions } from "../lib/cr-backfill.js";
@@ -76,7 +77,7 @@ export async function handlePropagateNext(args: ChangeRequestArgs): Promise<Tool
   if (cr.status === "APPROVED") {
     try {
       await execFileAsync("git", [
-        "-C", args.workspace_path, "add", "sekkei-docs/",
+        "-C", args.workspace_path, "add", `${DEFAULT_WORKSPACE_DIR}/`,
       ]);
       await execFileAsync("git", [
         "-C", args.workspace_path, "commit",

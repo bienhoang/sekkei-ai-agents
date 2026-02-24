@@ -7,7 +7,7 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 
 ### If `@doc` specified (single document validation):
 
-1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory` (default: `sekkei-docs`)
+1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory` (default: `workspace-docs`)
 2. **Resolve doc path**: `{output.directory}/{doc-type-dir}/{doc-type}.md`
    - Check for split mode: look for `_index.yaml` in `{output.directory}/{doc-type-dir}/`
 3. **Determine upstream doc type** from V-model chain:
@@ -73,7 +73,7 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 3. **If manifest exists and doc type is split:**
    a. Load `_index.yaml` via manifest-manager
    b. Get document entry for the specified doc type
-   c. Load glossary once from `sekkei-docs/glossary.yaml`
+   c. Load glossary once from `workspace-docs/glossary.yaml`
    d. Create target directory: `translations/{lang}/`
    e. For each shared file in manifest:
       - Read file content
@@ -88,11 +88,11 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
    g. Create `translations/{lang}/_index.yaml` mirroring source structure
    h. Update source `_index.yaml` translations[] entry
 4. **If no manifest (monolithic):**
-   a. If `sekkei-docs/glossary.yaml` exists, load glossary path
+   a. If `workspace-docs/glossary.yaml` exists, load glossary path
    b. Call MCP tool `translate_document` with content, source_lang, target_lang, glossary_path
    c. Use the returned translation context + glossary terms to translate
    d. Preserve all Markdown formatting, tables, and ID references
-   e. Save output to `./sekkei-docs/{doc-type}.{target_lang}.md`
+   e. Save output to `./workspace-docs/{doc-type}.{target_lang}.md`
 5. Report: files translated, glossary terms applied, output paths
 
 ## `/sekkei:glossary [add|list|find|export|import]`
@@ -151,7 +151,7 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 1. Call MCP tool `analyze_update` with `check_staleness: true`, `config_path`
 2. Display per-feature staleness scores and affected doc types
 
-> **Note**: CR completion now logs ALL propagated documents to `sekkei-docs/CHANGELOG.md`
+> **Note**: CR completion now logs ALL propagated documents to `workspace-docs/CHANGELOG.md`
 > with version extracted from each doc's 改訂履歴 table. Regeneration via `generate_document`
 > also logs with the correct version. Pre-generate advisory warns when upstream docs changed.
 
@@ -166,13 +166,13 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
    - Rows marked with `【変更】` → yellow highlight in Excel
    - Rows marked with `【削除】` → strikethrough + gray in Excel
 6. Display: change summary, impacted sections, suggested 改訂履歴 row
-7. Save revision Excel to `./sekkei-docs/{doc-type}-revision.xlsx`
+7. Save revision Excel to `./workspace-docs/{doc-type}-revision.xlsx`
 
 ## `/sekkei:preview`
 
 1. Run `npx @bienhoang/sekkei-preview` from the project root (or `node <sekkei-path>/packages/sekkei-preview/dist/cli.js`).
-2. Docs dir resolved automatically: `--docs` flag → `sekkei-docs/` in CWD → `sekkei.config.yaml output.directory`.
-3. If `sekkei-docs/index.md` missing, CLI auto-generates a homepage from `_index.yaml`.
+2. Docs dir resolved automatically: `--docs` flag → `workspace-docs/` in CWD → `sekkei.config.yaml output.directory`.
+3. If `workspace-docs/index.md` missing, CLI auto-generates a homepage from `_index.yaml`.
 4. Commands:
    - `npx @bienhoang/sekkei-preview` — dev server (default, hot-reload)
    - `npx @bienhoang/sekkei-preview --edit` — dev server with WYSIWYG editing enabled
@@ -193,7 +193,7 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
    - YAML frontmatter preserved automatically (not shown in editor)
    - Japanese IME input supported
 7. Without `--edit` flag, preview is read-only (no edit button shown).
-8. Without `--guide`, preview serves V-model spec docs from `sekkei-docs/`.
+8. Without `--guide`, preview serves V-model spec docs from `workspace-docs/`.
 
 ## `/sekkei:plan @doc-type`
 

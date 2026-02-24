@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { parse, stringify } from "yaml";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
+import { DEFAULT_WORKSPACE_DIR } from "./constants.js";
 import type { ChangeRequest, CRStatus } from "../types/change-request.js";
 import { CR_STATUSES } from "../types/change-request.js";
 
@@ -34,7 +35,7 @@ export function validateTransition(from: CRStatus, to: CRStatus): boolean {
 // --- Path Helpers ---
 
 export function getCRDir(basePath: string): string {
-  return join(basePath, "sekkei-docs", "change-requests");
+  return join(basePath, DEFAULT_WORKSPACE_DIR, "change-requests");
 }
 
 const CR_ID_RE = /^CR-\d{6}-\d{3}$/;

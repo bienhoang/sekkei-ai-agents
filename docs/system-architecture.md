@@ -311,7 +311,7 @@ RFP_RECEIVED → ANALYZING → QNA_GENERATION → WAITING_CLIENT
 | `06_scope_freeze.md` | checklist (merge) |
 | `07_decisions.md` | append |
 
-**Workspace path:** `{workspace_path}/sekkei-docs/01-rfp/{project_name}/`
+**Workspace path:** `{workspace_path}/workspace-docs/01-rfp/{project_name}/`
 
 **MCP Resources:** `rfp://instructions/{flow}` — served from `templates/rfp/flow-{flow}.md` (or `routing.md`). 7 flows: `analyze`, `questions`, `draft`, `impact`, `proposal`, `freeze`, `routing`.
 

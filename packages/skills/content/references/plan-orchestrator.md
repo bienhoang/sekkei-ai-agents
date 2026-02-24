@@ -54,7 +54,7 @@ Skip Round 2 for features where user selects "Use defaults" (complexity=medium, 
 ### Directory Structure
 
 ```
-sekkei-docs/plans/YYYYMMDD-{doc-type}-generation/
+workspace-docs/plans/YYYYMMDD-{doc-type}-generation/
 ├── plan.md
 ├── phase-01-shared-sections.md    (if doc-type has shared)
 ├── phase-02-{feature-id}.md

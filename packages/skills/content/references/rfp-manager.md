@@ -19,7 +19,7 @@ Files are the ONLY source of truth. Never rely on chat history.
 
 # WORKSPACE
 
-Path: `sekkei-docs/01-rfp/<project-name>/`
+Path: `workspace-docs/01-rfp/<project-name>/`
 
 ```
 00_status.md
@@ -190,4 +190,4 @@ When SCOPE_FREEZE reached AND confidence HIGH or MEDIUM:
 2. Notify entrypoint: "Config generated. Review, then run `/sekkei:functions-list`."
 3. Input: `05_proposal.md`. Supplementary: `02_analysis.md`.
 
-Workspace at `sekkei-docs/01-rfp/`. Spec docs go to `sekkei-docs/` in numbered directories.
+Workspace at `workspace-docs/01-rfp/`. Spec docs go to `workspace-docs/` in numbered directories.

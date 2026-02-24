@@ -104,7 +104,7 @@ npx @bienhoang/sekkei-preview   # Live preview in browser
                                                   ↓
                                          ┌──────────────────┐
                                          │  Markdown Docs    │
-                                         │  (sekkei-docs/)   │
+                                         │  (workspace-docs/)   │
                                          └────────┬─────────┘
                                                   │ previews
                                                   ↓
