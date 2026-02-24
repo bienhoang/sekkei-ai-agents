@@ -115,8 +115,17 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
    - If git show fails (file didn't exist): report "No previous version found"
 5. **Read downstream doc**: `{output.directory}/{downstream-dir}/{doc-type}.md`
 6. Call MCP tool `analyze_update` with `upstream_old`, `upstream_new`, `downstream_content`
-7. Display: changed sections, changed IDs, impacted downstream sections
-8. Ask user: regenerate affected sections? → if yes, call generate for impacted parts
+7. Display: changed sections, changed IDs, impacted downstream sections, suggested 改訂履歴 row
+8. **Auto-insert 改訂履歴 row** into downstream document:
+   a. Read current downstream document content from disk
+   b. Find the 改訂履歴 table (## 改訂履歴 heading)
+   c. Find the last data row (after header row and separator)
+   d. Parse last version number (e.g., "1.0")
+   e. Compute next version: increment minor by 0.1 (e.g., "1.0" → "1.1")
+   f. Insert new row: `| {next_version} | {today YYYY-MM-DD} | {change_summary} | |`
+   g. Show user the updated 改訂履歴 section for review
+9. Ask user: confirm & save? Or edit the row first?
+10. If regenerating: pass updated document as `existing_content` to `generate_document` to preserve 改訂履歴
 
 ### Staleness mode:
 
@@ -165,34 +174,31 @@ Plan large document generation with user survey and phased execution strategy.
 See `references/plan-orchestrator.md` for detailed logic.
 
 1. Determine doc-type from `@doc-type` argument or current chain status (next incomplete doc)
-2. Load `sekkei.config.yaml` → verify split config exists for this doc-type
-3. Read `functions-list.md` → extract 大分類 feature groups with IDs
+2. Call MCP tool `manage_plan(action="detect", workspace_path, config_path, doc_type)` — check if a plan is needed and whether an active plan already exists
+3. If response returns `has_active_plan=true`: ask user via `AskUserQuestion` — "An active plan exists for {doc-type}. Resume it or create a new one?" [Resume / Create New]
+   - If Resume: report existing plan path → "Run `/sekkei:implement @{plan_path}` to continue."
 4. **Survey Round 1 — Scope**: Present features via `AskUserQuestion` (multiSelect). User selects features to include and sets priority order.
 5. **Survey Round 2 — Detail**: For each selected feature, ask via `AskUserQuestion`: complexity (simple/medium/complex), special requirements, external dependencies, custom instructions.
-6. **Generate plan**: Create `sekkei-docs/plans/YYYYMMDD-{doc-type}-generation/` directory with:
-   - `plan.md` — YAML frontmatter (title, doc_type, status, features, feature_count, split_mode, created, phases) + overview + phases table
-   - Phase files per mapping in `references/plan-orchestrator.md` §4
-7. Display plan summary table → ask user to review
-8. Report: "Plan created at `sekkei-docs/plans/YYYYMMDD-{doc-type}-generation/`. Run `/sekkei:implement @{plan-path}` to execute."
+6. Call MCP tool `manage_plan(action="create", workspace_path, config_path, doc_type, features=[...], survey_data={...})` — creates plan directory and all phase files
+7. Display plan summary from create response (phases table, feature count, plan path)
+8. Report: "Plan created. Run `/sekkei:implement @{plan_path}` to execute."
 
 ## `/sekkei:implement @plan-path`
 
 Execute a generation plan phase by phase, delegating to existing sekkei sub-commands.
 See `references/plan-orchestrator.md` for detailed logic.
 
-1. Read `plan.md` from `@plan-path` → parse YAML frontmatter → validate status is `pending` or `in_progress`
-2. Update plan status to `in_progress`
-3. Parse all `phase-XX-*.md` files → build ordered execution queue (sort by phase number)
-4. **Per-phase execution loop**:
-   a. Display phase summary (name, scope, estimated sections)
-   b. Ask user: "Proceed with Phase {N}: {name}? [Proceed / Skip / Stop]"
-   c. If Proceed: delegate to the sekkei sub-command specified in the phase file (e.g., `/sekkei:basic-design` with feature scope)
-   d. If Skip: mark phase as skipped, continue to next
-   e. If Stop: save progress, exit loop
-   f. After delegation completes: mark phase TODO checkboxes as done, update plan.md phases table status
-5. After all phases complete: run `/sekkei:validate` on generated documents
-6. Update plan.md status to `completed`
-7. Report: generation summary (phases completed, files generated, validation results)
+1. Call MCP tool `manage_plan(action="status", workspace_path, plan_id)` — read plan state and phases list
+2. Validate response: status must be `pending` or `in_progress` (abort if `completed` or `cancelled`)
+3. **Per-phase execution loop** — for each phase where `status != "completed"` and `status != "skipped"`:
+   a. Call MCP tool `manage_plan(action="execute", workspace_path, config_path, plan_id, phase_number)` — returns phase summary and generate_document args
+   b. Display phase summary from response (name, scope, feature, estimated sections)
+   c. Ask user: "Proceed with Phase {N}: {name}? [Proceed / Skip / Stop]"
+   d. If **Proceed**: call `generate_document(...)` with args from execute response → then call `manage_plan(action="update", workspace_path, plan_id, phase_number, phase_status="completed")`
+   e. If **Skip**: call `manage_plan(action="update", workspace_path, plan_id, phase_number, phase_status="skipped")`
+   f. If **Stop**: exit loop (progress already persisted via prior update calls)
+4. After all phases done: validation phase auto-runs via final execute response (runs `/sekkei:validate` on manifest)
+5. Call MCP tool `manage_plan(action="status", workspace_path, plan_id)` → display final report (phases completed/skipped/remaining, files generated, validation results)
 
 ## `/sekkei:version`
 

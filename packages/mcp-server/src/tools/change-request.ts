@@ -9,7 +9,7 @@ import { logger } from "../lib/logger.js";
 
 export const CR_ACTIONS = [
   "create", "analyze", "approve", "propagate_next",
-  "validate", "complete", "status", "list", "cancel",
+  "validate", "complete", "status", "list", "cancel", "rollback",
 ] as const;
 
 const inputSchema = {
@@ -40,6 +40,10 @@ const inputSchema = {
     .describe("Reason for cancel"),
   note: z.string().max(2000).optional()
     .describe("Note for propagate_next step"),
+  suggest_content: z.boolean().optional()
+    .describe("When true, return suggested content snippets for upstream propagation steps"),
+  partial: z.boolean().optional()
+    .describe("When true, skip incomplete-steps check in validate (for mid-propagation validation)"),
 };
 
 export interface ChangeRequestArgs {
@@ -55,6 +59,8 @@ export interface ChangeRequestArgs {
   status_filter?: string;
   reason?: string;
   note?: string;
+  suggest_content?: boolean;
+  partial?: boolean;
 }
 
 export type ToolResult = { content: Array<{ type: "text"; text: string }>; isError?: boolean };

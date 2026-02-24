@@ -3,6 +3,26 @@
 Command workflows for the test phase of the V-model document chain.
 Parent: `SKILL.md` → Workflow Router → Test Phase.
 
+## Split Mode Detection
+
+Before generating test specs (ut-spec, it-spec), check for split mode:
+
+1. Call MCP tool `manage_plan(action="detect", workspace_path, config_path, doc_type="test-spec")`
+2. Response: `{ should_trigger, reason, feature_count, has_active_plan, plan_path? }`
+3. If `should_trigger=true` and `has_active_plan=false`:
+   → Prompt user: "Detected {feature_count} features in split mode. Create a test-spec generation plan first? [Y/n]"
+   - If Y: run `/sekkei:plan test-spec` → run `/sekkei:implement @{returned-plan-path}` → stop
+   - If N: continue with normal generation below
+4. If `should_trigger=true` and `has_active_plan=true`:
+   → Ask user: "An active test-spec plan exists. Resume it or generate normally? [Resume / Generate Normally]"
+   - If Resume: run `/sekkei:implement @{plan_path}` → stop
+   - If Generate Normally: continue below
+5. If `should_trigger=false`: continue with normal generation below
+
+Note: st-spec and uat-spec are system-level only (no per-feature split) — skip detect for these.
+
+---
+
 ## `/sekkei:test-plan @requirements`
 
 **Prerequisite check (MUST run before interview):**

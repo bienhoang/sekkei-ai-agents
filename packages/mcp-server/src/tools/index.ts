@@ -16,6 +16,7 @@ import { registerImportDocumentTool } from "./import-document.js";
 import { registerRfpWorkspaceTool } from "./rfp-workspace.js";
 import { registerChangeRequestTool } from "./change-request.js";
 import { registerUpdateChainStatusTool } from "./update-chain-status.js";
+import { registerPlanTool } from "./plan.js";
 
 export function registerAllTools(server: McpServer, templateDir: string, templateOverrideDir?: string): void {
   registerGetTemplateTool(server, templateDir, templateOverrideDir);
@@ -32,4 +33,5 @@ export function registerAllTools(server: McpServer, templateDir: string, templat
   registerRfpWorkspaceTool(server);
   registerChangeRequestTool(server);
   registerUpdateChainStatusTool(server);
+  registerPlanTool(server);
 }

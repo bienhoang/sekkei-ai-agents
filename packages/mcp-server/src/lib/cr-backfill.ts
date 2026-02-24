@@ -37,6 +37,8 @@ export function generateBackfillSuggestions(
   const oldIds = extractIds(oldContent);
   const newIds = extractIds(newContent);
   const suggestions: BackfillSuggestion[] = [];
+  // C5: dedup by (id, target_doc) pair to avoid duplicate suggestions
+  const seen = new Set<string>();
 
   for (const id of newIds) {
     const prefix = id.split("-")[0];
@@ -47,7 +49,7 @@ export function generateBackfillSuggestions(
     // Skip IDs that belong to the origin doc itself
     if (definingDocs.includes(originDoc)) continue;
 
-    // Check each defining doc for backfill suggestions
+    // C5: check all defining docs (not just first match) for backfill suggestions
     for (const definingDoc of definingDocs) {
       const upstreamContent = upstreamDocs.get(definingDoc);
       if (upstreamContent === undefined) continue;
@@ -56,14 +58,17 @@ export function generateBackfillSuggestions(
       const existsUpstream = upstreamContent.includes(id);
 
       if (isNew && !existsUpstream) {
-        suggestions.push({
-          id,
-          target_doc: definingDoc,
-          action: "add",
-          reason: `New ${id} referenced in ${originDoc} but not defined in ${definingDoc}`,
-        });
+        const key = `${id}::${definingDoc}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          suggestions.push({
+            id,
+            target_doc: definingDoc,
+            action: "add",
+            reason: `New ${id} referenced in ${originDoc} but not defined in ${definingDoc}`,
+          });
+        }
       }
-      break; // Only suggest for the first matching upstream doc
     }
   }
 

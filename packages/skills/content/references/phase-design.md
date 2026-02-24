@@ -20,12 +20,15 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 - Authentication method? (OAuth, SAML, custom)
 
 0. **Plan trigger check** (see `references/plan-orchestrator.md` §1):
-   - Read `sekkei.config.yaml` → check `split.basic-design` exists
-   - Count 大分類 features from `functions-list.md`
-   - If split enabled AND features >= 3 AND no active plan for `basic-design` in `sekkei-docs/plans/`:
-     → Ask: "Detected {N} features in split mode. Create a generation plan first? [Y/n]"
+   - Call MCP tool `manage_plan(action="detect", workspace_path, config_path, doc_type="basic-design")`
+   - Response: `{ should_trigger, reason, feature_count, has_active_plan, plan_path? }`
+   - If `should_trigger=true` and `has_active_plan=false`:
+     → Ask: "Detected {feature_count} features in split mode. Create a generation plan first? [Y/n]"
      → If Y: run `/sekkei:plan basic-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
+   - If `should_trigger=true` and `has_active_plan=true`:
+     → Ask: "An active plan exists. Resume it or continue normally? [Resume / Continue Normally]"
+     → If Resume: run `/sekkei:implement @{plan_path}`
 1. Read the input (ideally the generated 要件定義書 or requirements summary)
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
 3. **Check for split config**: read `sekkei.config.yaml` → `split.basic-design`
@@ -154,12 +157,15 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 - Error handling strategy?
 
 0. **Plan trigger check** (see `references/plan-orchestrator.md` §1):
-   - Read `sekkei.config.yaml` → check `split.detail-design` exists
-   - Count 大分類 features from `functions-list.md`
-   - If split enabled AND features >= 3 AND no active plan for `detail-design` in `sekkei-docs/plans/`:
-     → Ask: "Detected {N} features in split mode. Create a generation plan first? [Y/n]"
+   - Call MCP tool `manage_plan(action="detect", workspace_path, config_path, doc_type="detail-design")`
+   - Response: `{ should_trigger, reason, feature_count, has_active_plan, plan_path? }`
+   - If `should_trigger=true` and `has_active_plan=false`:
+     → Ask: "Detected {feature_count} features in split mode. Create a generation plan first? [Y/n]"
      → If Y: run `/sekkei:plan detail-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
+   - If `should_trigger=true` and `has_active_plan=true`:
+     → Ask: "An active plan exists. Resume it or continue normally? [Resume / Continue Normally]"
+     → If Resume: run `/sekkei:implement @{plan_path}`
 1. Read the input (ideally the generated 基本設計書)
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
 3. **Check for split config**: read `sekkei.config.yaml` → `split.detail-design`

@@ -20,7 +20,8 @@ export type SekkeiErrorCode =
   | "BACKLOG_SYNC_FAILED"
   | "RFP_WORKSPACE_ERROR"
   | "RFP_PHASE_ERROR"
-  | "CHANGE_REQUEST_ERROR";
+  | "CHANGE_REQUEST_ERROR"
+  | "PLAN_ERROR";
 
 export class SekkeiError extends Error {
   constructor(

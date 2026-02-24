@@ -6,10 +6,11 @@ Track and propagate specification changes across the V-model chain.
 
 # ENTRYPOINT BEHAVIOR
 
-1. Parse subcommand (default: new CR, --resume, --status, --list, --cancel)
+1. Parse subcommand (default: new CR, --resume, --status, --list, --cancel, --rollback)
 2. For new CR: collect inputs, run full workflow
 3. For resume: load CR, route to current step
-4. Display PROGRESS DASHBOARD after each step
+4. For rollback: restore documents to pre-CR git checkpoint
+5. Display PROGRESS DASHBOARD after each step
 
 ---
 
@@ -40,6 +41,7 @@ Current: {STATUS}
 | --status CR-ID | Show CR details |
 | --list [--filter STATUS] | List all CRs |
 | --cancel CR-ID [reason] | Cancel CR |
+| --rollback CR-ID | Restore all docs to pre-CR git checkpoint |
 
 ---
 
@@ -75,6 +77,13 @@ For each step:
   Call `manage_change_request` action=propagate_next with cr_id, config_path.
   - If upstream: show suggestion text, ask user to confirm/skip
   - If downstream: show regeneration instruction, optionally call generate_document
+  - **改訂履歴 handling** for each propagated document:
+    a. Read current document from disk
+    b. Find the 改訂履歴 table, parse last version number
+    c. Build new row: version +0.1, today's date, CR description + changed IDs summary
+    d. Insert row into document's 改訂履歴 table
+    e. If downstream: pass updated document as `existing_content` to `generate_document`
+    f. If upstream: show suggested additions with 改訂履歴 row already inserted
   Ask: done with this step? [Y/skip/abort]
 Repeat until all_steps_complete.
 
@@ -90,6 +99,33 @@ Display completion summary with all steps reviewed.
 
 ---
 
+# ROLLBACK WORKFLOW
+
+Available when CR status is `PROPAGATING`, `VALIDATED`, or `COMPLETED` (within same session).
+
+## Step 1: Load CR State
+
+Call `manage_change_request` action=status with cr_id.
+Display which documents were modified during propagation.
+
+## Step 2: Confirm Rollback
+
+Show warning: "This will restore all modified documents to the pre-CR git checkpoint. Regenerated docs will be overwritten. Proceed? [Y/n]"
+
+## Step 3: Execute Rollback
+
+Call `manage_change_request` action=rollback with cr_id, config_path.
+- Restores affected doc files from git checkpoint created in Step 5 (before first propagation)
+- Sets CR status to `CANCELLED`
+- Reports restored files and git refs used
+
+## Step 4: Display Results
+
+Show restored file list, CR status, and suggestion:
+> "Rollback complete. CR {CR-ID} cancelled. Run `/sekkei:change --status {CR-ID}` to review history."
+
+---
+
 # RESUME BEHAVIOR
 
 Load CR via action=status → check status → route:
@@ -100,7 +136,10 @@ Load CR via action=status → check status → route:
 | ANALYZING / IMPACT_ANALYZED | Step 4 (approve) |
 | APPROVED / PROPAGATING | Step 5 (propagate, at current index) |
 | VALIDATED | Step 7 (complete) |
-| COMPLETED / CANCELLED | Show status only |
+| COMPLETED | Show status only |
+| CANCELLED | Show status only (rollback already applied) |
+
+Use `--rollback CR-ID` to undo a CR that is `PROPAGATING`, `VALIDATED`, or `COMPLETED`.
 
 ---
 

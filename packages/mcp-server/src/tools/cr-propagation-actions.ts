@@ -70,6 +70,8 @@ export async function handlePropagateNext(args: ChangeRequestArgs): Promise<Tool
     return err(`propagate_next requires APPROVED or PROPAGATING status, got ${cr.status}`);
   }
 
+  // C4: track whether git checkpoint succeeded
+  let checkpointCreated = false;
   if (cr.status === "APPROVED") {
     try {
       await execFileAsync("git", [
@@ -80,6 +82,7 @@ export async function handlePropagateNext(args: ChangeRequestArgs): Promise<Tool
         "-m", `chore: pre-${crId} checkpoint`,
         "--allow-empty",
       ]);
+      checkpointCreated = true;
       logger.info({ crId }, "Git checkpoint created before propagation");
     } catch {
       logger.warn({ crId }, "Git checkpoint skipped (not a git repo or no changes)");
@@ -103,19 +106,47 @@ export async function handlePropagateNext(args: ChangeRequestArgs): Promise<Tool
     instruction = `DOWNSTREAM CASCADE: Regenerate ${step.doc_type} document to reflect the upstream changes. Use generate_document tool with updated upstream content.`;
   }
 
+  // C1: extract content snippets from origin doc for upstream steps when requested
+  let suggestedContent: string | undefined;
+  if (step.direction === "upstream" && args.suggest_content) {
+    if (!args.config_path) {
+      return err("config_path required when suggest_content=true");
+    }
+    try {
+      const docs = await loadChainDocs(args.config_path);
+      const originContent = docs.get(current.origin_doc) ?? "";
+      if (originContent && current.changed_ids.length > 0) {
+        const lines = originContent.split("\n");
+        const matchingLines = lines.filter(line =>
+          current.changed_ids.some(id => line.includes(id))
+        );
+        suggestedContent = matchingLines.join("\n") || undefined;
+      }
+    } catch {
+      logger.warn({ crId }, "suggest_content: failed to load chain docs");
+    }
+  }
+
   current.propagation_steps[idx] = { ...step, status: "done", note: args.note };
   current.propagation_index = idx + 1;
   current.updated = new Date().toISOString().slice(0, 10);
   await writeCR(filePath, current);
 
-  return ok(JSON.stringify({
+  const response: Record<string, unknown> = {
     step: idx + 1,
     total: current.propagation_steps.length,
     direction: step.direction,
     doc_type: step.doc_type,
     instruction,
     all_steps_complete: idx + 1 >= current.propagation_steps.length,
-  }));
+    checkpoint_created: checkpointCreated,
+  };
+
+  if (suggestedContent !== undefined) {
+    response.suggested_content = suggestedContent;
+  }
+
+  return ok(JSON.stringify(response));
 }
 
 export async function handleValidate(args: ChangeRequestArgs): Promise<ToolResult> {
@@ -126,9 +157,12 @@ export async function handleValidate(args: ChangeRequestArgs): Promise<ToolResul
   const cr = await readCR(filePath);
   if (cr.status !== "PROPAGATING") return err(`validate requires PROPAGATING status, got ${cr.status}`);
 
-  const incomplete = cr.propagation_steps.filter(s => s.status === "pending");
-  if (incomplete.length > 0) {
-    return err(`${incomplete.length} propagation steps still pending: ${incomplete.map(s => s.doc_type).join(", ")}`);
+  // C6: skip incomplete-steps check when partial=true (mid-propagation validation)
+  if (!args.partial) {
+    const incomplete = cr.propagation_steps.filter(s => s.status === "pending");
+    if (incomplete.length > 0) {
+      return err(`${incomplete.length} propagation steps still pending: ${incomplete.map(s => s.doc_type).join(", ")}`);
+    }
   }
 
   const chainReport = await validateChain(configPath);

@@ -4,18 +4,25 @@ Orchestration logic for `sekkei:plan` and `sekkei:implement` sub-commands.
 
 ## §1 Auto-Trigger Detection
 
-**Trigger conditions** (ALL must be true):
+Call MCP tool `manage_plan(action="detect", workspace_path, config_path, doc_type)`.
+
+Response shape: `{ should_trigger: bool, reason: string, feature_count: N, has_active_plan: bool, plan_path?: string }`
+
+- If `should_trigger=false` → continue with normal generation flow
+- If `should_trigger=true` and `has_active_plan=true` → ask user: "An active plan exists for {doc-type}. Resume it or start fresh? [Resume / Create New / Skip Plan]"
+  - If Resume → report `plan_path` → run `/sekkei:implement @{plan_path}`
+  - If Create New → run `/sekkei:plan {doc-type}` → run `/sekkei:implement @{returned-plan-path}`
+  - If Skip Plan → continue with normal generation flow
+- If `should_trigger=true` and `has_active_plan=false` → prompt user:
+  > "Detected {feature_count} features in split mode. Create a generation plan first? [Y/n]"
+  - If Y → run `/sekkei:plan {doc-type}` → run `/sekkei:implement @{returned-plan-path}`
+  - If N → continue with normal generation flow
+
+**Trigger conditions evaluated by detect action** (for reference):
 1. Doc-type is one of: `basic-design`, `detail-design`, `test-spec`
 2. `sekkei.config.yaml` has `split.{doc-type}` section enabled
 3. Feature count (大分類 in `functions-list.md`) >= 3
-4. No active plan exists for this doc-type
-
-**Plan discovery:** Scan `sekkei-docs/plans/` for dirs matching `*-{doc-type}-generation/plan.md`. If found with `status: pending` or `status: in_progress` → active plan exists.
-
-**User prompt when triggered:**
-> "Detected {N} features in split mode. Create a generation plan first? [Y/n]"
-- If Y → run `/sekkei:plan {doc-type}` → run `/sekkei:implement @{returned-plan-path}`
-- If N → continue with normal generation flow
+4. No active plan exists for this doc-type (when `has_active_plan=false`)
 
 ## §2 Survey Flow
 
@@ -164,30 +171,25 @@ status: pending
 
 ### Execution Flow
 
-1. Read `plan.md` → parse YAML → validate `status` is `pending` or `in_progress`
-2. Update plan status to `in_progress`
-3. Glob `phase-*.md` files → sort by phase number → build execution queue
-4. **Per-phase loop:**
-   a. Read phase file → display summary (name, type, scope, feature)
-   b. Ask: "Proceed with Phase {N}: {name}? [Proceed / Skip / Stop]"
-   c. **Proceed:** delegate to sekkei sub-command per §4 mapping → mark TODOs done → update plan.md phase status to `completed`
-   d. **Skip:** mark phase status as `skipped`, continue next
-   e. **Stop:** save progress, exit loop
-5. After all phases: run `/sekkei:validate` on manifest
-6. Update plan.md status to `completed`
-7. Report: phases completed/skipped/remaining, files generated, validation results
+1. Call `manage_plan(action="status", workspace_path, plan_id)` → validate `status` is `pending` or `in_progress`
+2. **Per-phase loop** — for each phase where `status != "completed"` and `status != "skipped"`:
+   a. Call `manage_plan(action="execute", workspace_path, config_path, plan_id, phase_number)` → returns phase summary + `generate_document` args
+   b. Display phase summary (name, type, scope, feature)
+   c. Ask: "Proceed with Phase {N}: {name}? [Proceed / Skip / Stop]"
+   d. **Proceed:** call `generate_document(...)` with args from execute response → call `manage_plan(action="update", workspace_path, plan_id, phase_number, phase_status="completed")`
+   e. **Skip:** call `manage_plan(action="update", workspace_path, plan_id, phase_number, phase_status="skipped")`
+   f. **Stop:** exit loop (progress persisted by prior update calls)
+3. After all phases: final execute response triggers `/sekkei:validate` on manifest automatically
+4. Call `manage_plan(action="status", workspace_path, plan_id)` → display final report (phases completed/skipped/remaining, files generated, validation results)
 
 ### Delegation Mapping
 
-| Phase Type | Command | Key Args |
-|------------|---------|----------|
-| shared | `/sekkei:{doc-type}` | `scope: "shared"` |
-| per-feature | `/sekkei:{doc-type}` | `scope: "feature", feature_id: "{ID}"`, survey data as input |
-| validation | `/sekkei:validate` | manifest path |
+| Phase Type | `execute` Response Key | Downstream Call |
+|------------|------------------------|----------------|
+| shared | `generate_args` with `scope: "shared"` | `generate_document(...)` |
+| per-feature | `generate_args` with `scope: "feature", feature_id` + survey data | `generate_document(...)` |
+| validation | `validate_args` with manifest path | `validate_document(...)` |
 
 ### Progress Tracking
 
-After each phase completes:
-1. Check off `- [ ]` → `- [x]` in phase file TODOs
-2. Update phase status in `plan.md` frontmatter: `pending` → `completed`
-3. Update phases table in plan.md body: `Pending` → `Complete`
+Progress is persisted server-side via `manage_plan(action="update")` after each phase. No manual file writes needed — `execute` and `update` calls maintain plan state atomically.
