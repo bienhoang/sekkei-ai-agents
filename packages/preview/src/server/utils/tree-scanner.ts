@@ -40,6 +40,14 @@ export async function scanTree(docsRoot: string, dir = docsRoot): Promise<TreeNo
 
   const dirs = visible.filter(e => e.isDirectory())
   const files = visible.filter(e => e.isFile())
+
+  // index.md always first within files
+  const indexIdx = files.findIndex(f => f.name === 'index.md')
+  if (indexIdx > 0) {
+    const [indexFile] = files.splice(indexIdx, 1)
+    files.unshift(indexFile)
+  }
+
   const ordered = [...dirs, ...files]
 
   const nodes: TreeNode[] = []

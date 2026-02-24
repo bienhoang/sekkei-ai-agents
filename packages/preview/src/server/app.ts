@@ -25,6 +25,12 @@ export function createApp(options: AppOptions): express.Application {
     res.status(404).json({ error: 'Not found' })
   })
 
+  // Serve images/assets from docsRoot (for markdown image references)
+  app.use('/docs-assets', express.static(docsRoot, {
+    extensions: ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'ico', 'bmp'],
+    dotfiles: 'ignore',
+  }))
+
   const clientDir = join(__dirname, 'client')
   app.use(express.static(clientDir))
 

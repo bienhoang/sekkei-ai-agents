@@ -9,6 +9,7 @@ import { useSystem } from './hooks/use-system.js'
 export function App() {
   const [activePath, setActivePath] = useState<string | null>(null)
   const [dirty, setDirty] = useState(false)
+  const [fullscreen, setFullscreen] = useState(false)
   const { file, loading } = useFile(activePath)
   const system = useSystem()
 
@@ -25,9 +26,13 @@ export function App() {
   return (
     <div className="flex flex-col h-screen bg-zinc-950 text-zinc-100 font-sans">
       <div className="flex flex-1 overflow-hidden">
-        <TreeSidebar activePath={activePath} onSelect={handleSelect} />
-        <main className="flex flex-col flex-1 overflow-hidden">
-          {loading && <div className="p-8 text-xs text-zinc-500">Loading…</div>}
+        {!fullscreen && <TreeSidebar activePath={activePath} onSelect={handleSelect} />}
+        <main className="flex flex-col flex-1 overflow-hidden bg-zinc-950">
+          {loading && (
+            <div className="flex items-center justify-center h-full">
+              <span className="text-xs text-zinc-500 animate-pulse">Loading…</span>
+            </div>
+          )}
           {!loading && !file && <EmptyState />}
           {!loading && file && (
             <TiptapEditor
@@ -36,11 +41,13 @@ export function App() {
               content={file.content}
               readonly={readonly}
               onDirty={setDirty}
+              fullscreen={fullscreen}
+              onToggleFullscreen={() => setFullscreen(f => !f)}
             />
           )}
         </main>
       </div>
-      <SystemBar info={system} />
+      {!fullscreen && <SystemBar info={system} />}
     </div>
   )
 }
