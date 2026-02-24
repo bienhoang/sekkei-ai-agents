@@ -1,5 +1,6 @@
-import { BubbleMenu } from '@tiptap/react'
+import { BubbleMenu } from '@tiptap/react/menus'
 import type { Editor } from '@tiptap/react'
+import type { EditorState } from '@tiptap/pm/state'
 
 interface Props {
   editor: Editor
@@ -38,7 +39,7 @@ export function BubbleToolbar({ editor }: Props) {
   return (
     <BubbleMenu
       editor={editor}
-      shouldShow={({ editor: e, state }) => {
+      shouldShow={({ editor: e, state }: { editor: Editor; state: EditorState }) => {
         const { from, to } = state.selection
         if (from === to) return false
         if (e.isActive('codeBlock')) return false

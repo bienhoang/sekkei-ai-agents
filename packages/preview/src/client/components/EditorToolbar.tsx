@@ -72,12 +72,11 @@ export function EditorToolbar({ editor, dirty, saving, onSave, fullscreen, onTog
     btn('```', 'Code block', () => editor.chain().focus().toggleCodeBlock().run(), editor.isActive('codeBlock')),
     btn('\uD83D\uDD17', 'Link', () => {
       const url = window.prompt('URL:')
-      if (url) editor.chain().focus().setLink({ href: url }).run()
-      else editor.chain().focus().unsetLink().run()
+      if (url && /^https?:\/\//.test(url)) editor.chain().focus().setLink({ href: url }).run()
     }, editor.isActive('link')),
     btn('\uD83D\uDDBC', 'Insert image', () => {
       const url = window.prompt('Image URL:')
-      if (url) editor.chain().focus().setImage({ src: url }).run()
+      if (url && /^https?:\/\//.test(url)) editor.chain().focus().setImage({ src: url }).run()
     }),
     btn('\u2014', 'Horizontal rule', () => editor.chain().focus().setHorizontalRule().run()),
   ]
