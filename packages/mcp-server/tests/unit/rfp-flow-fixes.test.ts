@@ -12,12 +12,14 @@ async function callTool(
   return (server as any)._registeredTools[name].handler(args, {});
 }
 
-/** Helper: create workspace and advance to target phase with required content */
+/** Helper: create workspace and advance to target phase with required content.
+ *  Uses a unique sub-directory of tmpDir as workspace_path to avoid collisions. */
 async function advanceTo(
-  server: McpServer, tmpDir: string, project: string, targetPhase: string,
+  server: McpServer, tmpDir: string, label: string, targetPhase: string,
 ): Promise<string> {
+  const basePath = join(tmpDir, label);
   const r = await callTool(server, "manage_rfp_workspace", {
-    action: "create", workspace_path: tmpDir, project_name: project,
+    action: "create", workspace_path: basePath, project_name: label,
   });
   const ws = JSON.parse(r.content[0].text).workspace;
   const steps: Array<{ write?: [string, string]; phase: string }> = [
@@ -73,7 +75,6 @@ describe("RFP flow fixes", () => {
     });
 
     it("DRAFTING → WAITING_CLIENT with force", async () => {
-      // QNA_GENERATION → DRAFTING (forward skip), then back
       const ws = await advanceTo(server, tmpDir, "b1-dr", "QNA_GENERATION");
       await callTool(server, "manage_rfp_workspace", {
         action: "transition", workspace_path: ws, phase: "DRAFTING",
@@ -144,8 +145,9 @@ describe("RFP flow fixes", () => {
   // --- M2: Content validation ---
   describe("M2: content validation", () => {
     it("blocks forward when required file empty", async () => {
+      const basePath = join(tmpDir, "m2-empty");
       const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: tmpDir, project_name: "m2-empty",
+        action: "create", workspace_path: basePath, project_name: "m2-empty",
       });
       const ws = JSON.parse(r.content[0].text).workspace;
       const t = await callTool(server, "manage_rfp_workspace", {
@@ -164,8 +166,9 @@ describe("RFP flow fixes", () => {
     });
 
     it("allows forward after writing content", async () => {
+      const basePath = join(tmpDir, "m2-ok");
       const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: tmpDir, project_name: "m2-ok",
+        action: "create", workspace_path: basePath, project_name: "m2-ok",
       });
       const ws = JSON.parse(r.content[0].text).workspace;
       await callTool(server, "manage_rfp_workspace", {

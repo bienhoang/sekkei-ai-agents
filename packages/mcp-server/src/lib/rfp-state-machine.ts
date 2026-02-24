@@ -118,7 +118,7 @@ export function isBackwardTransition(from: RfpPhase, to: RfpPhase): boolean {
 
 export async function createWorkspace(basePath: string, projectName: string): Promise<string> {
   validateProjectName(projectName);
-  const wsPath = join(basePath, DEFAULT_WORKSPACE_DIR, "01-rfp", projectName);
+  const wsPath = join(basePath, DEFAULT_WORKSPACE_DIR, "01-rfp");
   await mkdir(wsPath, { recursive: true });
 
   const now = new Date().toISOString().slice(0, 10);
@@ -442,7 +442,7 @@ export async function generateConfigFromWorkspace(workspacePath: string): Promis
     `  directory: ./${DEFAULT_WORKSPACE_DIR}`,
     "",
     "chain:",
-    `  rfp: "01-rfp/${status.project}/05_proposal.md"`,
+    `  rfp: "01-rfp/05_proposal.md"`,
     "  functions_list: { status: pending }",
     "  requirements: { status: pending }",
     "  basic_design: { status: pending }",

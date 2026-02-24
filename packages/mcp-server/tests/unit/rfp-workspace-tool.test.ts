@@ -28,13 +28,17 @@ describe("manage_rfp_workspace tool", () => {
     await rm(tmpDir, { recursive: true, force: true });
   });
 
+  // Helper: unique base path per test group
+  const makeBase = (label: string) => join(tmpDir, label);
+
   it("registers on the server", () => {
     expect((server as any)._registeredTools["manage_rfp_workspace"]).toBeDefined();
   });
 
   it("create: creates workspace and returns path", async () => {
+    const basePath = makeBase("tool-test");
     const result = await callTool(server, "manage_rfp_workspace", {
-      action: "create", workspace_path: tmpDir, project_name: "tool-test",
+      action: "create", workspace_path: basePath, project_name: "tool-test",
     });
     expect(result.isError).toBeUndefined();
     const data = JSON.parse(result.content[0].text);
@@ -123,9 +127,9 @@ describe("manage_rfp_workspace tool", () => {
   // --- Back Action ---
   describe("back action", () => {
     it("returns error on first phase (no previous)", async () => {
-      // Create a fresh workspace to test back from RFP_RECEIVED
+      const basePath = makeBase("back-test");
       const freshResult = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: tmpDir, project_name: "back-test",
+        action: "create", workspace_path: basePath, project_name: "back-test",
       });
       const freshWs = JSON.parse(freshResult.content[0].text).workspace;
       const result = await callTool(server, "manage_rfp_workspace", {
@@ -141,11 +145,11 @@ describe("manage_rfp_workspace tool", () => {
     let bwWsPath: string;
 
     it("setup: create workspace and advance to CLIENT_ANSWERED", async () => {
+      const basePath = makeBase("backward-test");
       const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: tmpDir, project_name: "backward-test",
+        action: "create", workspace_path: basePath, project_name: "backward-test",
       });
       bwWsPath = JSON.parse(r.content[0].text).workspace;
-      // Write required content before each forward transition
       await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwWsPath, filename: "01_raw_rfp.md", content: "# RFP" });
       await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "ANALYZING" });
       await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwWsPath, filename: "02_analysis.md", content: "# Analysis" });
@@ -178,8 +182,9 @@ describe("manage_rfp_workspace tool", () => {
   // --- QNA Round ---
   describe("qna_round increment", () => {
     it("increments on QNA_GENERATION transition", async () => {
+      const basePath = makeBase("qna-round-test");
       const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: tmpDir, project_name: "qna-round-test",
+        action: "create", workspace_path: basePath, project_name: "qna-round-test",
       });
       const qnaWs = JSON.parse(r.content[0].text).workspace;
       await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: qnaWs, filename: "01_raw_rfp.md", content: "# RFP" });
@@ -194,8 +199,9 @@ describe("manage_rfp_workspace tool", () => {
   // --- Generate Config ---
   describe("generate-config action", () => {
     it("rejects when not at SCOPE_FREEZE/PROPOSAL_UPDATE", async () => {
+      const basePath = makeBase("genconfig-test");
       const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: tmpDir, project_name: "genconfig-test",
+        action: "create", workspace_path: basePath, project_name: "genconfig-test",
       });
       const gcWs = JSON.parse(r.content[0].text).workspace;
       const result = await callTool(server, "manage_rfp_workspace", {

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { mkdtemp, rm, readFile } from "node:fs/promises";
+import { mkdtemp, rm, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
@@ -21,6 +21,9 @@ describe("rfp-state-machine", () => {
   afterAll(async () => {
     await rm(tmpDir, { recursive: true, force: true });
   });
+
+  // Helper: create a unique base path for each test group
+  const makeBase = (name: string) => join(tmpDir, name);
 
   // --- Phase Transitions ---
   describe("validateTransition", () => {
@@ -47,7 +50,8 @@ describe("rfp-state-machine", () => {
   // --- Workspace Creation ---
   describe("createWorkspace", () => {
     it("creates workspace with all files", async () => {
-      const ws = await createWorkspace(tmpDir, "test-project");
+      const base = makeBase("create-test");
+      const ws = await createWorkspace(base, "test-project");
       const inv = await getFileInventory(ws);
       for (const file of ["00_status.md", "01_raw_rfp.md", "02_analysis.md", "03_questions.md", "04_client_answers.md", "05_proposal.md", "06_scope_freeze.md", "07_decisions.md"]) {
         expect(inv.files[file]?.exists).toBe(true);
@@ -55,24 +59,26 @@ describe("rfp-state-machine", () => {
     });
 
     it("sets initial phase to RFP_RECEIVED", async () => {
-      const ws = join(tmpDir, "workspace-docs", "01-rfp", "test-project");
+      const ws = join(makeBase("create-test"), "workspace-docs", "01-rfp");
       const status = await readStatus(ws);
       expect(status.phase).toBe("RFP_RECEIVED");
       expect(status.project).toBe("test-project");
     });
 
     it("rejects invalid project names", async () => {
-      await expect(createWorkspace(tmpDir, "../evil")).rejects.toThrow("Invalid project name");
-      await expect(createWorkspace(tmpDir, "UPPER")).rejects.toThrow("Invalid project name");
+      const base = makeBase("reject-test");
+      await expect(createWorkspace(base, "../evil")).rejects.toThrow("Invalid project name");
+      await expect(createWorkspace(base, "UPPER")).rejects.toThrow("Invalid project name");
     });
   });
 
   // --- Status Read/Write ---
   describe("readStatus / writeStatus", () => {
     it("round-trips status data with new fields", async () => {
-      const ws = join(tmpDir, "workspace-docs", "01-rfp", "test-project");
+      const base = makeBase("status-test");
+      const ws = await createWorkspace(base, "status-proj");
       const status: RfpStatus = {
-        project: "test-project",
+        project: "status-proj",
         phase: "ANALYZING",
         last_update: "2026-02-23",
         next_action: "Generate Q&A",
@@ -97,35 +103,40 @@ describe("rfp-state-machine", () => {
 
   // --- File Write Rules ---
   describe("writeWorkspaceFile", () => {
-    const ws = () => join(tmpDir, "workspace-docs", "01-rfp", "test-project");
+    let ws: string;
+
+    beforeAll(async () => {
+      const base = makeBase("write-test");
+      ws = await createWorkspace(base, "write-proj");
+    });
 
     it("appends to append-only files", async () => {
-      await writeWorkspaceFile(ws(), "01_raw_rfp.md", "First content");
-      await writeWorkspaceFile(ws(), "01_raw_rfp.md", "Second content");
-      const text = await readFile(join(ws(), "01_raw_rfp.md"), "utf-8");
+      await writeWorkspaceFile(ws, "01_raw_rfp.md", "First content");
+      await writeWorkspaceFile(ws, "01_raw_rfp.md", "Second content");
+      const text = await readFile(join(ws, "01_raw_rfp.md"), "utf-8");
       expect(text).toContain("First content");
       expect(text).toContain("Second content");
     });
 
     it("overwrites rewrite files", async () => {
-      await writeWorkspaceFile(ws(), "02_analysis.md", "Version 1");
-      await writeWorkspaceFile(ws(), "02_analysis.md", "Version 2");
-      const text = await readFile(join(ws(), "02_analysis.md"), "utf-8");
+      await writeWorkspaceFile(ws, "02_analysis.md", "Version 1");
+      await writeWorkspaceFile(ws, "02_analysis.md", "Version 2");
+      const text = await readFile(join(ws, "02_analysis.md"), "utf-8");
       expect(text).toBe("Version 2");
       expect(text).not.toContain("Version 1");
     });
 
     it("merges checklist files", async () => {
-      await writeWorkspaceFile(ws(), "06_scope_freeze.md", "workflow_defined: YES\nauth_method_confirmed: NO");
-      await writeWorkspaceFile(ws(), "06_scope_freeze.md", "auth_method_confirmed: YES\nexport_format_confirmed: YES");
-      const text = await readFile(join(ws(), "06_scope_freeze.md"), "utf-8");
+      await writeWorkspaceFile(ws, "06_scope_freeze.md", "workflow_defined: YES\nauth_method_confirmed: NO");
+      await writeWorkspaceFile(ws, "06_scope_freeze.md", "auth_method_confirmed: YES\nexport_format_confirmed: YES");
+      const text = await readFile(join(ws, "06_scope_freeze.md"), "utf-8");
       expect(text).toContain("workflow_defined: YES");
       expect(text).toContain("auth_method_confirmed: YES");
       expect(text).toContain("export_format_confirmed: YES");
     });
 
     it("rejects unknown files", async () => {
-      await expect(writeWorkspaceFile(ws(), "unknown.md", "x")).rejects.toThrow("Unknown workspace file");
+      await expect(writeWorkspaceFile(ws, "unknown.md", "x")).rejects.toThrow("Unknown workspace file");
     });
   });
 
@@ -134,7 +145,8 @@ describe("rfp-state-machine", () => {
     let recWs: string;
 
     beforeAll(async () => {
-      recWs = await createWorkspace(tmpDir, "recovery-test");
+      const base = makeBase("recovery-test");
+      recWs = await createWorkspace(base, "recovery-proj");
     });
 
     it("returns RFP_RECEIVED for empty workspace", async () => {
@@ -193,17 +205,19 @@ describe("rfp-state-machine", () => {
 
   // --- Q&A Round Tracking ---
   describe("qna_round tracking", () => {
+    let ws: string;
+
+    beforeAll(async () => {
+      const base = makeBase("qna-test");
+      ws = await createWorkspace(base, "qna-proj");
+    });
+
     it("initial workspace has qna_round 0", async () => {
-      const ws = join(tmpDir, "workspace-docs", "01-rfp", "test-project");
       const status = await readStatus(ws);
-      // We set it to 2 in the round-trip test, so re-create for clean test
-      await writeStatus(ws, { ...status, qna_round: 0, phase_history: status.phase_history });
-      const fresh = await readStatus(ws);
-      expect(fresh.qna_round).toBe(0);
+      expect(status.qna_round).toBe(0);
     });
 
     it("persists qna_round across read/write", async () => {
-      const ws = join(tmpDir, "workspace-docs", "01-rfp", "test-project");
       const status = await readStatus(ws);
       await writeStatus(ws, { ...status, qna_round: 3 });
       const read = await readStatus(ws);
@@ -213,8 +227,14 @@ describe("rfp-state-machine", () => {
 
   // --- Decision Auto-Logging ---
   describe("decision auto-logging", () => {
+    let ws: string;
+
+    beforeAll(async () => {
+      const base = makeBase("decision-test");
+      ws = await createWorkspace(base, "decision-proj");
+    });
+
     it("appends decision entry on transition", async () => {
-      const ws = await createWorkspace(tmpDir, "decision-test");
       await appendDecision(ws, "RFP_RECEIVED", "ANALYZING", "Start analysis");
       const content = await readWorkspaceFile(ws, "07_decisions.md");
       expect(content).toContain("RFP_RECEIVED → ANALYZING");
@@ -222,7 +242,6 @@ describe("rfp-state-machine", () => {
     });
 
     it("includes backward impact label", async () => {
-      const ws = join(tmpDir, "workspace-docs", "01-rfp", "decision-test");
       await appendDecision(ws, "CLIENT_ANSWERED", "ANALYZING", "Scope changed");
       const content = await readWorkspaceFile(ws, "07_decisions.md");
       expect(content).toContain("Re-entering earlier phase for revision");
@@ -232,11 +251,10 @@ describe("rfp-state-machine", () => {
   // --- Status Backward Compatibility ---
   describe("status backward compatibility", () => {
     it("old format (no qna_round) parses with default 0", async () => {
-      const ws = await createWorkspace(tmpDir, "compat-test");
-      // Write old-format YAML manually (no qna_round, no phase_history)
-      const { writeFile } = await import("node:fs/promises");
+      const base = makeBase("compat-test");
+      const ws = await createWorkspace(base, "compat-proj");
       const oldYaml = [
-        "---", "project: compat-test", "phase: ANALYZING",
+        "---", "project: compat-proj", "phase: ANALYZING",
         "last_update: 2026-02-23", "next_action: test",
         "blocking_issues:", "assumptions:", "---", "",
       ].join("\n");
@@ -250,8 +268,8 @@ describe("rfp-state-machine", () => {
   // --- Config Generation ---
   describe("generateConfigFromWorkspace", () => {
     it("generates valid config YAML from workspace", async () => {
-      const ws = await createWorkspace(tmpDir, "config-test");
-      // Set up analysis + proposal files
+      const base = makeBase("config-test");
+      const ws = await createWorkspace(base, "config-proj");
       await writeWorkspaceFile(ws, "02_analysis.md", "## 3. Real System Type\nCategorized as: SaaS product");
       await writeWorkspaceFile(ws, "05_proposal.md", [
         "# Proposal", "## Feature Seed", "",
@@ -261,13 +279,12 @@ describe("rfp-state-machine", () => {
         "| RPT | report-engine | レポート機能 | P2 | L |",
         "",
       ].join("\n"));
-      // Set phase to SCOPE_FREEZE for generate-config
       const status = await readStatus(ws);
       await writeStatus(ws, { ...status, phase: "SCOPE_FREEZE" });
 
       const config = await generateConfigFromWorkspace(ws);
       expect(config).toContain('type: "saas"');
-      expect(config).toContain("config-test");
+      expect(config).toContain("config-proj");
       expect(config).toContain("USR");
       expect(config).toContain("user-management");
     });

@@ -21,7 +21,7 @@ Files are the ONLY source of truth. Never rely on chat history.
 
 # WORKSPACE
 
-Path: `workspace-docs/01-rfp/<project-name>/`
+Path: `workspace-docs/01-rfp/`
 
 ```
 00_status.md
