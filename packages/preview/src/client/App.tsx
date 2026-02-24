@@ -12,6 +12,7 @@ import { useTree } from './hooks/use-tree.js'
 import { useTheme } from './hooks/use-theme.js'
 import { useFlatTree } from './hooks/use-flat-tree.js'
 import { useToc } from './hooks/use-toc.js'
+import { useUrlSync } from './hooks/use-url-sync.js'
 
 export function App() {
   const [activePath, setActivePath] = useState<string | null>(null)
@@ -30,7 +31,7 @@ export function App() {
 
   const readonly = system?.mode === 'guide'
 
-  function handleSelect(path: string) {
+  const handleNavigate = useCallback((path: string) => {
     if (dirty && path !== activePath) {
       if (!window.confirm('You have unsaved changes. Switch files anyway?')) return
     }
@@ -38,7 +39,15 @@ export function App() {
     setActivePath(path)
     setEditorInstance(null)
     setScrollContainer(null)
-  }
+  }, [dirty, activePath])
+
+  useUrlSync({
+    activePath,
+    tree,
+    treeLoading,
+    onInitialResolve: setActivePath,
+    onNavigate: handleNavigate,
+  })
 
   const handleEditorReady = useCallback((editor: Editor, container: HTMLElement | null) => {
     setEditorInstance(editor)
@@ -62,7 +71,7 @@ export function App() {
             loading={treeLoading}
             error={treeError}
             activePath={activePath}
-            onSelect={handleSelect}
+            onSelect={handleNavigate}
             searchQuery={searchQuery}
           />
         )}
@@ -83,7 +92,7 @@ export function App() {
               fullscreen={fullscreen}
               onToggleFullscreen={() => setFullscreen(f => !f)}
               flatTree={flatTree}
-              onSelect={handleSelect}
+              onSelect={handleNavigate}
               onEditorReady={handleEditorReady}
             />
           )}
