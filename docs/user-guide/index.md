@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../assets/logo-mark.svg" alt="Sekkei" width="80">
+</p>
+
 # Sekkei — Hướng dẫn sử dụng
 
 **Sekkei** (設計) là AI agent tạo tài liệu đặc tả phần mềm tiếng Nhật theo chuẩn IPA — tích hợp trong Claude Code.

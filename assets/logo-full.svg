@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 256" fill="none">
+  <defs>
+    <linearGradient id="sekkei-grad" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- === MARK === -->
+  <!-- Document body with folded corner + V-model bottom -->
+  <path d="
+    M 48 24
+    L 172 24
+    L 220 72
+    L 220 184
+    L 134 244
+    L 48 184
+    Z
+  " fill="url(#sekkei-grad)"/>
+
+  <!-- Folded corner accent -->
+  <path d="M 172 24 L 172 72 L 220 72 Z" fill="#1E40AF" opacity="0.6"/>
+
+  <!-- Specification lines (cascade pattern) -->
+  <rect x="80" y="96" width="108" height="7" rx="3.5" fill="white" opacity="0.92"/>
+  <rect x="80" y="118" width="84" height="7" rx="3.5" fill="white" opacity="0.72"/>
+  <rect x="80" y="140" width="60" height="7" rx="3.5" fill="white" opacity="0.52"/>
+
+  <!-- V-model flow chevron -->
+  <path d="M 114 170 L 134 190 L 154 170" stroke="white" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.7"/>
+
+  <!-- === WORDMARK === -->
+  <!-- "Sekkei" primary text -->
+  <text x="272" y="148" font-family="'IBM Plex Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="72" font-weight="600" fill="#0F172A" letter-spacing="-1">Sekkei</text>
+
+  <!-- "設計" Japanese subtitle -->
+  <text x="274" y="192" font-family="'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif" font-size="28" font-weight="400" fill="#64748B" letter-spacing="4">設計</text>
+
+  <!-- Tagline -->
+  <text x="274" y="222" font-family="'IBM Plex Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif" font-size="16" font-weight="400" fill="#94A3B8" letter-spacing="1.5">AI DOCUMENTATION AGENT</text>
+</svg>

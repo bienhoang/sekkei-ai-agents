@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../../assets/logo-mark.svg" alt="Sekkei" width="64">
+</p>
+
 # Giới thiệu Sekkei
 
 ## Sekkei là gì?

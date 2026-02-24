@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <defs>
+    <linearGradient id="fg" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <!-- Simplified mark for small sizes: document + V bottom only -->
+  <path d="M 48 24 L 172 24 L 220 72 L 220 184 L 134 244 L 48 184 Z" fill="url(#fg)"/>
+  <path d="M 172 24 L 172 72 L 220 72 Z" fill="#1E40AF" opacity="0.5"/>
+</svg>

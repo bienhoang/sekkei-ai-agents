@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sekkei Logo Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'IBM Plex Sans', sans-serif; background: #f8fafc; color: #0f172a; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+  h1 { font-size: 32px; font-weight: 600; margin-bottom: 8px; }
+  .subtitle { color: #64748b; font-size: 16px; margin-bottom: 48px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 48px; }
+  .card { background: white; border-radius: 16px; padding: 32px; border: 1px solid #e2e8f0; }
+  .card.dark { background: #0f172a; border-color: #1e293b; }
+  .card h3 { font-size: 14px; font-weight: 500; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 24px; }
+  .card.dark h3 { color: #94a3b8; }
+  .card img, .card svg { display: block; margin: 0 auto; }
+  .mark-preview { width: 128px; height: 128px; }
+  .full-preview { width: 100%; max-width: 480px; height: auto; }
+  .sizes { display: flex; align-items: center; gap: 24px; justify-content: center; flex-wrap: wrap; }
+  .sizes img { display: block; }
+  .color-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+  .swatch { width: 80px; height: 80px; border-radius: 12px; display: flex; align-items: flex-end; padding: 8px; font-size: 11px; font-weight: 500; color: white; }
+  .meta { font-size: 13px; color: #94a3b8; line-height: 1.8; }
+  .meta strong { color: #64748b; }
+  .full-width { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Sekkei Logo System</h1>
+  <p class="subtitle">Brand assets for the AI Documentation Agent</p>
+
+  <div class="grid">
+    <!-- Mark on light -->
+    <div class="card">
+      <h3>Mark - Light Background</h3>
+      <img src="logo-mark.svg" class="mark-preview" alt="Sekkei mark">
+    </div>
+
+    <!-- Mark on dark -->
+    <div class="card dark">
+      <h3>Mark - Dark Background</h3>
+      <img src="logo-mark-dark.svg" class="mark-preview" alt="Sekkei mark dark">
+    </div>
+
+    <!-- Full logo light -->
+    <div class="card full-width">
+      <h3>Full Logo - Light Background</h3>
+      <img src="logo-full.svg" class="full-preview" alt="Sekkei full logo">
+    </div>
+
+    <!-- Full logo dark -->
+    <div class="card dark full-width">
+      <h3>Full Logo - Dark Background</h3>
+      <img src="logo-full-dark.svg" class="full-preview" alt="Sekkei full logo dark">
+    </div>
+
+    <!-- Sizes -->
+    <div class="card full-width">
+      <h3>Scale Test</h3>
+      <div class="sizes">
+        <img src="logo-mark.svg" width="16" height="16" alt="16px">
+        <img src="logo-mark.svg" width="24" height="24" alt="24px">
+        <img src="logo-mark.svg" width="32" height="32" alt="32px">
+        <img src="logo-mark.svg" width="48" height="48" alt="48px">
+        <img src="logo-mark.svg" width="64" height="64" alt="64px">
+        <img src="logo-mark.svg" width="96" height="96" alt="96px">
+        <img src="logo-mark.svg" width="128" height="128" alt="128px">
+      </div>
+    </div>
+
+    <!-- Colors -->
+    <div class="card">
+      <h3>Brand Colors</h3>
+      <div class="color-row">
+        <div class="swatch" style="background:#3B82F6">#3B82F6</div>
+        <div class="swatch" style="background:#1D4ED8">#1D4ED8</div>
+        <div class="swatch" style="background:#60A5FA">#60A5FA</div>
+        <div class="swatch" style="background:#1E40AF">#1E40AF</div>
+      </div>
+    </div>
+
+    <!-- Design Notes -->
+    <div class="card">
+      <h3>Design Notes</h3>
+      <div class="meta">
+        <strong>Concept:</strong> Blueprint V<br>
+        <strong>Mark:</strong> Document + V-model bottom + spec lines<br>
+        <strong>Style:</strong> Swiss minimalism<br>
+        <strong>Fonts:</strong> IBM Plex Sans + Noto Sans JP<br>
+        <strong>Gradient:</strong> #3B82F6 → #1D4ED8 (45deg)<br>
+        <strong>Files:</strong> logo-mark.svg, logo-full.svg, *-dark.svg
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

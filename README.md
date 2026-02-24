@@ -1,7 +1,11 @@
-# Sekkei (設計) - AI Documentation Agent
+<p align="center">
+  <img src="assets/logo-full.svg" alt="Sekkei — AI Documentation Agent" width="480">
+</p>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-green)](https://nodejs.org)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/Node.js-%3E%3D20-green" alt="Node.js"></a>
+</p>
 
 AI-powered generation of Japanese software specification documents following the V-model hierarchy. Works as an MCP server with Claude Code, Cursor, and VS Code/Copilot.
 
