@@ -1,3 +1,5 @@
+> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
+
 # Design Phase Commands
 
 Command workflows for the design phase of the V-model document chain.

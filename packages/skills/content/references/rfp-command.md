@@ -1,3 +1,5 @@
+> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
+
 # /sekkei:rfp — Presales RFP Lifecycle
 
 End-to-end presales workflow. Resumable. Deterministic. File-based state.

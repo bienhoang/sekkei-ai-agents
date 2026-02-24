@@ -1,3 +1,5 @@
+> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
+
 # Supplementary Commands
 
 Command workflows for supplementary documents (operation, migration, matrix, sitemap).

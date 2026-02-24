@@ -1,3 +1,5 @@
+> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
+
 # Test Phase Commands
 
 Command workflows for the test phase of the V-model document chain.

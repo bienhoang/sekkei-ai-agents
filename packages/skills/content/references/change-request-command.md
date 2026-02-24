@@ -1,3 +1,5 @@
+> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
+
 # /sekkei:change — Change Request Lifecycle
 
 Track and propagate specification changes across the V-model chain.

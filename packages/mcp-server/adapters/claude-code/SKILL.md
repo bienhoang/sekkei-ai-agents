@@ -7,6 +7,23 @@ description: "Generate Japanese specification documents (設計書) following V-
 
 Generate Japanese software specification documents following the V-model document chain.
 
+## Output Language
+
+**MANDATORY:** Read `sekkei.config.yaml` → `project.language` field.
+ALL user-facing output (responses, explanations, status messages, error descriptions, interview questions) MUST be written in the configured language.
+
+- `ja` → Japanese (日本語)
+- `en` → English
+- `vi` → Vietnamese (Tiếng Việt)
+
+**Always preserve regardless of output language:**
+- Japanese document type names: 要件定義書, 基本設計書, 詳細設計書, etc.
+- Cross-reference ID patterns: REQ-xxx, F-xxx, SCR-xxx, TBL-xxx, API-xxx, CLS-xxx, NFR-xxx
+- Markdown section headings inside generated documents (these follow template language, not output language)
+- Technical terms that have no standard translation (MCP, V-model, CRUD)
+
+**Default:** If `sekkei.config.yaml` not found or `project.language` not set, default to `ja`.
+
 ## Document Generation Commands
 
 ### Requirements Phase
@@ -64,6 +81,8 @@ This interactive wizard creates `sekkei.config.yaml`, sets up the output directo
 
 ### `/sekkei:rfp [@project-name]`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 **State management:** Use MCP tool `manage_rfp_workspace` for all workspace operations.
@@ -90,6 +109,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 **Resume:** Run `/sekkei:rfp` again — tool detects existing workspace and resumes from last phase.
 
 ### `/sekkei:functions-list @input`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Interview questions (ask before generating):**
 - What are the main subsystems/modules?
@@ -141,6 +162,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:requirements @input`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 **Interview questions (ask before generating):**
 - Are there specific compliance/regulatory requirements?
 - Performance targets (response time, throughput)?
@@ -160,6 +183,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 7. Update chain status: `requirements.status: complete`
 
 ### `/sekkei:basic-design @input`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Interview questions (ask before generating):**
 - What architecture pattern? (monolith, microservices, serverless)
@@ -222,6 +247,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 6. Update chain status: `basic_design.status: complete`
 
 ### `/sekkei:detail-design @input`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Prerequisite check (MUST run before interview):**
 1. Check basic-design exists (3-tier check):
@@ -302,6 +329,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:nfr @requirements`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 **Interview questions (ask before generating):**
 - Which IPA NFUG categories are in scope? (可用性, 性能, セキュリティ, 拡張性, 運用保守性, 移行性)
 - Target SLA values? (uptime %, response time, throughput)
@@ -319,6 +348,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 6. Update chain status: `nfr.status: complete`
 
 ### `/sekkei:security-design @basic-design`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Prerequisite check (MUST run before interview):**
 1. Check `{output.directory}/03-system/basic-design.md` exists (or check `chain.basic_design.status`)
@@ -355,6 +386,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:project-plan @requirements`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 **Interview questions (ask before generating):**
 - Team size and composition? (developers, QA, PM, etc.)
 - Target timeline and key milestones?
@@ -373,6 +406,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 6. Update chain status: `project_plan.status: complete`
 
 ### `/sekkei:test-plan @requirements`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Prerequisite check (MUST run before interview):**
 1. Load `sekkei.config.yaml` — read `chain.requirements.status`
@@ -410,6 +445,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:ut-spec @detail-design`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 **Prerequisite check (MUST run before interview):**
 1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.detail_design.status` != "complete" → **ABORT**. Tell user:
@@ -442,6 +479,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:it-spec @basic-design`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 **Prerequisite check (MUST run before interview):**
 1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.basic_design.status` != "complete" → **ABORT**. Tell user:
@@ -471,6 +510,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    and `upstream_content`. Show results as non-blocking.
 
 ### `/sekkei:st-spec @basic-design`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Prerequisite check (MUST run before interview):**
 1. Call MCP tool `get_chain_status` with `config_path` — read full chain
@@ -503,6 +544,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:uat-spec @requirements`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 **Prerequisite check (MUST run before interview):**
 1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.requirements.status` != "complete" → **ABORT**. Tell user:
@@ -533,6 +576,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    and `upstream_content`. Show results as non-blocking.
 
 ### `/sekkei:operation-design @input`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Prerequisite check (MUST run before interview):**
 1. Check `{output.directory}/02-requirements/requirements.md` exists
@@ -565,6 +610,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 8. Update chain status if configured: `operation_design.status: complete`
 
 ### `/sekkei:migration-design @input`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Prerequisite check (MUST run before interview):**
 1. Check `{output.directory}/03-system/basic-design.md` exists
@@ -600,6 +647,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 8. Update chain status if configured: `migration_design.status: complete`
 
 ### `/sekkei:matrix`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 **Interview questions (ask before generating):**
 - Which matrix? CRUD図 or トレーサビリティマトリックス?
@@ -652,6 +701,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:sitemap`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 **Prerequisite check (MUST run before interview):**
 1. Check `{output.directory}/04-functions-list/functions-list.md` exists
    - If missing → WARN: "Functions-list not found. Sitemap will not have F-xxx cross-references.
@@ -679,6 +730,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 9. Report: file path, total pages/screens count, hierarchy depth
 
 ### `/sekkei:validate @doc`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 #### If `@doc` specified (single document validation):
 
@@ -714,6 +767,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:status`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 1. Locate `sekkei.config.yaml` in the project root
 2. Call MCP tool `get_chain_status` with the config path
 3. Display the document chain progress table
@@ -721,6 +776,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 5. Suggest the next document to generate based on chain status
 
 ### `/sekkei:export @doc --format=xlsx|pdf|docx`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 1. Read the document or identify doc type
 2. Determine format from `--format` flag (default: xlsx)
@@ -737,6 +794,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 9. For docx: Cover page, auto-generated TOC (update with Ctrl+A → F9 in Word), heading hierarchy, formatted tables, MS Mincho JP font
 
 ### `/sekkei:translate @doc --lang=en`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 1. Read the document to translate
 2. **Check for manifest**: look for `_index.yaml` in output directory
@@ -767,6 +826,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:glossary [add|list|find|export|import]`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory`
 2. **Resolve glossary path**: `{output.directory}/glossary.yaml` (create if not exists)
 3. For `add`: ask JP term, EN term, VI term, context → call `manage_glossary` with action "add", `project_path`
@@ -776,6 +837,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 7. For `import`: ask for industry → call with action "import", `project_path`, `industry` → display imported/skipped counts
 
 ### `/sekkei:update @doc`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 #### Standard mode (diff analysis):
 
@@ -800,6 +863,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:diff-visual @before_file @after_file`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 1. Read the before document (previous version from git or chain backup)
 2. Read the after document (current version)
 3. Read the downstream document to check for impacts
@@ -812,6 +877,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 7. Save revision Excel to `./workspace-docs/{doc-type}-revision.xlsx`
 
 ### `/sekkei:preview`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 1. Run `npx @bienhoang/sekkei-preview` from the project root (or `node <sekkei-path>/packages/preview/dist/server.js`).
 2. Docs dir resolved automatically: `--docs` flag → `workspace-docs/` in CWD → `sekkei.config.yaml output.directory`.
@@ -838,6 +905,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:plan @doc-type`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 Plan large document generation with user survey and phased execution strategy.
 See `references/plan-orchestrator.md` for detailed logic.
 
@@ -853,6 +922,8 @@ See `references/plan-orchestrator.md` for detailed logic.
 8. Report: "Plan created at `workspace-docs/plans/YYYYMMDD-{doc-type}-generation/`. Run `/sekkei:implement @{plan-path}` to execute."
 
 ### `/sekkei:implement @plan-path`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 Execute a generation plan phase by phase, delegating to existing sekkei sub-commands.
 See `references/plan-orchestrator.md` for detailed logic.
@@ -873,6 +944,8 @@ See `references/plan-orchestrator.md` for detailed logic.
 
 ### `/sekkei:version`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 1. Run CLI: `npx sekkei version` (or `node <path>/dist/cli/main.js version`)
 2. Display the health check output to the user
 3. If any items show \u2717, suggest remediation steps
@@ -880,12 +953,16 @@ See `references/plan-orchestrator.md` for detailed logic.
 
 ### `/sekkei:uninstall`
 
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
+
 1. Confirm with user: "This will remove Sekkei skill, commands, and MCP entry from Claude Code. Proceed?"
 2. If confirmed: run `npx sekkei uninstall --force`
 3. Display removal summary
 4. Note: "Package remains installed. Run `npm uninstall -g @bienhoang/sekkei-mcp-server` to fully remove."
 
 ### `/sekkei:rebuild`
+
+> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
 
 1. Run CLI: `npx sekkei update`
 2. Display build + copy progress
