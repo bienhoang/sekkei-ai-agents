@@ -189,7 +189,7 @@ If files exist but status mismatch → trust file existence, reconstruct phase:
 When SCOPE_FREEZE reached AND confidence HIGH or MEDIUM:
 
 1. Run `generate-config` action to auto-create `sekkei.config.yaml`
-2. Notify entrypoint: "Config generated. Review, then run `/sekkei:functions-list`."
+2. Notify entrypoint: "Config generated. Review, then run `/sekkei:requirements`."
 3. Input: `05_proposal.md`. Supplementary: `02_analysis.md`.
 
 Workspace at `workspace-docs/01-rfp/`. Spec docs go to `workspace-docs/` in numbered directories.

@@ -108,7 +108,7 @@ Options:
 Scope frozen. Confidence: {HIGH|MEDIUM|LOW}.
 Handoff Readiness: {score}%
 
-→ HIGH/MEDIUM: Run /sekkei:functions-list to begin V-model chain. [Y/n]
+→ HIGH/MEDIUM: Run /sekkei:requirements to begin V-model chain. [Y/n]
 → LOW: Resolve blocking issues first. Type BACK to revise.
 ```
 
@@ -135,7 +135,7 @@ Options:
 # SEKKEI CHAIN INTEGRATION
 
 - Workspace: `workspace-docs/01-rfp/`
-- Handoff: `05_proposal.md` → input for `/sekkei:functions-list`
+- Handoff: `05_proposal.md` → input for `/sekkei:requirements`
 - Supplementary context: `02_analysis.md`
 - On scope freeze with HIGH/MEDIUM confidence, offer to run `generate-config` action
 
