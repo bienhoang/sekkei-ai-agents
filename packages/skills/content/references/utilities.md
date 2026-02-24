@@ -172,14 +172,14 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 
 ## `/sekkei:preview`
 
-1. Run `npx @bienhoang/sekkei-preview` from the project root.
+1. Run `sekkei-preview` from the project root.
 2. Docs dir resolved automatically: `--docs` flag → `workspace-docs/` in CWD → `sekkei.config.yaml output.directory`.
 3. Commands:
-   - `npx @bienhoang/sekkei-preview` — start Express server with WYSIWYG editor (Tiptap v3)
-   - `npx @bienhoang/sekkei-preview --guide` — open user guide (readonly mode)
-   - `npx @bienhoang/sekkei-preview --docs ./path --port 4983` — custom docs path + port
-   - `npx @bienhoang/sekkei-preview --no-open` — start without auto-opening browser
-   - `npx @bienhoang/sekkei-preview --help` — show usage
+   - `sekkei-preview` — start Express server with WYSIWYG editor (Tiptap v3)
+   - `sekkei-preview --guide` — open user guide (readonly mode)
+   - `sekkei-preview --docs ./path --port 4983` — custom docs path + port
+   - `sekkei-preview --no-open` — start without auto-opening browser
+   - `sekkei-preview --help` — show usage
 4. Preview URL: `http://localhost:4983` (default). Port auto-selects if busy.
 5. **Workspace mode** (default):
    - Tree sidebar shows `.md` files from docs directory

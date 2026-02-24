@@ -31,11 +31,19 @@ const CLAUDE_DIR = join(homedir(), ".claude");
 // ── Individual checks ──────────────────────────────────────────────────
 
 function getPackageVersion(): string {
+  // Read from monorepo root (../../.. from dist/cli/commands/)
+  const monorepoRoot = resolve(PKG_ROOT, "..", "..");
   try {
-    const pkg = JSON.parse(readFileSync(join(PKG_ROOT, "package.json"), "utf-8"));
+    const pkg = JSON.parse(readFileSync(join(monorepoRoot, "package.json"), "utf-8"));
     return pkg.version ?? "unknown";
   } catch {
-    return "unknown";
+    // Fallback to mcp-server package.json
+    try {
+      const pkg = JSON.parse(readFileSync(join(PKG_ROOT, "package.json"), "utf-8"));
+      return pkg.version ?? "unknown";
+    } catch {
+      return "unknown";
+    }
   }
 }
 
@@ -152,9 +160,15 @@ function checkMcpRegistration(): HealthItem {
 }
 
 function checkPreviewBuild(): HealthItem {
-  const previewServer = resolve(PKG_ROOT, "..", "preview", "dist", "server.js");
+  const previewDir = resolve(PKG_ROOT, "..", "preview");
+  const previewServer = join(previewDir, "dist", "server.js");
   if (existsSync(previewServer)) {
-    return { name: "Preview", status: "ok", detail: "dist/server.js found" };
+    try {
+      const pkg = JSON.parse(readFileSync(join(previewDir, "package.json"), "utf-8"));
+      return { name: "Preview", status: "ok", detail: `v${pkg.version}` };
+    } catch {
+      return { name: "Preview", status: "ok", detail: "dist/server.js found" };
+    }
   }
   return { name: "Preview", status: "warn", detail: "not built (run sekkei update)" };
 }
