@@ -120,7 +120,7 @@ export const updateCommand = defineCommand({
       const s = p.spinner();
       s.start("Building MCP server...");
       try {
-        execSync("npm run build", { cwd: PKG_ROOT, stdio: "pipe" });
+        execSync("npx tsc", { cwd: PKG_ROOT, stdio: "pipe" });
         s.stop("Build complete");
       } catch (err) {
         s.stop("Build failed");
