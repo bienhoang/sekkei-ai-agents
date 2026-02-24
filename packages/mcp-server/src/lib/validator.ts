@@ -289,6 +289,87 @@ export function validateContentDepth(
   return issues;
 }
 
+/** Extract lines between 改訂履歴 heading and next heading */
+function extractRevisionSection(content: string): string[] {
+  const lines = content.split("\n");
+  let capturing = false;
+  const captured: string[] = [];
+  for (const line of lines) {
+    if (/^#{1,4}\s+改訂履歴/.test(line)) {
+      capturing = true;
+      continue;
+    }
+    if (capturing && /^#{1,4}\s/.test(line)) break;
+    if (capturing) captured.push(line);
+  }
+  return captured;
+}
+
+/** Validate 改訂履歴 content quality (warnings only) */
+export function validateRevisionHistoryContent(
+  content: string,
+): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+
+  const sectionLines = extractRevisionSection(content);
+  if (sectionLines.length === 0) return issues;
+
+  const dataRows = sectionLines
+    .filter((line) => /^\|\s*\d+\.\d+\s*\|/.test(line));
+
+  if (dataRows.length === 0) {
+    issues.push({
+      type: "completeness",
+      severity: "warning",
+      message: "改訂履歴 table has no data rows",
+    });
+    return issues;
+  }
+
+  // Check version sequence (ascending)
+  const versions: string[] = [];
+  for (const row of dataRows) {
+    const match = row.match(/^\|\s*([0-9]+\.[0-9]+)\s*\|/);
+    if (match) versions.push(match[1]);
+  }
+
+  for (let i = 1; i < versions.length; i++) {
+    const [prevMaj, prevMin] = versions[i - 1].split(".").map(Number);
+    const [currMaj, currMin] = versions[i].split(".").map(Number);
+    if (currMaj < prevMaj || (currMaj === prevMaj && currMin <= prevMin)) {
+      issues.push({
+        type: "completeness",
+        severity: "warning",
+        message: `改訂履歴 版数 not ascending: ${versions[i - 1]} → ${versions[i]}`,
+      });
+    }
+  }
+
+  // Check for empty 変更内容 cells
+  for (const row of dataRows) {
+    const cells = row.split("|").map((c) => c.trim()).filter(Boolean);
+    if (cells.length >= 3 && cells[2] === "") {
+      issues.push({
+        type: "completeness",
+        severity: "warning",
+        message: `改訂履歴 row ${cells[0]}: empty 変更内容`,
+      });
+    }
+  }
+
+  return issues;
+}
+
+/** Extract the date from the last 改訂履歴 row */
+export function extractLastRevisionDate(content: string): string | null {
+  const sectionLines = extractRevisionSection(content);
+  const dates = sectionLines
+    .map((line) => line.match(/\|\s*\d+\.\d+\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|/))
+    .filter((m): m is RegExpMatchArray => m !== null)
+    .map((m) => m[1]);
+  return dates.length > 0 ? dates[dates.length - 1] : null;
+}
+
 /** Check YAML frontmatter for required lifecycle status field */
 function validateFrontmatterStatus(content: string): ValidationIssue[] {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
@@ -321,6 +402,7 @@ export function validateDocument(
 
   if (options?.check_completeness === true) {
     issues.push(...validateContentDepth(content, docType));
+    issues.push(...validateRevisionHistoryContent(content));
   }
 
   let cross_ref_report: CrossRefReport | undefined;

@@ -410,5 +410,24 @@ export function buildLearningInstruction(): string {
   ].join("\n");
 }
 
+/** Build changelog preservation instruction for regeneration context */
+export function buildChangelogPreservationInstruction(existingRevisionHistory: string): string {
+  return [
+    "## Changelog Preservation (MANDATORY)",
+    "",
+    "This document is being REGENERATED. You MUST preserve the existing revision history.",
+    "",
+    "### Existing 改訂履歴 (copy EXACTLY as-is):",
+    "",
+    existingRevisionHistory,
+    "",
+    "### Rules:",
+    "1. Copy ALL existing rows into the 改訂履歴 table WITHOUT modification",
+    "2. Append ONE new row: next version number | today's date | brief change summary | (empty 変更者)",
+    "3. Version increment: +0.1 for minor changes (e.g., 1.0 → 1.1)",
+    "4. Do NOT reorder, edit, or remove existing rows",
+  ].join("\n");
+}
+
 // Re-export screen design instructions (extracted for file size management)
 export { buildScreenDesignInstruction } from "./screen-design-instructions.js";

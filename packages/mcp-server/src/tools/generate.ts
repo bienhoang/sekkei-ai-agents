@@ -4,6 +4,7 @@
  */
 import { z } from "zod";
 import { readFile } from "node:fs/promises";
+import { dirname } from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { loadTemplate } from "../lib/template-loader.js";
@@ -21,11 +22,13 @@ import {
   buildConfidenceInstruction,
   buildTraceabilityInstruction,
   buildLearningInstruction,
+  buildChangelogPreservationInstruction,
 } from "../lib/generation-instructions.js";
 import { loadGlossary } from "../lib/glossary-native.js";
 import { extractAllIds } from "../lib/id-extractor.js";
 import { resolveOutputPath } from "../lib/resolve-output-path.js";
 import { autoCommit } from "../lib/git-committer.js";
+import { appendGlobalChangelog } from "../lib/changelog-manager.js";
 
 const inputSchema = {
   doc_type: z.enum(DOC_TYPES).describe("Type of document to generate"),
@@ -47,6 +50,7 @@ const inputSchema = {
   output_path: z.string().max(500).optional()
     .describe("Path where the generated document will be saved — used for git auto-commit when autoCommit=true in sekkei.config.yaml"),
   config_path: z.string().max(500).optional()
+    .refine((p) => !p || !p.includes(".."), { message: "config_path must not contain .." })
     .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "config_path must be .yaml/.yml" })
     .describe("Path to sekkei.config.yaml — enables git auto-commit if autoCommit: true"),
   source_code_path: z.string().max(500).optional()
@@ -58,7 +62,26 @@ const inputSchema = {
     .describe("Include source traceability annotations per paragraph (default: true)"),
   ticket_ids: z.array(z.string().max(50)).max(20).optional()
     .describe("Related ticket IDs (e.g., PROJ-123) to reference in the document"),
+  existing_content: z.string().max(500_000).optional()
+    .describe("Existing document content to preserve 改訂履歴 when regenerating"),
 };
+
+/** Extract existing 改訂履歴 section from document content */
+export function extractRevisionHistory(content: string): string {
+  const lines = content.split("\n");
+  let capturing = false;
+  const captured: string[] = [];
+  for (const line of lines) {
+    if (/^#{1,4}\s+改訂履歴/.test(line)) {
+      capturing = true;
+      captured.push(line);
+      continue;
+    }
+    if (capturing && /^#{1,4}\s/.test(line)) break;
+    if (capturing) captured.push(line);
+  }
+  return captured.join("\n").trim();
+}
 
 /** Build upstream IDs injection block for cross-reference constraints */
 function buildUpstreamIdsBlock(content: string): string {
@@ -145,6 +168,7 @@ export interface GenerateDocumentArgs {
   include_confidence?: boolean;
   include_traceability?: boolean;
   ticket_ids?: string[];
+  existing_content?: string;
   templateDir?: string;
   overrideDir?: string;
 }
@@ -155,7 +179,7 @@ export async function handleGenerateDocument(
   const { doc_type, input_content, project_name, language, input_lang, keigo_override,
     upstream_content, project_type, feature_name, scope, output_path, config_path,
     source_code_path, include_confidence, include_traceability, ticket_ids,
-    templateDir: tDir, overrideDir } = args;
+    existing_content, templateDir: tDir, overrideDir } = args;
   if (scope && !SPLIT_ALLOWED.has(doc_type)) {
     return {
       content: [{ type: "text" as const, text: `Split mode (scope) not supported for ${doc_type}. Supported: ${[...SPLIT_ALLOWED].join(", ")}` }],
@@ -254,6 +278,14 @@ export async function handleGenerateDocument(
       sections.push(``, buildTraceabilityInstruction());
     }
 
+    // Changelog preservation: when regenerating, preserve existing 改訂履歴
+    if (existing_content) {
+      const revisionHistory = extractRevisionHistory(existing_content);
+      if (revisionHistory) {
+        sections.push(``, buildChangelogPreservationInstruction(revisionHistory));
+      }
+    }
+
     // Ticket linking
     if (ticket_ids && ticket_ids.length > 0) {
       sections.push(
@@ -319,6 +351,21 @@ export async function handleGenerateDocument(
       }
     }
 
+    // Global changelog: append entry when regenerating existing document
+    if (existing_content && config_path) {
+      try {
+        const workspacePath = dirname(config_path);
+        await appendGlobalChangelog(workspacePath, {
+          date: new Date().toISOString().slice(0, 10),
+          docType: doc_type,
+          version: "",
+          changes: "Regenerated from upstream",
+          author: "",
+          crId: "",
+        });
+      } catch { /* non-blocking */ }
+    }
+
     return {
       content: [{ type: "text", text: finalOutput }],
     };
@@ -338,8 +385,8 @@ export function registerGenerateDocumentTool(server: McpServer, templateDir: str
     "generate_document",
     "Generate a Japanese specification document using template + AI instructions",
     inputSchema,
-    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids }) => {
-      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, templateDir, overrideDir });
+    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content }) => {
+      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, templateDir, overrideDir });
     }
   );
 }
