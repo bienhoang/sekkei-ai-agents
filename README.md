@@ -50,34 +50,31 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 
 ## Quick Start
 
-### Install (Local Dev)
+### Install (Recommended)
 
 ```bash
-git clone <repo-url> && cd sekkei
-chmod +x install.sh && ./install.sh
-# With Python export support:
-./install.sh --with-python
+curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash
 ```
 
-### Install (GitHub Packages)
+This installs everything: MCP server, Claude Code skill, CLI, and runs `sekkei doctor` to verify.
 
 ```bash
-# 1. Configure registry (one-time setup)
-echo "@bienhoang:registry=https://npm.pkg.github.com" >> ~/.npmrc
-echo "//npm.pkg.github.com/:_authToken=YOUR_GITHUB_PAT" >> ~/.npmrc
-
-# 2. Install
-npm install -g @bienhoang/sekkei-mcp-server
-npx @bienhoang/sekkei-skills   # Install Claude Code skill
-npx sekkei-setup                # Auto-detect editor and configure MCP
+# With Python export support (Excel/PDF/DOCX):
+curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash -s -- --with-python
 ```
 
-> **Note**: Generate a GitHub PAT with `read:packages` scope at [github.com/settings/tokens](https://github.com/settings/tokens).
+**Prerequisites:** Node.js 20+, git, [Claude Code](https://docs.anthropic.com/en/docs/claude-code), GitHub access (private repo — SSH key or PAT required).
+
+### Post-Install
+
+```bash
+sekkei doctor    # Check installation health
+sekkei init      # Initialize project config (interactive wizard)
+```
 
 ### Generate Documents
 
 ```
-npx sekkei init                           # Create project config (run in terminal)
 /sekkei:requirements @rfp.md              # Generate requirements (first after RFP)
 /sekkei:functions-list @requirements.md   # Generate function list
 /sekkei:nfr @requirements.md              # Generate non-functional requirements
@@ -90,7 +87,23 @@ npx sekkei init                           # Create project config (run in termin
 ### Preview
 
 ```bash
-npx @bienhoang/sekkei-preview   # Live preview in browser
+sekkei-preview          # Live preview in browser
+sekkei-preview --edit   # WYSIWYG editing mode
+```
+
+### Update
+
+```bash
+# Re-run the installer to update
+curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash
+```
+
+### Alternative Install (Local Dev)
+
+```bash
+git clone git@github.com:bienhoang/sekkei-ai-agents.git && cd sekkei-ai-agents
+chmod +x install.sh && ./install.sh          # Build + install
+./install.sh --with-python                   # With Python export support
 ```
 
 ## Architecture
@@ -134,8 +147,9 @@ Built with citty. Available commands:
 | `sekkei status` | Show chain progress |
 | `sekkei glossary` | Manage terminology |
 | `sekkei watch` | Watch for changes |
-| `sekkei version` | Version + environment health check |
-| `sekkei update` | Update Sekkei installation |
+| `sekkei doctor` | Installation health check + fix suggestions |
+| `sekkei version` | Version + environment info |
+| `sekkei update` | Update skill stubs and MCP registration |
 | `sekkei uninstall` | Remove Sekkei from system |
 
 ## Slash Commands (Claude Code)
@@ -197,19 +211,13 @@ Built with citty. Available commands:
 
 ### Claude Code
 
+The recommended install method handles everything automatically:
+
 ```bash
-npx @bienhoang/sekkei-skills   # Auto-install skill
+curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash
 ```
 
-Add to `~/.claude/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "sekkei": { "command": "npx", "args": ["@bienhoang/sekkei-mcp-server"] }
-  }
-}
-```
+This installs the skill to `~/.claude/skills/sekkei/`, registers the MCP server in `~/.claude/settings.json`, and creates all `/sekkei:*` slash commands.
 
 ### Cursor
 
@@ -301,7 +309,10 @@ A: Templates are in Japanese (ja). Use `/sekkei:translate` to translate to any l
 A: Yes. Run `npx sekkei-setup` or manually copy adapter files.
 
 **Q: How do I update?**
-A: Run `sekkei update` or `/sekkei:rebuild` in Claude Code.
+A: Re-run the setup script: `curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash`
+
+**Q: How do I check if everything is working?**
+A: Run `sekkei doctor` — it checks all components and suggests fixes for any issues.
 
 ## License
 
