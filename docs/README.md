@@ -13,11 +13,14 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 **Software Architects & Technical Leads**
 - Start with: [`system-architecture.md`](./system-architecture.md)
 - Then read: [`codebase-summary.md`](./codebase-summary.md)
+- For details: [`codebase-detail.md`](./codebase-detail.md)
 - Understand: Component interactions, data flows, design patterns
 
 **Developers (New & Existing)**
 - Start with: [`code-standards.md`](./code-standards.md)
 - Then read: [`codebase-summary.md`](./codebase-summary.md)
+- For advanced patterns: [`code-practices.md`](./code-practices.md)
+- For implementation details: [`codebase-detail.md`](./codebase-detail.md)
 - Then dive into: [`system-architecture.md`](./system-architecture.md)
 
 **DevOps & Operations**
@@ -32,8 +35,8 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 **Includes:**
 - Architecture diagrams (MCP server, document chain, output structure)
 - V-model document chain with split document support
-- Numbered output structure rules (01-overview through 10-glossary)
-- 9 MCP tools and their responsibilities (v1-2) + Phase 3 extensions
+- Numbered output structure rules (01-rfp through 10-glossary)
+- 15 MCP tools and their responsibilities (8 core + 3 Phase A + 1 RFP + 3 CR/Plan)
 - Phase 3 Intelligence Layer: code-analyzer, staleness-detector, structure-rules, google-sheets-exporter
 - CLI commands including new `watch` command for continuous monitoring
 - Core libraries (validator, resolver, manifest-manager, python-bridge, etc.)
@@ -48,24 +51,20 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 ---
 
 ### 2. Code Standards (`code-standards.md`)
-**Purpose:** Development conventions and implementation guidelines
+**Purpose:** Development conventions and core implementation guidelines
 
 **Includes:**
 - TypeScript file organization (kebab-case, src/ structure)
 - ESM import conventions (.js extensions)
 - Naming conventions (camelCase, UPPER_SNAKE_CASE, PascalCase, kebab-case)
-- **Phase 3 patterns:** Handler extraction (MCP tools + CLI), dynamic imports (optional deps), config extensions, git argument validation
-- Error handling with SekkeiError (typed codes, safe client output, +5 v3 codes)
+- Design patterns (handler extraction, dynamic imports, config extensions, git argument validation)
+- Error handling with SekkeiError (typed codes, safe client output)
 - Logging standards (Pino, structured logs to stderr only)
-- Zod schema validation patterns
-- Document type constants and enums
-- Manifest structure and feature configuration
-- Output path resolution rules
-- Cross-reference ID patterns by document type
-- Testing patterns (Jest, tool handler access)
-- Code quality, linting, import organization
+- Comments and documentation practices
 
-**Best for:** Writing code, understanding conventions, reviewing pull requests
+**See also:** [`code-practices.md`](./code-practices.md) for state machines, schema validation, document types, configuration, testing, and code quality details.
+
+**Best for:** Writing code, understanding conventions, quick reference during development
 
 ---
 
@@ -75,10 +74,11 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 **Includes:**
 - Vision & mission (AI-powered specification automation)
 - Core value propositions (V-model chain, traceability, split documents, code-awareness, staleness detection)
-- V-model document sequence (RFP → Overview → ... → Glossary)
-- Numbered output directory structure
-- 9 MCP tools with descriptions + Phase 3 extensions
+- V-model document sequence (RFP → Requirements → ... → Glossary)
+- Numbered output directory structure (01-rfp through 10-glossary)
+- 15 MCP tools with descriptions (8 core + 3 Phase A + 1 RFP + 3 CR/Plan)
 - **Phase 3 features:** Code-aware generation, staleness detection, anti-chaos rules, Google Sheets export, CLI watch command
+- **Distribution:** GitHub Packages (@bienhoang scope, restricted access)
 - Template system (ja/, en/, shared/ with overrides)
 - Validation modes (content, manifest, structure, structure-rules)
 - Architecture overview
@@ -94,26 +94,42 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 ---
 
 ### 4. Codebase Summary (`codebase-summary.md`)
-**Purpose:** Repository structure and implementation inventory
+**Purpose:** Repository structure overview and high-level module organization
 
 **Includes:**
-- Complete repository structure (monorepo organization)
-- File tree with descriptions (107+ files, v3 additions)
-- **Phase 3 modules:** code-analyzer (225 LOC), staleness-detector (241 LOC), structure-rules (271 LOC), google-sheets-exporter (186 LOC)
-- Key TypeScript modules (manifest-manager, validator, resolver, etc.)
-- CLI commands including new `watch` command
-- Python files (exporters, NLP utilities)
-- Template files (ja/ templates, shared templates, glossaries)
-- Type system (DocType, ProjectConfig with v3 extensions, CodeContext, StalenessReport, etc.)
-- Data flows (generation, validation with 4 modes, export)
-- Configuration structure (sekkei.config.yaml + v3 optional sections)
-- Build & test commands
-- Dependencies (TypeScript & Python packages, +4 Phase 3 packages)
-- Phase 3 changes (code analysis, git operations, Google Sheets, structure rules)
-- Development workflow
-- Summary statistics (107+ files, ~32 TS, ~12 Python, 306+ tests passing)
+- Complete repository structure (Turborepo monorepo organization)
+- File tree with descriptions (3 scoped packages: @bienhoang/sekkei-{mcp-server,preview,skills})
+- **@bienhoang/sekkei-mcp-server:** 93 TypeScript files overview
+- **@bienhoang/sekkei-preview:** VitePress + Milkdown (9 TS+Vue files)
+- **@bienhoang/sekkei-skills:** Claude Code SKILL.md (30+ sub-commands)
+- Phase grouping (requirements, design, test, supplementary)
+- V-Model chain structure with 57 edges
+- Summary statistics
 
-**Best for:** Finding files, understanding module organization, onboarding new developers
+**See also:** [`codebase-detail.md`](./codebase-detail.md) for detailed module documentation, Phase 3 intelligence layers, type system, data flows, configuration, build infrastructure, and recent changes.
+
+**Best for:** Finding files, understanding overall repository organization, onboarding new developers
+
+---
+
+### 5. Codebase Detail (`codebase-detail.md`)
+**Purpose:** Detailed module reference and architectural deep-dive
+
+**Includes:**
+- Phase 3 Intelligence Layer (code-analyzer, staleness-detector, structure-rules, google-sheets-exporter)
+- CLI commands (watch, version, uninstall, update, health-check, migrate)
+- Phase 2.1 V-Model Chain Audit Fixes (57 CHAIN_PAIRS, ID system unification, staleness fixes)
+- Core TypeScript files (manifest-manager, validator, resolver, python-bridge, etc.)
+- Python layer files (exporters, diff analyzer)
+- Template system organization
+- Type system (DocType, ProjectConfig, FeatureConfig, ManifestFeatureEntry, etc.)
+- Data flow diagrams (generation, validation, export pipelines)
+- Configuration structure detailed (sekkei.config.yaml, ChainEntry types)
+- Build & test infrastructure (Turborepo, Changesets, dependencies)
+- Recent changes and Phase A features
+- Development & deployment workflow
+
+**Best for:** Detailed implementation reference, understanding module interactions, advanced feature development
 
 ---
 
@@ -173,14 +189,25 @@ The validate tool supports 4 modes (Phase 3+):
 
 ## Technology Stack
 
+### Build & Release
+- **Turborepo** — Monorepo orchestration with caching in `.turbo/`
+- **Changesets** — Version management for GitHub Packages publish
+- **GitHub Actions** — CI/CD: `ci.yml` (PR+push lint→build→test), `release.yml` (auto-version + publish)
+
 ### MCP Server (TypeScript)
 - **Core:** @modelcontextprotocol/sdk, Zod, yaml, pino (logging), TypeScript compiler
 - **Test:** Jest with ESM support, ts-node for development
+- **Package:** @bienhoang/sekkei-mcp-server (GitHub Packages)
 - **Phase 3 Packages:**
   - **ts-morph** (^21.0) — TypeScript AST analysis for code-aware generation
   - **simple-git** (^3.20) — Git operations for staleness detection
   - **googleapis** (^118.0) — Google Sheets API for cloud export
   - **google-auth-library** (^9.4) — OAuth2/service account auth
+
+### Preview Server (Vue + VitePress)
+- **Package:** @bienhoang/sekkei-preview (GitHub Packages)
+- **Framework:** VitePress + Milkdown WYSIWYG editor
+- **Features:** Full-text search, Mermaid rendering, live editing
 
 ### Python Layer
 - **Export:** openpyxl (Excel), WeasyPrint (PDF), python-docx (Word)
@@ -211,13 +238,15 @@ The validate tool supports 4 modes (Phase 3+):
 
 | File | Purpose | Lines | Size |
 |------|---------|-------|------|
-| system-architecture.md | Technical design | 600 | 20 KB |
-| code-standards.md | Development standards | 801 | 26 KB |
-| project-overview-pdr.md | Vision & requirements | 550 | 18 KB |
-| codebase-summary.md | Repository structure | 806 | 27 KB |
+| system-architecture.md | Technical design | 600+ | 34 KB |
+| code-standards.md | Core development standards | 405 | 12 KB |
+| code-practices.md | Advanced practices & patterns | 573 | 16 KB |
+| project-overview-pdr.md | Vision & requirements | 550+ | 27 KB |
+| codebase-summary.md | Repository overview | 218 | 17 KB |
+| codebase-detail.md | Detailed module reference | 794 | 28 KB |
 | README.md (this file) | Navigation guide | — | — |
 
-**Total:** 2,757 lines of documentation
+**Total:** 3,140+ lines of documentation (split for maintainability, all files under 800 lines)
 
 ---
 
@@ -276,5 +305,5 @@ When updating documentation:
 
 ---
 
-**Last Updated:** 2026-02-23 (v1.1.1)
-**Documentation Status:** Complete ✅ (Phase A + RFP docs updated)
+**Last Updated:** 2026-02-24 (v1.1.2)
+**Documentation Status:** Complete ✅ (Split oversized docs into modular files, all files <800 lines)

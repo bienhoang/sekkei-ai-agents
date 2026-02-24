@@ -23,7 +23,7 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │  • Logs to stderr (fd 2) via Pino                       │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │              Tool Handlers (12 MCP Tools)               │   │
+│  │              Tool Handlers (15 MCP Tools)               │   │
 │  │  1. generate_document      → generates spec docs        │   │
 │  │  2. get_template           → returns template content   │   │
 │  │  3. validate_document      → checks completeness & refs │   │
@@ -32,10 +32,13 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │  6. translate_document     → translates to EN/VI        │   │
 │  │  7. manage_glossary        → CRUD glossary entries      │   │
 │  │  8. analyze_update         → diffs & enhanced 朱書き    │   │
-│  │  9. simulate_change_impact → spec impact cascade (new)  │   │
-│  │ 10. import_document        → Excel→markdown import (new)│   │
-│  │ 11. validate_chain         → full chain validation       │   │
-│  │ 12. manage_rfp_workspace   → RFP presales lifecycle      │   │
+│  │  9. simulate_change_impact → spec impact cascade        │   │
+│  │ 10. import_document        → Excel→markdown import      │   │
+│  │ 11. validate_chain         → full chain validation      │   │
+│  │ 12. manage_rfp_workspace   → RFP presales lifecycle     │   │
+│  │ 13. manage_change_request  → CR state machine           │   │
+│  │ 14. manage_plan            → multi-phase planning       │   │
+│  │ 15. update_chain_status    → CR propagation actions     │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │              MCP Resources                             │   │
@@ -235,13 +238,13 @@ project-output/
 ### 1. MCP Server (`src/server.ts`)
 
 - Initializes McpServer with STDIO transport
-- Registers all 12 tool handlers (8 core + 2 Phase A + 1 v3 + 1 RFP)
+- Registers all 15 tool handlers (8 core + 3 Phase A + 1 v3 + 1 RFP + 2 CR/Plan)
 - Manages resource URIs: template:// and rfp://instructions/{flow}
 - Logs all activity to stderr
 
 **Key Invariant:** Stdout is reserved exclusively for JSON-RPC 2.0. All logging and debugging goes to stderr (fd 2).
 
-### 2. Tool Handlers (`src/tools/`) — 12 MCP Tools
+### 2. Tool Handlers (`src/tools/`) — 15 MCP Tools
 
 #### generate.ts (333 LOC)
 - Input: `doc_type`, `input_content`, `project_name`, `language`, optional params (source_code_path, include_confidence, include_traceability, ticket_ids)

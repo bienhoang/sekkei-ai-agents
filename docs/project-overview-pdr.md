@@ -296,14 +296,15 @@ Reads `sekkei.config.yaml` and returns:
 
 ## Architecture
 
-### MCP Server
+### MCP Server (@bienhoang/sekkei-mcp-server)
 
 Sekkei is an **MCP (Model Context Protocol) server** using STDIO transport:
 - **Stdin:** JSON-RPC 2.0 requests from client
 - **Stdout:** JSON-RPC 2.0 responses only (reserved)
 - **Stderr:** Logging via Pino
+- **Distribution:** GitHub Packages (npm.pkg.github.com, restricted access via @bienhoang scope)
 
-Implements 12 MCP tools: 8 core (generate, validate, export, chain-status, get-template, translate, glossary, analyze-update) + 3 Phase A (simulate-change-impact, import-document, validate-chain) + 1 RFP (manage-rfp-workspace).
+Implements 15 MCP tools: 8 core (generate, validate, export, chain-status, get-template, translate, glossary, analyze-update) + 3 Phase A (simulate-change-impact, import-document, validate-chain) + 1 RFP (manage-rfp-workspace) + 2 CR/Plan (manage-change-request, manage-plan, update-chain-status).
 
 ### Data Layer
 
@@ -400,32 +401,54 @@ Exports via Python CLI (openpyxl, WeasyPrint):
 | NFR-007 | Logging | Structured logs to stderr; Pino logger; configurable levels |
 | NFR-008 | Testing | Unit & integration tests; Jest with ESM; coverage tracking |
 
-## Project Structure
+## Project Structure (Monorepo — Turborepo + Changesets)
 
 ```
 sekkei/
-├── mcp-server/
-│   ├── src/
-│   │   ├── server.ts           # Main MCP entry
-│   │   ├── lib/                # Core business logic
-│   │   ├── tools/              # MCP tool handlers
-│   │   └── types/              # Type definitions
-│   ├── tests/                  # Jest tests
-│   ├── dist/                   # Compiled output
-│   └── package.json            # npm dependencies
-├── python/
-│   ├── cli.py                  # Python CLI entry
-│   ├── export/                 # Excel/PDF exporters
-│   ├── nlp/                    # Glossary/diff
-│   └── requirements.txt        # Python deps
-├── templates/
-│   ├── ja/                     # Japanese templates
-│   ├── en/                     # English templates (planned)
-│   └── shared/                 # Shared templates
-├── skills/
-│   └── sekkei/                 # Claude Code SKILL.md
-└── plans/                      # Implementation plans
+├── .github/workflows/
+│   ├── ci.yml                  # Lint → Build → Test (turbo cache)
+│   └── release.yml             # Changesets: version PR + publish to GitHub Packages
+├── .changeset/
+│   └── config.json             # Changesets config (GitHub Packages)
+├── turbo.json                  # Turborepo config (npm@10.7.0)
+├── packages/
+│   ├── mcp-server/             # @bienhoang/sekkei-mcp-server (93 TS files)
+│   │   ├── src/
+│   │   │   ├── server.ts       # Main MCP entry, 15 tool registration
+│   │   │   ├── lib/            # Core business logic (50 files)
+│   │   │   ├── tools/          # MCP tool handlers (19 files)
+│   │   │   ├── types/          # Type definitions
+│   │   │   └── resources/      # MCP resources (templates, RFP)
+│   │   ├── tests/              # Jest tests (22+ files)
+│   │   ├── dist/               # Compiled output
+│   │   └── package.json
+│   ├── preview/                # @bienhoang/sekkei-preview (VitePress + Milkdown)
+│   │   ├── src/
+│   │   │   ├── App.vue         # Main Vue component
+│   │   │   ├── components/     # Viewer, Editor, Sidebar
+│   │   │   └── cli.ts          # CLI entry
+│   │   ├── vite.config.ts      # VitePress config
+│   │   └── package.json
+│   ├── skills/                 # @bienhoang/sekkei-skills (Claude Code SKILL.md)
+│   │   └── sekkei/
+│   │       ├── SKILL.md        # Skill definition (30+ sub-commands)
+│   │       ├── content/        # Skill definition files
+│   │       └── references/     # 6 reference guides
+│   ├── templates/              # Shared templates (ja/ + shared/, 22 + 4 files)
+│   │   ├── ja/                 # Japanese templates (22 files)
+│   │   ├── shared/             # Language-neutral (4 files)
+│   │   ├── rfp/                # RFP instructions (7 files)
+│   │   └── glossaries/         # Industry glossaries (15 YAML)
+│   └── python/                 # Export layer (Excel/PDF/DOCX, 7 files)
+│       ├── cli.py              # Python entry
+│       ├── export/
+│       ├── nlp/
+│       └── requirements.txt
+├── plans/                      # Implementation plans + reports
+└── docs/                       # Documentation
 ```
+
+**Distribution:** All 3 packages published to GitHub Packages (`npm.pkg.github.com`) with `@bienhoang` scope. Access is restricted (authentication required).
 
 ## Technical Stack
 
