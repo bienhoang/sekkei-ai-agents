@@ -60,6 +60,21 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => /\|\s*CLS-\d+/.test(c),
       message: "詳細設計書: クラス一覧テーブルにCLS-xxxが必要です",
     },
+    {
+      check: "screen reference",
+      test: (c: string) => /SCR-\d+/.test(c),
+      message: "詳細設計書: 画面設計詳細にSCR-xxx参照が必要です",
+    },
+    {
+      check: "table reference",
+      test: (c: string) => /TBL-\d+/.test(c),
+      message: "詳細設計書: DB詳細設計にTBL-xxx参照が必要です",
+    },
+    {
+      check: "API reference",
+      test: (c: string) => /API-\d+/.test(c),
+      message: "詳細設計書: API詳細仕様にAPI-xxx参照が必要です",
+    },
   ],
   "ut-spec": [
     {
@@ -122,6 +137,46 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       check: "screen table",
       test: (c) => /\|\s*SCR-\d+/.test(c),
       message: "画面設計書: 画面一覧テーブルにSCR-xxxが必要です",
+    },
+  ],
+  "operation-design": [
+    {
+      check: "OP entries",
+      test: (c: string) => (c.match(/OP-\d{3}/g) || []).length >= 3,
+      message: "運用設計書: 障害対応手順にOP-xxxが3つ以上必要です",
+    },
+  ],
+  "migration-design": [
+    {
+      check: "MIG entries",
+      test: (c: string) => (c.match(/MIG-\d{3}/g) || []).length >= 3,
+      message: "移行設計書: データ移行計画にMIG-xxxが3つ以上必要です",
+    },
+  ],
+  "crud-matrix": [
+    {
+      check: "F-xxx rows",
+      test: (c: string) => /\|\s*F-\d+/.test(c),
+      message: "CRUD図: 機能行にF-xxxが必要です",
+    },
+    {
+      check: "TBL-xxx columns",
+      test: (c: string) => /TBL-\d+/.test(c),
+      message: "CRUD図: テーブル列にTBL-xxxが必要です",
+    },
+  ],
+  "traceability-matrix": [
+    {
+      check: "REQ-xxx rows",
+      test: (c: string) => /\|\s*REQ-\d+/.test(c),
+      message: "トレーサビリティマトリックス: 要件行にREQ-xxxが必要です",
+    },
+  ],
+  "sitemap": [
+    {
+      check: "PG entries",
+      test: (c: string) => (c.match(/PG-\d{3}/g) || []).length >= 3,
+      message: "サイトマップ: ページ一覧にPG-xxxが3つ以上必要です",
     },
   ],
 };

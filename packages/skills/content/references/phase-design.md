@@ -128,13 +128,24 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 ## `/sekkei:detail-design @input`
 
 **Prerequisite check (MUST run before interview):**
-1. Check `{output.directory}/03-system/basic-design.md` exists (or `chain.basic_design.status == "complete"`)
-   - If missing → ABORT: "Basic design not found. Run `/sekkei:basic-design` first."
-2. Read basic-design content as primary upstream
-3. Optionally load additional upstream:
-   - If `chain.requirements.output` exists → read as additional upstream
-   - If `chain.functions_list.output` exists → read as additional upstream
-4. Concatenate all as `upstream_content` (basic-design + requirements + functions-list)
+1. Check basic-design exists (3-tier check):
+   a. If `sekkei.config.yaml` exists → check `chain.basic_design.status == "complete"` (preferred)
+   b. Else if split config active → check at least one `{output.directory}/features/*/basic-design.md` exists
+   c. Else → check `{output.directory}/03-system/basic-design.md` exists
+   - If ALL checks fail → ABORT: "Basic design not found. Run `/sekkei:basic-design` first."
+2. **Load upstream (mode-aware):**
+   a. Read `sekkei.config.yaml` → check `split.detail-design` exists
+   b. **If split mode:**
+      - Read ALL `{output.directory}/shared/*.md` → shared_content
+      - Read `{output.directory}/02-requirements/requirements.md` → req_content (if exists)
+      - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
+      - global_upstream = shared_content + "\n\n" + req_content + "\n\n" + fl_content
+      - (Per-feature upstream assembled in §4 below)
+   c. **If monolithic:**
+      - Read `{output.directory}/03-system/basic-design.md` → bd_content
+      - Read `{output.directory}/02-requirements/requirements.md` → req_content (if exists)
+      - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
+      - upstream_content = bd_content + "\n\n" + req_content + "\n\n" + fl_content
 
 **Interview questions (ask before generating):**
 - Programming language and framework?
@@ -153,16 +164,21 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
 3. **Check for split config**: read `sekkei.config.yaml` → `split.detail-design`
 4. **If split enabled:**
-   a. Use `upstream_content` from prerequisite check
-   b. Read `functions-list.md` → extract feature groups (大分類)
-   c. Create output directories: `shared/`, `features/{feature-id}/`
-   d. For each shared section in split config:
-      - Call `generate_document` with `scope: "shared"`, `upstream_content: upstream`
+   a. Read `functions-list.md` → extract feature groups (大分類)
+   b. Create output directories: `shared/`, `features/{feature-id}/`
+   c. For each shared section in `split.detail-design.shared` config:
+      - Call `generate_document` with `doc_type: "detail-design"`, `scope: "shared"`, `upstream_content: global_upstream`
       - Save to `shared/{section-name}.md`
-   e. For each feature:
-      - Call `generate_document` with `scope: "feature"`, `feature_id: "{ID}"`, `upstream_content: upstream`
-      - Save to `features/{feature-id}/detail-design.md`
-   f. Create/update `_index.yaml` manifest
+   d. For each feature from functions-list:
+      i. **Assemble per-feature upstream:**
+         - Read `features/{feature-id}/basic-design.md` → feature_bd
+         - Read `features/{feature-id}/screen-design.md` → feature_scr (if exists)
+         - feature_upstream = global_upstream + "\n\n" + feature_bd + "\n\n" + feature_scr
+      ii. Generate feature detail-design:
+         - Call `generate_document(doc_type: "detail-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: {feature_input}, upstream_content: feature_upstream)`
+         - Save output to `features/{feature-id}/detail-design.md`
+      iii. Update `_index.yaml` manifest entry
+   e. Create/update `_index.yaml` manifest via manifest-manager
 5. **If not split (default):**
    a. Use `upstream_content` prepared in prerequisite check above
    b. Call MCP tool `generate_document` with `doc_type: "detail-design"`, `language` from config (default: "ja"),
@@ -178,8 +194,9 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
       - Sequence diagrams (Mermaid) for key processing flows
       - Cross-reference SCR-xxx, TBL-xxx, API-xxx IDs from 基本設計書
    e. Save output to `{output.directory}/03-system/detail-design.md`
-6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "detail_design"`,
-   `status: "complete"`, `output: "03-system/detail-design.md"`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "detail_design"`:
+   - **If split mode:** `status: "complete"`, `system_output: "03-system/"`, `features_output: "05-features/"`
+   - **If monolithic:** `status: "complete"`, `output: "03-system/detail-design.md"`
 7. Call MCP tool `validate_document` with saved content and `doc_type: "detail-design"`.
    Show results as non-blocking.
 8. Suggest next steps:

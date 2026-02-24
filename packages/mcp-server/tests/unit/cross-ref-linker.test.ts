@@ -4,6 +4,7 @@ import {
   buildTraceabilityMatrix,
   analyzeGraph,
   generateSuggestions,
+  CHAIN_PAIRS,
 } from "../../src/lib/cross-ref-linker.js";
 
 // --- Fixture content strings ---
@@ -427,5 +428,44 @@ describe("generateSuggestions", () => {
       traceability_matrix: [],
     };
     expect(generateSuggestions(partial)).toHaveLength(0);
+  });
+});
+
+describe("CHAIN_PAIRS — detail-design traceability pairs", () => {
+  it("includes functions-list → detail-design chain pair", () => {
+    const pair = CHAIN_PAIRS.find(
+      ([up, down]) => up === "functions-list" && down === "detail-design"
+    );
+    expect(pair).toBeDefined();
+  });
+
+  it("includes requirements → detail-design chain pair", () => {
+    const pair = CHAIN_PAIRS.find(
+      ([up, down]) => up === "requirements" && down === "detail-design"
+    );
+    expect(pair).toBeDefined();
+  });
+
+  it("analyzes F-xxx traceability from functions-list to detail-design", () => {
+    const ddWithFIds = `
+## クラス設計
+- CLS-001 LoginController (SCR-001, F-001)
+- CLS-002 SearchController (F-002)
+`;
+    const docs = new Map([
+      ["functions-list", FUNCTIONS_LIST],
+      ["detail-design", ddWithFIds],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const link = report.links.find(
+      (l) => l.upstream === "functions-list" && l.downstream === "detail-design"
+    );
+    expect(link).toBeDefined();
+    // F-001 and F-002 referenced, F-003 orphaned
+    expect(link!.orphaned_ids).toContain("F-003");
+    expect(link!.orphaned_ids).not.toContain("F-001");
+    expect(link!.orphaned_ids).not.toContain("F-002");
   });
 });

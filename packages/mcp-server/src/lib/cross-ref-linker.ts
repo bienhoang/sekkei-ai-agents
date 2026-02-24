@@ -23,6 +23,8 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["nfr", "security-design"],
   ["basic-design", "security-design"],
   ["basic-design", "detail-design"],
+  ["functions-list", "detail-design"],
+  ["requirements", "detail-design"],
   // Test phase (V-model symmetric — branching)
   ["requirements", "test-plan"],
   ["nfr", "test-plan"],
@@ -35,7 +37,15 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["nfr", "uat-spec"],
   // Supplementary
   ["requirements", "operation-design"],
+  ["nfr", "operation-design"],
   ["basic-design", "migration-design"],
+  ["requirements", "migration-design"],
+  ["operation-design", "migration-design"],
+  ["functions-list", "crud-matrix"],
+  ["basic-design", "crud-matrix"],
+  ["requirements", "traceability-matrix"],
+  ["basic-design", "traceability-matrix"],
+  ["functions-list", "sitemap"],
 ];
 
 /** ID prefix → doc type that defines it */
@@ -203,7 +213,9 @@ export function buildTraceabilityMatrix(docs: Map<string, string>): Traceability
   const docOrder = [
     "requirements", "nfr", "functions-list", "project-plan",
     "basic-design", "security-design", "detail-design",
+    "operation-design", "migration-design",
     "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec",
+    "crud-matrix", "traceability-matrix", "sitemap",
   ];
 
   for (const [docType, content] of docs) {

@@ -2,7 +2,7 @@
 
 import { parseArgs } from 'node:util';
 import { spawn } from 'node:child_process';
-import { existsSync, symlinkSync, unlinkSync } from 'node:fs';
+import { existsSync, lstatSync, rmSync, symlinkSync, unlinkSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolveDocsDir } from './resolve-docs-dir.js';
@@ -94,6 +94,23 @@ function main(): void {
     symlinkSync(pkgNodeModules, docsNodeModules, 'junction');
   }
 
+  // Cleanup function for dev mode — remove generated artifacts on exit
+  function cleanup(): void {
+    try {
+      if (existsSync(docsNodeModules) && lstatSync(docsNodeModules).isSymbolicLink()) {
+        unlinkSync(docsNodeModules);
+      }
+    } catch { /* best-effort */ }
+    try {
+      const configPath = join(docsDir, '.vitepress', 'config.mts');
+      if (existsSync(configPath)) rmSync(configPath);
+    } catch { /* best-effort */ }
+    try {
+      const themeDir = join(docsDir, '.vitepress', 'theme');
+      if (existsSync(themeDir)) rmSync(themeDir, { recursive: true, force: true });
+    } catch { /* best-effort */ }
+  }
+
   const env = { ...process.env };
   if (edit) {
     env.SEKKEI_EDIT = '1';
@@ -121,6 +138,7 @@ function main(): void {
   });
 
   child.on('close', (code) => {
+    if (command === 'dev') cleanup();
     process.exit(code ?? 0);
   });
 

@@ -76,6 +76,7 @@ export const uninstallCommand = defineCommand({
       process.stdout.write(`  ${icon} ${labels[i]}: ${status}\n`);
     }
 
-    process.stdout.write("\nPackage remains. Run `npm uninstall -g sekkei-mcp-server` to fully remove.\n");
+    process.stdout.write("\nNote: If you used /sekkei:preview, manually remove .vitepress/ and node_modules symlink from your docs directory.\n");
+    process.stdout.write("Package remains. Run `npm uninstall -g sekkei-mcp-server` to fully remove.\n");
   },
 });

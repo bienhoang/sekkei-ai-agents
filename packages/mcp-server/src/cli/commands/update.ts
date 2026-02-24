@@ -11,6 +11,7 @@ import {
   lstatSync,
   mkdirSync,
   readFileSync,
+  rmSync,
   symlinkSync,
   unlinkSync,
   writeFileSync,
@@ -63,7 +64,15 @@ const SUBCMD_DEFS: [string, string, string][] = [
   ["preview", "Start VitePress docs preview (--edit for WYSIWYG)", "[--edit] [--docs path] [--port N]"],
   ["version", "Show version and health check", ""],
   ["uninstall", "Remove Sekkei from Claude Code", "[--force]"],
+  ["rfp", "Presales RFP lifecycle", "[@project-name]"],
+  ["change", "Change request lifecycle", ""],
+  ["plan", "Create generation plan for large documents", "@doc-type"],
+  ["implement", "Execute a generation plan phase by phase", "@plan-path"],
+  ["rebuild", "Rebuild and re-install Sekkei skill + MCP", "[--skip-build]"],
 ];
+
+/** Number of expected sub-command stubs — used by health-check */
+export const EXPECTED_SUBCMD_COUNT = SUBCMD_DEFS.length;
 
 function createSubCmdStub(name: string, desc: string, hint: string): void {
   const content = [
@@ -128,7 +137,10 @@ export const updateCommand = defineCommand({
       process.stdout.write("  \u26A0 Skill source not found, skipped\n");
     }
 
-    // 3. Regenerate sub-command stubs
+    // 3. Clean stale stubs and regenerate
+    if (existsSync(SUBCMD_DIR)) {
+      rmSync(SUBCMD_DIR, { recursive: true, force: true });
+    }
     mkdirSync(SUBCMD_DIR, { recursive: true });
     for (const [name, desc, hint] of SUBCMD_DEFS) {
       createSubCmdStub(name, desc, hint);

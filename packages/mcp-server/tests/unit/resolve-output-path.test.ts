@@ -33,6 +33,10 @@ describe("resolveOutputPath", () => {
     expect(resolveOutputPath("security-design")).toBe("03-system/security-design.md");
   });
 
+  it("returns 03-system/ for detail-design shared", () => {
+    expect(resolveOutputPath("detail-design", "shared")).toBe("03-system/");
+  });
+
   it("returns 05-features/{name}/detail-design.md for detail-design feature", () => {
     expect(resolveOutputPath("detail-design", "feature", "user-management"))
       .toBe("05-features/user-management/detail-design.md");
@@ -69,12 +73,16 @@ describe("resolveOutputPath", () => {
   });
 
   // Supplementary
-  it("returns 06-data/ for migration-design", () => {
-    expect(resolveOutputPath("migration-design")).toBe("06-data/");
+  it("returns 06-data/migration-design.md for migration-design", () => {
+    expect(resolveOutputPath("migration-design")).toBe("06-data/migration-design.md");
   });
 
-  it("returns 07-operations/ for operation-design", () => {
-    expect(resolveOutputPath("operation-design")).toBe("07-operations/");
+  it("returns 07-operations/operation-design.md for operation-design", () => {
+    expect(resolveOutputPath("operation-design")).toBe("07-operations/operation-design.md");
+  });
+
+  it("returns 03-system/sitemap.md for sitemap", () => {
+    expect(resolveOutputPath("sitemap")).toBe("03-system/sitemap.md");
   });
 
   it("returns 03-system/crud-matrix.md for crud-matrix", () => {

@@ -7,6 +7,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
+import { EXPECTED_SUBCMD_COUNT } from "./update.js";
 
 // ── Interfaces ─────────────────────────────────────────────────────────
 export interface HealthItem {
@@ -26,8 +27,6 @@ export interface HealthReport {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = resolve(__dirname, "..", "..", "..");
 const CLAUDE_DIR = join(homedir(), ".claude");
-
-const EXPECTED_SUBCMD_COUNT = 20;
 
 // ── Individual checks ──────────────────────────────────────────────────
 

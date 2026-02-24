@@ -95,19 +95,25 @@ describe("validateContentDepth — test-plan", () => {
 });
 
 describe("validateContentDepth — doc type with no rules", () => {
-  it("returns empty array for crud-matrix (no rules defined)", () => {
+  it("returns warnings for crud-matrix missing F-xxx and TBL-xxx", () => {
     const issues = validateContentDepth("any content", "crud-matrix");
-    expect(issues).toHaveLength(0);
+    expect(issues).toHaveLength(2);
+    expect(issues[0].message).toContain("F-xxx");
+    expect(issues[1].message).toContain("TBL-xxx");
   });
 
-  it("returns warning for detail-design missing CLS-xxx", () => {
+  it("returns warnings for detail-design missing all references", () => {
     const issues = validateContentDepth("any content", "detail-design");
-    expect(issues).toHaveLength(1);
+    expect(issues).toHaveLength(4);
     expect(issues[0].message).toContain("CLS-xxx");
+    expect(issues[1].message).toContain("SCR-xxx");
+    expect(issues[2].message).toContain("TBL-xxx");
+    expect(issues[3].message).toContain("API-xxx");
   });
 
-  it("returns empty array for detail-design with CLS-xxx", () => {
-    const issues = validateContentDepth("| CLS-001 | LoginController |", "detail-design");
+  it("returns empty array for detail-design with all references", () => {
+    const content = "| CLS-001 | LoginController | SCR-001 画面 | TBL-001 テーブル | API-001 認証 |";
+    const issues = validateContentDepth(content, "detail-design");
     expect(issues).toHaveLength(0);
   });
 });
