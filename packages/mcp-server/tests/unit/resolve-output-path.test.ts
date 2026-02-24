@@ -38,8 +38,8 @@ describe("resolveOutputPath", () => {
       .toBe("05-features/user-management/detail-design.md");
   });
 
-  it("returns undefined for detail-design without scope", () => {
-    expect(resolveOutputPath("detail-design")).toBeUndefined();
+  it("returns 03-system/detail-design.md for detail-design monolithic", () => {
+    expect(resolveOutputPath("detail-design")).toBe("03-system/detail-design.md");
   });
 
   // Test phase

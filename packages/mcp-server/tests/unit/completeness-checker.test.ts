@@ -100,8 +100,14 @@ describe("validateContentDepth — doc type with no rules", () => {
     expect(issues).toHaveLength(0);
   });
 
-  it("returns empty array for detail-design (no rules defined)", () => {
+  it("returns warning for detail-design missing CLS-xxx", () => {
     const issues = validateContentDepth("any content", "detail-design");
+    expect(issues).toHaveLength(1);
+    expect(issues[0].message).toContain("CLS-xxx");
+  });
+
+  it("returns empty array for detail-design with CLS-xxx", () => {
+    const issues = validateContentDepth("| CLS-001 | LoginController |", "detail-design");
     expect(issues).toHaveLength(0);
   });
 });

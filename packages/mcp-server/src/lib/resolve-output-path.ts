@@ -24,6 +24,7 @@ export function resolveOutputPath(
   if (docType === "security-design")     return "03-system/security-design.md";
   if (docType === "detail-design") {
     if (scope === "feature" && featureName) return `05-features/${featureName}/detail-design.md`;
+    return "03-system/detail-design.md";
   }
 
   // Test phase — nested under 08-test/

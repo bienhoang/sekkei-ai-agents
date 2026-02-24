@@ -54,6 +54,13 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       message: "セキュリティ設計書: SEC-xxxが必要です",
     },
   ],
+  "detail-design": [
+    {
+      check: "class table",
+      test: (c: string) => /\|\s*CLS-\d+/.test(c),
+      message: "詳細設計書: クラス一覧テーブルにCLS-xxxが必要です",
+    },
+  ],
   "ut-spec": [
     {
       check: "UT cases",

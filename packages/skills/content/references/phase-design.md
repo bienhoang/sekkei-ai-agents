@@ -127,6 +127,15 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 
 ## `/sekkei:detail-design @input`
 
+**Prerequisite check (MUST run before interview):**
+1. Check `{output.directory}/03-system/basic-design.md` exists (or `chain.basic_design.status == "complete"`)
+   - If missing → ABORT: "Basic design not found. Run `/sekkei:basic-design` first."
+2. Read basic-design content as primary upstream
+3. Optionally load additional upstream:
+   - If `chain.requirements.output` exists → read as additional upstream
+   - If `chain.functions_list.output` exists → read as additional upstream
+4. Concatenate all as `upstream_content` (basic-design + requirements + functions-list)
+
 **Interview questions (ask before generating):**
 - Programming language and framework?
 - ORM preference?
@@ -141,22 +150,25 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
      → If Y: run `/sekkei:plan detail-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
 1. Read the input (ideally the generated 基本設計書)
-2. If `sekkei.config.yaml` exists, load project metadata
+2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
 3. **Check for split config**: read `sekkei.config.yaml` → `split.detail-design`
 4. **If split enabled:**
-   a. Read `functions-list.md` → extract feature groups (大分類)
-   b. Create output directories: `shared/`, `features/{feature-id}/`
-   c. For each shared section in split config:
-      - Call `generate_document` with `scope: "shared"`
+   a. Use `upstream_content` from prerequisite check
+   b. Read `functions-list.md` → extract feature groups (大分類)
+   c. Create output directories: `shared/`, `features/{feature-id}/`
+   d. For each shared section in split config:
+      - Call `generate_document` with `scope: "shared"`, `upstream_content: upstream`
       - Save to `shared/{section-name}.md`
-   d. For each feature:
-      - Call `generate_document` with `scope: "feature"`, `feature_id: "{ID}"`
+   e. For each feature:
+      - Call `generate_document` with `scope: "feature"`, `feature_id: "{ID}"`, `upstream_content: upstream`
       - Save to `features/{feature-id}/detail-design.md`
-   e. Create/update `_index.yaml` manifest
+   f. Create/update `_index.yaml` manifest
 5. **If not split (default):**
-   a. Call MCP tool `generate_document` with `doc_type: "detail-design"`, `language` from config (default: "ja"), and input. Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
-   b. Use the returned template + AI instructions to generate the 詳細設計書
-   c. Follow these rules strictly:
+   a. Use `upstream_content` prepared in prerequisite check above
+   b. Call MCP tool `generate_document` with `doc_type: "detail-design"`, `language` from config (default: "ja"),
+      `input_content: @input`, `upstream_content: upstream`. Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
+   c. Use the returned template + AI instructions to generate the 詳細設計書
+   d. Follow these rules strictly:
       - 10-section structure as defined in the template
       - Module list with call relationships
       - Class specs: CLS-001 format with Mermaid class diagrams
@@ -165,5 +177,12 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
       - Error message list with severity levels
       - Sequence diagrams (Mermaid) for key processing flows
       - Cross-reference SCR-xxx, TBL-xxx, API-xxx IDs from 基本設計書
-   d. Save output to `./sekkei-docs/detail-design.md`
-6. Update chain status: `detail_design.status: complete`
+   e. Save output to `{output.directory}/03-system/detail-design.md`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "detail_design"`,
+   `status: "complete"`, `output: "03-system/detail-design.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "detail-design"`.
+   Show results as non-blocking.
+8. Suggest next steps:
+   > "Detail design complete. Next steps:
+   > - `/sekkei:ut-spec` — generate 単体テスト仕様書
+   > - `/sekkei:validate @detail-design` — validate cross-references"
