@@ -431,6 +431,88 @@ describe("generateSuggestions", () => {
   });
 });
 
+describe("CHAIN_PAIRS — supplementary chain pairs", () => {
+  it("includes nfr → operation-design", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["nfr", "operation-design"]);
+  });
+
+  it("includes requirements → migration-design", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["requirements", "migration-design"]);
+  });
+
+  it("includes operation-design → migration-design", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["operation-design", "migration-design"]);
+  });
+
+  it("includes functions-list → crud-matrix", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["functions-list", "crud-matrix"]);
+  });
+
+  it("includes basic-design → crud-matrix", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["basic-design", "crud-matrix"]);
+  });
+
+  it("includes requirements → traceability-matrix", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["requirements", "traceability-matrix"]);
+  });
+
+  it("includes basic-design → traceability-matrix", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["basic-design", "traceability-matrix"]);
+  });
+
+  it("includes functions-list → sitemap", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["functions-list", "sitemap"]);
+  });
+});
+
+describe("analyzeGraph — nfr → operation-design chain pair", () => {
+  it("detects orphaned NFR-xxx not referenced in operation-design", () => {
+    const opDesign = `
+## 障害対応手順
+| OP-001 | サーバー再起動 | NFR-001 |
+| OP-002 | バックアップ復元 | |
+| OP-003 | ログ確認 | |
+`;
+    const docs = new Map([
+      ["nfr", NFR],
+      ["operation-design", opDesign],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const link = report.links.find(
+      (l) => l.upstream === "nfr" && l.downstream === "operation-design"
+    );
+    expect(link).toBeDefined();
+    expect(link!.orphaned_ids).toContain("NFR-002");
+    expect(link!.orphaned_ids).not.toContain("NFR-001");
+  });
+});
+
+describe("analyzeGraph — crud-matrix chain pairs", () => {
+  it("detects orphaned F-xxx not referenced in crud-matrix", () => {
+    const crudMatrix = `
+## CRUD図
+| 機能ID | 機能名 | TBL-001 |
+| F-001 | ログイン | R |
+| F-002 | 検索 | R |
+`;
+    const docs = new Map([
+      ["functions-list", FUNCTIONS_LIST],
+      ["basic-design", BASIC_DESIGN],
+      ["crud-matrix", crudMatrix],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const flLink = report.links.find(
+      (l) => l.upstream === "functions-list" && l.downstream === "crud-matrix"
+    );
+    expect(flLink).toBeDefined();
+    expect(flLink!.orphaned_ids).toContain("F-003");
+  });
+});
+
 describe("CHAIN_PAIRS — detail-design traceability pairs", () => {
   it("includes functions-list → detail-design chain pair", () => {
     const pair = CHAIN_PAIRS.find(

@@ -118,6 +118,62 @@ describe("validateContentDepth — doc type with no rules", () => {
   });
 });
 
+describe("validateContentDepth — operation-design", () => {
+  it("warns when fewer than 3 OP-xxx IDs present", () => {
+    const content = "## 障害対応手順\nOP-001 サーバー再起動\nOP-002 バックアップ";
+    const issues = validateContentDepth(content, "operation-design");
+    expect(issues.some((i) => i.message.includes("OP-xxx"))).toBe(true);
+  });
+
+  it("returns no issues with 3+ OP-xxx IDs", () => {
+    const content = "OP-001 再起動\nOP-002 バックアップ\nOP-003 ログ確認";
+    const issues = validateContentDepth(content, "operation-design");
+    expect(issues).toHaveLength(0);
+  });
+});
+
+describe("validateContentDepth — migration-design", () => {
+  it("warns when fewer than 3 MIG-xxx IDs present", () => {
+    const content = "## データ移行計画\nMIG-001 ユーザーデータ\nMIG-002 商品データ";
+    const issues = validateContentDepth(content, "migration-design");
+    expect(issues.some((i) => i.message.includes("MIG-xxx"))).toBe(true);
+  });
+
+  it("returns no issues with 3+ MIG-xxx IDs", () => {
+    const content = "MIG-001 ユーザー\nMIG-002 商品\nMIG-003 注文";
+    const issues = validateContentDepth(content, "migration-design");
+    expect(issues).toHaveLength(0);
+  });
+});
+
+describe("validateContentDepth — traceability-matrix", () => {
+  it("warns when no REQ-xxx rows in table", () => {
+    const content = "## トレーサビリティ\n| 要件ID | SCR | API |";
+    const issues = validateContentDepth(content, "traceability-matrix");
+    expect(issues.some((i) => i.message.includes("REQ-xxx"))).toBe(true);
+  });
+
+  it("returns no issues when REQ-xxx present in table rows", () => {
+    const content = "| REQ-001 | ○ | ○ |";
+    const issues = validateContentDepth(content, "traceability-matrix");
+    expect(issues).toHaveLength(0);
+  });
+});
+
+describe("validateContentDepth — sitemap", () => {
+  it("warns when fewer than 3 PG-xxx IDs present", () => {
+    const content = "## ページ一覧\nPG-001 トップ\nPG-002 ログイン";
+    const issues = validateContentDepth(content, "sitemap");
+    expect(issues.some((i) => i.message.includes("PG-xxx"))).toBe(true);
+  });
+
+  it("returns no issues with 3+ PG-xxx IDs", () => {
+    const content = "PG-001 トップ\nPG-002 ログイン\nPG-003 検索";
+    const issues = validateContentDepth(content, "sitemap");
+    expect(issues).toHaveLength(0);
+  });
+});
+
 // ---------------------------------------------------------------------------
 // validateDocument — integration: check_completeness flag behaviour
 // ---------------------------------------------------------------------------
