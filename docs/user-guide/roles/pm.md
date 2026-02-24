@@ -1,0 +1,92 @@
+# Role Guide: PM (Project Manager)
+
+Xem thêm: [Giới thiệu](../introduction.md) | [Quick Start](../quick-start.md) | [Workflow Overview](../workflow/index.md) | [Team Playbook](../team-playbook/index.md)
+
+---
+
+## 1. PM làm gì trong dự án Sekkei?
+
+Bạn là người khởi động và giám sát toàn bộ vòng đời tài liệu. PM không tự sinh tài liệu kỹ thuật — bạn **init project**, **cấu hình approval chain**, **theo dõi tiến độ chain**, và **gate delivery** (duyệt trước khi gửi khách hàng).
+
+Công việc chính của PM trong Sekkei:
+
+- Khởi tạo project và cấu hình `sekkei.config.yaml`
+- Xem trạng thái chain để biết tài liệu nào đang pending/broken
+- Validate từng phase trước khi chuyển giao sang phase tiếp
+- Export bộ tài liệu hoàn chỉnh để giao khách hàng
+
+---
+
+## 2. Lệnh thường dùng
+
+| Lệnh | Dùng khi nào |
+|------|--------------|
+| `npx sekkei init` | Khởi tạo project mới, tạo `sekkei.config.yaml` |
+| `/sekkei:status` | Xem chain progress — tài liệu nào done/pending/broken |
+| `/sekkei:validate @doc` | Kiểm tra tính nhất quán trước khi duyệt phase |
+| `/sekkei:export @doc --format=pdf` | Export PDF để gửi stakeholder review |
+| `/sekkei:export @doc --format=xlsx` | Export Excel chuẩn IPA 4-sheet để giao khách hàng |
+| `/sekkei:version` | Health check — kiểm tra MCP server + Python bridge |
+
+---
+
+## 3. Quy trình làm việc
+
+PM chạy **Init → Configure → Monitor → Gate → Deliver**. Bạn bắt đầu bằng `npx sekkei init`, cấu hình approval chain trong `sekkei.config.yaml`, sau đó weekly check `/sekkei:status` để xem tiến độ. Trước khi team chuyển sang phase tiếp (Requirements → Design → Test), PM validate tài liệu output của phase đó. Khi tất cả specs đã pass validate, PM export bộ tài liệu hoàn chỉnh để giao.
+
+Chi tiết toàn bộ luồng: [Workflow Overview](../workflow/index.md)
+
+---
+
+## 4. Cấu hình Approval Chain
+
+> [!WARNING]
+> **[Beta]** Tính năng `approval_chain` đang trong giai đoạn thử nghiệm. Cấu hình đúng nhưng hành vi có thể thay đổi ở phiên bản sau.
+
+Thêm vào `sekkei.config.yaml`:
+
+```yaml
+approval_chain:
+  requirements:
+    approvers: ["pm", "ba"]
+    required: 2
+  design:
+    approvers: ["pm", "dev-lead"]
+    required: 1
+  test:
+    approvers: ["pm", "qa"]
+    required: 1
+```
+
+Khi approval chain được cấu hình, `/sekkei:validate` sẽ báo cáo trạng thái approval bên cạnh ID consistency check.
+
+---
+
+## 5. Tips
+
+- Chạy `/sekkei:status` đầu mỗi tuần — một cái nhìn nhanh 30 giây cho biết chain đang blocked ở đâu
+- **Đừng bỏ qua validate** trước khi chuyển phase — một ID broken ở requirements sẽ cascade xuống toàn bộ design và test
+- Export PDF cho stakeholder review (dễ comment), export Excel cho khách hàng Nhật (họ quen format này)
+- `keigo` trong config ảnh hưởng văn phong — `謙譲語` nên dùng khi giao tài liệu cho khách hàng lớn/truyền thống
+
+---
+
+## 6. Checklist
+
+- [ ] `sekkei.config.yaml` đã được tạo với `project.name`, `type`, `keigo`
+- [ ] Approval chain đã cấu hình (nếu team dùng feature này)
+- [ ] `/sekkei:version` chạy OK — Python bridge connected
+- [ ] Requirements phase: `/sekkei:validate @requirements` pass trước khi BA handoff sang Dev Lead
+- [ ] Design phase: `/sekkei:validate @basic-design` pass trước khi Dev Lead chuyển sang QA
+- [ ] Test phase: `/sekkei:validate` toàn bộ specs pass
+- [ ] Export final: tất cả tài liệu được export xlsx và PDF lưu trữ
+
+---
+
+## 7. Links
+
+- [Giới thiệu Sekkei](../introduction.md)
+- [V-Model & 13 loại tài liệu](../v-model-and-documents.md)
+- [Quick Start](../quick-start.md)
+- [Workflow Overview](../workflow/index.md)
+- [Team Playbook](../team-playbook/index.md)

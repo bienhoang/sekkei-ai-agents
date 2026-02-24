@@ -28,6 +28,19 @@ function formatRow(e: ChangelogEntry): string {
   return `| ${esc(e.date)} | ${esc(e.docType)} | ${esc(e.version)} | ${esc(e.changes)} | ${esc(e.author)} | ${esc(e.crId)} |`;
 }
 
+/** Increment version by 0.1 (e.g., "1.0" → "1.1", "2.9" → "3.0") */
+export function incrementVersion(version: string): string {
+  if (!version) return "1.0";
+  const parts = version.split(".");
+  if (parts.length !== 2) return "1.0";
+  const major = Number(parts[0]);
+  const minor = Number(parts[1]);
+  if (isNaN(major) || isNaN(minor)) return "1.0";
+  const nextMinor = minor + 1;
+  if (nextMinor >= 10) return `${major + 1}.0`;
+  return `${major}.${nextMinor}`;
+}
+
 /** Extract latest version from 改訂履歴 table (last 版数 value) */
 export function extractVersionFromContent(content: string): string {
   const lines = content.split("\n");
@@ -37,9 +50,16 @@ export function extractVersionFromContent(content: string): string {
     if (/^#{1,4}\s+改訂履歴/.test(line)) { capturing = true; continue; }
     if (capturing && /^#{1,4}\s/.test(line)) break;
     if (capturing) {
-      const match = line.match(/^\|\s*(\d+\.\d+)\s*\|/);
-      if (match) lastVersion = match[1];
+      // Standard: | 1.0 | or | v1.0 |
+      const match = line.match(/^\|\s*v?(\d+\.\d+)\s*\|/);
+      if (match) { lastVersion = match[1]; continue; }
+      // Alternative: | 版数 1.0 |
+      const altMatch = line.match(/^\|\s*版数\s*(\d+\.\d+)\s*\|/);
+      if (altMatch) { lastVersion = altMatch[1]; }
     }
+  }
+  if (!lastVersion) {
+    logger.warn("extractVersionFromContent: no version found in 改訂履歴");
   }
   return lastVersion;
 }

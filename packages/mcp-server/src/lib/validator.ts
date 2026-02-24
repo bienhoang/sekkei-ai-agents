@@ -10,7 +10,7 @@ import { validateKeigoComprehensive } from "./keigo-validator.js";
 import { CONTENT_DEPTH_RULES } from "./completeness-rules.js";
 
 export interface ValidationIssue {
-  type: "missing_section" | "missing_id" | "orphaned_id" | "missing_column" | "keigo_violation" | "completeness" | "staleness";
+  type: "missing_section" | "missing_id" | "orphaned_id" | "missing_column" | "keigo_violation" | "completeness" | "staleness" | "changelog_preservation";
   message: string;
   severity?: "error" | "warning";
 }
@@ -290,7 +290,7 @@ export function validateContentDepth(
 }
 
 /** Extract lines between 改訂履歴 heading and next heading */
-function extractRevisionSection(content: string): string[] {
+export function extractRevisionSection(content: string): string[] {
   const lines = content.split("\n");
   let capturing = false;
   const captured: string[] = [];
@@ -368,6 +368,61 @@ export function extractLastRevisionDate(content: string): string | null {
     .filter((m): m is RegExpMatchArray => m !== null)
     .map((m) => m[1]);
   return dates.length > 0 ? dates[dates.length - 1] : null;
+}
+
+/** Filter lines matching revision data rows (e.g., | 1.0 | ... ) */
+export function parseRevisionDataRows(lines: string[]): string[] {
+  return lines.filter((line) => /^\|\s*\d+\.\d+\s*\|/.test(line));
+}
+
+/** Compare 改訂履歴 rows before/after regeneration to detect silent data loss */
+export function validateChangelogPreservation(
+  previousContent: string,
+  newContent: string,
+): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+  const oldLines = extractRevisionSection(previousContent);
+  const newLines = extractRevisionSection(newContent);
+  const oldRows = parseRevisionDataRows(oldLines);
+  const newRows = parseRevisionDataRows(newLines);
+
+  // No previous changelog → nothing to preserve
+  if (oldRows.length === 0) return issues;
+
+  // Row count check
+  if (newRows.length < oldRows.length) {
+    issues.push({
+      type: "changelog_preservation",
+      severity: "error",
+      message: `改訂履歴 rows decreased: ${oldRows.length} → ${newRows.length}`,
+    });
+  }
+
+  // Verbatim check: each old row must exist in new content
+  for (const oldRow of oldRows) {
+    const normalized = oldRow.replace(/\s+/g, " ").trim();
+    const found = newRows.some(
+      (nr) => nr.replace(/\s+/g, " ").trim() === normalized,
+    );
+    if (!found) {
+      issues.push({
+        type: "changelog_preservation",
+        severity: "error",
+        message: `改訂履歴 row missing or modified: ${oldRow.length > 60 ? oldRow.slice(0, 60) + "..." : oldRow}`,
+      });
+    }
+  }
+
+  // Exactly 1 new row expected (warning if not)
+  if (newRows.length !== oldRows.length + 1 && issues.length === 0) {
+    issues.push({
+      type: "changelog_preservation",
+      severity: "warning",
+      message: `Expected exactly 1 new 改訂履歴 row, got ${newRows.length - oldRows.length}`,
+    });
+  }
+
+  return issues;
 }
 
 /** Check YAML frontmatter for required lifecycle status field */

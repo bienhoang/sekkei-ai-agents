@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.24% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>39/58</span>
+                <span class='fraction'>40/60</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.45% </span>
+                <span class="strong">42.85% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>20/44</span>
+                <span class='fraction'>18/42</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.24% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>39/58</span>
+                <span class='fraction'>40/60</span>
             </div>
         
             
@@ -262,7 +262,15 @@
 <a name='L197'></a><a href='#L197'>197</a>
 <a name='L198'></a><a href='#L198'>198</a>
 <a name='L199'></a><a href='#L199'>199</a>
-<a name='L200'></a><a href='#L200'>200</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a>
+<a name='L207'></a><a href='#L207'>207</a>
+<a name='L208'></a><a href='#L208'>208</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -325,8 +333,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">178x</span>
-<span class="cline-any cline-yes">178x</span>
+<span class="cline-any cline-yes">182x</span>
+<span class="cline-any cline-yes">182x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -374,11 +382,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -564,12 +580,18 @@ export function detectKeigoLevel(text: string): KeigoDetection {
 &nbsp;
 // Expected keigo matrix: doc_type × preset → expected level
 const EXPECTED_KEIGO: Record&lt;string, Record&lt;string, "teineigo" | "joutai" | "any"&gt;&gt; = {
-  "requirements":    { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
-  "basic-design":    { enterprise: "teineigo", standard: "any",      agile: "joutai",  default: "any" },
-  "detail-design":   { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
-  "test-spec":       { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
-  "functions-list":  { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
-  "overview":        { enterprise: "teineigo", standard: "teineigo", agile: "any",     default: "teineigo" },
+  "requirements":      { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
+  "nfr":               { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
+  "functions-list":    { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
+  "project-plan":      { enterprise: "teineigo", standard: "teineigo", agile: "joutai",  default: "teineigo" },
+  "basic-design":      { enterprise: "teineigo", standard: "any",      agile: "joutai",  default: "any" },
+  "security-design":   { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "detail-design":     { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "test-plan":         { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "ut-spec":           { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "it-spec":           { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "st-spec":           { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
+  "uat-spec":          { enterprise: "teineigo", standard: "joutai",   agile: "joutai",  default: "joutai" },
 };
 &nbsp;
 export function detectBrseMistakes(text: string, docType: DocType): ValidationIssue[] {
@@ -577,12 +599,14 @@ export function detectBrseMistakes(text: string, docType: DocType): ValidationIs
   const prose = extractProse(text);
 &nbsp;
   // Over-keigo in developer-only docs
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (docType === "detail-design" || docType === "test-spec") {
+  const devOnlyDocs: DocType[] = ["detail-design", "ut-spec", "it-spec", "st-spec", "uat-spec"];
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (devOnlyDocs.includes(docType)) {
     const overKeigo = <span class="cstat-no" title="statement not covered" >countMatches(prose, [/させていただ/g]);</span>
 <span class="cstat-no" title="statement not covered" >    <span class="missing-if-branch" title="if path not taken" >I</span>if (overKeigo &gt; 0) {</span>
+      const label = <span class="cstat-no" title="statement not covered" >docType === "detail-design" ? "詳細設計書" : `${docType}`;</span>
 <span class="cstat-no" title="statement not covered" >      issues.push({</span>
         type: "keigo_violation",
-        message: `Over-keigo detected: 「させていただ」が${docType === "detail-design" ? "詳細設計書" : "テスト仕様書"}で${overKeigo}回使用（開発者向けドキュメントには不要）`,
+        message: `Over-keigo detected: 「させていただ」が${label}で${overKeigo}回使用（開発者向けドキュメントには不要）`,
         severity: "warning",
       });
     }
@@ -667,7 +691,7 @@ export function validateKeigoComprehensive(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-02-23T06:51:59.102Z
+                at 2026-02-24T05:10:01.200Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

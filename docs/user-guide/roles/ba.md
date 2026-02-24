@@ -1,0 +1,86 @@
+# Role Guide: BA (Business Analyst)
+
+Xem thêm: [Giới thiệu](../introduction.md) | [Quick Start](../quick-start.md) | [Workflow Requirements](../workflow/requirements.md) | [Team Playbook](../team-playbook/index.md)
+
+---
+
+## 1. BA làm gì trong dự án Sekkei?
+
+BA là **người dùng cốt lõi** của Sekkei. Bạn chịu trách nhiệm toàn bộ phase Requirements — từ việc paste meeting notes hay RFP vào lệnh đầu tiên cho đến khi bộ tài liệu yêu cầu được validate và handoff sang Dev Lead.
+
+Công việc chính của BA:
+
+- Tạo **要件定義書** (yêu cầu định nghĩa) từ meeting notes, RFP, hoặc mô tả nghiệp vụ
+- Chạy **機能一覧** (danh sách chức năng) và **非機能要件定義書** (yêu cầu phi chức năng) song song từ requirements
+- Duy trì **glossary** (bảng thuật ngữ) để đảm bảo nhất quán tiếng Nhật xuyên suốt dự án
+- **Review kỹ AI output** — Sekkei sinh tài liệu nhanh nhưng bạn phải xác nhận domain accuracy
+- Xử lý **thay đổi yêu cầu** từ client bằng `/sekkei:update`
+
+---
+
+## 2. Lệnh thường dùng
+
+| Lệnh | Dùng khi nào |
+|------|--------------|
+| `/sekkei:requirements @input` | Tạo 要件定義書 từ notes/RFP/mô tả nghiệp vụ |
+| `/sekkei:functions-list @requirements` | Tạo 機能一覧 từ requirements (chạy song song với nfr) |
+| `/sekkei:nfr @requirements` | Tạo 非機能要件定義書 (performance, security, availability targets) |
+| `/sekkei:uat-spec @requirements` | Tạo 受入テスト仕様書 — BA đảm bảo UAT map đúng REQ-xxx |
+| `/sekkei:validate @requirements` | Kiểm tra ID orphaned, section thiếu, cross-ref broken |
+| `/sekkei:glossary add` | Thêm thuật ngữ vào glossary (tên module, domain terms) |
+| `/sekkei:translate @doc --lang=en` | Dịch tài liệu sang tiếng Anh để stakeholder nội bộ review |
+| `/sekkei:update @requirements` | Cập nhật requirements khi client thay đổi yêu cầu |
+
+---
+
+## 3. Quy trình làm việc
+
+BA đi theo luồng: **Thu thập yêu cầu → Requirements → Functions-list + NFR song song → Glossary → Validate → Handoff**.
+
+1. Gather meeting notes hoặc nhận RFP từ Sales
+2. Paste vào `/sekkei:requirements` — Sekkei hỏi thêm vài câu clarifying trước khi generate
+3. Review output: kiểm tra REQ-xxx IDs có đủ, business logic có đúng không
+4. Chạy song song `/sekkei:functions-list` và `/sekkei:nfr`
+5. Thêm domain-specific terms vào glossary
+6. Chạy `/sekkei:validate` — fix bất kỳ broken IDs
+7. Handoff cho Dev Lead với requirements đã validated
+
+Chi tiết từng bước: [Workflow Requirements](../workflow/requirements.md)
+
+---
+
+## 4. Tips
+
+**AI output cần BA domain review nghiêm túc.** Sekkei sinh đúng cấu trúc IPA và cross-reference IDs, nhưng không biết nghiệp vụ cụ thể của bạn. Những thứ cần kiểm tra kỹ:
+
+- Business rules trong phần 業務フロー có khớp thực tế không
+- Performance targets trong NFR có numeric cụ thể không (tránh "nhanh" — phải là "< 3s")
+- REQ-xxx nào sẽ map thành UAT scenario — kiểm tra ngay khi review requirements
+
+**Glossary là tài sản quan trọng.** Khi bạn thêm term vào glossary, Sekkei dùng term đó nhất quán trong tất cả tài liệu sau. Ví dụ: nếu khách hàng gọi module HR là "人事管理モジュール" không phải "HRモジュール", thêm vào glossary ngay từ đầu.
+
+**Khi client thay đổi yêu cầu** sau khi requirements đã được dùng làm input cho design: dùng `/sekkei:update @requirements` thay vì sửa file thủ công — lệnh này tự động phân tích impact và gợi ý những tài liệu downstream cần update theo.
+
+---
+
+## 5. Checklist
+
+- [ ] REQ-xxx IDs đã được review — không có ID trùng hoặc thiếu logic
+- [ ] Business rules trong requirements khớp với meeting notes / RFP gốc
+- [ ] NFR targets có số cụ thể: response time (ms/s), uptime (%), concurrent users
+- [ ] F-xxx hierarchy trong functions-list có cấu trúc logic (parent → child features)
+- [ ] Glossary: tất cả module names và domain terms quan trọng đã được thêm
+- [ ] UAT scenarios (nếu tạo sớm) map đúng về REQ-xxx
+- [ ] `/sekkei:validate @requirements` pass — không có orphaned IDs
+- [ ] Requirements đã handoff cho Dev Lead cùng với functions-list và NFR
+
+---
+
+## 6. Links
+
+- [Giới thiệu Sekkei](../introduction.md)
+- [V-Model & 13 loại tài liệu](../v-model-and-documents.md)
+- [Quick Start](../quick-start.md)
+- [Workflow Requirements](../workflow/requirements.md)
+- [Workflow Testing](../workflow/testing.md)
+- [Team Playbook](../team-playbook/index.md)

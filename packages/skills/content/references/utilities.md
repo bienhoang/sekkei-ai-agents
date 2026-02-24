@@ -121,6 +121,14 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 5. **Read downstream doc**: `{output.directory}/{downstream-dir}/{doc-type}.md`
 6. Call MCP tool `analyze_update` with `upstream_old`, `upstream_new`, `downstream_content`
 7. Display: changed sections, changed IDs, impacted downstream sections, suggested 改訂履歴 row
+7b. **Auto-insert 改訂履歴 row into upstream document**:
+   a. Read upstream document from disk: `{output.directory}/{upstream-dir}/{upstream-type}.md`
+   b. Find the 改訂履歴 table, parse last version number
+   c. Compute next version: increment minor by 0.1
+   d. Insert new row: `| {next_version} | {today YYYY-MM-DD} | {change_summary from analyze_update} | |`
+   e. Show user the updated upstream 改訂履歴 section for review
+   f. If user confirms: save upstream document
+   g. Note: upstream doc's 改訂履歴 now reflects the direct edit
 8. **Auto-insert 改訂履歴 row** into downstream document:
    a. Read current downstream document content from disk
    b. Find the 改訂履歴 table (## 改訂履歴 heading)
@@ -131,6 +139,12 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
    g. Show user the updated 改訂履歴 section for review
 9. Ask user: confirm & save? Or edit the row first?
 10. If regenerating: pass updated document as `existing_content` to `generate_document` to preserve 改訂履歴
+    - Also pass `auto_insert_changelog: true` and `change_description: "{summary}"` as safety net
+11. **Post-generation validation**:
+   a. Read the newly generated/saved downstream document
+   b. Compare 改訂履歴 rows: all rows from `existing_content` (step 8) must exist in new output
+   c. If rows missing or modified: warn user — "⚠ 改訂履歴 rows may not have been preserved correctly. Please check the 改訂履歴 section and retry generation if needed."
+   d. If all rows preserved + 1 new row: confirm — "✓ 改訂履歴 preserved successfully."
 
 ### Staleness mode:
 

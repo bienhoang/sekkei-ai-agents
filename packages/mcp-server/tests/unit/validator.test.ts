@@ -9,6 +9,7 @@ import {
   validateTableStructure,
   validateDocument,
   validateSplitDocument,
+  validateChangelogPreservation,
 } from "../../src/lib/validator.js";
 
 /** Structural section block included in all valid test documents */
@@ -136,6 +137,68 @@ describe("validateDocument (integration)", () => {
     const result = validateDocument(current, "basic-design", upstream);
     expect(result.cross_ref_report).toBeDefined();
     expect(result.cross_ref_report!.missing).toContain("REQ-002");
+  });
+});
+
+describe("validateChangelogPreservation", () => {
+  const makeDoc = (rows: string[]) =>
+    `# Doc\n## 改訂履歴\n| 版数 | 日付 | 変更内容 | 変更者 |\n|------|------|----------|--------|\n${rows.join("\n")}\n## 承認欄\n`;
+
+  it("returns no issues when all rows preserved + 1 new", () => {
+    const prev = makeDoc(["| 1.0 | 2026-01-01 | Initial | Author |"]);
+    const next = makeDoc([
+      "| 1.0 | 2026-01-01 | Initial | Author |",
+      "| 1.1 | 2026-02-24 | Updated | |",
+    ]);
+    const issues = validateChangelogPreservation(prev, next);
+    expect(issues).toHaveLength(0);
+  });
+
+  it("returns error when rows missing", () => {
+    const prev = makeDoc([
+      "| 1.0 | 2026-01-01 | Initial | Author |",
+      "| 1.1 | 2026-01-15 | Update | Author |",
+    ]);
+    const next = makeDoc(["| 1.1 | 2026-01-15 | Update | Author |"]);
+    const issues = validateChangelogPreservation(prev, next);
+    expect(issues.some(i => i.severity === "error")).toBe(true);
+  });
+
+  it("returns error when row count decreased", () => {
+    const prev = makeDoc([
+      "| 1.0 | 2026-01-01 | A | X |",
+      "| 1.1 | 2026-01-15 | B | Y |",
+    ]);
+    const next = makeDoc(["| 1.2 | 2026-02-24 | C | Z |"]);
+    const issues = validateChangelogPreservation(prev, next);
+    expect(issues.some(i => i.message.includes("decreased"))).toBe(true);
+  });
+
+  it("returns empty when previous has no changelog", () => {
+    const prev = "# Doc\n## 承認欄\n";
+    const next = makeDoc(["| 1.0 | 2026-02-24 | New | |"]);
+    expect(validateChangelogPreservation(prev, next)).toHaveLength(0);
+  });
+
+  it("returns warning when more than 1 new row", () => {
+    const prev = makeDoc(["| 1.0 | 2026-01-01 | A | X |"]);
+    const next = makeDoc([
+      "| 1.0 | 2026-01-01 | A | X |",
+      "| 1.1 | 2026-02-01 | B | Y |",
+      "| 1.2 | 2026-02-24 | C | Z |",
+    ]);
+    const issues = validateChangelogPreservation(prev, next);
+    expect(issues.some(i => i.severity === "warning")).toBe(true);
+  });
+
+  it("handles whitespace differences gracefully", () => {
+    const prev = makeDoc(["| 1.0 | 2026-01-01 | Initial | Author |"]);
+    const next = makeDoc([
+      "|  1.0  |  2026-01-01  |  Initial  |  Author  |",
+      "| 1.1 | 2026-02-24 | Updated | |",
+    ]);
+    const issues = validateChangelogPreservation(prev, next);
+    expect(issues.filter(i => i.severity === "error")).toHaveLength(0);
   });
 });
 

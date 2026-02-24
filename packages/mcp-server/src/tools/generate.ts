@@ -64,6 +64,10 @@ const inputSchema = {
     .describe("Related ticket IDs (e.g., PROJ-123) to reference in the document"),
   existing_content: z.string().max(500_000).optional()
     .describe("Existing document content to preserve 改訂履歴 when regenerating"),
+  auto_insert_changelog: z.boolean().default(false).optional()
+    .describe("Auto-insert new 改訂履歴 row before preservation. Requires existing_content."),
+  change_description: z.string().max(200).optional()
+    .describe("Change description for auto-inserted 改訂履歴 row (default: 'Updated from upstream')"),
 };
 
 /** Extract existing 改訂履歴 section from document content */
@@ -151,6 +155,23 @@ function buildSplitInstructions(
   ].join("\n");
 }
 
+/** Insert a new row at the end of the 改訂履歴 table */
+export function insertChangelogRow(content: string, newRow: string): string {
+  const lines = content.split("\n");
+  let lastDataRowIdx = -1;
+  let inSection = false;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^#{1,4}\s+改訂履歴/.test(lines[i])) { inSection = true; continue; }
+    if (inSection && /^#{1,4}\s/.test(lines[i])) break;
+    if (inSection && /^\|\s*v?\d+\.\d+\s*\|/.test(lines[i])) {
+      lastDataRowIdx = i;
+    }
+  }
+  if (lastDataRowIdx === -1) return content; // no table found
+  lines.splice(lastDataRowIdx + 1, 0, newRow);
+  return lines.join("\n");
+}
+
 export interface GenerateDocumentArgs {
   doc_type: DocType;
   input_content: string;
@@ -169,6 +190,8 @@ export interface GenerateDocumentArgs {
   include_traceability?: boolean;
   ticket_ids?: string[];
   existing_content?: string;
+  auto_insert_changelog?: boolean;
+  change_description?: string;
   templateDir?: string;
   overrideDir?: string;
 }
@@ -179,7 +202,8 @@ export async function handleGenerateDocument(
   const { doc_type, input_content, project_name, language, input_lang, keigo_override,
     upstream_content, project_type, feature_name, scope, output_path, config_path,
     source_code_path, include_confidence, include_traceability, ticket_ids,
-    existing_content, templateDir: tDir, overrideDir } = args;
+    existing_content, auto_insert_changelog, change_description,
+    templateDir: tDir, overrideDir } = args;
   if (scope && !SPLIT_ALLOWED.has(doc_type)) {
     return {
       content: [{ type: "text" as const, text: `Split mode (scope) not supported for ${doc_type}. Supported: ${[...SPLIT_ALLOWED].join(", ")}` }],
@@ -300,9 +324,22 @@ export async function handleGenerateDocument(
       } catch { /* non-blocking */ }
     }
 
+    // Auto-insert 改訂履歴 row when requested
+    let effectiveExistingContent = existing_content;
+    let insertedVersion: string | undefined;
+    if (auto_insert_changelog && existing_content) {
+      const { extractVersionFromContent, incrementVersion } = await import("../lib/changelog-manager.js");
+      const oldVer = extractVersionFromContent(existing_content);
+      insertedVersion = incrementVersion(oldVer);
+      const today = new Date().toISOString().slice(0, 10);
+      const desc = change_description ?? "Updated from upstream";
+      const newRow = `| ${insertedVersion} | ${today} | ${desc} | |`;
+      effectiveExistingContent = insertChangelogRow(existing_content, newRow);
+    }
+
     // Changelog preservation: when regenerating, preserve existing 改訂履歴
-    if (existing_content) {
-      const revisionHistory = extractRevisionHistory(existing_content);
+    if (effectiveExistingContent) {
+      const revisionHistory = extractRevisionHistory(effectiveExistingContent);
       if (revisionHistory) {
         sections.push(``, buildChangelogPreservationInstruction(revisionHistory));
       }
@@ -374,15 +411,16 @@ export async function handleGenerateDocument(
     }
 
     // Global changelog: append entry when regenerating existing document
-    if (existing_content && config_path) {
+    if (effectiveExistingContent && config_path) {
       try {
-        const { extractVersionFromContent } = await import("../lib/changelog-manager.js");
-        const version = extractVersionFromContent(existing_content);
+        const { extractVersionFromContent, incrementVersion } = await import("../lib/changelog-manager.js");
+        const oldVersion = extractVersionFromContent(existing_content ?? "");
+        const nextVersion = insertedVersion ?? incrementVersion(oldVersion);
         const workspacePath = dirname(config_path);
         await appendGlobalChangelog(workspacePath, {
           date: new Date().toISOString().slice(0, 10),
           docType: doc_type,
-          version,
+          version: nextVersion,
           changes: "Regenerated from upstream",
           author: "",
           crId: "",
@@ -409,8 +447,8 @@ export function registerGenerateDocumentTool(server: McpServer, templateDir: str
     "generate_document",
     "Generate a Japanese specification document using template + AI instructions",
     inputSchema,
-    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content }) => {
-      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, templateDir, overrideDir });
+    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description }) => {
+      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description, templateDir, overrideDir });
     }
   );
 }

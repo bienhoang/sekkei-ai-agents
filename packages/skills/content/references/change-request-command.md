@@ -73,10 +73,25 @@ Call `manage_change_request` action=approve.
 
 ## Step 5: Propagate (loop)
 
+**Before first propagation step — Origin document 改訂履歴:**
+  a. Read origin document from disk
+  b. Find the 改訂履歴 table, parse last version number
+  c. Build new row: version +0.1, today's date, "CR {CR-ID}: {description}"
+  d. Insert row into origin document's 改訂履歴 table
+  e. Show user for confirmation: "Origin document {origin_doc} 改訂履歴 will be updated:"
+  f. Save origin document
+  g. Note: "Origin document 改訂履歴 updated before propagation begins"
+
 For each step:
   Call `manage_change_request` action=propagate_next with cr_id, config_path.
   - If upstream: show suggestion text, ask user to confirm/skip
   - If downstream: show regeneration instruction, optionally call generate_document
+    - Pass `auto_insert_changelog: true` and `change_description: "CR {CR-ID}: {summary}"` to `generate_document`
+    - **Post-generation check**: After regeneration completes:
+      a. Read regenerated document
+      b. Compare 改訂履歴 rows with the `existing_content` passed to `generate_document`
+      c. If rows missing: warn user — "⚠ 改訂履歴 preservation check failed for {doc_type}. Recommend re-running generation."
+      d. If preserved: continue to next step
   - **改訂履歴 handling** for each propagated document:
     a. Read current document from disk
     b. Find the 改訂履歴 table, parse last version number
