@@ -1,6 +1,6 @@
 {
   "name": "@bienhoang/sekkei-preview",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "VitePress-based preview + WYSIWYG editor for Sekkei specification documents",
   "type": "module",
   "bin": {
