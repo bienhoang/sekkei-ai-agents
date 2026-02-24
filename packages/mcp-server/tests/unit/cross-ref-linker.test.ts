@@ -513,6 +513,72 @@ describe("analyzeGraph — crud-matrix chain pairs", () => {
   });
 });
 
+describe("CHAIN_PAIRS — test-plan → test-spec chain pairs", () => {
+  it("includes test-plan → ut-spec", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["test-plan", "ut-spec"]);
+  });
+
+  it("includes test-plan → it-spec", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["test-plan", "it-spec"]);
+  });
+
+  it("includes test-plan → st-spec", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["test-plan", "st-spec"]);
+  });
+
+  it("includes test-plan → uat-spec", () => {
+    expect(CHAIN_PAIRS).toContainEqual(["test-plan", "uat-spec"]);
+  });
+});
+
+describe("analyzeGraph — test-plan → ut-spec chain pair", () => {
+  it("detects orphaned TP-xxx not referenced in ut-spec", () => {
+    const utSpecWithTp = `
+## 単体テストケース
+- UT-001 LoginController test (CLS-001, TP-001)
+- UT-002 SearchController test (CLS-002)
+`;
+    const docs = new Map([
+      ["test-plan", TEST_PLAN],
+      ["ut-spec", utSpecWithTp],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const link = report.links.find(
+      (l) => l.upstream === "test-plan" && l.downstream === "ut-spec"
+    );
+    expect(link).toBeDefined();
+    // TP-001 referenced, TP-002 and TP-003 orphaned
+    expect(link!.orphaned_ids).toContain("TP-002");
+    expect(link!.orphaned_ids).toContain("TP-003");
+    expect(link!.orphaned_ids).not.toContain("TP-001");
+  });
+});
+
+describe("analyzeGraph — test-plan → uat-spec chain pair", () => {
+  it("links exist when both docs present", () => {
+    const uatSpec = `
+## 受入テストケース
+- UAT-001 ログインシナリオ (REQ-001, TP-001)
+- UAT-002 検索シナリオ (REQ-002, TP-002)
+`;
+    const docs = new Map([
+      ["test-plan", TEST_PLAN],
+      ["uat-spec", uatSpec],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const link = report.links.find(
+      (l) => l.upstream === "test-plan" && l.downstream === "uat-spec"
+    );
+    expect(link).toBeDefined();
+    // TP-003 not referenced in uat-spec
+    expect(link!.orphaned_ids).toContain("TP-003");
+  });
+});
+
 describe("CHAIN_PAIRS — detail-design traceability pairs", () => {
   it("includes functions-list → detail-design chain pair", () => {
     const pair = CHAIN_PAIRS.find(

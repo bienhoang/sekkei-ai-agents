@@ -29,6 +29,10 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["requirements", "test-plan"],
   ["nfr", "test-plan"],
   ["basic-design", "test-plan"],
+  ["test-plan", "ut-spec"],
+  ["test-plan", "it-spec"],
+  ["test-plan", "st-spec"],
+  ["test-plan", "uat-spec"],
   ["detail-design", "ut-spec"],
   ["basic-design", "it-spec"],
   ["basic-design", "st-spec"],
@@ -133,7 +137,7 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
   const chain = config.chain;
   if (!chain) return docs;
 
-  // Single-file entries
+  // Single-file entries (always monolithic)
   const singleEntries: [string, { output?: string } | undefined][] = [
     ["functions-list", chain.functions_list],
     ["requirements", chain.requirements],
@@ -141,8 +145,6 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
     ["project-plan", chain.project_plan],
     ["security-design", chain.security_design],
     ["test-plan", chain.test_plan],
-    ["ut-spec", chain.ut_spec],
-    ["it-spec", chain.it_spec],
     ["st-spec", chain.st_spec],
     ["uat-spec", chain.uat_spec],
     ["operation-design", chain.operation_design],
@@ -159,14 +161,17 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
     }
   }
 
-  // Split entries (basic-design, detail-design only in v2.0)
-  const splitEntries: [string, { output?: string; system_output?: string; features_output?: string }][] = [
+  // Dual-mode entries: split (system_output + features_output) with single-file fallback
+  const dualEntries: [string, { output?: string; system_output?: string; features_output?: string } | undefined][] = [
     ["basic-design", chain.basic_design],
     ["detail-design", chain.detail_design],
+    ["ut-spec", chain.ut_spec as { output?: string; system_output?: string; features_output?: string } | undefined],
+    ["it-spec", chain.it_spec as { output?: string; system_output?: string; features_output?: string } | undefined],
   ];
 
-  for (const [docType, entry] of splitEntries) {
+  for (const [docType, entry] of dualEntries) {
     if (!entry) continue;
+    // Try split mode first
     const parts: string[] = [];
     for (const dirKey of ["system_output", "features_output"] as const) {
       const dirPath = entry[dirKey];
@@ -175,7 +180,17 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
         if (content) parts.push(content);
       }
     }
-    if (parts.length > 0) docs.set(docType, parts.join("\n\n"));
+    if (parts.length > 0) {
+      docs.set(docType, parts.join("\n\n"));
+    } else if (entry.output) {
+      // Fallback to single file (backward compatible)
+      try {
+        const content = await readFile(resolve(base, entry.output), "utf-8");
+        if (content.length <= 500_000) docs.set(docType, content);
+      } catch {
+        // skip missing
+      }
+    }
   }
 
   return docs;

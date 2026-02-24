@@ -42,10 +42,12 @@ Parent: `SKILL.md` → Workflow Router → Test Phase.
 ## `/sekkei:ut-spec @detail-design`
 
 **Prerequisite check (MUST run before interview):**
-1. Load `sekkei.config.yaml` — read `chain.detail_design.status`
+1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.detail_design.status` != "complete" → **ABORT**. Tell user:
    > "Detail design not complete. Run `/sekkei:detail-design` first."
 3. Read detail-design content from `chain.detail_design.output` (or `system_output` + `features_output` if split)
+4. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
+5. Concatenate as `upstream_content` (detail-design + test-plan if available)
 
 **Interview questions (ask before generating):**
 - Target modules/classes for unit testing?
@@ -54,27 +56,30 @@ Parent: `SKILL.md` → Workflow Router → Test Phase.
 
 1. Use `upstream_content` prepared in prerequisite check above
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
-3. Call MCP tool `generate_document` with `doc_type: "ut-spec"`, `upstream_content` (detail-design), and `language` from config
+3. Call MCP tool `generate_document` with `doc_type: "ut-spec"`, `upstream_content` (detail-design + test-plan), and `language` from config
 4. Follow these rules strictly:
    - ID format: `UT-001`
    - Cross-reference CLS-xxx and DD-xxx IDs from 詳細設計書
+   - Cross-reference TP-xxx IDs from テスト計画書 (if loaded)
    - Minimum 5 test cases per module
    - テスト観点: 正常系 / 異常系 / 境界値 (all three required)
 5. Save output:
    - Default: `{output.directory}/08-test/ut-spec.md`
    - Feature scope: `{output.directory}/05-features/{name}/ut-spec.md`
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "ut_spec"`,
-   `status: "complete"`, `output: "08-test/ut-spec.md"`
+   `status: "complete"`, `output: <saved_path_from_step_5>`
 7. Call MCP tool `validate_document` with saved content, `doc_type: "ut-spec"`,
    and `upstream_content`. Show results as non-blocking.
 
 ## `/sekkei:it-spec @basic-design`
 
 **Prerequisite check (MUST run before interview):**
-1. Load `sekkei.config.yaml` — read `chain.basic_design.status`
+1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.basic_design.status` != "complete" → **ABORT**. Tell user:
    > "Basic design not complete. Run `/sekkei:basic-design` first."
 3. Read basic-design content from `chain.basic_design.output` (or `system_output` + `features_output` if split)
+4. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
+5. Concatenate as `upstream_content` (basic-design + test-plan if available)
 
 **Interview questions (ask before generating):**
 - Integration scope? (API-to-API, screen-to-API, DB integration, external services)
@@ -82,28 +87,30 @@ Parent: `SKILL.md` → Workflow Router → Test Phase.
 
 1. Use `upstream_content` prepared in prerequisite check above
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
-3. Call MCP tool `generate_document` with `doc_type: "it-spec"`, `upstream_content` (basic-design), and `language` from config
+3. Call MCP tool `generate_document` with `doc_type: "it-spec"`, `upstream_content` (basic-design + test-plan), and `language` from config
 4. Follow these rules strictly:
    - ID format: `IT-001`
    - Cross-reference API-xxx, SCR-xxx, TBL-xxx IDs from 基本設計書
+   - Cross-reference TP-xxx IDs from テスト計画書 (if loaded)
    - Verify interface contracts: request/response schemas, error codes
 5. Save output:
    - Default: `{output.directory}/08-test/it-spec.md`
    - Feature scope: `{output.directory}/05-features/{name}/it-spec.md`
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "it_spec"`,
-   `status: "complete"`, `output: "08-test/it-spec.md"`
+   `status: "complete"`, `output: <saved_path_from_step_5>`
 7. Call MCP tool `validate_document` with saved content, `doc_type: "it-spec"`,
    and `upstream_content`. Show results as non-blocking.
 
 ## `/sekkei:st-spec @basic-design`
 
 **Prerequisite check (MUST run before interview):**
-1. Load `sekkei.config.yaml` — read `chain.basic_design.status`
+1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.basic_design.status` != "complete" → **ABORT**. Tell user:
    > "Basic design not complete. Run `/sekkei:basic-design` first."
 3. Read basic-design content from `chain.basic_design.output` (or `system_output` + `features_output` if split)
-4. Check `chain.functions_list.status` — if "complete", also read functions-list content
-5. Concatenate as `upstream_content` (basic-design + functions-list if available)
+4. If `chain.functions_list.status` == "complete" → also read functions-list content
+5. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
+6. Concatenate as `upstream_content` (basic-design + functions-list + test-plan, in order of availability)
 
 **Interview questions (ask before generating):**
 - Key E2E business scenarios to validate?
@@ -116,6 +123,7 @@ Parent: `SKILL.md` → Workflow Router → Test Phase.
 4. Follow these rules strictly:
    - ID format: `ST-001`
    - Cross-reference SCR-xxx, TBL-xxx, F-xxx IDs from upstream
+   - Cross-reference TP-xxx IDs from テスト計画書 (if loaded)
    - Include E2E scenarios, performance targets (numeric), and security test cases
    - System-level only — no per-feature split
 5. Save output to `{output.directory}/08-test/st-spec.md`
@@ -127,12 +135,13 @@ Parent: `SKILL.md` → Workflow Router → Test Phase.
 ## `/sekkei:uat-spec @requirements`
 
 **Prerequisite check (MUST run before interview):**
-1. Load `sekkei.config.yaml` — read `chain.requirements.status`
+1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.requirements.status` != "complete" → **ABORT**. Tell user:
    > "Requirements not complete. Run `/sekkei:requirements` first."
 3. Read requirements content from `chain.requirements.output`
-4. Check `chain.nfr.status` — if "complete", also read nfr content
-5. Concatenate as `upstream_content` (requirements + nfr if available)
+4. If `chain.nfr.status` == "complete" → also read nfr content
+5. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
+6. Concatenate as `upstream_content` (requirements + nfr + test-plan, in order of availability)
 
 **Interview questions (ask before generating):**
 - Key business scenarios for acceptance?
@@ -145,6 +154,7 @@ Parent: `SKILL.md` → Workflow Router → Test Phase.
 4. Follow these rules strictly:
    - ID format: `UAT-001`
    - Cross-reference REQ-xxx and NFR-xxx IDs from upstream
+   - Cross-reference TP-xxx IDs from テスト計画書 (if loaded)
    - Business scenario-based test cases (not technical)
    - System-level only — no per-feature split
 5. Save output to `{output.directory}/08-test/uat-spec.md`
