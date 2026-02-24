@@ -73,6 +73,7 @@ cd "$MCP_DIR"
 npm install --no-fund --no-audit 2>&1 | tail -1
 ok "Dependencies installed"
 
+rm -rf dist/
 npm run build 2>&1 | tail -1
 ok "TypeScript compiled → dist/"
 
@@ -91,6 +92,7 @@ if [[ -d "$PREVIEW_DIR" && -f "$PREVIEW_DIR/package.json" ]]; then
   cd "$PREVIEW_DIR"
   npm install --no-fund --no-audit 2>&1 | tail -1
   ok "Preview dependencies installed"
+  rm -rf dist/
   npm run build 2>&1 | tail -1
   ok "Preview TypeScript compiled"
   PREVIEW_CLI="$PREVIEW_DIR/dist/cli.js"
