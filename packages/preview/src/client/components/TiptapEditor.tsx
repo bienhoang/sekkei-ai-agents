@@ -119,7 +119,8 @@ function MiniBar({ dirty, saving, onSave, onToggle, chars, words }: {
 }
 
 export function TiptapEditor({ path, content, readonly = false, onDirty, fullscreen, onToggleFullscreen, flatTree, onSelect, onEditorReady }: Props) {
-  const initialRef = useRef(content)
+  const initialRef = useRef<string>('')
+  const readyRef = useRef(false)
   const scrollRef = useRef<HTMLDivElement>(null)
   const [dirty, setDirty] = useState(false)
   const { save, saving } = useSaveFile()
@@ -172,6 +173,7 @@ export function TiptapEditor({ path, content, readonly = false, onDirty, fullscr
     content: processedContent,
     editable: !readonly,
     onUpdate({ editor: e }) {
+      if (!readyRef.current) return
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const current = (e.storage as any).markdown.getMarkdown() as string
       const isDirty = current !== initialRef.current
@@ -179,6 +181,17 @@ export function TiptapEditor({ path, content, readonly = false, onDirty, fullscr
       onDirty?.(isDirty)
     },
   })
+
+  // Capture canonical baseline markdown after editor mounts (accounts for
+  // image-path rewriting + Tiptap's markdown round-trip normalization)
+  useEffect(() => {
+    if (editor) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      initialRef.current = (editor.storage as any).markdown.getMarkdown() as string
+      readyRef.current = true
+    }
+    return () => { readyRef.current = false }
+  }, [editor])
 
   // Notify parent when editor is ready
   useEffect(() => {
