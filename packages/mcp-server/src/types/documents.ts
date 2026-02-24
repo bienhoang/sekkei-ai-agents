@@ -310,12 +310,22 @@ export interface ChainLinkReport {
   missing_ids: string[];   // referenced in downstream but not defined in upstream
 }
 
+/** Staleness warning for a document pair where upstream is newer than downstream */
+export interface StalenessWarning {
+  upstream: string;
+  downstream: string;
+  upstreamModified: string;
+  downstreamModified: string;
+  message: string;
+}
+
 export interface ChainRefReport {
   links: ChainLinkReport[];
   orphaned_ids: { id: string; defined_in: string; expected_in: string }[];
   missing_ids: { id: string; referenced_in: string; expected_from: string }[];
   traceability_matrix: TraceabilityEntry[];
   suggestions: string[];
+  staleness_warnings?: StalenessWarning[];
 }
 
 // --- Impact Cascade Types ---

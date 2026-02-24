@@ -73,6 +73,17 @@ export async function handleValidateChain(
     lines.push("");
   }
 
+  // Staleness warnings section
+  if (report.staleness_warnings && report.staleness_warnings.length > 0) {
+    lines.push("## Staleness Warnings", "");
+    lines.push("| Upstream | Downstream | Upstream Modified | Downstream Modified |");
+    lines.push("|----------|------------|-------------------|---------------------|");
+    for (const w of report.staleness_warnings) {
+      lines.push(`| ${w.upstream} | ${w.downstream} | ${w.upstreamModified} | ${w.downstreamModified} |`);
+    }
+    lines.push("");
+  }
+
   if (report.links.length === 0) {
     lines.push("No document pairs found in config chain. Ensure docs have been generated.");
   }

@@ -28,6 +28,22 @@ function formatRow(e: ChangelogEntry): string {
   return `| ${esc(e.date)} | ${esc(e.docType)} | ${esc(e.version)} | ${esc(e.changes)} | ${esc(e.author)} | ${esc(e.crId)} |`;
 }
 
+/** Extract latest version from 改訂履歴 table (last 版数 value) */
+export function extractVersionFromContent(content: string): string {
+  const lines = content.split("\n");
+  let capturing = false;
+  let lastVersion = "";
+  for (const line of lines) {
+    if (/^#{1,4}\s+改訂履歴/.test(line)) { capturing = true; continue; }
+    if (capturing && /^#{1,4}\s/.test(line)) break;
+    if (capturing) {
+      const match = line.match(/^\|\s*(\d+\.\d+)\s*\|/);
+      if (match) lastVersion = match[1];
+    }
+  }
+  return lastVersion;
+}
+
 export async function appendGlobalChangelog(
   workspacePath: string,
   entry: ChangelogEntry,

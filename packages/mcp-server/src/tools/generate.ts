@@ -278,6 +278,28 @@ export async function handleGenerateDocument(
       sections.push(``, buildTraceabilityInstruction());
     }
 
+    // Pre-generate advisory: check if upstream docs changed since last generation
+    if (existing_content && config_path) {
+      try {
+        const { checkDocStaleness } = await import("../lib/doc-staleness.js");
+        const stalenessWarnings = await checkDocStaleness(config_path, doc_type);
+        if (stalenessWarnings.length > 0) {
+          const advisory = [
+            "## Advisory: Upstream Changes Detected",
+            "",
+            "The following upstream documents have changed since this document was last generated:",
+            "",
+            "| Upstream Doc | Modified |",
+            "|-------------|----------|",
+            ...stalenessWarnings.map(w => `| ${w.upstream} | ${w.upstreamModified} |`),
+            "",
+            "Consider updating upstream content before regeneration.",
+          ];
+          sections.push(``, advisory.join("\n"));
+        }
+      } catch { /* non-blocking */ }
+    }
+
     // Changelog preservation: when regenerating, preserve existing 改訂履歴
     if (existing_content) {
       const revisionHistory = extractRevisionHistory(existing_content);
@@ -354,11 +376,13 @@ export async function handleGenerateDocument(
     // Global changelog: append entry when regenerating existing document
     if (existing_content && config_path) {
       try {
+        const { extractVersionFromContent } = await import("../lib/changelog-manager.js");
+        const version = extractVersionFromContent(existing_content);
         const workspacePath = dirname(config_path);
         await appendGlobalChangelog(workspacePath, {
           date: new Date().toISOString().slice(0, 10),
           docType: doc_type,
-          version: "",
+          version,
           changes: "Regenerated from upstream",
           author: "",
           crId: "",

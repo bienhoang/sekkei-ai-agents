@@ -26,6 +26,10 @@ const inputSchema = {
     .describe("Check document structure against template rules (section ordering, required fields)"),
   preset: z.enum(["enterprise", "standard", "agile"]).optional()
     .describe("Strictness preset (default: standard)"),
+  config_path: z.string().max(500).optional()
+    .refine((p) => !p || !p.includes(".."), { message: "config_path must not contain .." })
+    .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "config_path must be .yaml/.yml" })
+    .describe("Path to sekkei.config.yaml — enables staleness detection for the document"),
 };
 
 export interface ValidateDocumentArgs {
@@ -37,12 +41,13 @@ export interface ValidateDocumentArgs {
   check_completeness?: boolean;
   check_structure_rules?: boolean;
   preset?: "enterprise" | "standard" | "agile";
+  config_path?: string;
 }
 
 export async function handleValidateDocument(
   args: ValidateDocumentArgs
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
-  const { content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset } = args;
+  const { content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset, config_path } = args;
   logger.info({ doc_type, hasUpstream: !!upstream_content, hasManifest: !!manifest_path, hasStructure: !!structure_path }, "Validating document");
 
   if (structure_path) {
@@ -221,6 +226,22 @@ export async function handleValidateDocument(
     );
   }
 
+  // Staleness check: compare git timestamps of upstream vs this doc
+  if (config_path && doc_type) {
+    try {
+      const { checkDocStaleness } = await import("../lib/doc-staleness.js");
+      const warnings = await checkDocStaleness(config_path, doc_type);
+      if (warnings.length > 0) {
+        lines.push(``, `## Staleness Warnings`, ``);
+        lines.push("| Upstream | Modified | This Doc Modified |");
+        lines.push("|----------|----------|-------------------|");
+        for (const w of warnings) {
+          lines.push(`| ${w.upstream} | ${w.upstreamModified} | ${w.downstreamModified} |`);
+        }
+      }
+    } catch { /* staleness check non-blocking */ }
+  }
+
   return {
     content: [{ type: "text", text: lines.join("\n") }],
   };
@@ -231,8 +252,8 @@ export function registerValidateDocumentTool(server: McpServer): void {
     "validate_document",
     "Validate a Japanese specification document for completeness and cross-references",
     inputSchema,
-    async ({ content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset }) => {
-      return handleValidateDocument({ content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset });
+    async ({ content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset, config_path }) => {
+      return handleValidateDocument({ content, doc_type, upstream_content, manifest_path, structure_path, check_completeness, check_structure_rules, preset, config_path });
     }
   );
 }

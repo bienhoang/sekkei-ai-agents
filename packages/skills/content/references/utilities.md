@@ -28,7 +28,11 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
    a. Read doc content
    b. Call `validate_document` with `content`, `doc_type`, `upstream_content`
 7. Display: section completeness, cross-ref coverage %, missing/orphaned IDs, missing columns
-8. Suggest fixes for issues found
+8. **If `config_path` available**: Check upstream staleness via git timestamps
+   - Compare last-modified date of upstream vs downstream docs
+   - Display WARNING for docs where upstream changed after downstream was last generated
+   - Staleness is advisory only — does not affect validation result
+9. Suggest fixes for issues found
 
 ### If no `@doc` (full chain validation):
 
@@ -36,6 +40,7 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 2. Call MCP tool `validate_chain` with `config_path`
 3. Display chain-wide cross-reference report
 4. Highlight broken links and orphaned IDs across all documents
+5. Display staleness warnings: docs where upstream file is newer than downstream
 
 ## `/sekkei:status`
 
@@ -131,6 +136,10 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 
 1. Call MCP tool `analyze_update` with `check_staleness: true`, `config_path`
 2. Display per-feature staleness scores and affected doc types
+
+> **Note**: CR completion now logs ALL propagated documents to `sekkei-docs/CHANGELOG.md`
+> with version extracted from each doc's 改訂履歴 table. Regeneration via `generate_document`
+> also logs with the correct version. Pre-generate advisory warns when upstream docs changed.
 
 ## `/sekkei:diff-visual @before_file @after_file`
 

@@ -328,5 +328,15 @@ export function generateSuggestions(report: Omit<ChainRefReport, "suggestions">)
 export async function validateChain(configPath: string): Promise<ChainRefReport> {
   const docs = await loadChainDocs(configPath);
   const graph = buildIdGraph(docs);
-  return analyzeGraph(graph, docs);
+  const report = analyzeGraph(graph, docs);
+
+  // Attach staleness warnings (non-blocking)
+  try {
+    const { checkChainStaleness } = await import("./doc-staleness.js");
+    report.staleness_warnings = await checkChainStaleness(configPath);
+  } catch {
+    report.staleness_warnings = [];
+  }
+
+  return report;
 }

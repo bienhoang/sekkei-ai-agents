@@ -115,16 +115,58 @@ async function handleComplete(args: ChangeRequestArgs): Promise<ToolResult> {
 
   await transitionCR(filePath, "COMPLETED", "Change request completed");
 
-  // Append to global changelog on CR completion
+  // Log origin + propagated docs to global changelog with version extraction
   try {
+    let docPaths: Map<string, string> | null = null;
+    let extractVersion: ((content: string) => string) | null = null;
+    let fsReadFile: ((p: string, e: BufferEncoding) => Promise<string>) | null = null;
+
+    if (args.config_path) {
+      try {
+        const { loadChainDocPaths } = await import("../lib/doc-staleness.js");
+        const { extractVersionFromContent } = await import("../lib/changelog-manager.js");
+        const { readFile } = await import("node:fs/promises");
+        docPaths = await loadChainDocPaths(args.config_path);
+        extractVersion = extractVersionFromContent;
+        fsReadFile = readFile;
+      } catch { /* import/load non-blocking */ }
+    }
+
+    // Helper: extract version from a doc file
+    async function getVersion(docType: string): Promise<string> {
+      if (!docPaths || !extractVersion || !fsReadFile) return "";
+      const path = docPaths.get(docType);
+      if (!path) return "";
+      try {
+        const content = await fsReadFile(path, "utf-8");
+        return extractVersion(content);
+      } catch { return ""; }
+    }
+
+    // Log origin doc
+    const originVersion = await getVersion(cr.origin_doc);
     await appendGlobalChangelog(args.workspace_path, {
       date: new Date().toISOString().slice(0, 10),
       docType: cr.origin_doc,
-      version: "",
+      version: originVersion,
       changes: cr.description,
       author: "",
       crId: cr.id,
     });
+
+    // Log all propagated docs
+    for (const step of cr.propagation_steps) {
+      if (step.status !== "done" || step.doc_type === cr.origin_doc) continue;
+      const version = await getVersion(step.doc_type);
+      await appendGlobalChangelog(args.workspace_path, {
+        date: new Date().toISOString().slice(0, 10),
+        docType: step.doc_type,
+        version,
+        changes: `Propagated from ${cr.origin_doc}: ${cr.description}`,
+        author: "",
+        crId: cr.id,
+      });
+    }
   } catch { /* non-blocking */ }
 
   return ok(JSON.stringify({ success: true, cr_id: crId }));
