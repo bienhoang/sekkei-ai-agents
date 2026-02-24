@@ -56,31 +56,9 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash
 ```
 
-This installs everything: MCP server, Claude Code skill, CLI, and runs `sekkei doctor` to verify.
+This installs everything: MCP server, Claude Code skill, CLI, Python export (Excel/PDF/DOCX), and runs `sekkei doctor` to verify.
 
-```bash
-# With Python export support (Excel/PDF/DOCX):
-curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash -s -- --with-python
-```
-
-**Prerequisites:** Node.js 20+, git, [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
-
-> **GitHub Access Required** — This is a private repo. Set up access **before** running the installer:
->
-> **Option A — SSH key (recommended):**
-> ```bash
-> ssh-keygen -t ed25519 -C "your@email.com"
-> cat ~/.ssh/id_ed25519.pub   # Copy this → https://github.com/settings/keys
-> ```
->
-> **Option B — Personal Access Token:**
-> 1. Go to [github.com/settings/tokens](https://github.com/settings/tokens) → Generate new token (classic)
-> 2. Select scope: `repo` (full control of private repositories)
-> 3. Clone manually first:
-> ```bash
-> git clone https://<YOUR_TOKEN>@github.com/bienhoang/sekkei-ai-agents.git ~/.sekkei
-> ```
-> Then re-run the installer — it will detect the existing clone and skip the clone step.
+**Prerequisites:** Node.js 20+, git, Python 3.9+, [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
 
 ### Post-Install
 
@@ -119,8 +97,8 @@ curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/set
 
 ```bash
 git clone git@github.com:bienhoang/sekkei-ai-agents.git && cd sekkei-ai-agents
-chmod +x install.sh && ./install.sh          # Build + install
-./install.sh --with-python                   # With Python export support
+chmod +x install.sh && ./install.sh          # Build + install (includes Python)
+./install.sh --skip-python                   # Skip Python export setup
 ```
 
 ## Architecture
@@ -158,15 +136,12 @@ Built with citty. Available commands:
 
 | Command | Description |
 |---------|-------------|
-| `sekkei generate` | Generate documents from CLI |
-| `sekkei validate` | Validate document completeness |
-| `sekkei export` | Export to Excel/PDF/DOCX |
-| `sekkei status` | Show chain progress |
-| `sekkei glossary` | Manage terminology |
-| `sekkei watch` | Watch for changes |
+| `sekkei init` | Initialize project config (interactive wizard) |
 | `sekkei doctor` | Installation health check + fix suggestions |
 | `sekkei version` | Version + environment info |
+| `sekkei glossary` | Manage terminology |
 | `sekkei update` | Update skill stubs and MCP registration |
+| `sekkei migrate` | Migrate config underscore keys to hyphen format |
 | `sekkei uninstall` | Remove Sekkei from system |
 
 ## Slash Commands (Claude Code)
@@ -177,7 +152,7 @@ Built with citty. Available commands:
 
 | Command | Description |
 |---------|-------------|
-| `npx sekkei init` | Initialize project config (CLI) |
+| `sekkei init` | Initialize project config (interactive wizard) |
 | `/sekkei:rfp @rfp.md` | RFP analysis and presales workflow |
 | `/sekkei:requirements @input` | Generate 要件定義書 (Requirements) |
 | `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |

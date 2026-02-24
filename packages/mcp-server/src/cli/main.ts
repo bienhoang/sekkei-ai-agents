@@ -6,12 +6,8 @@ import { readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineCommand, runMain } from "citty";
-import { generateCommand } from "./commands/generate.js";
-import { validateCommand } from "./commands/validate.js";
-import { exportCommand } from "./commands/export-cmd.js";
-import { statusCommand } from "./commands/status.js";
+import { initCommand } from "./commands/init.js";
 import { glossaryCommand } from "./commands/glossary.js";
-import { watchCommand } from "./commands/watch.js";
 import { versionCommand } from "./commands/version.js";
 import { uninstallCommand } from "./commands/uninstall.js";
 import { updateCommand } from "./commands/update.js";
@@ -28,12 +24,8 @@ const main = defineCommand({
     description: "Sekkei — AI Documentation Agent CLI for Japanese V-model spec documents",
   },
   subCommands: {
-    generate: generateCommand,
-    validate: validateCommand,
-    export: exportCommand,
-    status: statusCommand,
+    init: initCommand,
     glossary: glossaryCommand,
-    watch: watchCommand,
     version: versionCommand,
     uninstall: uninstallCommand,
     update: updateCommand,

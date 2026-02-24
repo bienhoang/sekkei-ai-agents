@@ -58,7 +58,7 @@ When the user invokes a sub-command, load the corresponding reference file and f
 Before using any sub-command, initialize the project via CLI:
 
 ```bash
-npx sekkei init
+sekkei init
 ```
 
 This interactive wizard creates `sekkei.config.yaml`, sets up the output directory, imports industry glossary, and configures Python dependencies for export features. No AI required.

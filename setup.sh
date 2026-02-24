@@ -3,7 +3,7 @@
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash
-#   curl -fsSL ... | bash -s -- --with-python
+#   curl -fsSL ... | bash -s -- --skip-python  # skip Python venv for export
 #
 # What it does:
 #   1. Checks prerequisites (Node 20+, npm, git, Claude Code)

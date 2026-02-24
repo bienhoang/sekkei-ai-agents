@@ -12,31 +12,7 @@ Chạy lệnh sau trong terminal:
 curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash
 ```
 
-Installer tự động: kiểm tra prerequisites (Node.js 20+, git, Claude Code), clone repo, build MCP server, cài skill + CLI, chạy `sekkei doctor` để verify.
-
-> [!IMPORTANT]
-> **Đây là private repo** — bạn cần cấu hình GitHub access **trước khi** chạy installer:
->
-> **Cách A — SSH key (khuyến nghị):**
-> ```bash
-> ssh-keygen -t ed25519 -C "your@email.com"
-> cat ~/.ssh/id_ed25519.pub   # Copy output → thêm tại https://github.com/settings/keys
-> ```
->
-> **Cách B — Personal Access Token:**
-> 1. Vào [github.com/settings/tokens](https://github.com/settings/tokens) → Generate new token (classic)
-> 2. Chọn scope: `repo` (full control of private repositories)
-> 3. Clone thủ công trước:
-> ```bash
-> git clone https://<TOKEN_CỦA_BẠN>@github.com/bienhoang/sekkei-ai-agents.git ~/.sekkei
-> ```
-> Sau đó chạy lại installer — nó sẽ detect clone có sẵn và bỏ qua bước clone.
-
-> [!NOTE]
-> Cần Python export (Excel/PDF/DOCX)? Thêm `--with-python`:
-> ```bash
-> curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash -s -- --with-python
-> ```
+Installer tự động: kiểm tra prerequisites (Node.js 20+, git, Python 3.9+, Claude Code), clone repo, build MCP server, cài Python venv + export dependencies, cài skill + CLI, chạy `sekkei doctor` để verify.
 
 Sau khi cài xong, kiểm tra:
 
@@ -114,7 +90,7 @@ Sau đó xem trạng thái chain trong Claude Code:
 Lần đầu tiên bạn sẽ thấy tất cả tài liệu ở trạng thái `pending` — đây là bình thường.
 
 > [!WARNING]
-> Nếu `sekkei doctor` báo thiếu Python venv, export sang Excel/PDF sẽ không hoạt động. Chạy lại installer với `--with-python` hoặc cài thủ công:
+> Nếu `sekkei doctor` báo thiếu Python venv, export sang Excel/PDF sẽ không hoạt động. Cài thủ công:
 > ```bash
 > cd ~/.sekkei/packages/mcp-server && python3 -m venv python/.venv && python/.venv/bin/pip install -r python/requirements.txt
 > ```

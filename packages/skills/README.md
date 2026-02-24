@@ -30,7 +30,7 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 
 | Command | Description |
 |---------|-------------|
-| `npx sekkei init` | Initialize project config (CLI) |
+| `sekkei init` | Initialize project config (interactive wizard) |
 | `/sekkei:rfp @rfp.md` | RFP analysis and presales workflow |
 | `/sekkei:requirements @input` | Generate 要件定義書 (Requirements Definition) |
 | `/sekkei:functions-list @input` | Generate 機能一覧 (Function List) |
@@ -77,7 +77,7 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 
 ```bash
 # 1. Initialize project (run in terminal)
-npx sekkei init
+sekkei init
 
 # 2. Generate documents following V-model chain
 /sekkei:requirements @rfp.md             # RFP → 要件定義書

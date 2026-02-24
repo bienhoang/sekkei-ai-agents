@@ -4,7 +4,7 @@
 #
 # Usage:
 #   chmod +x install.sh && ./install.sh
-#   ./install.sh --with-python   # also set up Python venv for Excel/PDF export
+#   ./install.sh --skip-python   # skip Python venv setup for Excel/PDF export
 
 set -euo pipefail
 
@@ -31,9 +31,9 @@ CLAUDE_DIR="$HOME/.claude"
 SKILL_DEST="$CLAUDE_DIR/skills/sekkei"
 SETTINGS_FILE="$CLAUDE_DIR/settings.json"
 
-WITH_PYTHON=false
+WITH_PYTHON=true
 for arg in "$@"; do
-  [[ "$arg" == "--with-python" ]] && WITH_PYTHON=true
+  [[ "$arg" == "--skip-python" ]] && WITH_PYTHON=false
 done
 
 echo -e "\n${BOLD}Sekkei (設計) — Local Install${RESET}"
@@ -217,7 +217,7 @@ if $WITH_PYTHON; then
   fi
 else
   echo ""
-  warn "Skipping Python setup (export features). Use --with-python to enable."
+  warn "Skipping Python setup (export features)."
 fi
 
 # ── 6. Verify ──────────────────────────────────────────────────────────

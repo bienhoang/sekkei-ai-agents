@@ -493,13 +493,11 @@ execFile(pythonPath, ["cli.py"], {
 
 ### 5. CLI Commands (`src/cli/commands/`)
 
-#### watch.ts (v3)
-`sekkei watch` command — Monitor specification drift:
-- Flags: `--config`, `--since`, `--threshold`, `--ci`
-- Polls for git changes, detects staleness, validates rules
-- Reports via stdout or exits with code on violations
+#### Lifecycle Commands
 
-#### Lifecycle Commands (NEW)
+**init.ts** — `sekkei init`
+- Delegates to interactive init wizard (`bin/init.js`)
+- Flags: `--skip-deps`, `--preset`
 
 **version.ts** — `sekkei version`
 - Shows Sekkei version + environment health check

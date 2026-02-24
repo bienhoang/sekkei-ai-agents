@@ -53,13 +53,11 @@ Service account authentication (dynamic google-auth-library import).
 
 ### CLI Commands
 
-#### `src/cli/commands/watch.ts` (48 lines — v3)
-`sekkei watch` command for continuous monitoring:
-- Flags: `--config`, `--since`, `--threshold`, `--ci`
-- Polls for git changes, detects staleness, validates structure rules
-- Supports CI mode (exit codes on violations)
+#### `src/cli/commands/init.ts` (35 lines)
+`sekkei init` — delegates to interactive init wizard (`bin/init.js`):
+- Flags: `--skip-deps`, `--preset`
 
-#### `src/cli/commands/version.ts` (28 lines — NEW)
+#### `src/cli/commands/version.ts` (28 lines)
 `sekkei version` command with health check:
 - Shows package version + detailed environment report
 - Checks: Node.js, Python, Playwright, templates, config, venv, skill, MCP, commands
