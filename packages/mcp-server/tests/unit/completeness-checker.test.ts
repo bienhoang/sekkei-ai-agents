@@ -80,6 +80,20 @@ describe("validateContentDepth — functions-list", () => {
   });
 });
 
+describe("validateContentDepth — test-plan", () => {
+  it("warns when fewer than 3 TP-xxx IDs present", () => {
+    const content = "## テスト戦略\nTP-001 単体テスト\nTP-002 結合テスト";
+    const issues = validateContentDepth(content, "test-plan");
+    expect(issues.some((i) => i.message.includes("TP-xxx"))).toBe(true);
+  });
+
+  it("returns no issues with 3+ TP-xxx IDs", () => {
+    const content = "TP-001 単体テスト\nTP-002 結合テスト\nTP-003 システムテスト";
+    const issues = validateContentDepth(content, "test-plan");
+    expect(issues).toHaveLength(0);
+  });
+});
+
 describe("validateContentDepth — doc type with no rules", () => {
   it("returns empty array for crud-matrix (no rules defined)", () => {
     const issues = validateContentDepth("any content", "crud-matrix");

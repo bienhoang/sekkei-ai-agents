@@ -19,13 +19,20 @@ export const CHAIN_PAIRS: [string, string][] = [
   // Design phase
   ["requirements", "basic-design"],
   ["functions-list", "basic-design"],
+  ["requirements", "security-design"],
+  ["nfr", "security-design"],
   ["basic-design", "security-design"],
   ["basic-design", "detail-design"],
   // Test phase (V-model symmetric — branching)
+  ["requirements", "test-plan"],
+  ["nfr", "test-plan"],
+  ["basic-design", "test-plan"],
   ["detail-design", "ut-spec"],
   ["basic-design", "it-spec"],
   ["basic-design", "st-spec"],
+  ["functions-list", "st-spec"],
   ["requirements", "uat-spec"],
+  ["nfr", "uat-spec"],
   // Supplementary
   ["requirements", "operation-design"],
   ["basic-design", "migration-design"],

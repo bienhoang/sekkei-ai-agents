@@ -96,6 +96,13 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       message: "プロジェクト計画書: WBSにPP-xxxが3つ以上必要です",
     },
   ],
+  "test-plan": [
+    {
+      check: "TP entries",
+      test: (c: string) => (c.match(/TP-\d{3}/g) || []).length >= 3,
+      message: "テスト計画書: テスト戦略にTP-xxxが3つ以上必要です",
+    },
+  ],
   "test-evidence": [
     {
       check: "evidence entry",

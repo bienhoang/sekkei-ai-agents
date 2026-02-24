@@ -123,7 +123,7 @@ const UPSTREAM_ID_TYPES: Record<DocType, string[]> = {
   nfr: ["REQ", "NFR"],
   "project-plan": ["REQ", "F"],
   "basic-design": ["REQ", "F"],
-  "security-design": ["REQ", "NFR"],
+  "security-design": ["REQ", "NFR", "API", "SCR", "TBL"],
   "detail-design": ["SCR", "TBL", "API"],
   "test-plan": ["REQ", "F", "NFR"],
   "ut-spec": ["CLS", "DD"],

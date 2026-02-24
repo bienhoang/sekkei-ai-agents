@@ -92,21 +92,38 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 
 ## `/sekkei:security-design @basic-design`
 
+**Prerequisite check (MUST run before interview):**
+1. Check `{output.directory}/03-system/basic-design.md` exists (or check `chain.basic_design.status`)
+   - If missing → ABORT: "Basic design not found. Run `/sekkei:basic-design` first."
+2. Read basic-design content as primary upstream
+3. Optionally load requirements + nfr for fuller cross-referencing:
+   - If `chain.requirements.output` exists → read as additional upstream
+   - If `chain.nfr.output` exists → read as additional upstream
+4. Concatenate all as `upstream_content` (requirements + nfr + basic-design)
+
 **Interview questions (ask before generating):**
 - Authentication method? (OAuth2, SAML, OpenID Connect, custom)
 - Data classification levels? (公開, 社内, 機密, 極秘)
 - Applicable compliance? (個人情報保護法, PCI-DSS, HIPAA, ISMS)
 
-1. Read the upstream 基本設計書
+1. Use `upstream_content` prepared in prerequisite check above
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
-3. Call MCP tool `generate_document` with `doc_type: "security-design"`, `upstream_content` (basic-design), and `language` from config
+3. Call MCP tool `generate_document` with `doc_type: "security-design"`, `upstream_content`, and `language` from config
 4. Follow these rules strictly:
    - ID format: `SEC-001`
    - Address OWASP Top 10 risks explicitly
    - Specify TLS 1.3+ for all transport, bcrypt (cost≥12) or Argon2id for passwords
+   - Cross-reference REQ-xxx, NFR-xxx IDs from requirements/nfr
    - Cross-reference API-xxx, SCR-xxx, TBL-xxx IDs from 基本設計書
 5. Save output to `{output.directory}/03-system/security-design.md`
-6. Update chain status: `security_design.status: complete`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "security_design"`,
+   `status: "complete"`, `output: "03-system/security-design.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "security-design"`.
+   Show results as non-blocking.
+8. Suggest next steps:
+   > "Security design complete. Next steps:
+   > - `/sekkei:detail-design` — generate 詳細設計書
+   > - `/sekkei:validate @security-design` — validate cross-references"
 
 ## `/sekkei:detail-design @input`
 

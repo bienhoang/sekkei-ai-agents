@@ -49,6 +49,25 @@ const UT_SPEC = `
 - UT-002 SearchController test (CLS-002)
 `;
 
+const SECURITY_DESIGN = `
+## セキュリティ設計
+| SEC-001 | 認証セキュリティ | REQ-001, NFR-001, API-001 |
+| SEC-002 | データ保護 | TBL-001, SCR-001 |
+`;
+
+const TEST_PLAN = `
+## テスト戦略
+| TP-001 | 単体テスト | REQ-001, F-001 |
+| TP-002 | 結合テスト | REQ-002, F-002 |
+| TP-003 | NFR検証 | NFR-001 |
+`;
+
+const NFR = `
+## 非機能要件
+- NFR-001 可用性 99.9%
+- NFR-002 性能 response <200ms
+`;
+
 // --- Tests ---
 
 describe("buildIdGraph", () => {
@@ -295,6 +314,81 @@ describe("NFR origin from requirements", () => {
     const nfrEntry = matrix.find(e => e.id === "NFR-001");
     expect(nfrEntry).toBeDefined();
     expect(nfrEntry!.doc_type).toBe("requirements");
+  });
+});
+
+describe("analyzeGraph — requirements → security-design chain pair", () => {
+  it("detects orphaned REQ-xxx not referenced in security-design", () => {
+    const docs = new Map([
+      ["requirements", REQUIREMENTS_FULL],
+      ["security-design", SECURITY_DESIGN],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const link = report.links.find(
+      (l) => l.upstream === "requirements" && l.downstream === "security-design"
+    );
+    expect(link).toBeDefined();
+    // REQ-001 referenced in security-design, REQ-002 and REQ-003 not
+    expect(link!.orphaned_ids).toContain("REQ-002");
+    expect(link!.orphaned_ids).toContain("REQ-003");
+    expect(link!.orphaned_ids).not.toContain("REQ-001");
+  });
+});
+
+describe("analyzeGraph — nfr → security-design chain pair", () => {
+  it("detects orphaned NFR-xxx not referenced in security-design", () => {
+    const docs = new Map([
+      ["nfr", NFR],
+      ["security-design", SECURITY_DESIGN],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const link = report.links.find(
+      (l) => l.upstream === "nfr" && l.downstream === "security-design"
+    );
+    expect(link).toBeDefined();
+    // NFR-001 referenced, NFR-002 not
+    expect(link!.orphaned_ids).toContain("NFR-002");
+    expect(link!.orphaned_ids).not.toContain("NFR-001");
+  });
+});
+
+describe("analyzeGraph — requirements → test-plan chain pair", () => {
+  it("detects orphaned REQ-xxx not referenced in test-plan", () => {
+    const docs = new Map([
+      ["requirements", REQUIREMENTS_FULL],
+      ["test-plan", TEST_PLAN],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const link = report.links.find(
+      (l) => l.upstream === "requirements" && l.downstream === "test-plan"
+    );
+    expect(link).toBeDefined();
+    // REQ-001, REQ-002 referenced; REQ-003 not
+    expect(link!.orphaned_ids).toContain("REQ-003");
+    expect(link!.orphaned_ids).not.toContain("REQ-001");
+    expect(link!.orphaned_ids).not.toContain("REQ-002");
+  });
+});
+
+describe("analyzeGraph — basic-design → test-plan chain pair", () => {
+  it("links exist when both docs present", () => {
+    const docs = new Map([
+      ["basic-design", BASIC_DESIGN],
+      ["test-plan", TEST_PLAN],
+    ]);
+    const graph = buildIdGraph(docs);
+    const report = analyzeGraph(graph, docs);
+
+    const link = report.links.find(
+      (l) => l.upstream === "basic-design" && l.downstream === "test-plan"
+    );
+    expect(link).toBeDefined();
   });
 });
 

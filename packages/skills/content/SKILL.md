@@ -107,15 +107,15 @@ RFP (/sekkei:rfp)
         ├─► NFR (/sekkei:nfr)
         ├─► Functions List (/sekkei:functions-list)
         ├─► Project Plan (/sekkei:project-plan)
+        ├─► Test Plan (/sekkei:test-plan)          ← requirements + nfr
+        ├─► UAT Spec (/sekkei:uat-spec)            ← requirements + nfr
         └─► Glossary seed (/sekkei:glossary seed)
               └─► Basic Design (/sekkei:basic-design)
                     ├─► Security Design (/sekkei:security-design)
+                    ├─► IT Spec (/sekkei:it-spec)              ← basic-design
+                    ├─► ST Spec (/sekkei:st-spec)              ← basic-design + functions-list
                     └─► Detail Design (/sekkei:detail-design)
-                          └─► Test Plan (/sekkei:test-plan)
-                                ├─► UT Spec (/sekkei:ut-spec)     ← detail-design
-                                ├─► IT Spec (/sekkei:it-spec)     ← basic-design
-                                ├─► ST Spec (/sekkei:st-spec)     ← basic-design
-                                └─► UAT Spec (/sekkei:uat-spec)   ← requirements
+                          └─► UT Spec (/sekkei:ut-spec)        ← detail-design
 ```
 
 ## Split Mode
