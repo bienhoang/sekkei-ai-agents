@@ -4,7 +4,7 @@
 
 **Sekkei (設計)** v2.0 is a monorepo containing:
 - **@bienhoang/sekkei-mcp-server** (TypeScript/93 files/8,200+ LOC) — AI specification document generation with V-model chain restructure + Phase A + v3 extensions
-- **@bienhoang/sekkei-preview** (Vue + VitePress/9 TS+Vue files) — VitePress preview + Milkdown WYSIWYG editor
+- **@bienhoang/sekkei-preview** (Express + React + Tiptap v3/9 TS+TSX files) — Express server + React SPA + Tiptap v3 WYSIWYG editor
 - **@bienhoang/sekkei-skills** (Claude Code SKILL.md with 30+ sub-commands) — Claude Code skill definition + reference docs
 - **Python Layer** (7 files in cli.py, rest in .venv) — Export & NLP utilities (Excel/PDF/DOCX/matrix)
 - **Templates** (22 MD + 15 YAML glossaries) — Japanese specification templates with industry terminology
@@ -154,15 +154,16 @@ sekkei/
 │   │   ├── tsconfig.json              # TypeScript config
 │   │   ├── jest.config.cjs            # Jest test config (ESM)
 │   │   └── CLAUDE.md                  # Development guidelines
-│   ├── preview/                       # @bienhoang/sekkei-preview (VitePress + Milkdown, 9 TS+Vue files)
+│   ├── preview/                       # @bienhoang/sekkei-preview (Express + React + Tiptap, 9 TS+TSX files)
 │   │   ├── src/
-│   │   │   ├── App.vue                # Main Vue app
+│   │   │   ├── App.tsx                # Main React app component
 │   │   │   ├── components/
-│   │   │   │   ├── DocumentViewer.vue # Markdown renderer with Mermaid support
-│   │   │   │   ├── Editor.vue         # Milkdown WYSIWYG editor
-│   │   │   │   └── Sidebar.vue        # Navigation sidebar
+│   │   │   │   ├── DocumentViewer.tsx # Markdown renderer with Mermaid support
+│   │   │   │   ├── Editor.tsx         # Tiptap v3 WYSIWYG editor
+│   │   │   │   └── Sidebar.tsx        # Navigation sidebar
+│   │   │   ├── server.ts              # Express server entry
 │   │   │   └── cli.ts                 # CLI entry for sekkei-preview command
-│   │   ├── vite.config.ts             # VitePress configuration
+│   │   ├── vite.config.ts             # Vite configuration
 │   │   └── package.json
 │   └── skills/                        # @bienhoang/sekkei-skills (Claude Code Skill)
 │       └── sekkei/

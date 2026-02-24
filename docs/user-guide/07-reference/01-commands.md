@@ -49,7 +49,7 @@
 | 25 | **diff-visual** | `/sekkei:diff-visual @before @after` | — | Export Excel màu thể hiện diff giữa 2 version |
 | 26 | **plan** | `/sekkei:plan @doc-type` | — | Khảo sát yêu cầu + tạo kế hoạch triển khai nhiều phase |
 | 27 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
-| 28 | **preview** | `/sekkei:preview` | `--edit` / `--guide` / `--docs` / `--port <number>` | Khởi động VitePress preview server tại localhost |
+| 28 | **preview** | `/sekkei:preview` | `--docs` / `--guide` / `--port <number>` / `--no-open` / `--help` | Khởi động Express preview server tại localhost:4983 |
 | 29 | **version** | `/sekkei:version` | `--json` | Version info + MCP server status |
 | 30 | **doctor** | `sekkei doctor` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
 | 31 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |

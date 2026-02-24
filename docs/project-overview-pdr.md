@@ -422,12 +422,13 @@ sekkei/
 │   │   ├── tests/              # Jest tests (22+ files)
 │   │   ├── dist/               # Compiled output
 │   │   └── package.json
-│   ├── preview/                # @bienhoang/sekkei-preview (VitePress + Milkdown)
+│   ├── preview/                # @bienhoang/sekkei-preview (Express + React + Tiptap)
 │   │   ├── src/
-│   │   │   ├── App.vue         # Main Vue component
-│   │   │   ├── components/     # Viewer, Editor, Sidebar
+│   │   │   ├── App.tsx         # Main React component
+│   │   │   ├── components/     # Viewer, Editor, Sidebar (React)
+│   │   │   ├── server.ts       # Express server entry
 │   │   │   └── cli.ts          # CLI entry
-│   │   ├── vite.config.ts      # VitePress config
+│   │   ├── vite.config.ts      # Vite configuration
 │   │   └── package.json
 │   ├── skills/                 # @bienhoang/sekkei-skills (Claude Code SKILL.md)
 │   │   └── sekkei/

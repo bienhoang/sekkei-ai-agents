@@ -8,7 +8,7 @@
 
 ## Overview
 - **Priority:** P1
-- **Status:** pending
+- **Status:** completed
 - **Effort:** 3h
 - **Depends on:** Phase 3 (TiptapEditor placeholder exists, App.tsx wired)
 
@@ -25,6 +25,8 @@ Replace the `TiptapEditor` and `EditorToolbar` placeholders with full Tiptap v3 
 - Toolbar buttons use `editor.chain().focus()` commands — standard Tiptap pattern
 - Link: prompt for URL via `window.prompt` (KISS — no modal library)
 - `StarterKit` includes: bold, italic, strike, headings, bullet/ordered lists, blockquote, code, codeBlock, hardBreak, horizontalRule, paragraph, history
+<!-- Updated: Validation Session 1 - tiptap-markdown v3 compat risk + textarea fallback -->
+- **Fallback strategy:** `tiptap-markdown` v0.8.x targets Tiptap v2. If peer dep issues arise, install with `--legacy-peer-deps`. If runtime errors occur, degrade to a raw `<textarea>` with basic markdown content (no WYSIWYG). This fallback preserves core edit+save functionality without Tiptap.
 
 ## Requirements
 

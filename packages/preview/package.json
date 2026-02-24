@@ -1,54 +1,49 @@
 {
   "name": "@bienhoang/sekkei-preview",
-  "version": "0.4.1",
-  "description": "VitePress-based preview + WYSIWYG editor for Sekkei specification documents",
+  "version": "1.0.0",
+  "description": "Express+React preview + WYSIWYG editor for Sekkei specification documents",
   "type": "module",
   "bin": {
-    "sekkei-preview": "./dist/cli.js"
+    "sekkei-preview": "./dist/server.js"
   },
-  "main": "dist/cli.js",
-  "files": [
-    "dist/",
-    "theme/",
-    "plugins/",
-    "guide/"
-  ],
+  "main": "dist/server.js",
+  "files": ["dist/", "guide/"],
   "scripts": {
-    "build": "tsc && npm run build:guide",
-    "build:guide": "node --input-type=commonjs -e \"const {cpSync}=require('fs');cpSync('../../docs/user-guide','./guide',{recursive:true})\"",
-    "lint": "tsc --noEmit"
+    "build": "rm -rf dist && vite build && tsup && npm run build:guide",
+    "build:guide": "node --input-type=commonjs -e \"const {cpSync,existsSync}=require('fs'); const src='../../docs/user-guide'; if(existsSync(src)) cpSync(src,'./guide',{recursive:true}); else console.log('Warning: docs/user-guide not found, skipping guide copy');\"",
+    "dev:server": "tsx watch src/server/index.ts",
+    "dev:client": "vite",
+    "lint": "tsc --noEmit && tsc -p tsconfig.client.json --noEmit",
+    "test": "echo 'No unit tests for preview package' && exit 0"
   },
   "dependencies": {
-    "vitepress": "^1.6.4",
-    "vue": "^3.5.0",
-    "yaml": "^2.7.0",
-    "@milkdown/kit": "^7.18.0",
-    "@milkdown/vue": "^7.18.0",
-    "@milkdown/theme-nord": "^7.18.0"
+    "express": "^4.21.0",
+    "get-port": "^7.1.0",
+    "open": "^11.0.0",
+    "yaml": "^2.7.0"
   },
   "devDependencies": {
     "typescript": "^5.7.0",
-    "@types/node": "^22.13.0"
+    "@types/node": "^22.13.0",
+    "@types/express": "^5.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@tiptap/react": "^3.0.0",
+    "@tiptap/pm": "^3.0.0",
+    "@tiptap/starter-kit": "^3.0.0",
+    "@tiptap/extension-link": "^3.0.0",
+    "tiptap-markdown": "^0.8.10",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "tsup": "^8.4.0",
+    "vite": "^6.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "tsx": "^4.19.0"
   },
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "keywords": [
-    "sekkei",
-    "vitepress",
-    "preview",
-    "wysiwyg",
-    "milkdown",
-    "japanese",
-    "specification"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/bienhoang/sekkei-ai-agents.git",
-    "directory": "packages/preview"
-  },
-  "homepage": "https://github.com/bienhoang/sekkei-ai-agents/tree/main/packages/preview",
-  "bugs": "https://github.com/bienhoang/sekkei-ai-agents/issues",
+  "engines": { "node": ">=20.0.0" },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com",
     "access": "restricted"

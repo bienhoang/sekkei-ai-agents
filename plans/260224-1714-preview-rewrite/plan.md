@@ -1,7 +1,7 @@
 ---
 title: "Rewrite packages/preview — Express + React + Tiptap v3 + Tailwind v4"
 description: "Replace VitePress/Vue/Milkdown with Express+React SPA, dual build (vite+tsup), tiptap-markdown, Tailwind v4 prose"
-status: pending
+status: completed
 priority: P1
 effort: 15h
 branch: main
@@ -17,12 +17,12 @@ Replace `packages/preview` (VitePress + Vue + Milkdown) with a standalone Expres
 
 | # | Phase | Effort | Status | Depends |
 |---|-------|--------|--------|---------|
-| 1 | [Package Restructure + Build Pipeline](./phase-01-package-restructure.md) | 2h | pending | — |
-| 2 | [Express Server + API](./phase-02-express-server-api.md) | 3h | pending | Phase 1 |
-| 3 | [React Frontend + Tree Sidebar](./phase-03-react-frontend-tree.md) | 4h | pending | Phase 1 |
-| 4 | [Tiptap Editor + Toolbar](./phase-04-tiptap-editor.md) | 3h | pending | Phase 3 |
-| 5 | [Dual Mode — Workspace + Guide](./phase-05-dual-mode.md) | 2h | pending | Phase 2,4 |
-| 6 | [Skill Update + E2E Tests](./phase-06-skill-update-e2e.md) | 1h | pending | Phase 5 |
+| 1 | [Package Restructure + Build Pipeline](./phase-01-package-restructure.md) | 2h | completed | — |
+| 2 | [Express Server + API](./phase-02-express-server-api.md) | 3h | completed | Phase 1 |
+| 3 | [React Frontend + Tree Sidebar](./phase-03-react-frontend-tree.md) | 4h | completed | Phase 1 |
+| 4 | [Tiptap Editor + Toolbar](./phase-04-tiptap-editor.md) | 3h | completed | Phase 3 |
+| 5 | [Dual Mode — Workspace + Guide](./phase-05-dual-mode.md) | 2h | completed | Phase 2,4 |
+| 6 | [Skill Update + E2E Tests](./phase-06-skill-update-e2e.md) | 1h | completed | Phase 5 |
 
 **Total: 15h**
 

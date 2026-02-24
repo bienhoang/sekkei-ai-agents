@@ -2,15 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src/server",
+    "types": ["node"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "theme",
-    "plugins"
-  ]
+  "include": ["src/server/**/*"],
+  "exclude": ["node_modules", "dist", "src/client"]
 }

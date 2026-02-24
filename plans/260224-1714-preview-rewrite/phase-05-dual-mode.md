@@ -10,7 +10,7 @@
 
 ## Overview
 - **Priority:** P2
-- **Status:** pending
+- **Status:** completed
 - **Effort:** 2h
 - **Depends on:** Phase 2 (server mode flag), Phase 4 (readonly editor)
 
@@ -20,7 +20,8 @@ Dual mode is largely already wired through prior phases. This phase verifies the
 - `resolveGuideDir()` already exists (moved in Phase 2) — priority: `<packageDir>/guide/` → walk up to `docs/user-guide/`
 - Mode propagates: CLI `--guide` flag → `resolveGuideDir()` → Express `mode='guide'` → `GET /api/system` → `useSystem()` → `readonly` prop → Tiptap `editable: false`
 - Server already returns 403 on `PUT /api/files` when `mode === 'guide'` (Phase 2)
-- `build:guide` script already exists in package.json (Phase 1) — copy `docs/user-guide/ → guide/`
+<!-- Updated: Validation Session 1 - build:guide included in main build script -->
+- `build:guide` script included in main `build` command (Phase 1): `vite build && tsup && npm run build:guide`
 - No changes needed to `resolve-docs-dir.ts` or `resolve-guide-dir` logic
 - The only new work: verify build:guide produces correct output, add guide/ to .gitignore if missing, smoke test both modes
 

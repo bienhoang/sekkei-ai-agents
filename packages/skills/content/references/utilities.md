@@ -170,30 +170,28 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 
 ## `/sekkei:preview`
 
-1. Run `npx @bienhoang/sekkei-preview` from the project root (or `node <sekkei-path>/packages/sekkei-preview/dist/cli.js`).
+1. Run `npx @bienhoang/sekkei-preview` from the project root.
 2. Docs dir resolved automatically: `--docs` flag → `workspace-docs/` in CWD → `sekkei.config.yaml output.directory`.
-3. If `workspace-docs/index.md` missing, CLI auto-generates a homepage from `_index.yaml`.
-4. Commands:
-   - `npx @bienhoang/sekkei-preview` — dev server (default, hot-reload)
-   - `npx @bienhoang/sekkei-preview --edit` — dev server with WYSIWYG editing enabled
-   - `npx @bienhoang/sekkei-preview --guide` — open user guide
-   - `npx @bienhoang/sekkei-preview --guide --edit` — open user guide with WYSIWYG editing
-   - `npx @bienhoang/sekkei-preview --guide --port 3001` — custom port for user guide
-   - `npx @bienhoang/sekkei-preview build` — build static site
-   - `npx @bienhoang/sekkei-preview serve` — serve built site
-   - `npx @bienhoang/sekkei-preview --docs ./path --port 3000` — custom path + port
-5. Preview URL: `http://localhost:5173` (dev default). Sidebar regenerates from directory structure on restart.
-6. **Edit mode** (`--edit` flag):
-   - Each page shows a floating "Edit" button (bottom-right)
-   - Click Edit → page content replaced by WYSIWYG editor (Milkdown)
-   - Supports: headings, tables, lists, code blocks, bold/italic
-   - Save → writes markdown to disk → page hot-reloads
-   - Cancel → discard changes, return to read-only view
-   - Keyboard: `Ctrl+S` / `Cmd+S` to save
-   - YAML frontmatter preserved automatically (not shown in editor)
-   - Japanese IME input supported
-7. Without `--edit` flag, preview is read-only (no edit button shown).
-8. Without `--guide`, preview serves V-model spec docs from `workspace-docs/`.
+3. Commands:
+   - `npx @bienhoang/sekkei-preview` — start Express server with WYSIWYG editor (Tiptap v3)
+   - `npx @bienhoang/sekkei-preview --guide` — open user guide (readonly mode)
+   - `npx @bienhoang/sekkei-preview --docs ./path --port 4983` — custom docs path + port
+   - `npx @bienhoang/sekkei-preview --no-open` — start without auto-opening browser
+   - `npx @bienhoang/sekkei-preview --help` — show usage
+4. Preview URL: `http://localhost:4983` (default). Port auto-selects if busy.
+5. **Workspace mode** (default):
+   - Tree sidebar shows `.md` files from docs directory
+   - Click file → WYSIWYG editor (Tiptap v3 + tiptap-markdown)
+   - Supports: headings, lists, bold/italic/strike, code, blockquote, links, HR
+   - Save → `PUT /api/files` → writes markdown to disk preserving YAML frontmatter
+   - Keyboard: `Cmd+S` / `Ctrl+S` to save
+   - Dirty indicator (amber dot) shows unsaved changes
+   - Confirm dialog when switching files with unsaved changes
+6. **Guide mode** (`--guide` flag):
+   - Serves bundled user guide (readonly)
+   - No toolbar, no editing, no save
+   - `PUT /api/files` returns 403
+7. Without `--guide`, preview serves V-model spec docs from `workspace-docs/`.
 
 ## `/sekkei:plan @doc-type`
 

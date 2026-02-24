@@ -204,10 +204,13 @@ The validate tool supports 4 modes (Phase 3+):
   - **googleapis** (^118.0) — Google Sheets API for cloud export
   - **google-auth-library** (^9.4) — OAuth2/service account auth
 
-### Preview Server (Vue + VitePress)
+### Preview Server (Express + React + Tiptap)
 - **Package:** @bienhoang/sekkei-preview (GitHub Packages)
-- **Framework:** VitePress + Milkdown WYSIWYG editor
+- **Backend:** Express.js server on port 4983 (default)
+- **Frontend:** React SPA with Tailwind v4 styling
+- **Editor:** Tiptap v3 WYSIWYG editor
 - **Features:** Full-text search, Mermaid rendering, live editing
+- **CLI Flags:** `--docs`, `--guide`, `--port <number>`, `--no-open`, `--help`
 
 ### Python Layer
 - **Export:** openpyxl (Excel), WeasyPrint (PDF), python-docx (Word)

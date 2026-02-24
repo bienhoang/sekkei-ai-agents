@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --font-sans: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+  --leading-relaxed: 1.8;
+}
+
+/* Scrollbar */
+* { scrollbar-width: thin; scrollbar-color: theme(colors.zinc.300) transparent; }
+
+/* Prose overrides for JP documents */
+.prose { line-height: var(--leading-relaxed); }
+
+/* Remove Tiptap default focus outline */
+.ProseMirror { outline: none; }
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: theme(colors.zinc.600);
+  pointer-events: none;
+  float: left;
+  height: 0;
+}

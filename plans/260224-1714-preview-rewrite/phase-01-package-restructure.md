@@ -8,7 +8,7 @@
 
 ## Overview
 - **Priority:** P1 — all other phases depend on this
-- **Status:** pending
+- **Status:** completed
 - **Effort:** 2h
 - **Depends on:** nothing
 
