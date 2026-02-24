@@ -48,9 +48,9 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.0.0 | Core MCP server — document generation, validation, export, CLI |
-| [@bienhoang/sekkei-preview](./packages/preview/) | 0.3.0 | VitePress live preview + Milkdown WYSIWYG editor |
-| [@bienhoang/sekkei-skills](./packages/skills/) | 2.0.0 | Claude Code slash commands (`/sekkei:*`) |
+| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.3.0 | Core MCP server — document generation, validation, export, CLI |
+| [@bienhoang/sekkei-preview](./packages/preview/) | 1.1.0 | Express+React live preview + Tiptap v3 WYSIWYG editor |
+| [@bienhoang/sekkei-skills](./packages/skills/) | 1.4.0 | Claude Code slash commands (`/sekkei:*`) |
 
 ## Quick Start
 
@@ -129,9 +129,9 @@ chmod +x install.sh && ./install.sh          # Build + install (includes Python)
 ### MCP Server
 
 - **Transport**: STDIO (stdout reserved for JSON-RPC, logs to stderr)
-- **10 MCP Tools**: `generate_document`, `get_template`, `validate_document`, `get_chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`, `manage_rfp_workspace`
+- **15 MCP Tools**: `generate_document`, `get_template`, `validate_document`, `get_chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`, `simulate_change_impact`, `import_document`, `manage_rfp_workspace`, `manage_change_request`, `update_chain_status`, `manage_plan`
 - **MCP Resources**: `templates://` for doc templates, `rfp://` for RFP workflow instructions
-- **18 Templates**: Japanese (ja) with YAML frontmatter — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
+- **22 Templates**: Japanese (ja) with YAML frontmatter — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
 - **Python Bridge**: `execFile`-based (no shell injection) for Excel/PDF/DOCX export via `SEKKEI_INPUT` env var
 
 ### CLI (`sekkei` command)
@@ -198,7 +198,7 @@ Built with citty. Available commands:
 | `/sekkei:diff-visual @before @after` | Color-coded revision Excel (朱書き) |
 | `/sekkei:plan @doc-type` | Create generation plan for large docs |
 | `/sekkei:implement @plan-path` | Execute generation plan phase by phase |
-| `/sekkei:preview` | Start VitePress preview server |
+| `/sekkei:preview` | Start Express+React preview server |
 | `/sekkei:version` | Show version + health check |
 | `/sekkei:uninstall` | Remove Sekkei from Claude Code |
 | `/sekkei:rebuild` | Rebuild and re-install skill + MCP |
@@ -266,18 +266,18 @@ sekkei/
 ├── packages/
 │   ├── mcp-server/              # @bienhoang/sekkei-mcp-server
 │   │   ├── src/
-│   │   │   ├── tools/           # 10 MCP tool handlers
+│   │   │   ├── tools/           # 15 MCP tool handlers
 │   │   │   ├── resources/       # Template + RFP instruction resources
 │   │   │   ├── lib/             # Core logic (template-loader, python-bridge, etc.)
 │   │   │   └── cli/             # CLI commands (citty-based)
-│   │   ├── templates/ja/        # 18 Japanese doc templates
+│   │   ├── templates/ja/        # 22 Japanese doc templates
 │   │   ├── python/              # Export layer (Excel, PDF, DOCX, glossary, diff)
 │   │   ├── bin/                 # setup.js, init.js, cli.js
 │   │   └── adapters/            # Platform configs (Claude Code, Cursor, Copilot)
 │   ├── preview/                 # @bienhoang/sekkei-preview
-│   │   ├── src/                 # CLI, VitePress config generator
-│   │   ├── theme/               # Custom VitePress theme + Vue components
-│   │   └── plugins/             # VitePress plugins
+│   │   └── src/
+│   │       ├── client/          # React + Tiptap v3 WYSIWYG editor
+│   │       └── server/          # Express server + API
 │   └── skills/                  # @bienhoang/sekkei-skills
 │       ├── bin/install.js       # Skill installer
 │       └── content/SKILL.md     # 30 sub-commands + workflow router
