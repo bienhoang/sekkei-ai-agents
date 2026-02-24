@@ -1,6 +1,6 @@
 # Team Playbook — Phối Hợp Nhóm với Sekkei
 
-Xem thêm: [Giới thiệu](../introduction.md) | [Workflow Overview](../workflow/index.md) | [Quick Start](../quick-start.md)
+Xem thêm: [Giới thiệu](../01-introduction.md) | [Workflow Overview](../04-workflow/index.md) | [Quick Start](../03-quick-start.md)
 
 ---
 
@@ -112,8 +112,8 @@ Bàn giao: Toàn bộ test specs + traceability matrix → PM export để giao 
 
 | Tài liệu | Nội dung |
 |----------|----------|
-| [scenarios.md](./scenarios.md) | 3 tình huống thực tế với toàn bộ chuỗi lệnh |
-| [checklists.md](./checklists.md) | Checklist từng phase — copy-paste sẵn |
-| [review-and-approval.md](./review-and-approval.md) | Quy tắc review, approval chain, quality gates |
+| [scenarios.md](./01-scenarios.md) | 3 tình huống thực tế với toàn bộ chuỗi lệnh |
+| [checklists.md](./02-checklists.md) | Checklist từng phase — copy-paste sẵn |
+| [review-and-approval.md](./03-review-and-approval.md) | Quy tắc review, approval chain, quality gates |
 
-Muốn xem hướng dẫn theo vai trò: [roles/](../roles/)
+Muốn xem hướng dẫn theo vai trò: [roles/](../05-roles/)

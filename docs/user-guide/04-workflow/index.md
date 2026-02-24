@@ -1,6 +1,6 @@
 # Workflow Overview — Luồng Dự Án Sekkei
 
-Xem thêm: [Giới thiệu](../introduction.md) | [V-Model & Tài liệu](../v-model-and-documents.md) | [Quick Start](../quick-start.md)
+Xem thêm: [Giới thiệu](../01-introduction.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md) | [Quick Start](../03-quick-start.md)
 
 ---
 
@@ -99,12 +99,12 @@ Hai lệnh này bạn sẽ dùng thường xuyên ở mọi phase:
 
 | Phase | Tài liệu hướng dẫn |
 |-------|-------------------|
-| Requirements — 4 tài liệu | [requirements.md](./requirements.md) |
-| Design — 3 tài liệu | [design.md](./design.md) |
-| Testing — 5 tài liệu | [testing.md](./testing.md) |
-| Tài liệu bổ sung — 9 loại | [supplementary.md](./supplementary.md) |
-| Change Request lifecycle | [change-request.md](./change-request.md) |
+| Requirements — 4 tài liệu | [requirements.md](./01-requirements.md) |
+| Design — 3 tài liệu | [design.md](./02-design.md) |
+| Testing — 5 tài liệu | [testing.md](./03-testing.md) |
+| Tài liệu bổ sung — 9 loại | [supplementary.md](./04-supplementary.md) |
+| Change Request lifecycle | [change-request.md](./05-change-request.md) |
 
 ---
 
-**Bắt đầu:** Nếu bạn chưa init project, đọc [Quick Start](../quick-start.md) trước. Sau đó vào [Requirements](./requirements.md) để bắt đầu phase đầu tiên.
+**Bắt đầu:** Nếu bạn chưa init project, đọc [Quick Start](../03-quick-start.md) trước. Sau đó vào [Requirements](./01-requirements.md) để bắt đầu phase đầu tiên.

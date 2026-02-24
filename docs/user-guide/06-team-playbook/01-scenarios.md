@@ -1,6 +1,6 @@
 # Scenarios — Tình Huống Thực Tế
 
-Xem thêm: [Team Playbook](./index.md) | [Checklists](./checklists.md) | [Review & Approval](./review-and-approval.md)
+Xem thêm: [Team Playbook](./index.md) | [Checklists](./02-checklists.md) | [Review & Approval](./03-review-and-approval.md)
 
 ---
 
@@ -419,4 +419,4 @@ zip -r hr-system-docs-v1.0-$(date +%Y%m%d).zip sekkei-docs/
 
 ---
 
-**Xem thêm:** [Checklists](./checklists.md) | [Review & Approval](./review-and-approval.md) | [Change Request Workflow](../workflow/change-request.md)
+**Xem thêm:** [Checklists](./02-checklists.md) | [Review & Approval](./03-review-and-approval.md) | [Change Request Workflow](../04-workflow/05-change-request.md)

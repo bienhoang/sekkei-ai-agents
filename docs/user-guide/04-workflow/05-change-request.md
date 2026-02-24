@@ -1,6 +1,6 @@
 # Change Request — Quản Lý Thay Đổi
 
-Xem thêm: [Workflow Index](./index.md) | [Testing Phase](./testing.md) | [V-Model & Tài liệu](../v-model-and-documents.md)
+Xem thêm: [Workflow Index](./index.md) | [Testing Phase](./03-testing.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md)
 
 ---
 
@@ -214,4 +214,4 @@ Với mỗi lỗi, Sekkei gợi ý lệnh để fix. Ví dụ:
 
 ---
 
-**Xem thêm:** [Tài liệu bổ sung](./supplementary.md) | [Role Guides](../roles/)
+**Xem thêm:** [Tài liệu bổ sung](./04-supplementary.md) | [Role Guides](../05-roles/)

@@ -71,7 +71,7 @@ flowchart TD
 
 Mô hình phát triển phần mềm phổ biến tại Nhật, trong đó mỗi tài liệu thiết kế (bên trái) đối ứng với một loại test (bên phải). Sekkei sinh tài liệu theo đúng thứ tự V-model này.
 
-Chi tiết xem: [V-model và 13 loại tài liệu](./v-model-and-documents.md)
+Chi tiết xem: [V-model và 13 loại tài liệu](./02-v-model-and-documents.md)
 
 ### IPA標準 (IPA chuẩn)
 
@@ -83,4 +83,4 @@ Các tài liệu trong Sekkei **phụ thuộc lẫn nhau theo thứ tự**. Ví 
 
 ---
 
-**Bước tiếp theo:** Đọc [Quick Start](./quick-start.md) để tạo tài liệu đầu tiên trong 15 phút.
+**Bước tiếp theo:** Đọc [Quick Start](./03-quick-start.md) để tạo tài liệu đầu tiên trong 15 phút.

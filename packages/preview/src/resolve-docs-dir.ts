@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve, join } from 'node:path';
+import { resolve, join, dirname } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 
 /**
@@ -47,5 +47,31 @@ export function resolveDocsDir(cliDocsFlag?: string): string {
 
   throw new Error(
     'No docs directory found. Use --docs <path>, create ./sekkei-docs/, or set output.directory in sekkei.config.yaml'
+  );
+}
+
+/**
+ * Resolve user-guide directory for --guide mode:
+ * 1. <packageDir>/guide/          → bundled in published package
+ * 2. Walk up from packageDir to find docs/user-guide/  → monorepo dev
+ * 3. Error
+ */
+export function resolveGuideDir(packageDir: string): string {
+  // Priority 1: Bundled guide/ in published package
+  const bundled = join(packageDir, 'guide');
+  if (existsSync(bundled)) return bundled;
+
+  // Priority 2: Walk up from packageDir to find docs/user-guide/
+  let current = packageDir;
+  for (let i = 0; i < 5; i++) {
+    const candidate = join(current, 'docs', 'user-guide');
+    if (existsSync(candidate)) return candidate;
+    const parent = dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+
+  throw new Error(
+    'User guide not found. Expected <package>/guide/ or docs/user-guide/ in a parent directory.'
   );
 }

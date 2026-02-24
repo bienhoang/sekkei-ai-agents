@@ -1,6 +1,6 @@
 # Requirements Phase — 4 Tài Liệu Yêu Cầu
 
-Xem thêm: [Workflow Index](./index.md) | [V-Model & Tài liệu](../v-model-and-documents.md) | [Quick Start](../quick-start.md)
+Xem thêm: [Workflow Index](./index.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md) | [Quick Start](../03-quick-start.md)
 
 ---
 
@@ -211,4 +211,4 @@ Khi `/sekkei:status` hiện `basic-design: READY`, bạn có thể chuyển sang
 
 ---
 
-**Phase tiếp theo:** [Design Phase](./design.md) — Thiết kế 基本設計書, セキュリティ設計書, 詳細設計書
+**Phase tiếp theo:** [Design Phase](./02-design.md) — Thiết kế 基本設計書, セキュリティ設計書, 詳細設計書

@@ -1,6 +1,6 @@
 # Review & Approval — Quy Tắc Duyệt Tài Liệu
 
-Xem thêm: [Team Playbook](./index.md) | [Scenarios](./scenarios.md) | [Checklists](./checklists.md)
+Xem thêm: [Team Playbook](./index.md) | [Scenarios](./01-scenarios.md) | [Checklists](./02-checklists.md)
 
 ---
 
@@ -139,4 +139,4 @@ Sekkei phân tích diff giữa requirements hiện tại và requirements lúc b
 
 ---
 
-**Xem thêm:** [Scenarios](./scenarios.md) | [Checklists](./checklists.md) | [PM Role Guide](../roles/pm.md)
+**Xem thêm:** [Scenarios](./01-scenarios.md) | [Checklists](./02-checklists.md) | [PM Role Guide](../05-roles/01-pm.md)

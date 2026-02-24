@@ -1,6 +1,6 @@
 # Role Guide: Sales / Presales
 
-Xem thêm: [Giới thiệu](../introduction.md) | [Quick Start](../quick-start.md) | [Workflow Supplementary](../workflow/supplementary.md) | [Team Playbook](../team-playbook/index.md)
+Xem thêm: [Giới thiệu](../01-introduction.md) | [Quick Start](../03-quick-start.md) | [Workflow Supplementary](../04-workflow/04-supplementary.md) | [Team Playbook](../06-team-playbook/index.md)
 
 ---
 
@@ -148,8 +148,8 @@ Tất cả output lưu tại `sekkei-docs/01-rfp/<project-name>/`:
 
 ## 7. Links
 
-- [Giới thiệu Sekkei](../introduction.md)
-- [V-Model & 13 loại tài liệu](../v-model-and-documents.md)
-- [Quick Start](../quick-start.md)
-- [Workflow Supplementary](../workflow/supplementary.md)
-- [Team Playbook](../team-playbook/index.md)
+- [Giới thiệu Sekkei](../01-introduction.md)
+- [V-Model & 13 loại tài liệu](../02-v-model-and-documents.md)
+- [Quick Start](../03-quick-start.md)
+- [Workflow Supplementary](../04-workflow/04-supplementary.md)
+- [Team Playbook](../06-team-playbook/index.md)

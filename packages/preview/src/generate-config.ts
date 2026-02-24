@@ -5,6 +5,7 @@ export interface ConfigOptions {
   edit: boolean;
   port: number;
   title?: string;
+  description?: string;
 }
 
 interface SidebarItem {
@@ -129,7 +130,7 @@ ${pluginImport}
 
 export default {
   title: ${JSON.stringify(options.title ?? 'Sekkei Docs')},
-  description: 'Japanese specification documents',
+  description: ${JSON.stringify(options.description ?? 'Japanese specification documents')},
   themeConfig: {
     sidebar: ${sidebarJson},
     outline: { level: [2, 3] },

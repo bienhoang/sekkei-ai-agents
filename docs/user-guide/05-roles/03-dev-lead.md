@@ -1,6 +1,6 @@
 # Role Guide: Dev Lead
 
-Xem thêm: [Giới thiệu](../introduction.md) | [Quick Start](../quick-start.md) | [Workflow Design](../workflow/design.md) | [Team Playbook](../team-playbook/index.md)
+Xem thêm: [Giới thiệu](../01-introduction.md) | [Quick Start](../03-quick-start.md) | [Workflow Design](../04-workflow/02-design.md) | [Team Playbook](../06-team-playbook/index.md)
 
 ---
 
@@ -42,7 +42,7 @@ Dev Lead đi theo luồng: **Confirm requirements validated → Basic-design →
 4. Sau khi basic-design ổn, chạy song song security và detail design
 5. Validate basic-design trước khi handoff cho QA
 
-Chi tiết từng bước: [Workflow Design](../workflow/design.md)
+Chi tiết từng bước: [Workflow Design](../04-workflow/02-design.md)
 
 ---
 
@@ -85,7 +85,7 @@ Sekkei sẽ survey codebase (nếu có), chia thành các phases ưu tiên, và 
 /sekkei:implement @plan-path
 ```
 
-Chạy từng phase theo thứ tự. Xem chi tiết: [Workflow Supplementary](../workflow/supplementary.md)
+Chạy từng phase theo thứ tự. Xem chi tiết: [Workflow Supplementary](../04-workflow/04-supplementary.md)
 
 ---
 
@@ -113,9 +113,9 @@ Chạy từng phase theo thứ tự. Xem chi tiết: [Workflow Supplementary](..
 
 ## 8. Links
 
-- [Giới thiệu Sekkei](../introduction.md)
-- [V-Model & 13 loại tài liệu](../v-model-and-documents.md)
-- [Quick Start](../quick-start.md)
-- [Workflow Design](../workflow/design.md)
-- [Workflow Supplementary](../workflow/supplementary.md)
-- [Team Playbook](../team-playbook/index.md)
+- [Giới thiệu Sekkei](../01-introduction.md)
+- [V-Model & 13 loại tài liệu](../02-v-model-and-documents.md)
+- [Quick Start](../03-quick-start.md)
+- [Workflow Design](../04-workflow/02-design.md)
+- [Workflow Supplementary](../04-workflow/04-supplementary.md)
+- [Team Playbook](../06-team-playbook/index.md)

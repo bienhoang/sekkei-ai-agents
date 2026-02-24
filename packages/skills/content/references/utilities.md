@@ -176,6 +176,9 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 4. Commands:
    - `npx sekkei-preview` — dev server (default, hot-reload)
    - `npx sekkei-preview --edit` — dev server with WYSIWYG editing enabled
+   - `npx sekkei-preview --guide` — open user guide
+   - `npx sekkei-preview --guide --edit` — open user guide with WYSIWYG editing
+   - `npx sekkei-preview --guide --port 3001` — custom port for user guide
    - `npx sekkei-preview build` — build static site
    - `npx sekkei-preview serve` — serve built site
    - `npx sekkei-preview --docs ./path --port 3000` — custom path + port
@@ -190,6 +193,7 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
    - YAML frontmatter preserved automatically (not shown in editor)
    - Japanese IME input supported
 7. Without `--edit` flag, preview is read-only (no edit button shown).
+8. Without `--guide`, preview serves V-model spec docs from `sekkei-docs/`.
 
 ## `/sekkei:plan @doc-type`
 

@@ -1,6 +1,6 @@
 # Tài Liệu Bổ Sung — 9 Loại Tùy Chọn
 
-Xem thêm: [Workflow Index](./index.md) | [Testing Phase](./testing.md) | [V-Model & Tài liệu](../v-model-and-documents.md)
+Xem thêm: [Workflow Index](./index.md) | [Testing Phase](./03-testing.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md)
 
 ---
 
@@ -104,4 +104,4 @@ Sekkei giữ nguyên IDs (REQ-xxx, F-xxx, SCR-xxx) trong bản dịch để cros
 
 ---
 
-**Xem thêm:** [Change Request lifecycle](./change-request.md) | [Role Guides](../roles/)
+**Xem thêm:** [Change Request lifecycle](./05-change-request.md) | [Role Guides](../05-roles/)

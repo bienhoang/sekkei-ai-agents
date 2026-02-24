@@ -324,4 +324,4 @@ Export:
 
 ---
 
-**Bước tiếp theo:** Xem [Quick Start](./quick-start.md) để bắt đầu tạo tài liệu đầu tiên, hoặc xem các workflow hướng dẫn trong thư mục `workflow/`.
+**Bước tiếp theo:** Xem [Quick Start](./03-quick-start.md) để bắt đầu tạo tài liệu đầu tiên, hoặc xem các workflow hướng dẫn trong thư mục `workflow/`.

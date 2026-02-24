@@ -44,7 +44,7 @@ Generate Japanese software specification documents following the V-model documen
 - `/sekkei:diff-visual @before @after` — Generate color-coded revision Excel (朱書き)
 - `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in split mode)
 - `/sekkei:implement @plan-path` — Execute a generation plan phase by phase
-- `/sekkei:preview` — Start VitePress docs preview server
+- `/sekkei:preview` — Start VitePress docs preview server (`--guide` for user guide)
 - `/sekkei:version` — Show version and environment health check
 - `/sekkei:uninstall` — Remove Sekkei from Claude Code
 - `/sekkei:rebuild` — Rebuild and re-install Sekkei skill + MCP (runs `sekkei update` CLI)

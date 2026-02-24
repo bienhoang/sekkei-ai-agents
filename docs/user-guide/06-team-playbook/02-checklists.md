@@ -1,6 +1,6 @@
 # Checklists — Danh Sách Kiểm Tra Theo Phase
 
-Xem thêm: [Team Playbook](./index.md) | [Scenarios](./scenarios.md) | [Review & Approval](./review-and-approval.md)
+Xem thêm: [Team Playbook](./index.md) | [Scenarios](./01-scenarios.md) | [Review & Approval](./03-review-and-approval.md)
 
 ---
 
@@ -14,7 +14,7 @@ Chạy trước khi bất kỳ ai trong team bắt đầu làm việc.
 
 - [ ] `npx sekkei init` đã chạy thành công — `sekkei.config.yaml` được tạo
 - [ ] `sekkei.config.yaml` có `project.name`, `type`, `keigo` level phù hợp với khách hàng
-- [ ] Approval chain đã được cấu hình trong config (xem [review-and-approval.md](./review-and-approval.md))
+- [ ] Approval chain đã được cấu hình trong config (xem [review-and-approval.md](./03-review-and-approval.md))
 - [ ] `/sekkei:version` chạy OK — MCP server connected, Python bridge OK
 - [ ] Tất cả thành viên team đã cài Sekkei skill (`~/.claude/skills/sekkei/SKILL.md`)
 - [ ] Output directory (`sekkei-docs/`) đã được tạo và thêm vào `.gitignore` nếu cần
@@ -132,4 +132,4 @@ Chạy mỗi khi có thay đổi yêu cầu sau khi spec freeze.
 
 ---
 
-**Xem thêm:** [Scenarios](./scenarios.md) | [Review & Approval](./review-and-approval.md)
+**Xem thêm:** [Scenarios](./01-scenarios.md) | [Review & Approval](./03-review-and-approval.md)

@@ -5,7 +5,7 @@ import { spawn } from 'node:child_process';
 import { existsSync, lstatSync, rmSync, symlinkSync, unlinkSync } from 'node:fs';
 import { resolve, dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { resolveDocsDir } from './resolve-docs-dir.js';
+import { resolveDocsDir, resolveGuideDir } from './resolve-docs-dir.js';
 import { generateIndexIfMissing } from './generate-index.js';
 import { generateVitePressConfig } from './generate-config.js';
 
@@ -23,6 +23,7 @@ Commands:
 
 Options:
   --docs <path>   Docs directory (default: auto-resolve)
+  --guide         Serve user guide instead of spec docs
   --port <N>      Dev server port (default: 5173)
   --edit          Enable WYSIWYG editing mode
   --help          Show this help
@@ -35,6 +36,7 @@ function main(): void {
     options: {
       docs: { type: 'string' },
       port: { type: 'string' },
+      guide: { type: 'boolean', default: false },
       edit: { type: 'boolean', default: false },
       help: { type: 'boolean', default: false },
     },
@@ -60,11 +62,23 @@ function main(): void {
     process.exit(1);
   }
   const edit = values.edit as boolean;
+  const guide = values.guide as boolean;
 
   // Resolve docs directory
   let docsDir: string;
+  let title: string | undefined;
+  let description: string | undefined;
   try {
-    docsDir = resolveDocsDir(values.docs as string | undefined);
+    if (guide) {
+      if (values.docs) {
+        console.error('Warning: --guide takes precedence over --docs');
+      }
+      docsDir = resolveGuideDir(packageDir);
+      title = 'Sekkei User Guide';
+      description = 'Hướng dẫn sử dụng Sekkei';
+    } else {
+      docsDir = resolveDocsDir(values.docs as string | undefined);
+    }
   } catch (err) {
     console.error(`Error: ${(err as Error).message}`);
     process.exit(1);
@@ -79,6 +93,8 @@ function main(): void {
   generateVitePressConfig(docsDir, packageDir, {
     edit,
     port,
+    title,
+    description,
   });
 
   console.log(`VitePress config generated at ${docsDir}/.vitepress/config.mts`);
@@ -138,7 +154,7 @@ function main(): void {
   });
 
   child.on('close', (code) => {
-    if (command === 'dev') cleanup();
+    cleanup();
     process.exit(code ?? 0);
   });
 

@@ -10,10 +10,12 @@
   "files": [
     "dist/",
     "theme/",
-    "plugins/"
+    "plugins/",
+    "guide/"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run build:guide",
+    "build:guide": "node --input-type=commonjs -e \"const {cpSync}=require('fs');cpSync('../../docs/user-guide','./guide',{recursive:true})\"",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

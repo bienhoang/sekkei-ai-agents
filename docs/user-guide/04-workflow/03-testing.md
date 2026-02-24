@@ -1,6 +1,6 @@
 # Testing Phase — 5 Tài Liệu Kiểm Thử
 
-Xem thêm: [Workflow Index](./index.md) | [Design Phase](./design.md) | [V-Model & Tài liệu](../v-model-and-documents.md)
+Xem thêm: [Workflow Index](./index.md) | [Design Phase](./02-design.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md)
 
 ---
 
@@ -330,8 +330,8 @@ Output mong đợi khi hoàn thành:
 
 ---
 
-**Phase trước:** [Design Phase](./design.md)
+**Phase trước:** [Design Phase](./02-design.md)
 
-**Tài liệu bổ sung:** [Supplementary Docs](./supplementary.md) — CRUD図, export, translation
+**Tài liệu bổ sung:** [Supplementary Docs](./04-supplementary.md) — CRUD図, export, translation
 
-**Thay đổi sau khi spec freeze:** [Change Request](./change-request.md)
+**Thay đổi sau khi spec freeze:** [Change Request](./05-change-request.md)

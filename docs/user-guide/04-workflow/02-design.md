@@ -1,6 +1,6 @@
 # Design Phase — 3 Tài Liệu Thiết Kế
 
-Xem thêm: [Workflow Index](./index.md) | [Requirements Phase](./requirements.md) | [V-Model & Tài liệu](../v-model-and-documents.md)
+Xem thêm: [Workflow Index](./index.md) | [Requirements Phase](./01-requirements.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md)
 
 ---
 
@@ -101,7 +101,7 @@ sekkei-docs/
 ```
 
 > [!NOTE]
-> Split mode cũng tự động sinh **画面設計書** cho từng màn hình — chi tiết layout, validation rules, event handlers, screen transitions. Xem thêm: [Tài liệu bổ sung](./supplementary.md).
+> Split mode cũng tự động sinh **画面設計書** cho từng màn hình — chi tiết layout, validation rules, event handlers, screen transitions. Xem thêm: [Tài liệu bổ sung](./04-supplementary.md).
 
 ### Plan/Implement flow
 
@@ -226,6 +226,6 @@ Output mong đợi:
 
 ---
 
-**Phase tiếp theo:** [Testing Phase](./testing.md) — Tạo テスト計画書 và 4 test specs
+**Phase tiếp theo:** [Testing Phase](./03-testing.md) — Tạo テスト計画書 và 4 test specs
 
-**Phase trước:** [Requirements Phase](./requirements.md)
+**Phase trước:** [Requirements Phase](./01-requirements.md)

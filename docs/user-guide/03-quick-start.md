@@ -228,10 +228,10 @@ Sau khi có 要件定義書, bạn có thể tiếp tục chain:
 
 Xem thứ tự ưu tiên cho từng role:
 
-- **BA:** [Workflow Requirements](./workflow/requirements.md)
-- **PM:** [Role Guide — PM](./roles/pm.md)
-- **Dev Lead:** [Workflow Design](./workflow/design.md)
-- **Tất cả:** [Workflow Index](./workflow/index.md)
+- **BA:** [Workflow Requirements](./04-workflow/01-requirements.md)
+- **PM:** [Role Guide — PM](./05-roles/01-pm.md)
+- **Dev Lead:** [Workflow Design](./04-workflow/02-design.md)
+- **Tất cả:** [Workflow Index](./04-workflow/index.md)
 
 ---
 
