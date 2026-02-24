@@ -7,6 +7,7 @@ mermaid.initialize({
   theme: 'dark',
   securityLevel: 'loose',
   fontFamily: 'inherit',
+  flowchart: { htmlLabels: true },
 })
 
 let counter = 0
@@ -51,8 +52,10 @@ function MermaidDiagram({ code }: { code: string }) {
     const trimmed = code.trim()
     if (!trimmed) return
 
+    // Convert \n to <br/> for line breaks in mermaid node labels
+    const processed = trimmed.replace(/\\n/g, '<br/>')
     const id = `${idRef.current}-${++counter}`
-    mermaid.render(id, trimmed)
+    mermaid.render(id, processed)
       .then(result => { setSvg(result.svg); setError('') })
       .catch(err => { setSvg(''); setError(String(err)) })
   }, [code])

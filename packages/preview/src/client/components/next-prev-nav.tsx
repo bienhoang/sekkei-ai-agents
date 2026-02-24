@@ -16,29 +16,23 @@ export function NextPrevNav({ flatTree, currentPath, onSelect }: Props) {
   if (!prev && !next) return null
 
   return (
-    <nav className="flex items-center justify-between px-8 py-6 border-t border-[var(--c-divider)] mt-8">
+    <nav className="grid grid-cols-2 gap-4 px-8 py-8 mt-4">
       {prev ? (
         <button
           onClick={() => onSelect(prev.path)}
-          className="group flex items-center gap-2 text-sm transition-colors"
+          className="group flex flex-col items-start gap-1 px-5 py-4 rounded-xl border border-[var(--c-divider)] hover:border-[var(--c-brand)] bg-[var(--c-bg)] cursor-pointer transition-colors text-left"
         >
-          <span className="text-lg text-[var(--c-text-3)]">←</span>
-          <div className="text-left">
-            <span className="block text-[11px] uppercase tracking-wide text-[var(--c-text-4)]">Previous</span>
-            <span className="text-[var(--c-brand)] group-hover:opacity-80 transition-opacity">{formatName(prev.name)}</span>
-          </div>
+          <span className="text-xs font-medium text-[var(--c-text-3)]">Previous page</span>
+          <span className="text-sm font-medium text-[var(--c-brand)] group-hover:opacity-80 transition-opacity">{formatName(prev.name)}</span>
         </button>
       ) : <div />}
       {next ? (
         <button
           onClick={() => onSelect(next.path)}
-          className="group flex items-center gap-2 text-sm transition-colors text-right"
+          className="group flex flex-col items-end gap-1 px-5 py-4 rounded-xl border border-[var(--c-divider)] hover:border-[var(--c-brand)] bg-[var(--c-bg)] cursor-pointer transition-colors text-right"
         >
-          <div>
-            <span className="block text-[11px] uppercase tracking-wide text-[var(--c-text-4)]">Next</span>
-            <span className="text-[var(--c-brand)] group-hover:opacity-80 transition-opacity">{formatName(next.name)}</span>
-          </div>
-          <span className="text-lg text-[var(--c-text-3)]">→</span>
+          <span className="text-xs font-medium text-[var(--c-text-3)]">Next page</span>
+          <span className="text-sm font-medium text-[var(--c-brand)] group-hover:opacity-80 transition-opacity">{formatName(next.name)}</span>
         </button>
       ) : <div />}
     </nav>

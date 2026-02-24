@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="../../assets/logo-mark.svg" alt="Sekkei" width="80">
-</p>
+![Sekkei](./images/logo-mark.svg)
 
 # Sekkei — Hướng dẫn sử dụng
 

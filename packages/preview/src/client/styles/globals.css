@@ -293,18 +293,29 @@
 .ProseMirror ul[data-type="taskList"] {
   list-style: none;
   padding-left: 0;
+  margin: 0.5rem 0;
 }
 
 .ProseMirror ul[data-type="taskList"] li {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
   gap: 0.5rem;
-  margin: 0.25rem 0;
+  margin: 0;
+  padding: 0.125rem 0;
 }
 
 .ProseMirror ul[data-type="taskList"] li > label {
   flex-shrink: 0;
-  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  /* Align checkbox with first line of text */
+  position: relative;
+  top: 0.15em;
+}
+
+/* Reset prose margins on task list paragraphs */
+.ProseMirror ul[data-type="taskList"] li > div > p {
+  margin: 0;
 }
 
 .ProseMirror ul[data-type="taskList"] li > label input[type="checkbox"] {
