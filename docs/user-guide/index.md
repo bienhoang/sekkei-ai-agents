@@ -14,7 +14,7 @@ Hướng dẫn này dành cho: **BA · Sales · PM · Dev Lead · QA**
 
 | Bạn là... | Bắt đầu tại | Lệnh chính |
 |-----------|------------|-----------|
-| **PM** | [PM Guide](./05-roles/01-pm.md) | `npx sekkei init`, `/sekkei:status`, `/sekkei:validate` |
+| **PM** | [PM Guide](./05-roles/01-pm.md) | `sekkei init`, `/sekkei:status`, `/sekkei:validate` |
 | **BA** | [BA Guide](./05-roles/02-ba.md) | `/sekkei:requirements`, `/sekkei:functions-list` |
 | **Dev Lead** | [Dev Lead Guide](./05-roles/03-dev-lead.md) | `/sekkei:basic-design`, `/sekkei:detail-design` |
 | **QA** | [QA Guide](./05-roles/04-qa.md) | `/sekkei:test-plan`, `/sekkei:ut-spec`, `/sekkei:validate` |

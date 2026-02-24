@@ -1,6 +1,6 @@
 # Tham Chiếu Cấu Hình — `sekkei.config.yaml`
 
-> File cấu hình nằm ở root của project. Được tạo tự động bởi `npx sekkei init`.
+> File cấu hình nằm ở root của project. Được tạo tự động bởi `sekkei init`.
 
 ---
 
@@ -22,7 +22,7 @@
 
 | Key | Type | Default | Mô tả |
 |-----|------|---------|-------|
-| `output.directory` | string | `./sekkei-docs` | Thư mục lưu toàn bộ tài liệu được generate |
+| `output.directory` | string | `./workspace-docs` | Thư mục lưu toàn bộ tài liệu được generate |
 
 ### `export` — Xuất file
 
@@ -69,7 +69,7 @@ project:
     - "AWS (ECS, RDS, S3)"
 
 output:
-  directory: ./sekkei-docs
+  directory: ./workspace-docs
 
 export:
   excel_template: ./templates/company-template.xlsx  # optional
@@ -101,10 +101,10 @@ chain:
 
 ## Cấu Trúc Thư Mục Output
 
-Sau khi generate đầy đủ, thư mục `sekkei-docs/` có cấu trúc:
+Sau khi generate đầy đủ, thư mục `workspace-docs/` có cấu trúc:
 
 ```
-sekkei-docs/
+workspace-docs/
 ├── 01-rfp/
 │   ├── rfp-analysis.md
 │   ├── qa-list.md

@@ -70,7 +70,7 @@ flowchart TD
 - **Ai tạo:** BA | **Ai review:** PM + khách hàng Nhật
 - **Khi nào:** Sau khi có RFP hoặc họp kickoff với khách hàng
 - **Input cần:** RFP, meeting notes, hoặc mô tả yêu cầu từ khách hàng
-- **Output:** `sekkei-docs/requirements.md` — IDs: `REQ-001`, `NFR-001`
+- **Output:** `workspace-docs/requirements.md` — IDs: `REQ-001`, `NFR-001`
 - **Lệnh:**
   ```
   /sekkei:requirements @rfp-notes.md
@@ -85,7 +85,7 @@ flowchart TD
 - **Ai tạo:** BA | **Ai review:** Dev Lead + PM
 - **Khi nào:** Song song hoặc ngay sau 要件定義書
 - **Input cần:** 要件定義書 hoặc RFP
-- **Output:** `sekkei-docs/functions-list.md` — IDs: `F-001` (ví dụ: `EMP-001` cho nhóm Employee)
+- **Output:** `workspace-docs/functions-list.md` — IDs: `F-001` (ví dụ: `EMP-001` cho nhóm Employee)
 - **Lệnh:**
   ```
   /sekkei:functions-list @requirements.md
@@ -103,7 +103,7 @@ flowchart TD
 - **Ai tạo:** BA + Dev Lead | **Ai review:** PM + khách hàng Nhật
 - **Khi nào:** Cùng lúc với 要件定義書
 - **Input cần:** 要件定義書
-- **Output:** `sekkei-docs/nfr.md` — IDs: `NFR-001`
+- **Output:** `workspace-docs/nfr.md` — IDs: `NFR-001`
 - **Lệnh:**
   ```
   /sekkei:nfr @requirements.md
@@ -118,7 +118,7 @@ flowchart TD
 - **Ai tạo:** PM | **Ai review:** Dev Lead + khách hàng Nhật
 - **Khi nào:** Sau khi có 要件定義書 và 機能一覧
 - **Input cần:** 要件定義書, 機能一覧
-- **Output:** `sekkei-docs/project-plan.md` — IDs: `PP-001`
+- **Output:** `workspace-docs/project-plan.md` — IDs: `PP-001`
 - **Lệnh:**
   ```
   /sekkei:project-plan @requirements.md
@@ -133,7 +133,7 @@ flowchart TD
 - **Ai tạo:** Dev Lead | **Ai review:** PM + BA + khách hàng Nhật
 - **Khi nào:** Sau khi 要件定義書, 機能一覧, NFR hoàn chỉnh
 - **Input cần:** 要件定義書, 機能一覧
-- **Output:** `sekkei-docs/basic-design.md` — IDs: `SCR-001` (màn hình), `TBL-001` (bảng DB), `API-001` (API)
+- **Output:** `workspace-docs/basic-design.md` — IDs: `SCR-001` (màn hình), `TBL-001` (bảng DB), `API-001` (API)
 - **Lệnh:**
   ```
   /sekkei:basic-design @requirements.md
@@ -148,7 +148,7 @@ flowchart TD
 - **Ai tạo:** Dev Lead + Security | **Ai review:** PM + khách hàng Nhật
 - **Khi nào:** Sau khi có 基本設計書
 - **Input cần:** 基本設計書, 要件定義書, NFR
-- **Output:** `sekkei-docs/security-design.md` — IDs: `SEC-001`
+- **Output:** `workspace-docs/security-design.md` — IDs: `SEC-001`
 - **Lệnh:**
   ```
   /sekkei:security-design @basic-design.md
@@ -163,7 +163,7 @@ flowchart TD
 - **Ai tạo:** Dev Lead / Senior Dev | **Ai review:** Dev team
 - **Khi nào:** Sau khi có 基本設計書
 - **Input cần:** 基本設計書, 要件定義書, 機能一覧
-- **Output:** `sekkei-docs/detail-design.md` — IDs: `CLS-001` (class)
+- **Output:** `workspace-docs/detail-design.md` — IDs: `CLS-001` (class)
 - **Lệnh:**
   ```
   /sekkei:detail-design @basic-design.md
@@ -178,7 +178,7 @@ flowchart TD
 - **Ai tạo:** QA Lead | **Ai review:** PM + Dev Lead
 - **Khi nào:** Sau khi có 要件定義書 — có thể bắt đầu song song với 基本設計書
 - **Input cần:** 要件定義書, NFR, 機能一覧, 基本設計書 (nếu có)
-- **Output:** `sekkei-docs/test-plan.md` — IDs: `TP-001`
+- **Output:** `workspace-docs/test-plan.md` — IDs: `TP-001`
 - **Lệnh:**
   ```
   /sekkei:test-plan @requirements.md
@@ -193,7 +193,7 @@ flowchart TD
 - **Ai tạo:** Developer | **Ai review:** QA
 - **Khi nào:** Sau khi có 詳細設計書
 - **Input cần:** 詳細設計書, テスト計画書
-- **Output:** `sekkei-docs/ut-spec.md` — IDs: `UT-001`
+- **Output:** `workspace-docs/ut-spec.md` — IDs: `UT-001`
 - **Lệnh:**
   ```
   /sekkei:ut-spec @detail-design.md
@@ -208,7 +208,7 @@ flowchart TD
 - **Ai tạo:** QA / Dev | **Ai review:** Dev Lead
 - **Khi nào:** Sau khi có 基本設計書
 - **Input cần:** 基本設計書 (API-xxx, SCR-xxx), テスト計画書
-- **Output:** `sekkei-docs/it-spec.md` — IDs: `IT-001`
+- **Output:** `workspace-docs/it-spec.md` — IDs: `IT-001`
 - **Lệnh:**
   ```
   /sekkei:it-spec @basic-design.md
@@ -223,7 +223,7 @@ flowchart TD
 - **Ai tạo:** QA Lead | **Ai review:** PM
 - **Khi nào:** Sau khi có 基本設計書, 機能一覧, テスト計画書
 - **Input cần:** 基本設計書, 機能一覧, テスト計画書
-- **Output:** `sekkei-docs/st-spec.md` — IDs: `ST-001`
+- **Output:** `workspace-docs/st-spec.md` — IDs: `ST-001`
 - **Lệnh:**
   ```
   /sekkei:st-spec @basic-design.md
@@ -238,7 +238,7 @@ flowchart TD
 - **Ai tạo:** BA | **Ai review:** PM + khách hàng Nhật
 - **Khi nào:** Sau khi có 要件定義書 và テスト計画書
 - **Input cần:** 要件定義書, NFR, テスト計画書
-- **Output:** `sekkei-docs/uat-spec.md` — IDs: `UAT-001`
+- **Output:** `workspace-docs/uat-spec.md` — IDs: `UAT-001`
 - **Lệnh:**
   ```
   /sekkei:uat-spec @requirements.md
@@ -253,7 +253,7 @@ flowchart TD
 - **Ai tạo:** BA / PM | **Ai review:** Dev Lead + khách hàng Nhật
 - **Khi nào:** Bất cứ khi nào có yêu cầu thay đổi sau khi spec freeze
 - **Input cần:** Tài liệu bị ảnh hưởng (bất kỳ tài liệu nào trong chain)
-- **Output:** `sekkei-docs/change-request.md` — IDs: `CR-001`
+- **Output:** `workspace-docs/change-request.md` — IDs: `CR-001`
 - **Lệnh:** Dùng `/sekkei:update @doc` để phát hiện impact, sau đó tạo 変更要求書 theo template
   ```
   /sekkei:update @basic-design.md

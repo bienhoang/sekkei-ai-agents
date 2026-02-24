@@ -59,7 +59,7 @@ output:
 Với `split: true`, Sekkei sinh ra các file riêng theo feature thay vì một file monolithic:
 
 ```
-sekkei-docs/
+workspace-docs/
   basic-design/
     SCR-auth.md
     SCR-hr-management.md

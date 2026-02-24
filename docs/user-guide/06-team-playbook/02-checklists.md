@@ -12,12 +12,12 @@ Copy-paste từng checklist vào task tracker hoặc comment của PR khi bắt 
 
 Chạy trước khi bất kỳ ai trong team bắt đầu làm việc.
 
-- [ ] `npx sekkei init` đã chạy thành công — `sekkei.config.yaml` được tạo
+- [ ] `sekkei init` đã chạy thành công — `sekkei.config.yaml` được tạo
 - [ ] `sekkei.config.yaml` có `project.name`, `type`, `keigo` level phù hợp với khách hàng
 - [ ] Approval chain đã được cấu hình trong config (xem [review-and-approval.md](./03-review-and-approval.md))
 - [ ] `/sekkei:version` chạy OK — MCP server connected, Python bridge OK
 - [ ] Tất cả thành viên team đã cài Sekkei skill (`~/.claude/skills/sekkei/SKILL.md`)
-- [ ] Output directory (`sekkei-docs/`) đã được tạo và thêm vào `.gitignore` nếu cần
+- [ ] Output directory (`workspace-docs/`) đã được tạo và thêm vào `.gitignore` nếu cần
 - [ ] Git repo đã init, commit đầu tiên với config file đã được tạo
 
 ---

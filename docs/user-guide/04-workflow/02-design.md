@@ -91,7 +91,7 @@ split:
 Khi split mode bật, Sekkei sinh file riêng cho từng feature group:
 
 ```
-sekkei-docs/
+workspace-docs/
 ├── basic-design/
 │   ├── employee-management.md     # SCR-001~010, TBL-001~003
 │   ├── attendance-management.md   # SCR-011~020, TBL-004~005

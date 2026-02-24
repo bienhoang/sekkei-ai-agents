@@ -21,7 +21,7 @@ flowchart TD
     end
 
     subgraph "PM"
-        P1["Init & Config\nnpx sekkei init"]
+        P1["Init & Config\nsekkei init"]
         P2["Gate 1\nValidate Requirements"]
         P3["Gate 2\nValidate Design"]
         P4["Gate 3\nValidate Full Chain"]
@@ -82,7 +82,7 @@ R = Responsible (người thực hiện) | A = Accountable (người chịu trá
 
 | Vai trò | Cần thiết | Optional |
 |---------|-----------|----------|
-| PM | `npx sekkei init`, Claude Code | Preview server |
+| PM | `sekkei init`, Claude Code | Preview server |
 | BA | Claude Code + Sekkei skill | Preview `--edit` |
 | Dev Lead | Claude Code + Sekkei skill | Preview `--edit` |
 | QA | Claude Code + Sekkei skill | Preview |

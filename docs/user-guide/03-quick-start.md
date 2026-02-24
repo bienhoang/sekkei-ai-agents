@@ -4,16 +4,27 @@ Hướng dẫn này giúp bạn tạo **要件定義書 đầu tiên trong 15 ph
 
 ---
 
-## Bước 0: Prerequisites
+## Bước 0: Cài đặt Sekkei
 
-Trước khi bắt đầu, hãy đảm bảo:
+Chạy lệnh sau trong terminal:
 
-- **Claude Code** đã được cài đặt và đăng nhập
-- **Node.js 18+** có sẵn (`node --version` để kiểm tra)
-- Bạn đang ở trong thư mục dự án của mình
+```bash
+curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash
+```
+
+Installer tự động: kiểm tra prerequisites (Node.js 20+, git, Claude Code), clone repo, build MCP server, cài skill + CLI, chạy `sekkei doctor` để verify.
 
 > [!NOTE]
-> Sekkei chạy hoàn toàn trong Claude Code. Bạn không cần IDE riêng — chỉ cần terminal và Claude Code là đủ.
+> Cần Python export (Excel/PDF/DOCX)? Thêm `--with-python`:
+> ```bash
+> curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash -s -- --with-python
+> ```
+
+Sau khi cài xong, kiểm tra:
+
+```bash
+sekkei doctor    # Health check toàn bộ hệ thống
+```
 
 ---
 
@@ -22,7 +33,7 @@ Trước khi bắt đầu, hãy đảm bảo:
 Chạy lệnh sau trong thư mục dự án:
 
 ```bash
-npx sekkei init
+sekkei init
 ```
 
 Wizard sẽ hỏi bạn lần lượt:
@@ -35,8 +46,8 @@ Wizard sẽ hỏi bạn lần lượt:
   > ja
 ? Keigo level: (丁寧語 / 謙譲語 / simple)
   > 丁寧語
-? Output directory: (./sekkei-docs)
-  > ./sekkei-docs
+? Output directory: (./workspace-docs)
+  > ./workspace-docs
 ```
 
 Sau khi chạy xong, file `sekkei.config.yaml` được tạo trong thư mục dự án:
@@ -48,7 +59,7 @@ project:
   language: ja
   keigo: 丁寧語
 output:
-  directory: ./sekkei-docs
+  directory: ./workspace-docs
 ```
 
 > [!TIP]
@@ -60,21 +71,23 @@ output:
 
 Chạy health check để đảm bảo Sekkei hoạt động đúng:
 
-```
-/sekkei:version
+```bash
+sekkei doctor
 ```
 
 Output mẫu:
 
 ```
-Sekkei v1.2.0 — Health Check
-✓ MCP server connected
-✓ Templates loaded (13 doc types)
-✓ Python bridge (openpyxl, weasyprint)
-✓ sekkei.config.yaml found
+Sekkei Doctor — Installation Health Check
+✓ Node.js v22.0.0
+✓ MCP Server connected
+✓ Templates loaded (22 types)
+✓ Skill files installed
+✓ Commands: 33/33 stubs
+⚠ Python venv (optional — for Excel/PDF export)
 ```
 
-Sau đó xem trạng thái chain:
+Sau đó xem trạng thái chain trong Claude Code:
 
 ```
 /sekkei:status
@@ -83,7 +96,10 @@ Sau đó xem trạng thái chain:
 Lần đầu tiên bạn sẽ thấy tất cả tài liệu ở trạng thái `pending` — đây là bình thường.
 
 > [!WARNING]
-> Nếu thấy `✗ Python bridge` trong health check, export sang Excel/PDF sẽ không hoạt động. Chạy `npx sekkei init` lại để cài Python dependencies.
+> Nếu `sekkei doctor` báo thiếu Python venv, export sang Excel/PDF sẽ không hoạt động. Chạy lại installer với `--with-python` hoặc cài thủ công:
+> ```bash
+> cd ~/.sekkei/packages/mcp-server && python3 -m venv python/.venv && python/.venv/bin/pip install -r python/requirements.txt
+> ```
 
 ---
 
@@ -138,7 +154,7 @@ Trước khi tạo 要件定義書, mình cần xác nhận thêm:
 3. Mức độ security cần thiết? (public SaaS hay internal only)
 ```
 
-Trả lời xong, Sekkei sinh ra `sekkei-docs/requirements.md` với đầy đủ 10 sections và IDs từ REQ-001 trở đi.
+Trả lời xong, Sekkei sinh ra `workspace-docs/requirements.md` với đầy đủ 10 sections và IDs từ REQ-001 trở đi.
 
 > [!TIP]
 > Input tiếng Việt hoàn toàn ổn — Sekkei tự detect `input_lang: "vi"` và sinh output tiếng Nhật chuẩn. Bạn không cần dịch trước.
@@ -192,7 +208,7 @@ Hoặc Word:
 /sekkei:export @requirements --format=docx
 ```
 
-File được lưu vào `sekkei-docs/` với tên tự động. Sekkei báo lại đường dẫn và file size sau khi export xong.
+File được lưu vào `workspace-docs/` với tên tự động. Sekkei báo lại đường dẫn và file size sau khi export xong.
 
 > [!TIP]
 > Excel format (`.xlsx`) là định dạng khách hàng Nhật ưa dùng nhất — cấu trúc 4 sheet (表紙 / 更新履歴 / 目次 / 本文) quen thuộc với họ. Dùng PDF khi gửi draft để review nhanh.
@@ -238,8 +254,8 @@ Xem thứ tự ưu tiên cho từng role:
 ## Tóm Tắt Lệnh Đã Dùng
 
 ```bash
-npx sekkei init                              # Khởi tạo project
-/sekkei:version                              # Health check
+sekkei init                                  # Khởi tạo project
+sekkei doctor                                # Health check
 /sekkei:status                               # Xem chain progress
 /sekkei:rfp @rfp.pdf                         # Phân tích RFP (nếu có)
 /sekkei:requirements @input                  # Tạo 要件定義書

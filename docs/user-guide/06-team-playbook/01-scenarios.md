@@ -401,7 +401,7 @@ Mở từng file Excel và xác nhận 4 sheet theo chuẩn IPA:
 Tạo ZIP bundle:
 
 ```bash
-zip -r hr-system-docs-v1.0-$(date +%Y%m%d).zip sekkei-docs/
+zip -r hr-system-docs-v1.0-$(date +%Y%m%d).zip workspace-docs/
 ```
 
 ### Audit Checklist trước giao hàng

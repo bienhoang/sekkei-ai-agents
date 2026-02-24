@@ -50,8 +50,9 @@
 | 26 | **plan** | `/sekkei:plan @doc-type` | — | Khảo sát yêu cầu + tạo kế hoạch triển khai nhiều phase |
 | 27 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
 | 28 | **preview** | `/sekkei:preview` | `--edit` / `--guide` / `--docs` / `--port <number>` | Khởi động VitePress preview server tại localhost |
-| 29 | **version** | `/sekkei:version` | `--json` | Health check MCP server, Python bridge, templates + version info |
-| 30 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |
+| 29 | **version** | `/sekkei:version` | `--json` | Version info + MCP server status |
+| 30 | **doctor** | `sekkei doctor` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
+| 31 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |
 
 ---
 

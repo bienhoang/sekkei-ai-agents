@@ -26,7 +26,7 @@ Công việc chính của Sales/Presales:
 | `/sekkei:export @doc --format=pdf` | Export PDF để gửi khách hàng review hoặc demo |
 | `/sekkei:translate @doc --lang=en` | Dịch sang tiếng Anh cho stakeholder nội bộ |
 | `/sekkei:preview` | Khởi động preview server tại localhost:5173 |
-| `/sekkei:version` | Health check trước khi demo |
+| `sekkei doctor` | Health check trước khi demo |
 
 ---
 
@@ -93,7 +93,7 @@ Trong suốt RFP Workspace, bạn có thể dùng các keyword sau:
 
 ### Output Files
 
-Tất cả output lưu tại `sekkei-docs/01-rfp/<project-name>/`:
+Tất cả output lưu tại `workspace-docs/01-rfp/<project-name>/`:
 
 ```
 01_raw_rfp.md          — RFP gốc đã được parse
