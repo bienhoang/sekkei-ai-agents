@@ -16,7 +16,7 @@
 | 6 | **basic-design** | `/sekkei:basic-design @input` | 要件定義書 + 機能一覧 | 基本設計書 — `basic-design.md` (SCR-xxx, TBL-xxx, API-xxx) | requirements + functions-list |
 | 7 | **security-design** | `/sekkei:security-design @bd` | 基本設計書 | セキュリティ設計書 — `security-design.md` (SEC-xxx) | basic-design |
 | 8 | **detail-design** | `/sekkei:detail-design @input` | 基本設計書 | 詳細設計書 — `detail-design.md` (CLS-xxx) | basic-design |
-| 9 | **test-plan** | `/sekkei:test-plan @req` | 要件定義書 + 非機能要件 + 基本設計書 | テスト計画書 — `test-plan.md` (TP-xxx) | basic-design |
+| 9 | **test-plan** | `/sekkei:test-plan @req` | 要件定義書 + 非機能要件 + 機能一覧 + 基本設計書 | テスト計画書 — `test-plan.md` (TP-xxx) | basic-design + functions-list |
 | 10 | **ut-spec** | `/sekkei:ut-spec @detail-design` | 詳細設計書 + テスト計画書 | 単体テスト仕様書 — `ut-spec.md` (UT-xxx) | detail-design + test-plan |
 | 11 | **it-spec** | `/sekkei:it-spec @basic-design` | 基本設計書 + テスト計画書 | 結合テスト仕様書 — `it-spec.md` (IT-xxx) | basic-design + test-plan |
 | 12 | **st-spec** | `/sekkei:st-spec @basic-design` | 基本設計書 + 機能一覧 + テスト計画書 | システムテスト仕様書 — `st-spec.md` (ST-xxx) | basic-design + test-plan |
@@ -49,7 +49,7 @@
 | 25 | **diff-visual** | `/sekkei:diff-visual @before @after` | — | Export Excel màu thể hiện diff giữa 2 version |
 | 26 | **plan** | `/sekkei:plan @doc-type` | — | Khảo sát yêu cầu + tạo kế hoạch triển khai nhiều phase |
 | 27 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
-| 28 | **preview** | `/sekkei:preview` | `--edit` / `--docs` / `--port <number>` | Khởi động VitePress preview server tại localhost |
+| 28 | **preview** | `/sekkei:preview` | `--edit` / `--guide` / `--docs` / `--port <number>` | Khởi động VitePress preview server tại localhost |
 | 29 | **version** | `/sekkei:version` | `--json` | Health check MCP server, Python bridge, templates + version info |
 | 30 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |
 

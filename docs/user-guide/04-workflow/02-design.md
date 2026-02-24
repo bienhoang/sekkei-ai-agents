@@ -83,8 +83,9 @@ Với dự án có 3 nhóm 大分類 trở lên trong 機能一覧, nên bật s
 
 ```yaml
 # sekkei.config.yaml
-output:
-  split: true
+split:
+  basic-design: true
+  detail-design: true   # optional
 ```
 
 Khi split mode bật, Sekkei sinh file riêng cho từng feature group:

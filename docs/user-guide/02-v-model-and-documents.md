@@ -51,6 +51,7 @@ flowchart TD
     BD --> TP["テスト計画書\n(/sekkei:test-plan)"]
     NFR --> TP
     REQ --> TP
+    FL --> TP
     DD --> UT["単体テスト仕様書\n(/sekkei:ut-spec)"]
     BD --> IT["結合テスト仕様書\n(/sekkei:it-spec)"]
     BD --> ST["システムテスト仕様書\n(/sekkei:st-spec)"]
@@ -176,7 +177,7 @@ flowchart TD
 - **Là gì:** Tài liệu chiến lược test tổng thể — xác định phạm vi test, môi trường, công cụ, entry/exit criteria cho cả 4 cấp (UT, IT, ST, UAT). Là "master plan" mà các test spec (UT/IT/ST/UAT) sẽ tuân theo.
 - **Ai tạo:** QA Lead | **Ai review:** PM + Dev Lead
 - **Khi nào:** Sau khi có 要件定義書 — có thể bắt đầu song song với 基本設計書
-- **Input cần:** 要件定義書, NFR, 基本設計書 (nếu có)
+- **Input cần:** 要件定義書, NFR, 機能一覧, 基本設計書 (nếu có)
 - **Output:** `sekkei-docs/test-plan.md` — IDs: `TP-001`
 - **Lệnh:**
   ```
