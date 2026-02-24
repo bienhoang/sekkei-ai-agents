@@ -38,7 +38,7 @@ Generate Japanese software specification documents following the V-model documen
 - `/sekkei:status` — Show document chain progress
 - `/sekkei:export @doc --format=xlsx|pdf|docx` — Export document to Excel, PDF, or Word
 - `/sekkei:translate @doc --lang=en` — Translate document with glossary context
-- `/sekkei:glossary [seed|add|list|find|export|finalize]` — Manage project terminology
+- `/sekkei:glossary [add|list|find|export|import]` — Manage project terminology
 - `/sekkei:update @doc` — Detect upstream changes and impacted sections
 - `/sekkei:diff-visual @before @after` — Generate color-coded revision Excel (朱書き)
 - `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in split mode)
@@ -680,21 +680,37 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 ### `/sekkei:validate @doc`
 
-1. Read the document to validate
-2. Determine the doc_type from the document header or user input
-3. **Check for manifest**: look for `_index.yaml` in output directory
-4. **If manifest exists for this doc type (type=split):**
-   a. Call `validate_document` with `manifest_path` (no content needed)
-   b. Display per-file validation results + aggregate cross-ref report
-5. **If no manifest:**
-   a. If an upstream document is available, read it too
-   b. Call MCP tool `validate_document` with content, doc_type, and optional upstream_content
-6. Display the validation results:
-   - Section completeness (per-file for split, overall for monolithic)
-   - Cross-reference coverage percentage
-   - Missing/orphaned IDs
-   - Missing table columns
-7. Suggest fixes for any issues found
+#### If `@doc` specified (single document validation):
+
+1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory` (default: `sekkei-docs`)
+2. **Resolve doc path**: `{output.directory}/{doc-type-dir}/{doc-type}.md`
+   - Check for split mode: look for `_index.yaml` in `{output.directory}/{doc-type-dir}/`
+3. **Determine upstream doc type** from V-model chain:
+   - requirements → (no upstream, skip cross-ref)
+   - functions-list → requirements
+   - basic-design → requirements + functions-list
+   - detail-design → basic-design
+   - test-plan → requirements + basic-design
+   - ut-spec → detail-design
+   - it-spec → basic-design
+   - st-spec → basic-design + functions-list
+   - uat-spec → requirements
+4. **Auto-load upstream**: Read upstream doc(s) from `{output.directory}/` → concatenate as `upstream_content`
+5. **If split mode (manifest exists):**
+   a. Call `validate_document` with `manifest_path` + `upstream_content`
+   b. Display per-file validation + aggregate cross-ref report
+6. **If monolithic:**
+   a. Read doc content
+   b. Call `validate_document` with `content`, `doc_type`, `upstream_content`
+7. Display: section completeness, cross-ref coverage %, missing/orphaned IDs, missing columns
+8. Suggest fixes for issues found
+
+#### If no `@doc` (full chain validation):
+
+1. Load `sekkei.config.yaml` → get `config_path`
+2. Call MCP tool `validate_chain` with `config_path`
+3. Display chain-wide cross-reference report
+4. Highlight broken links and orphaned IDs across all documents
 
 ### `/sekkei:status`
 
@@ -749,25 +765,38 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    e. Save output to `./sekkei-docs/{doc-type}.{target_lang}.md`
 5. Report: files translated, glossary terms applied, output paths
 
-### `/sekkei:glossary [seed|add|list|find|export|finalize]`
+### `/sekkei:glossary [add|list|find|export|import]`
 
-1. Locate `sekkei-docs/glossary.yaml` (create if not exists)
-2. For `seed`: extract candidate terms from upstream docs (requirements, basic-design) → call `manage_glossary` with action "seed" → show extracted terms for review
-3. For `add`: ask for JP term, EN term, VI term, context → call `manage_glossary` with action "add"
-4. For `list`: call `manage_glossary` with action "list" → display all terms
-5. For `find`: ask for search query → call with action "find"
-6. For `export`: call with action "export" → display as Markdown table (4 columns: ja/en/vi/context)
-7. For `finalize`: lock glossary for translation/export use → call `manage_glossary` with action "finalize" → set `glossary.status: finalized` in config
-8. For `import`: ask for industry (finance / medical / manufacturing / real-estate / logistics / retail / insurance / education / government / construction / telecom / automotive / energy / food-service / common) → call with action "import", industry → display imported/skipped counts
+1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory`
+2. **Resolve glossary path**: `{output.directory}/glossary.yaml` (create if not exists)
+3. For `add`: ask JP term, EN term, VI term, context → call `manage_glossary` with action "add", `project_path`
+4. For `list`: call `manage_glossary` with action "list", `project_path` → display all terms
+5. For `find`: ask search query → call with action "find", `project_path`
+6. For `export`: call with action "export", `project_path` → display Markdown table (ja/en/vi/context)
+7. For `import`: ask for industry → call with action "import", `project_path`, `industry` → display imported/skipped counts
 
 ### `/sekkei:update @doc`
 
-1. Read the current version of the upstream document
-2. Read the previous version (from git or stored copy)
-3. Read the downstream document to check
-4. Call MCP tool `analyze_update` with upstream_old, upstream_new, downstream_content
-5. Display: changed sections, changed IDs, impacted downstream sections
-6. Ask user: regenerate affected sections? → if yes, call generate for impacted parts
+#### Standard mode (diff analysis):
+
+1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory`
+2. **Determine doc pair**: `@doc` = downstream doc → identify upstream doc type from V-model chain
+3. **Read current upstream**: `{output.directory}/{upstream-dir}/{upstream-type}.md`
+4. **Read previous upstream from git**:
+   ```bash
+   git show HEAD~1:{output.directory}/{upstream-dir}/{upstream-type}.md
+   ```
+   - If user provides `--since <ref>`: use `git show {ref}:{path}` instead
+   - If git show fails (file didn't exist): report "No previous version found"
+5. **Read downstream doc**: `{output.directory}/{downstream-dir}/{doc-type}.md`
+6. Call MCP tool `analyze_update` with `upstream_old`, `upstream_new`, `downstream_content`
+7. Display: changed sections, changed IDs, impacted downstream sections
+8. Ask user: regenerate affected sections? → if yes, call generate for impacted parts
+
+#### Staleness mode:
+
+1. Call MCP tool `analyze_update` with `check_staleness: true`, `config_path`
+2. Display per-feature staleness scores and affected doc types
 
 ### `/sekkei:diff-visual @before_file @after_file`
 
@@ -872,7 +901,7 @@ RFP (/sekkei:rfp)
         ├─► NFR (/sekkei:nfr)
         ├─► Functions List (/sekkei:functions-list)
         ├─► Project Plan (/sekkei:project-plan)
-        └─► Glossary seed (/sekkei:glossary seed)
+        └─► Glossary (/sekkei:glossary import|add)
               └─► Basic Design (/sekkei:basic-design)
                     ├─► Security Design (/sekkei:security-design)
                     ├─► Detail Design (/sekkei:detail-design)

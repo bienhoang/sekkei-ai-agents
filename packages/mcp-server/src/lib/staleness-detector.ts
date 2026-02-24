@@ -7,7 +7,8 @@ import { readFile } from "node:fs/promises";
 import { parse as parseYaml } from "yaml";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
-import type { ProjectConfig } from "../types/documents.js";
+import { resolveOutputPath } from "./resolve-output-path.js";
+import type { ProjectConfig, DocType } from "../types/documents.js";
 
 export interface StalenessEntry {
   featureId: string;
@@ -184,17 +185,22 @@ export async function detectStaleness(
 
     if (matched.length > 0) {
       try {
-        const logResult = await git.log({
-          file: outputDir,
-          maxCount: 1,
-          format: { aI: "%aI" },
-        });
-        if (logResult.latest) {
-          lastDocUpdate = (logResult.latest as unknown as Record<string, string>).aI ?? null;
-          if (lastDocUpdate) {
-            const docDate = new Date(lastDocUpdate).getTime();
-            daysSinceDocUpdate = Math.round((Date.now() - docDate) / 86_400_000);
-          }
+        // Build per-feature doc paths via resolveOutputPath
+        const affectedTypes = getAffectedDocTypes(featureId);
+        const featureDocPaths = affectedTypes
+          .map((dt) => resolveOutputPath(dt as DocType))
+          .filter((p): p is string => p != null)
+          .map((p) => `${outputDir}/${p}`);
+
+        // git log with per-feature paths (not whole outputDir)
+        const logOutput = await git.raw([
+          "log", "-1", "--format=%aI", "--", ...featureDocPaths,
+        ]);
+        const trimmed = logOutput.trim();
+        if (trimmed) {
+          lastDocUpdate = trimmed;
+          const docDate = new Date(lastDocUpdate).getTime();
+          daysSinceDocUpdate = Math.round((Date.now() - docDate) / 86_400_000);
         }
       } catch {
         daysSinceDocUpdate = 90; // assume worst case

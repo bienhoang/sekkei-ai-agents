@@ -39,9 +39,9 @@ function configWithFeatureMap(featureMap: Record<string, { label: string; files:
   return JSON.stringify({ ...MINIMAL_CONFIG, feature_file_map: featureMap });
 }
 
-function setupGitSuccess(changedFiles: string[] = [], statOutput = "", tagName = "") {
-  // git log succeeds (repo verification)
-  mockLog.mockResolvedValue({ latest: { aI: new Date(Date.now() - 5 * 86_400_000).toISOString() } });
+function setupGitSuccess(changedFiles: string[] = [], statOutput = "", tagName = "", perFeatureDate = "") {
+  // git log succeeds (repo verification only)
+  mockLog.mockResolvedValue({ latest: null });
   mockRaw
     // git describe --tags
     .mockResolvedValueOnce(tagName || (() => { throw new Error("no tag"); })())
@@ -49,6 +49,10 @@ function setupGitSuccess(changedFiles: string[] = [], statOutput = "", tagName =
     .mockResolvedValueOnce(changedFiles.join("\n"))
     // git diff --stat
     .mockResolvedValueOnce(statOutput);
+  // Per-feature doc path check (if files match) — caller adds more mockResolvedValueOnce as needed
+  if (perFeatureDate) {
+    mockRaw.mockResolvedValueOnce(perFeatureDate);
+  }
 }
 
 beforeEach(() => {
@@ -92,11 +96,13 @@ describe("detectStaleness — glob matching", () => {
       })
     );
 
-    mockLog.mockResolvedValue({ latest: { aI: new Date(Date.now() - 10 * 86_400_000).toISOString() } });
+    const docDate = new Date(Date.now() - 10 * 86_400_000).toISOString();
+    mockLog.mockResolvedValue({ latest: null }); // repo verification only
     mockRaw
       .mockRejectedValueOnce(new Error("no tag")) // describe --tags fails → use 30d
       .mockResolvedValueOnce("src/auth/login.ts\nsrc/auth/token.ts\nsrc/unrelated/foo.ts")
-      .mockResolvedValueOnce("3 files changed, 50 insertions(+), 10 deletions(-)");
+      .mockResolvedValueOnce("3 files changed, 50 insertions(+), 10 deletions(-)")
+      .mockResolvedValueOnce(docDate); // per-feature doc path check for F-001
 
     const report = await detectStaleness("/project/sekkei.config.yaml");
 
@@ -120,7 +126,8 @@ describe("detectStaleness — glob matching", () => {
     mockRaw
       .mockRejectedValueOnce(new Error("no tag"))
       .mockResolvedValueOnce("src/index.ts\nsrc/sub/deep.ts")
-      .mockResolvedValueOnce("2 files changed, 20 insertions(+)");
+      .mockResolvedValueOnce("2 files changed, 20 insertions(+)")
+      .mockResolvedValueOnce(""); // per-feature doc path check for REQ-001 (no doc commits)
 
     const report = await detectStaleness("/project/sekkei.config.yaml");
 
@@ -143,12 +150,13 @@ describe("detectStaleness — scoring formula", () => {
       })
     );
 
-    mockLog.mockResolvedValue({ latest: { aI: docDate } });
+    mockLog.mockResolvedValue({ latest: null }); // repo verification only
     const files = ["src/feature/a.ts", "src/feature/b.ts", "src/feature/c.ts", "src/feature/d.ts", "src/feature/e.ts"];
     mockRaw
       .mockRejectedValueOnce(new Error("no tag"))
       .mockResolvedValueOnce(files.join("\n"))
-      .mockResolvedValueOnce("5 files changed, 250 insertions(+)");
+      .mockResolvedValueOnce("5 files changed, 250 insertions(+)")
+      .mockResolvedValueOnce(docDate); // per-feature doc path check
 
     const report = await detectStaleness("/project/sekkei.config.yaml");
     const f = report.features[0];
@@ -205,12 +213,13 @@ describe("detectStaleness — threshold filtering", () => {
       })
     );
     const oldDate = new Date(Date.now() - 100 * 86_400_000).toISOString();
-    mockLog.mockResolvedValue({ latest: { aI: oldDate } });
+    mockLog.mockResolvedValue({ latest: null }); // repo verification only
     mockRaw
       .mockRejectedValueOnce(new Error("no tag"))
       // F-001 matches 10 files; F-002 matches none
       .mockResolvedValueOnce(Array.from({ length: 10 }, (_, i) => `src/auth/f${i}.ts`).join("\n"))
-      .mockResolvedValueOnce("10 files changed, 600 insertions(+)");
+      .mockResolvedValueOnce("10 files changed, 600 insertions(+)")
+      .mockResolvedValueOnce(oldDate); // per-feature doc path check for F-001
 
     const report = await detectStaleness("/project/sekkei.config.yaml", { threshold: 50 });
     // F-001 should be stale (score = 100), F-002 should not
@@ -275,5 +284,64 @@ describe("detectStaleness — affected doc types", () => {
     expect(f?.affectedDocTypes).toContain("functions-list");
     expect(r?.affectedDocTypes).toContain("basic-design");
     expect(s?.affectedDocTypes).toContain("detail-design");
+  });
+});
+
+describe("detectStaleness — per-feature doc paths (B9 fix)", () => {
+  it("gives different lastDocUpdate per feature based on their doc paths", async () => {
+    const date1 = new Date(Date.now() - 10 * 86_400_000).toISOString();
+    const date2 = new Date(Date.now() - 60 * 86_400_000).toISOString();
+
+    mockReadFile.mockResolvedValueOnce(
+      configWithFeatureMap({
+        "F-001": { label: "Auth", files: ["src/auth/**"] },
+        "SCR-001": { label: "Screens", files: ["src/screens/**"] },
+      })
+    );
+    mockLog.mockResolvedValue({ latest: null }); // repo verification
+    mockRaw
+      .mockRejectedValueOnce(new Error("no tag"))
+      .mockResolvedValueOnce("src/auth/login.ts\nsrc/screens/home.tsx")
+      .mockResolvedValueOnce("2 files changed, 100 insertions(+)")
+      // Per-feature git.raw for F-001 (functions-list + basic-design paths)
+      .mockResolvedValueOnce(date1)
+      // Per-feature git.raw for SCR-001 (basic-design + detail-design paths)
+      .mockResolvedValueOnce(date2);
+
+    const report = await detectStaleness("/project/sekkei.config.yaml");
+
+    const f001 = report.features.find((f) => f.featureId === "F-001");
+    const scr001 = report.features.find((f) => f.featureId === "SCR-001");
+
+    // B9 fix: different features should have different lastDocUpdate
+    expect(f001?.lastDocUpdate).toBe(date1);
+    expect(scr001?.lastDocUpdate).toBe(date2);
+    expect(f001?.lastDocUpdate).not.toBe(scr001?.lastDocUpdate);
+  });
+
+  it("uses per-feature doc paths in git.raw call, not whole outputDir", async () => {
+    const docDate = new Date(Date.now() - 5 * 86_400_000).toISOString();
+    mockReadFile.mockResolvedValueOnce(
+      configWithFeatureMap({
+        "F-001": { label: "Auth", files: ["src/auth/**"] },
+      })
+    );
+    mockLog.mockResolvedValue({ latest: null });
+    mockRaw
+      .mockRejectedValueOnce(new Error("no tag"))
+      .mockResolvedValueOnce("src/auth/login.ts")
+      .mockResolvedValueOnce("1 file changed, 10 insertions(+)")
+      .mockResolvedValueOnce(docDate);
+
+    await detectStaleness("/project/sekkei.config.yaml");
+
+    // 4th raw call should be the per-feature doc path check
+    const perFeatureCall = mockRaw.mock.calls[3] as string[][];
+    expect(perFeatureCall[0]).toContain("log");
+    expect(perFeatureCall[0]).toContain("--format=%aI");
+    expect(perFeatureCall[0]).toContain("--");
+    // Should contain actual doc paths, not just "output"
+    const pathArgs = perFeatureCall[0].slice(perFeatureCall[0].indexOf("--") + 1);
+    expect(pathArgs.some((p: string) => p.includes("functions-list"))).toBe(true);
   });
 });

@@ -28,9 +28,23 @@ def extract_sections(content: str) -> dict[str, str]:
     return sections
 
 
+# Whitelisted ID prefixes — must match id-extractor.ts ID_TYPES
+_ID_PREFIXES = (
+    "F", "REQ", "NFR", "SCR", "TBL", "API",
+    "CLS", "DD", "TS",
+    "UT", "IT", "ST", "UAT",
+    "SEC", "PP", "TP",
+    "OP", "MIG",
+    "EV", "MTG", "ADR", "IF", "PG",
+)
+_ID_PATTERN = re.compile(
+    r"\b(?:" + "|".join(_ID_PREFIXES) + r")-\d{1,4}\b"
+)
+
+
 def extract_ids(content: str) -> set[str]:
-    """Extract all cross-reference IDs from content."""
-    return set(re.findall(r"\b[A-Z]{1,5}-\d{1,4}\b", content))
+    """Extract cross-reference IDs using whitelisted prefixes (matches id-extractor.ts)."""
+    return set(_ID_PATTERN.findall(content))
 
 
 def diff_documents(old_content: str, new_content: str) -> dict:

@@ -38,7 +38,7 @@ Generate Japanese software specification documents following the V-model documen
 - `/sekkei:status` — Show document chain progress
 - `/sekkei:export @doc --format=xlsx|pdf|docx` — Export document to Excel, PDF, or Word
 - `/sekkei:translate @doc --lang=en` — Translate document with glossary context
-- `/sekkei:glossary [seed|add|list|find|export|finalize]` — Manage project terminology
+- `/sekkei:glossary [add|list|find|export|import]` — Manage project terminology
 - `/sekkei:change` — Change request lifecycle (impact analysis → approval → propagation → validation)
 - `/sekkei:update @doc` — Detect upstream changes and impacted sections
 - `/sekkei:diff-visual @before @after` — Generate color-coded revision Excel (朱書き)
@@ -107,7 +107,7 @@ RFP (/sekkei:rfp)
         ├─► NFR (/sekkei:nfr)
         ├─► Functions List (/sekkei:functions-list)
         ├─► Project Plan (/sekkei:project-plan)
-        └─► Glossary seed (/sekkei:glossary seed)
+        └─► Glossary (/sekkei:glossary import|add)
               └─► Basic Design (/sekkei:basic-design)
                     ├─► Security Design (/sekkei:security-design)
                     ├─► Detail Design (/sekkei:detail-design)
