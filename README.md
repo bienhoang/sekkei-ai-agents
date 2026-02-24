@@ -63,7 +63,24 @@ This installs everything: MCP server, Claude Code skill, CLI, and runs `sekkei d
 curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash -s -- --with-python
 ```
 
-**Prerequisites:** Node.js 20+, git, [Claude Code](https://docs.anthropic.com/en/docs/claude-code), GitHub access (private repo — SSH key or PAT required).
+**Prerequisites:** Node.js 20+, git, [Claude Code](https://docs.anthropic.com/en/docs/claude-code).
+
+> **GitHub Access Required** — This is a private repo. Set up access **before** running the installer:
+>
+> **Option A — SSH key (recommended):**
+> ```bash
+> ssh-keygen -t ed25519 -C "your@email.com"
+> cat ~/.ssh/id_ed25519.pub   # Copy this → https://github.com/settings/keys
+> ```
+>
+> **Option B — Personal Access Token:**
+> 1. Go to [github.com/settings/tokens](https://github.com/settings/tokens) → Generate new token (classic)
+> 2. Select scope: `repo` (full control of private repositories)
+> 3. Clone manually first:
+> ```bash
+> git clone https://<YOUR_TOKEN>@github.com/bienhoang/sekkei-ai-agents.git ~/.sekkei
+> ```
+> Then re-run the installer — it will detect the existing clone and skip the clone step.
 
 ### Post-Install
 

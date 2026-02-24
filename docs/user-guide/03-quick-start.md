@@ -14,6 +14,24 @@ curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/set
 
 Installer tự động: kiểm tra prerequisites (Node.js 20+, git, Claude Code), clone repo, build MCP server, cài skill + CLI, chạy `sekkei doctor` để verify.
 
+> [!IMPORTANT]
+> **Đây là private repo** — bạn cần cấu hình GitHub access **trước khi** chạy installer:
+>
+> **Cách A — SSH key (khuyến nghị):**
+> ```bash
+> ssh-keygen -t ed25519 -C "your@email.com"
+> cat ~/.ssh/id_ed25519.pub   # Copy output → thêm tại https://github.com/settings/keys
+> ```
+>
+> **Cách B — Personal Access Token:**
+> 1. Vào [github.com/settings/tokens](https://github.com/settings/tokens) → Generate new token (classic)
+> 2. Chọn scope: `repo` (full control of private repositories)
+> 3. Clone thủ công trước:
+> ```bash
+> git clone https://<TOKEN_CỦA_BẠN>@github.com/bienhoang/sekkei-ai-agents.git ~/.sekkei
+> ```
+> Sau đó chạy lại installer — nó sẽ detect clone có sẵn và bỏ qua bước clone.
+
 > [!NOTE]
 > Cần Python export (Excel/PDF/DOCX)? Thêm `--with-python`:
 > ```bash
