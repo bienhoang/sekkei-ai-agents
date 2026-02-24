@@ -122,11 +122,18 @@ bash "$SEKKEI_HOME/install.sh" "$@"
 step "Setting up CLI"
 
 CLI_JS="$SEKKEI_HOME/packages/mcp-server/bin/cli.js"
+PREVIEW_JS="$SEKKEI_HOME/packages/preview/dist/server.js"
 if [[ -f "$CLI_JS" ]]; then
   chmod +x "$CLI_JS"
   mkdir -p "$HOME/.local/bin"
   ln -sf "$CLI_JS" "$HOME/.local/bin/sekkei"
   ok "Linked: ~/.local/bin/sekkei"
+
+  # Link sekkei-preview if built
+  if [[ -f "$PREVIEW_JS" ]]; then
+    ln -sf "$PREVIEW_JS" "$HOME/.local/bin/sekkei-preview"
+    ok "Linked: ~/.local/bin/sekkei-preview"
+  fi
 
   # Ensure ~/.local/bin is in PATH
   SHELL_RC=""
