@@ -44,9 +44,9 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [sekkei-mcp-server](./packages/mcp-server/) | 2.0.0 | Core MCP server — document generation, validation, export, CLI |
-| [sekkei-preview](./packages/preview/) | 0.3.0 | VitePress live preview + Milkdown WYSIWYG editor |
-| [sekkei-skills](./packages/skills/) | 2.0.0 | Claude Code slash commands (`/sekkei:*`) |
+| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.0.0 | Core MCP server — document generation, validation, export, CLI |
+| [@bienhoang/sekkei-preview](./packages/preview/) | 0.3.0 | VitePress live preview + Milkdown WYSIWYG editor |
+| [@bienhoang/sekkei-skills](./packages/skills/) | 2.0.0 | Claude Code slash commands (`/sekkei:*`) |
 
 ## Quick Start
 
@@ -59,13 +59,20 @@ chmod +x install.sh && ./install.sh
 ./install.sh --with-python
 ```
 
-### Install (npm)
+### Install (GitHub Packages)
 
 ```bash
-npm install -g sekkei-mcp-server
-npx sekkei-skills   # Install Claude Code skill
-npx sekkei-setup    # Auto-detect editor and configure MCP
+# 1. Configure registry (one-time setup)
+echo "@bienhoang:registry=https://npm.pkg.github.com" >> ~/.npmrc
+echo "//npm.pkg.github.com/:_authToken=YOUR_GITHUB_PAT" >> ~/.npmrc
+
+# 2. Install
+npm install -g @bienhoang/sekkei-mcp-server
+npx @bienhoang/sekkei-skills   # Install Claude Code skill
+npx sekkei-setup                # Auto-detect editor and configure MCP
 ```
+
+> **Note**: Generate a GitHub PAT with `read:packages` scope at [github.com/settings/tokens](https://github.com/settings/tokens).
 
 ### Generate Documents
 
@@ -83,15 +90,15 @@ npx sekkei init                           # Create project config (run in termin
 ### Preview
 
 ```bash
-npx sekkei-preview   # Live preview in browser
+npx @bienhoang/sekkei-preview   # Live preview in browser
 ```
 
 ## Architecture
 
 ```
 ┌─────────────────┐     MCP (STDIO)     ┌──────────────────┐
-│  sekkei-skills   │ ──────────────────→ │ sekkei-mcp-server │
-│  (Claude Code)   │  /sekkei:* commands │  (Core Engine)    │
+│  @bienhoang/     │ ──────────────────→ │ @bienhoang/        │
+│  sekkei-skills   │  /sekkei:* commands │  sekkei-mcp-server │
 └─────────────────┘                      └────────┬─────────┘
                                                   │ generates
                                                   ↓
@@ -102,8 +109,8 @@ npx sekkei-preview   # Live preview in browser
                                                   │ previews
                                                   ↓
                                          ┌──────────────────┐
+                                         │  @bienhoang/      │
                                          │  sekkei-preview   │
-                                         │  (VitePress)      │
                                          └──────────────────┘
 ```
 
@@ -191,7 +198,7 @@ Built with citty. Available commands:
 ### Claude Code
 
 ```bash
-npx sekkei-skills   # Auto-install skill
+npx @bienhoang/sekkei-skills   # Auto-install skill
 ```
 
 Add to `~/.claude/settings.json`:
@@ -199,7 +206,7 @@ Add to `~/.claude/settings.json`:
 ```json
 {
   "mcpServers": {
-    "sekkei": { "command": "npx", "args": ["sekkei-mcp-server"] }
+    "sekkei": { "command": "npx", "args": ["@bienhoang/sekkei-mcp-server"] }
   }
 }
 ```
@@ -253,7 +260,7 @@ sekkei/
 ├── install.sh                   # Local install script for Claude Code
 ├── sekkei.config.example.yaml   # Template for project config
 ├── packages/
-│   ├── mcp-server/              # sekkei-mcp-server
+│   ├── mcp-server/              # @bienhoang/sekkei-mcp-server
 │   │   ├── src/
 │   │   │   ├── tools/           # 10 MCP tool handlers
 │   │   │   ├── resources/       # Template + RFP instruction resources
@@ -263,11 +270,11 @@ sekkei/
 │   │   ├── python/              # Export layer (Excel, PDF, DOCX, glossary, diff)
 │   │   ├── bin/                 # setup.js, init.js, cli.js
 │   │   └── adapters/            # Platform configs (Claude Code, Cursor, Copilot)
-│   ├── preview/                 # sekkei-preview
+│   ├── preview/                 # @bienhoang/sekkei-preview
 │   │   ├── src/                 # CLI, VitePress config generator
 │   │   ├── theme/               # Custom VitePress theme + Vue components
 │   │   └── plugins/             # VitePress plugins
-│   └── skills/                  # sekkei-skills
+│   └── skills/                  # @bienhoang/sekkei-skills
 │       ├── bin/install.js       # Skill installer
 │       └── content/SKILL.md     # 30 sub-commands + workflow router
 └── .github/                     # CI/CD

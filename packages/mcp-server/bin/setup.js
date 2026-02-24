@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Sekkei setup script — detects editors and configures MCP integration.
- * Usage: npx @sekkei/setup
+ * Usage: npx @bienhoang/sekkei-mcp-server
  */
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -67,7 +67,7 @@ function setupCursor(configDir) {
     mcpServers: {
       sekkei: {
         command: "npx",
-        args: ["@sekkei/mcp-server"],
+        args: ["@bienhoang/sekkei-mcp-server"],
         env: {}
       }
     }
@@ -190,7 +190,7 @@ export async function runEditorSetup({ skipPython = false } = {}) {
 
   log("");
   log(`${BOLD}${GREEN}Setup complete!${RESET}`);
-  log("  Run 'sekkei-mcp' or 'npx sekkei-mcp-server' to start the MCP server.");
+  log("  Run 'sekkei-mcp' or 'npx @bienhoang/sekkei-mcp-server' to start the MCP server.");
   log("");
 }
 

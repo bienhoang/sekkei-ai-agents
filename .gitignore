@@ -11,3 +11,4 @@ dist/
 mcp-server/coverage/
 .agent/
 __pycache__/
+.turbo/

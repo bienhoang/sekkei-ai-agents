@@ -3,7 +3,7 @@
     "sekkei": {
       "command": "npx",
       "args": [
-        "sekkei-mcp-server"
+        "@bienhoang/sekkei-mcp-server"
       ],
       "env": {
         "SEKKEI_TEMPLATE_DIR": "",

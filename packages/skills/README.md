@@ -1,6 +1,6 @@
-# sekkei-skills
+# @bienhoang/sekkei-skills
 
-[![npm version](https://img.shields.io/npm/v/sekkei-skills)](https://www.npmjs.com/package/sekkei-skills)
+[![GitHub Package](https://img.shields.io/github/v/release/bienhoang/sekkei-ai-agents?label=sekkei-skills)](https://github.com/bienhoang/sekkei-ai-agents/packages)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 
 Claude Code skill for generating Japanese specification documents (設計書) following the V-model chain.
@@ -8,14 +8,14 @@ Claude Code skill for generating Japanese specification documents (設計書) fo
 ## Prerequisites
 
 - [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code)
-- [sekkei-mcp-server](../mcp-server/) configured as MCP server
+- [@bienhoang/sekkei-mcp-server](../mcp-server/) configured as MCP server
 
 ## Installation
 
 Auto-install to `~/.claude/skills/sekkei/`:
 
 ```bash
-npx sekkei-skills
+npx @bienhoang/sekkei-skills
 ```
 
 Or manual copy (from repo root):
@@ -98,7 +98,7 @@ npx sekkei init
 
 ## Using with MCP Server
 
-Skills invoke MCP tools via Claude Code's MCP integration. Ensure `sekkei-mcp-server` is configured:
+Skills invoke MCP tools via Claude Code's MCP integration. Ensure `@bienhoang/sekkei-mcp-server` is configured:
 
 ```json
 // ~/.claude/settings.json
@@ -106,7 +106,7 @@ Skills invoke MCP tools via Claude Code's MCP integration. Ensure `sekkei-mcp-se
   "mcpServers": {
     "sekkei": {
       "command": "npx",
-      "args": ["sekkei-mcp-server"]
+      "args": ["@bienhoang/sekkei-mcp-server"]
     }
   }
 }
@@ -116,8 +116,8 @@ Skills invoke MCP tools via Claude Code's MCP integration. Ensure `sekkei-mcp-se
 
 | Package | Description |
 |---------|-------------|
-| [sekkei-mcp-server](../mcp-server/) | Core MCP server that skills invoke for document generation |
-| [sekkei-preview](../preview/) | VitePress live preview started by `/sekkei:preview` |
+| [@bienhoang/sekkei-mcp-server](../mcp-server/) | Core MCP server that skills invoke for document generation |
+| [@bienhoang/sekkei-preview](../preview/) | VitePress live preview started by `/sekkei:preview` |
 
 ## 日本語
 

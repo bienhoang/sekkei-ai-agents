@@ -1,6 +1,6 @@
-# sekkei-preview
+# @bienhoang/sekkei-preview
 
-[![npm version](https://img.shields.io/npm/v/sekkei-preview)](https://www.npmjs.com/package/sekkei-preview)
+[![GitHub Package](https://img.shields.io/github/v/release/bienhoang/sekkei-ai-agents?label=sekkei-preview)](https://github.com/bienhoang/sekkei-ai-agents/packages)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org/)
 
@@ -17,13 +17,13 @@ VitePress-based live preview + WYSIWYG editor for Sekkei specification documents
 ## Installation
 
 ```bash
-npm install -g sekkei-preview
+npm install -g @bienhoang/sekkei-preview
 ```
 
 Or run directly:
 
 ```bash
-npx sekkei-preview
+npx @bienhoang/sekkei-preview
 ```
 
 ## Quick Start
@@ -33,7 +33,7 @@ npx sekkei-preview
 /sekkei:functions-list @rfp.md
 
 # 2. Start preview server
-npx sekkei-preview
+npx @bienhoang/sekkei-preview
 
 # 3. Open browser and edit in WYSIWYG mode
 ```
@@ -61,8 +61,8 @@ The CLI reads `sekkei.config.yaml` from the project root to generate VitePress c
 
 | Package | Description |
 |---------|-------------|
-| [sekkei-mcp-server](../mcp-server/) | Core MCP server — generates the documents this package previews |
-| [sekkei-skills](../skills/) | Claude Code slash commands — `/sekkei:preview` starts this server |
+| [@bienhoang/sekkei-mcp-server](../mcp-server/) | Core MCP server — generates the documents this package previews |
+| [@bienhoang/sekkei-skills](../skills/) | Claude Code slash commands — `/sekkei:preview` starts this server |
 
 ## 日本語
 

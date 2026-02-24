@@ -1,6 +1,6 @@
-# sekkei-mcp-server
+# @bienhoang/sekkei-mcp-server
 
-[![npm version](https://img.shields.io/npm/v/sekkei-mcp-server)](https://www.npmjs.com/package/sekkei-mcp-server)
+[![GitHub Package](https://img.shields.io/github/v/release/bienhoang/sekkei-ai-agents?label=sekkei-mcp-server)](https://github.com/bienhoang/sekkei-ai-agents/packages)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org/)
 
@@ -21,13 +21,13 @@ MCP Server for generating Japanese software specification documents (設計書) 
 ## Installation
 
 ```bash
-npm install -g sekkei-mcp-server
+npm install -g @bienhoang/sekkei-mcp-server
 ```
 
 Or run directly:
 
 ```bash
-npx sekkei-mcp-server
+npx @bienhoang/sekkei-mcp-server
 ```
 
 ## Quick Start
@@ -53,7 +53,7 @@ npx sekkei init
   "mcpServers": {
     "sekkei": {
       "command": "npx",
-      "args": ["sekkei-mcp-server"]
+      "args": ["@bienhoang/sekkei-mcp-server"]
     }
   }
 }
@@ -222,8 +222,8 @@ npm run lint         # Type check
 
 | Package | Description |
 |---------|-------------|
-| [sekkei-preview](../preview/) | VitePress live preview + WYSIWYG editor for generated documents |
-| [sekkei-skills](../skills/) | Claude Code slash commands (`/sekkei:*`) for the full workflow |
+| [@bienhoang/sekkei-preview](../preview/) | VitePress live preview + WYSIWYG editor for generated documents |
+| [@bienhoang/sekkei-skills](../skills/) | Claude Code slash commands (`/sekkei:*`) for the full workflow |
 
 ## 日本語
 

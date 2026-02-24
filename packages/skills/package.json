@@ -1,5 +1,5 @@
 {
-  "name": "sekkei-skills",
+  "name": "@bienhoang/sekkei-skills",
   "version": "1.1.1",
   "description": "Claude Code skills for generating Japanese specification documents (設計書)",
   "type": "module",
@@ -33,7 +33,8 @@
     "node": ">=20.0.0"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "https://npm.pkg.github.com",
+    "access": "restricted"
   },
   "license": "MIT"
 }

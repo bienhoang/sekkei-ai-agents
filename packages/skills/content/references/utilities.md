@@ -170,18 +170,18 @@ Parent: `SKILL.md` → Workflow Router → Utilities.
 
 ## `/sekkei:preview`
 
-1. Run `npx sekkei-preview` from the project root (or `node <sekkei-path>/packages/sekkei-preview/dist/cli.js`).
+1. Run `npx @bienhoang/sekkei-preview` from the project root (or `node <sekkei-path>/packages/sekkei-preview/dist/cli.js`).
 2. Docs dir resolved automatically: `--docs` flag → `sekkei-docs/` in CWD → `sekkei.config.yaml output.directory`.
 3. If `sekkei-docs/index.md` missing, CLI auto-generates a homepage from `_index.yaml`.
 4. Commands:
-   - `npx sekkei-preview` — dev server (default, hot-reload)
-   - `npx sekkei-preview --edit` — dev server with WYSIWYG editing enabled
-   - `npx sekkei-preview --guide` — open user guide
-   - `npx sekkei-preview --guide --edit` — open user guide with WYSIWYG editing
-   - `npx sekkei-preview --guide --port 3001` — custom port for user guide
-   - `npx sekkei-preview build` — build static site
-   - `npx sekkei-preview serve` — serve built site
-   - `npx sekkei-preview --docs ./path --port 3000` — custom path + port
+   - `npx @bienhoang/sekkei-preview` — dev server (default, hot-reload)
+   - `npx @bienhoang/sekkei-preview --edit` — dev server with WYSIWYG editing enabled
+   - `npx @bienhoang/sekkei-preview --guide` — open user guide
+   - `npx @bienhoang/sekkei-preview --guide --edit` — open user guide with WYSIWYG editing
+   - `npx @bienhoang/sekkei-preview --guide --port 3001` — custom port for user guide
+   - `npx @bienhoang/sekkei-preview build` — build static site
+   - `npx @bienhoang/sekkei-preview serve` — serve built site
+   - `npx @bienhoang/sekkei-preview --docs ./path --port 3000` — custom path + port
 5. Preview URL: `http://localhost:5173` (dev default). Sidebar regenerates from directory structure on restart.
 6. **Edit mode** (`--edit` flag):
    - Each page shows a floating "Edit" button (bottom-right)
@@ -239,7 +239,7 @@ See `references/plan-orchestrator.md` for detailed logic.
 1. Confirm with user: "This will remove Sekkei skill, commands, and MCP entry from Claude Code. Proceed?"
 2. If confirmed: run `npx sekkei uninstall --force`
 3. Display removal summary
-4. Note: "Package remains installed. Run `npm uninstall -g sekkei-mcp-server` to fully remove."
+4. Note: "Package remains installed. Run `npm uninstall -g @bienhoang/sekkei-mcp-server` to fully remove."
 
 ## `/sekkei:rebuild`
 
