@@ -151,6 +151,14 @@ function checkMcpRegistration(): HealthItem {
   }
 }
 
+function checkPreviewBuild(): HealthItem {
+  const previewServer = resolve(PKG_ROOT, "..", "preview", "dist", "server.js");
+  if (existsSync(previewServer)) {
+    return { name: "Preview", status: "ok", detail: "dist/server.js found" };
+  }
+  return { name: "Preview", status: "warn", detail: "not built (run sekkei update)" };
+}
+
 function checkSubCommands(): HealthItem {
   const cmdDir = join(CLAUDE_DIR, "commands", "sekkei");
   try {
@@ -174,7 +182,7 @@ export async function checkHealth(): Promise<HealthReport> {
   return {
     version: getPackageVersion(),
     environment: [checkNodeVersion(), checkPython(), checkPlaywright()],
-    paths: [checkTemplateDir(), checkConfig(), checkPythonVenv()],
+    paths: [checkTemplateDir(), checkConfig(), checkPythonVenv(), checkPreviewBuild()],
     claudeCode: [checkClaudeSkill(), checkMcpRegistration(), checkSubCommands()],
   };
 }

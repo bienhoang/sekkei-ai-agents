@@ -90,12 +90,12 @@ PREVIEW_CLI=""
 if [[ -d "$PREVIEW_DIR" && -f "$PREVIEW_DIR/package.json" ]]; then
   step "Building sekkei-preview package"
   cd "$PREVIEW_DIR"
-  npm install --no-fund --no-audit 2>&1 | tail -1
+  npm install --legacy-peer-deps --no-fund --no-audit 2>&1 | tail -1
   ok "Preview dependencies installed"
   rm -rf dist/
   npm run build 2>&1 | tail -1
-  ok "Preview TypeScript compiled"
-  PREVIEW_CLI="$PREVIEW_DIR/dist/cli.js"
+  ok "Preview built (Express+React+Tiptap)"
+  PREVIEW_CLI="$PREVIEW_DIR/dist/server.js"
   ok "sekkei-preview built: $PREVIEW_CLI"
   cd "$SCRIPT_DIR"
 else
@@ -153,7 +153,7 @@ create_subcmd "translate" "Translate with glossary context" "@doc --lang=en"
 create_subcmd "glossary" "Manage project terminology" "[add|list|find|export|import]"
 create_subcmd "update" "Detect upstream changes" "@doc"
 create_subcmd "diff-visual" "Color-coded revision Excel (朱書き)" "@before @after"
-create_subcmd "preview" "Start VitePress docs preview (--edit for WYSIWYG)" "[--edit] [--docs path] [--port N]"
+create_subcmd "preview" "Start Express+React docs preview with WYSIWYG editor" "[--guide] [--docs path] [--port N]"
 create_subcmd "version" "Show version and health check" ""
 create_subcmd "uninstall" "Remove Sekkei from Claude Code" "[--force]"
 create_subcmd "doctor" "Check installation health and fix suggestions" ""
@@ -260,7 +260,7 @@ echo "  Restart Claude Code to activate the MCP server."
 echo "  Then run 'sekkei init' in your project folder to start."
 if [[ -n "$PREVIEW_CLI" ]]; then
   echo "  Preview: node $PREVIEW_CLI"
-  echo -e "  \033[2mPreview docs: node $PREVIEW_CLI [--edit]  (run from your project root)${RESET}"
+  echo -e "  \033[2mPreview docs: node $PREVIEW_CLI [--guide]  (run from your project root)${RESET}"
 else
   echo -e "  \033[2mPreview: unavailable (sekkei-preview not built)${RESET}"
 fi

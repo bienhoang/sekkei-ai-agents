@@ -61,7 +61,7 @@ const SUBCMD_DEFS: [string, string, string][] = [
   ["glossary", "Manage project terminology", "[add|list|find|export|import]"],
   ["update", "Detect upstream changes", "@doc"],
   ["diff-visual", "Color-coded revision Excel (朱書き)", "@before @after"],
-  ["preview", "Start VitePress docs preview (--edit for WYSIWYG)", "[--edit] [--docs path] [--port N]"],
+  ["preview", "Start Express+React docs preview with WYSIWYG editor", "[--guide] [--docs path] [--port N]"],
   ["version", "Show version and health check", ""],
   ["uninstall", "Remove Sekkei from Claude Code", "[--force]"],
   ["rfp", "Presales RFP lifecycle", "[@project-name]"],
@@ -115,7 +115,7 @@ export const updateCommand = defineCommand({
     skipBuild: { type: "boolean", description: "Skip npm build step", default: false },
   },
   async run({ args }) {
-    // 1. Build
+    // 1. Build MCP server
     if (!args.skipBuild) {
       const s = p.spinner();
       s.start("Building MCP server...");
@@ -126,6 +126,22 @@ export const updateCommand = defineCommand({
         s.stop("Build failed");
         process.stderr.write((err as Error).message + "\n");
         process.exit(1);
+      }
+    }
+
+    // 1b. Build preview package (force override old version)
+    if (!args.skipBuild) {
+      const previewDir = resolve(SEKKEI_ROOT, "packages", "preview");
+      if (existsSync(previewDir)) {
+        const s = p.spinner();
+        s.start("Building preview package...");
+        try {
+          execSync("npm run build", { cwd: previewDir, stdio: "pipe" });
+          s.stop("Preview build complete");
+        } catch (err) {
+          s.stop("Preview build failed (non-fatal)");
+          process.stderr.write(`  Preview: ${(err as Error).message}\n`);
+        }
       }
     }
 
