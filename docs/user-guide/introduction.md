@@ -67,6 +67,7 @@ flowchart TD
 ## 3 Thuật ngữ cần biết trước
 
 ### V-model
+![alt text](images/introduction/v-model.png)
 
 Mô hình phát triển phần mềm phổ biến tại Nhật, trong đó mỗi tài liệu thiết kế (bên trái) đối ứng với một loại test (bên phải). Sekkei sinh tài liệu theo đúng thứ tự V-model này.
 

@@ -230,7 +230,7 @@ Xem thứ tự ưu tiên cho từng role:
 
 - **BA:** [Workflow Requirements](./workflow/requirements.md)
 - **PM:** [Role Guide — PM](./roles/pm.md)
-- **Dev Lead:** [Workflow Basic Design](./workflow/basic-design.md)
+- **Dev Lead:** [Workflow Design](./workflow/design.md)
 - **Tất cả:** [Workflow Index](./workflow/index.md)
 
 ---
