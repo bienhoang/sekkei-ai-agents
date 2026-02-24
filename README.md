@@ -48,9 +48,9 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.3.0 | Core MCP server — document generation, validation, export, CLI |
-| [@bienhoang/sekkei-preview](./packages/preview/) | 1.1.0 | Express+React live preview + Tiptap v3 WYSIWYG editor |
-| [@bienhoang/sekkei-skills](./packages/skills/) | 1.4.0 | Claude Code slash commands (`/sekkei:*`) |
+| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.3.1 | Core MCP server — document generation, validation, export, CLI |
+| [@bienhoang/sekkei-preview](./packages/preview/) | 1.2.0 | Express+React live preview with VitePress-like UI + Tiptap v3 WYSIWYG editor |
+| [@bienhoang/sekkei-skills](./packages/skills/) | 1.4.1 | Claude Code slash commands (`/sekkei:*`) |
 
 ## Quick Start
 
