@@ -82,10 +82,13 @@ ok "Claude Code detected"
 # ── 3. Clone or Update ─────────────────────────────────────────────────
 if [[ -d "$SEKKEI_HOME/.git" ]]; then
   step "Updating ~/.sekkei"
+  # Clean build artifacts that block git pull (package-lock.json from npm install, etc.)
+  git -C "$SEKKEI_HOME" checkout -- package-lock.json 2>/dev/null || true
+  git -C "$SEKKEI_HOME" checkout -- '*/package-lock.json' 2>/dev/null || true
   if git -C "$SEKKEI_HOME" pull --ff-only 2>/dev/null; then
     ok "Updated to latest"
   else
-    warn "git pull failed (local changes?). Resetting to origin/main..."
+    warn "git pull failed. Fetching and resetting to origin/main..."
     git -C "$SEKKEI_HOME" fetch origin
     git -C "$SEKKEI_HOME" reset --hard origin/main
     ok "Reset to origin/main"
