@@ -67,7 +67,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
         const nfrRows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
         if (nfrRows.length === 0) return true; // no NFR rows to check
         // At least 80% of NFR rows should contain a numeric target
-        const withNumbers = nfrRows.filter((row) => /\d+(\.\d+)?[%秒ms時間件人日回]/.test(row));
+        const withNumbers = nfrRows.filter((row) => /\d+(\.\d+)?(ms|%|秒|時間|件|人|日|回)/.test(row));
         return withNumbers.length >= nfrRows.length * 0.8;
       },
       message: "要件定義書: NFR目標値に数値が不足しています（例: 99.9%, 2秒以内, 1000件）",
@@ -103,7 +103,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => {
         const rows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
         if (rows.length === 0) return true;
-        return rows.filter((r) => /\d+(\.\d+)?[%秒ms時間件人日回]/.test(r)).length >= rows.length * 0.8;
+        return rows.filter((r) => /\d+(\.\d+)?(ms|%|秒|時間|件|人|日|回)/.test(r)).length >= rows.length * 0.8;
       },
       message: "非機能要件定義書: 目標値に数値が不足しています（例: 99.9%, 2秒以内, 1000件）",
     },
@@ -289,7 +289,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "coverage metric",
-      test: (c: string) => /カバレッジ|網羅率|網羅|coverage|\d+%/.test(c),
+      test: (c: string) => /カバレッジ|網羅率|網羅|coverage/.test(c),
       message: "テスト計画書: テストカバレッジの目標値が必要です",
     },
   ],
