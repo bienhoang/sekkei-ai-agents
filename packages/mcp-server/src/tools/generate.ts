@@ -56,9 +56,9 @@ const inputSchema = {
   source_code_path: z.string().max(500).optional()
     .refine((p) => !p || !p.includes(".."), { message: "Path must not contain .." })
     .describe("Path to source code directory for code-aware generation (TypeScript projects)"),
-  include_confidence: z.boolean().default(true).optional()
+  include_confidence: z.boolean().optional()
     .describe("Include AI confidence annotations (高/中/低) per section (default: true)"),
-  include_traceability: z.boolean().default(true).optional()
+  include_traceability: z.boolean().optional()
     .describe("Include source traceability annotations per paragraph (default: true)"),
   ticket_ids: z.array(z.string().max(50)).max(20).optional()
     .describe("Related ticket IDs (e.g., PROJ-123) to reference in the document"),
