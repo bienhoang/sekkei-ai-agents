@@ -1,6 +1,6 @@
 {
   "name": "@bienhoang/sekkei-mcp-server",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "description": "MCP Server for generating Japanese software specification documents following V-model",
   "type": "module",
   "main": "dist/index.js",
