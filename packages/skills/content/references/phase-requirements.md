@@ -13,9 +13,10 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
 1. If `@input` argument provided by user → input source confirmed, proceed
 2. If no `@input`:
    a. Check if `{output.directory}/01-rfp/` directory exists and contains `.md` files
-   b. If exists → auto-load `02_analysis.md` + `06_scope_freeze.md` as input, proceed
+   b. If exists → glob all `.md` files in `{output.directory}/01-rfp/`, sort by filename, concatenate as input, proceed
 3. If neither condition met → **ABORT**. Do NOT proceed to interview. Tell user:
    > "No input source available. Either provide input with `@input` or run `/sekkei:rfp` first to create the RFP workspace in `01-rfp/`."
+4. Check `chain.requirements.status` in sekkei.config.yaml. If `in-progress`, warn: 'Requirements generation may already be in progress. Continue anyway? [Y/n]'
 
 **Interview questions (ask before generating):**
 - What is the project scope? (confirm from RFP or clarify if no RFP)
@@ -26,6 +27,7 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
 - Any technology constraints already decided? (platform, language, cloud provider)
 
 1. Read 01-rfp/ workspace content if available (analysis, scope freeze, decisions)
+   - If combined input exceeds 400KB, warn: 'Input is very large (>400KB). Consider summarizing or splitting by subsystem for better results.' Proceed if user confirms.
 2. If @input provided, merge with RFP content as additional context
 3. If `sekkei.config.yaml` exists, load project metadata and `project_type`
 4. Call MCP tool `generate_document` with `doc_type: "requirements"`, input content, `project_type`, and `language` from config (default: "ja"). Pass `input_lang` if input not Japanese.
@@ -38,12 +40,13 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
    - Do NOT reference F-xxx — functions-list does not exist yet
    - This is the FIRST document after RFP — defines REQ-xxx IDs for all downstream docs
    - Include acceptance criteria for each major requirement
+   - If `preset: agile` in sekkei.config.yaml, use user story format: 'As a [role], I want [feature], so that [benefit]' instead of detailed 機能要件一覧 table
 7. Save output to `{output.directory}/02-requirements/requirements.md`
-8. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "requirements"`, `status: "complete"`, `output: "02-requirements/requirements.md"`
-9. Call MCP tool `validate_document` with the saved file content and `doc_type: "requirements"`. Show results:
+8. Call MCP tool `validate_document` with the saved file content and `doc_type: "requirements"`. Show results:
    - If no issues: "Validation passed."
    - If warnings: show them as non-blocking warnings
    - If errors: show them but do NOT abort — document already saved
+9. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "requirements"`, `status: "complete"` if no errors, or `status: "generated"` if validation errors found, `output: "02-requirements/requirements.md"`
 10. Suggest next steps (can run in parallel):
    > "Requirements complete. Next steps (can run in parallel):
    > - `/sekkei:functions-list` — generate 機能一覧 from requirements

@@ -39,6 +39,38 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c) => /NFR-\d{3}/.test(c),
       message: "要件定義書: 非機能要件が1つ以上必要です (NFR-xxx)",
     },
+    {
+      check: "NFR vague terms",
+      test: (c: string) => {
+        // Extract NFR table rows (lines containing NFR-xxx)
+        const nfrRows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
+        const vaguePattern = /高速|十分|適切|高い|良好/;
+        return !nfrRows.some((row) => vaguePattern.test(row));
+      },
+      message: "要件定義書: NFR目標値に曖昧な表現があります（高速・十分・適切・高い・良好は数値に置換してください）",
+    },
+    {
+      check: "NFR numeric targets",
+      test: (c: string) => {
+        const nfrRows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
+        if (nfrRows.length === 0) return true; // no NFR rows to check
+        // At least 80% of NFR rows should contain a numeric target
+        const withNumbers = nfrRows.filter((row) => /\d+(\.\d+)?[%秒ms時間件人日回]/.test(row));
+        return withNumbers.length >= nfrRows.length * 0.8;
+      },
+      message: "要件定義書: NFR目標値に数値が不足しています（例: 99.9%, 2秒以内, 1000件）",
+    },
+    {
+      check: "traceability verification method",
+      test: (c: string) => {
+        const reqRows = c.split("\n").filter((l) => /REQ-\d{3}/.test(l));
+        if (reqRows.length === 0) return true;
+        // Check that most REQ rows have a 検証方法 value (UT/IT/ST/UAT)
+        const withVerification = reqRows.filter((row) => /UT|IT|ST|UAT/.test(row));
+        return withVerification.length >= reqRows.length * 0.8;
+      },
+      message: "要件定義書: 検証方法（UT/IT/ST/UAT）が不足しています",
+    },
   ],
   nfr: [
     {

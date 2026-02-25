@@ -29,17 +29,36 @@ function formatRow(e: ChangelogEntry): string {
   return `| ${esc(e.date)} | ${esc(e.docType)} | ${esc(e.version)} | ${esc(e.changes)} | ${esc(e.author)} | ${esc(e.crId)} |`;
 }
 
-/** Increment version by 0.1 (e.g., "1.0" → "1.1", "2.9" → "3.0") */
+/** Increment version — supports X.Y, X.Y.Z (semver), and 第N版 (Japanese) formats */
 export function incrementVersion(version: string): string {
   if (!version) return "1.0";
+
+  // Japanese format: 第N版
+  const jpMatch = version.match(/^第(\d+)版$/);
+  if (jpMatch) {
+    return `第${Number(jpMatch[1]) + 1}版`;
+  }
+
   const parts = version.split(".");
-  if (parts.length !== 2) return "1.0";
-  const major = Number(parts[0]);
-  const minor = Number(parts[1]);
-  if (isNaN(major) || isNaN(minor)) return "1.0";
-  const nextMinor = minor + 1;
-  if (nextMinor >= 10) return `${major + 1}.0`;
-  return `${major}.${nextMinor}`;
+
+  // Semver: X.Y.Z
+  if (parts.length === 3) {
+    const [major, minor, patch] = parts.map(Number);
+    if ([major, minor, patch].some(isNaN)) return "1.0";
+    return `${major}.${minor}.${patch + 1}`;
+  }
+
+  // Simple: X.Y (existing behavior)
+  if (parts.length === 2) {
+    const major = Number(parts[0]);
+    const minor = Number(parts[1]);
+    if (isNaN(major) || isNaN(minor)) return "1.0";
+    const nextMinor = minor + 1;
+    if (nextMinor >= 10) return `${major + 1}.0`;
+    return `${major}.${nextMinor}`;
+  }
+
+  return "1.0";
 }
 
 /** Extract latest version from 改訂履歴 table — collects all versions and returns maximum */
@@ -51,12 +70,17 @@ export function extractVersionFromContent(content: string): string {
     if (/^#{1,4}\s+改訂履歴/.test(line)) { capturing = true; continue; }
     if (capturing && /^#{1,4}\s/.test(line)) break;
     if (capturing) {
-      // Match version anywhere in a table row (not just first cell)
-      const matches = line.matchAll(/v?(\d+\.\d+)/g);
-      for (const m of matches) {
-        // Only capture if it looks like a version (not a random decimal)
+      // Match X.Y or X.Y.Z (with optional v prefix)
+      const semverMatches = line.matchAll(/v?(\d+\.\d+(?:\.\d+)?)/g);
+      for (const m of semverMatches) {
         const val = m[1];
-        if (parseFloat(val) < 100) versions.push(val);
+        const major = Number(val.split(".")[0]);
+        if (major < 100) versions.push(val);
+      }
+      // Match 第N版 (Japanese edition format)
+      const jpMatches = line.matchAll(/第(\d+)版/g);
+      for (const m of jpMatches) {
+        versions.push(`第${m[1]}版`);
       }
     }
   }
@@ -64,11 +88,14 @@ export function extractVersionFromContent(content: string): string {
     logger.warn("extractVersionFromContent: no version found in 改訂履歴");
     return "";
   }
-  // Return highest version (handles unsorted tables)
+  // Return highest version (handles unsorted tables, all formats)
   versions.sort((a, b) => {
-    const [aMaj, aMin] = a.split(".").map(Number);
-    const [bMaj, bMin] = b.split(".").map(Number);
-    return aMaj !== bMaj ? aMaj - bMaj : aMin - bMin;
+    const toNum = (v: string) => {
+      const jp = v.match(/^第(\d+)版$/);
+      if (jp) return Number(jp[1]);
+      return v.split(".").reduce((acc, p, i) => acc + Number(p) * Math.pow(100, 2 - i), 0);
+    };
+    return toNum(a) - toNum(b);
   });
   return versions[versions.length - 1];
 }

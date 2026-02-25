@@ -45,8 +45,8 @@ describe("validateContentDepth — requirements", () => {
     expect(issues.some((i) => i.message.includes("NFR-xxx"))).toBe(true);
   });
 
-  it("returns no issues with 3+ REQ-xxx and NFR-001", () => {
-    const content = "REQ-001 ログイン\nREQ-002 ログアウト\nREQ-003 検索\nNFR-001 性能要件";
+  it("returns no issues with 3+ REQ-xxx and NFR-001 with numeric target", () => {
+    const content = "| REQ-001 | ログイン | UT |\n| REQ-002 | ログアウト | IT |\n| REQ-003 | 検索 | ST |\n| NFR-001 | 性能 | 応答時間 | 2秒以内 |";
     const issues = validateContentDepth(content, "requirements");
     expect(issues).toHaveLength(0);
   });

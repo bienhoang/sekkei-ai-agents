@@ -68,6 +68,13 @@ const inputSchema = {
     .describe("Auto-insert new 改訂履歴 row before preservation. Requires existing_content."),
   change_description: z.string().max(200).optional()
     .describe("Change description for auto-inserted 改訂履歴 row (default: 'Updated from upstream')"),
+  append_mode: z.boolean().default(false).optional()
+    .describe("Append new requirements to existing document. Requires existing_content. Preserves existing REQ-xxx/NFR-xxx IDs and adds new ones with next sequential ID."),
+  input_sources: z.array(z.object({
+    name: z.string().max(100).describe("Source name (e.g., 'Business Team', 'Compliance Team')"),
+    content: z.string().max(200_000).describe("Content from this source"),
+  })).max(10).optional()
+    .describe("Multiple input sources. Each requirement will be tagged with its origin source in 出典 column."),
 };
 
 /** Extract existing 改訂履歴 section from document content */
@@ -121,6 +128,15 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
   },
   lp: {
     "basic-design": "## Project Type: Landing Page\nFocus on: page structure, conversion funnel, form spec, analytics/tracking integration.",
+  },
+  government: {
+    requirements: "## Project Type: Government\n法令要件セクションを追加: デジタル庁ガイドライン準拠, 監査要件, 政府セキュリティ要件を含めること",
+  },
+  finance: {
+    requirements: "## Project Type: Finance\n金融庁ガイドライン, FISC安全対策基準への準拠を明記. 取引記録保存要件セクションを追加",
+  },
+  healthcare: {
+    requirements: "## Project Type: Healthcare\n医療情報ガイドライン参照. HL7/FHIR連携要件を検討. 個人情報保護（医療特則）セクションを追加",
   },
 };
 
@@ -192,6 +208,8 @@ export interface GenerateDocumentArgs {
   existing_content?: string;
   auto_insert_changelog?: boolean;
   change_description?: string;
+  append_mode?: boolean;
+  input_sources?: Array<{ name: string; content: string }>;
   templateDir?: string;
   overrideDir?: string;
 }
@@ -203,6 +221,7 @@ export async function handleGenerateDocument(
     upstream_content, project_type, feature_name, scope, output_path, config_path,
     source_code_path, include_confidence, include_traceability, ticket_ids,
     existing_content, auto_insert_changelog, change_description,
+    append_mode, input_sources,
     templateDir: tDir, overrideDir } = args;
   if (scope && !SPLIT_ALLOWED.has(doc_type)) {
     return {
@@ -288,6 +307,26 @@ export async function handleGenerateDocument(
 
     if (upstreamIdsBlock) {
       sections.push(``, upstreamIdsBlock);
+    }
+
+    if (append_mode) {
+      sections.push(
+        ``,
+        `## Append Mode (MANDATORY)`,
+        `Preserve ALL existing requirements exactly. Add new requirements with sequential IDs starting after the highest existing ID (e.g., if REQ-015 exists, new IDs start at REQ-016). Do NOT modify or remove any existing rows.`,
+      );
+    }
+
+    if (input_sources && input_sources.length > 0) {
+      const sourceNames = input_sources.map((s) => `"${s.name}"`).join(", ");
+      sections.push(
+        ``,
+        `## Multiple Input Sources`,
+        `Input is provided from ${input_sources.length} source(s): ${sourceNames}.`,
+        `When multiple input sources are provided, tag each requirement's origin in the 出典 column with the source name.`,
+        ``,
+        ...input_sources.map((s) => `### Source: ${s.name}\n\n${s.content}`),
+      );
     }
 
     if (codeContextBlock) {
@@ -466,8 +505,8 @@ export function registerGenerateDocumentTool(server: McpServer, templateDir: str
     "generate_document",
     "Generate a Japanese specification document using template + AI instructions",
     inputSchema,
-    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description }) => {
-      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description, templateDir, overrideDir });
+    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description, append_mode, input_sources }) => {
+      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description, append_mode, input_sources, templateDir, overrideDir });
     }
   );
 }

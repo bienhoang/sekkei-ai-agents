@@ -4,6 +4,7 @@
  * future phases (keigo, project-type, bilingual) to extend cleanly.
  */
 import type { DocType, KeigoLevel, Language } from "../types/documents.js";
+import { buildInlineYamlLayoutHint } from "./screen-design-instructions.js";
 
 /** Base AI generation instructions per document type */
 export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
@@ -27,6 +28,8 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "This is the FIRST document after RFP — defines REQ-xxx and NFR-xxx IDs that all downstream docs reference.",
     "Input comes from 01-rfp workspace (RFP analysis, stakeholder notes, scope freeze). Do NOT reference F-xxx — functions-list does not exist yet.",
     "For 非機能要件: Apply IPA NFUG 6 categories (可用性/性能・拡張性/運用・保守性/移行性/セキュリティ/システム環境・エコロジー). Every NFR-xxx MUST have a specific numeric 目標値. Prohibited vague terms: 高速, 十分, 適切, 高い, 良好.",
+    "When preset is 'agile': Use user story format for functional requirements: 'As a [role], I want [feature], so that [benefit]'. Skip detailed 現状課題 subsections and 附録. Keep NFR table with numeric targets.",
+    "If input content exceeds 200KB, organize requirements by subsystem (大分類). Generate at least 3 REQ-xxx per subsystem for comprehensive coverage.",
   ].join("\n"),
 
   "basic-design": [
@@ -37,6 +40,9 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "API list: API-001 format with 8 columns.",
     "Include Mermaid diagram suggestions for system architecture and business flow.",
     "Cross-reference REQ-xxx IDs from 要件定義書 if upstream doc is provided.",
+    "",
+    "### Section 5.3 — Screen Layout (画面レイアウト方針)",
+    buildInlineYamlLayoutHint(),
   ].join("\n"),
 
   "detail-design": [
@@ -244,8 +250,18 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "1. 画面一覧 — screen list table with SCR-xxx IDs",
     "2. 画面遷移図 — Mermaid stateDiagram-v2 for screen transitions",
     "3. コンポーネントカタログ — reusable UI component definitions",
-    "4. 画面詳細 — per-screen spec: layout, items, validation, events",
+    "4. 画面詳細 — per-screen spec with 6 sub-sections:",
+    "   a. 画面レイアウト — structured YAML layout block (see format below)",
+    "   b. 画面項目定義 — item definition table with # ①②③ matching YAML `n` values",
+    "   c. バリデーション一覧 — validation rules per field",
+    "   d. イベント一覧 — trigger/action mapping",
+    "   e. 画面遷移 — per-screen transitions",
+    "   f. 権限 — role-based access matrix",
     "5. API連携 — screen event ↔ API-xxx mapping table",
+    "",
+    "### Screen Layout Format (section 4.a)",
+    buildInlineYamlLayoutHint(),
+    "",
     "Cross-reference SCR-xxx and API-xxx IDs from basic-design if upstream doc is provided.",
     "Include Mermaid state diagrams for screen transition flows.",
   ].join("\n"),
@@ -430,4 +446,4 @@ export function buildChangelogPreservationInstruction(existingRevisionHistory: s
 }
 
 // Re-export screen design instructions (extracted for file size management)
-export { buildScreenDesignInstruction } from "./screen-design-instructions.js";
+export { buildScreenDesignInstruction, buildInlineYamlLayoutHint } from "./screen-design-instructions.js";

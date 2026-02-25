@@ -109,9 +109,13 @@ approver: ""
      - Include at least 10 functional requirements
 -->
 
-| 要件ID | 要件カテゴリ | 要件分類 | 要件名 | 要件詳細説明 | 優先度 | 関連RFP項目 | 検証方法 | 備考 |
-|--------|-------------|---------|--------|-------------|--------|------------|---------|------|
-| REQ-001 | <!-- AI --> | <!-- AI --> | <!-- AI --> | <!-- AI --> | <!-- AI: 高/中/低 --> | <!-- AI: RFP source section/item --> | <!-- AI: UT,IT --> | <!-- AI --> |
+<!-- AI: 分類 values: 新規(TO-BE) for new features, 現行(AS-IS) for existing features being migrated, 変更(Change) for modifications. Default to 新規 for greenfield projects. -->
+
+<!-- AI: ステータス: ドラフト (initial), レビュー中, 承認済, 却下. Set all to ドラフト on first generation. -->
+
+| 要件ID | 分類 | 要件カテゴリ | 要件分類 | 要件名 | 要件詳細説明 | 優先度 | 関連RFP項目 | 検証方法 | 備考 | ステータス |
+|--------|------|-------------|---------|--------|-------------|--------|------------|---------|------|------------|
+| REQ-001 | <!-- AI: 新規/現行/変更 --> | <!-- AI --> | <!-- AI --> | <!-- AI --> | <!-- AI --> | <!-- AI: 高/中/低 --> | <!-- AI: RFP source section/item --> | <!-- AI: UT,IT --> | <!-- AI --> | ドラフト |
 
 #### 3.1.4 業務フロー図
 <!-- AI: Mermaid flowchart showing main business process flow.

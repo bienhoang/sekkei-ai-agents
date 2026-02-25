@@ -37,6 +37,21 @@ describe("extractVersionFromContent", () => {
     const doc = "# Doc\n## 改訂履歴\nNo table here.\n## 承認欄\n";
     expect(extractVersionFromContent(doc)).toBe("");
   });
+
+  it("extracts semver X.Y.Z format", () => {
+    const doc = makeDoc(["| 1.0.0 | 2026-01-01 | 初版 | A |", "| 1.0.2 | 2026-02-01 | 修正 | B |"]);
+    expect(extractVersionFromContent(doc)).toBe("1.0.2");
+  });
+
+  it("extracts Japanese 第N版 format", () => {
+    const doc = makeDoc(["| 第1版 | 2026-01-01 | 初版 | A |", "| 第3版 | 2026-02-01 | 改訂 | B |"]);
+    expect(extractVersionFromContent(doc)).toBe("第3版");
+  });
+
+  it("returns highest version when mixing X.Y and X.Y.Z", () => {
+    const doc = makeDoc(["| 1.0 | 2026-01-01 | 初版 | A |", "| 1.0.5 | 2026-02-01 | 修正 | B |"]);
+    expect(extractVersionFromContent(doc)).toBe("1.0.5");
+  });
 });
 
 describe("incrementVersion", () => {
@@ -63,7 +78,17 @@ describe("incrementVersion", () => {
   it("returns 1.0 for malformed input", () => {
     expect(incrementVersion("abc")).toBe("1.0");
     expect(incrementVersion("1")).toBe("1.0");
-    expect(incrementVersion("1.2.3")).toBe("1.0");
+  });
+
+  it("increments semver X.Y.Z format", () => {
+    expect(incrementVersion("1.0.0")).toBe("1.0.1");
+    expect(incrementVersion("2.1.3")).toBe("2.1.4");
+    expect(incrementVersion("1.2.3")).toBe("1.2.4");
+  });
+
+  it("increments Japanese 第N版 format", () => {
+    expect(incrementVersion("第1版")).toBe("第2版");
+    expect(incrementVersion("第10版")).toBe("第11版");
   });
 });
 

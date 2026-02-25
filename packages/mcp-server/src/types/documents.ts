@@ -69,7 +69,7 @@ export type Priority = (typeof PRIORITIES)[number];
 export const KEIGO_LEVELS = ["丁寧語", "謙譲語", "simple"] as const;
 export type KeigoLevel = (typeof KEIGO_LEVELS)[number];
 
-export const PROJECT_TYPES = ["web", "mobile", "api", "desktop", "lp", "internal-system", "saas", "batch"] as const;
+export const PROJECT_TYPES = ["web", "mobile", "api", "desktop", "lp", "internal-system", "saas", "batch", "government", "finance", "healthcare"] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
 
 export const PRESETS = ["enterprise", "standard", "agile"] as const;
@@ -219,6 +219,7 @@ export interface ProjectConfig {
 export const RFP_PHASES = [
   "RFP_RECEIVED", "ANALYZING", "QNA_GENERATION", "WAITING_CLIENT",
   "DRAFTING", "CLIENT_ANSWERED", "PROPOSAL_UPDATE", "SCOPE_FREEZE",
+  "DECLINED", "ON_HOLD", "CANCELLED",
 ] as const;
 export type RfpPhase = (typeof RFP_PHASES)[number];
 
@@ -243,6 +244,8 @@ export interface RfpStatus {
   assumptions: string[];
   qna_round: number;            // starts at 0, incremented on each QNA_GENERATION entry
   phase_history: PhaseEntry[];   // ordered list of phase transitions
+  deadline?: string;            // client submission deadline (ISO date)
+  response_due?: string;        // expected Q&A response date (ISO date)
 }
 
 export interface RfpFileInventory {

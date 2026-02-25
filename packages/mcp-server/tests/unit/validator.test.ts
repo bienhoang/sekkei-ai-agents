@@ -10,6 +10,7 @@ import {
   validateDocument,
   validateSplitDocument,
   validateChangelogPreservation,
+  validateContentDepth,
 } from "../../src/lib/validator.js";
 
 /** Structural section block included in all valid test documents */
@@ -51,6 +52,47 @@ describe("validateCompleteness", () => {
     const content = "## 改訂履歴\n## 配布先\n## 用語集\n# 機能一覧";
     const issues = validateCompleteness(content, "functions-list");
     expect(issues.some((i) => i.message.includes("承認欄"))).toBe(true);
+  });
+});
+
+describe("validateContentDepth - NFR numeric targets", () => {
+  const STRUCTURAL_NFR =
+    "---\ndoc_type: requirements\nversion: \"1.0\"\n---\n" +
+    "## 改訂履歴\n| 版数 | 日付 | 変更内容 | 変更者 |\n|------|------|----------|--------|\n| 1.0 | 2026-01-01 | 初版 | Author |\n" +
+    "## 承認欄\n| 役割 | 氏名 | 日付 |\n" +
+    "## 配布先\n## 用語集\n";
+
+  const reqSection =
+    "## 3. 要件の定義\n### 3.1 機能要件\n| REQ-001 | ... | REQ-002 | ... | REQ-003 | ...\n### 3.2 非機能要件\n";
+
+  it("passes when NFR rows have numeric targets", () => {
+    const content =
+      STRUCTURAL_NFR +
+      reqSection +
+      "| NFR-001 | 可用性 | 稼働率 | 99.9% | 月次 |\n" +
+      "| NFR-002 | 性能 | 応答時間 | 2秒以内 | 都度 |\n";
+    const issues = validateContentDepth(content, "requirements");
+    expect(issues.some((i) => i.message.includes("NFR目標値"))).toBe(false);
+  });
+
+  it("warns when NFR rows contain vague terms", () => {
+    const content =
+      STRUCTURAL_NFR +
+      reqSection +
+      "| NFR-001 | 可用性 | 稼働率 | 高い | 月次 |\n" +
+      "| NFR-002 | 性能 | 応答時間 | 高速 | 都度 |\n";
+    const issues = validateContentDepth(content, "requirements");
+    expect(issues.some((i) => i.message.includes("曖昧な表現"))).toBe(true);
+  });
+
+  it("warns when NFR rows are missing numeric targets", () => {
+    const content =
+      STRUCTURAL_NFR +
+      reqSection +
+      "| NFR-001 | 可用性 | 稼働率 | 高め | 月次 |\n" +
+      "| NFR-002 | 性能 | 応答時間 | 早い | 都度 |\n";
+    const issues = validateContentDepth(content, "requirements");
+    expect(issues.some((i) => i.message.includes("数値が不足"))).toBe(true);
   });
 });
 
