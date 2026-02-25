@@ -24,6 +24,7 @@ Determine the shell type for each screen based on function ID prefix:
 | `F-ERR-*` | error | `error-shell.css` | Centered icon + message |
 | `F-MAIL-*`, `F-EMAIL-*` | email | `email-shell.css` | 600px email container |
 | `F-PRINT-*` | print | `print-shell.css` | A4 clean layout |
+| `F-APP-*` | mobile | `mobile-shell.css` | Top header + Content + Bottom tab bar |
 | Everything else | admin | `admin-shell.css` | Sidebar + Header + Content |
 
 Note: `blank` shell has no auto-detect prefix — use `shell_type: blank` explicit override only.
@@ -129,6 +130,8 @@ await browser.close();
 
 Run with: `node screenshot.mjs`
 
+**Mobile shell screenshots**: Use `viewport: { width: 390, height: 844 }` for mobile shell screens. The `fullPage: true` option captures full content height.
+
 Alternatively, use `chrome-devtools` or `agent-browser` skill for browser automation.
 
 ## HTML Template Skeleton
@@ -195,7 +198,7 @@ Every generated HTML file MUST use this exact structure:
 
 ## Non-Admin Shell Skeletons
 
-For non-admin shell types (auth, error, onboarding, public, email, print, blank), read `references/mockup-shells.md` for HTML skeletons, CSS class references, and layout examples.
+For non-admin shell types (auth, error, onboarding, public, email, print, blank, mobile), read `references/mockup-shells.md` for HTML skeletons, CSS class references, and layout examples.
 
 ## CSS Class Reference
 
@@ -376,6 +379,7 @@ For pie/doughnut charts, omit `scales` and use array `backgroundColor`:
 
 1. **Content-area only**: Annotations go ONLY inside the content area:
    - `admin`: `.shell-content`
+   - `mobile`: `.shell-content`
    - `auth`: `.auth-card`
    - `onboarding`: `.onboarding-content`
    - `public`: `.public-hero` + `.public-section`

@@ -336,6 +336,157 @@ For screens detected as `print` shell type (F-PRINT-* prefix or `shell_type: pri
 | `.print-table` | Clean bordered table |
 | `.print-footer` | Page number footer |
 
+## Mobile Shell Skeleton
+
+For screens detected as `mobile` shell type (F-APP-* prefix or `shell_type: mobile`):
+
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{Screen Name} — {Project Name}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="mobile-shell.css">
+</head>
+<body>
+<div class="screen-wrap">
+<div class="mobile-shell" style="--viewport-width: 390px;">
+  <!-- Header (NO content annotations) -->
+  <header class="shell-header">
+    <div class="shell-header-back"><i class="fa-solid fa-chevron-left"></i></div>
+    <div class="shell-header-title">{Screen Title}</div>
+    <div class="shell-header-actions">
+      <i class="fa-solid fa-ellipsis-vertical"></i>
+    </div>
+  </header>
+
+  <!-- Content (annotations go HERE, starting from 1) -->
+  <main class="shell-content">
+    <!-- Screen-specific components with annotations -->
+  </main>
+
+  <!-- Tab bar (NO content annotations) -->
+  <nav class="shell-tabbar">
+    <div class="tab-item active"><i class="fa-solid fa-house"></i><span>ホーム</span></div>
+    <div class="tab-item"><i class="fa-solid fa-magnifying-glass"></i><span>検索</span></div>
+    <div class="tab-item"><i class="fa-solid fa-bell"></i><span>通知</span></div>
+    <div class="tab-item"><i class="fa-solid fa-user"></i><span>プロフィール</span></div>
+  </nav>
+</div>
+</div>
+</body>
+</html>
+```
+
+### Mobile CSS Classes — Shell Structure
+| Class | Purpose |
+|-------|---------|
+| `.mobile-shell` | Root grid container (header + content + tabbar) |
+| `.shell-header` | Top header bar (56px) |
+| `.shell-header-back` | Back arrow button |
+| `.shell-header-title` | Centered page title |
+| `.shell-header-actions` | Right-side action icons |
+| `.shell-content` | Scrollable main content area |
+| `.shell-tabbar` | Bottom tab bar (56px, 4 tabs) |
+| `.tab-item` | Tab button (icon + label, add `.active` for current) |
+
+### Mobile CSS Classes — Components
+| Class | Purpose |
+|-------|---------|
+| `.mobile-card` | Card with rounded corners + shadow |
+| `.mobile-card-image` | Full-width image placeholder (200px) |
+| `.list-item` | Flex row (avatar + content + chevron) |
+| `.list-group` | Grouped section container |
+| `.list-group-title` | Section label (uppercase, muted) |
+| `.chat-bubble` | Message bubble (add `.sent` or `.received`) |
+| `.chat-input-bar` | Message input + send button bar |
+| `.feed-card` | Social post card |
+| `.feed-actions` | Like/comment/share action row |
+| `.profile-header` | Centered avatar + name + bio |
+| `.profile-stats` | 3-column stats grid (posts/followers/following) |
+| `.mobile-input` | Full-width input (48px, larger touch target) |
+| `.mobile-toggle` | iOS-style toggle (add `.active` for on) |
+| `.mobile-select` | Full-width select dropdown |
+| `.bottom-sheet` | Slide-up overlay panel |
+| `.chip-row` | Horizontal scrolling chip container |
+| `.chip` | Pill-shaped tag (add `.active` for selected) |
+| `.avatar-sm` / `.avatar-md` / `.avatar-lg` | 32px / 48px / 80px avatar circles |
+| `.badge-dot` | 8px red notification dot |
+| `.empty-state` | Centered icon + text for empty screens |
+| `.notification-item` | Notification row (add `.unread` for highlight) |
+| `.stat-card` | KPI card (smaller padding than admin) |
+| `.dashboard-grid` | 2-column fixed grid |
+
+### Mobile Layout Examples
+
+#### Dashboard
+```html
+<main class="shell-content">
+  <div class="dashboard-grid">
+    <div class="component"><span class="annotation">1</span>
+      <div class="stat-card"><div class="stat-value">1,234</div><div class="stat-label">ユーザー</div></div>
+    </div>
+    <div class="component"><span class="annotation">2</span>
+      <div class="stat-card"><div class="stat-value">567</div><div class="stat-label">注文</div></div>
+    </div>
+    <div class="component full-span"><span class="annotation">3</span>
+      <div class="chart-card">
+        <div class="chart-title">月次推移</div>
+        <div class="chart-container"><canvas id="chart-monthly"></canvas></div>
+      </div>
+    </div>
+  </div>
+</main>
+```
+
+#### List with Search + Filter Chips
+```html
+<main class="shell-content">
+  <div class="component"><span class="annotation">1</span>
+    <div class="input-field" style="border-radius:20px;"><span class="placeholder-text"><i class="fa-solid fa-magnifying-glass"></i> 検索...</span></div>
+  </div>
+  <div class="component"><span class="annotation">2</span>
+    <div class="chip-row">
+      <span class="chip active">すべて</span><span class="chip">進行中</span><span class="chip">完了</span>
+    </div>
+  </div>
+  <div class="component"><span class="annotation">3</span>
+    <div class="list-item"><span class="avatar-sm">T</span><div class="list-item-content"><div class="list-item-title">田中 太郎</div><div class="list-item-subtitle">エンジニア</div></div><i class="fa-solid fa-chevron-right list-item-chevron"></i></div>
+    <div class="list-item"><span class="avatar-sm">S</span><div class="list-item-content"><div class="list-item-title">鈴木 花子</div><div class="list-item-subtitle">デザイナー</div></div><i class="fa-solid fa-chevron-right list-item-chevron"></i></div>
+  </div>
+</main>
+```
+
+#### Chat (tabbar hidden, chat-input-bar shown)
+```html
+<!-- Note: For chat screens, replace shell-tabbar with chat-input-bar -->
+<div class="screen-wrap">
+<div class="mobile-shell" style="--viewport-width: 390px;">
+  <header class="shell-header">
+    <div class="shell-header-back"><i class="fa-solid fa-chevron-left"></i></div>
+    <div class="shell-header-title">チャット</div>
+    <div class="shell-header-actions"><i class="fa-solid fa-phone"></i></div>
+  </header>
+  <main class="shell-content" style="padding-bottom:0;">
+    <div class="chat-list">
+      <div class="chat-bubble received">こんにちは！お元気ですか？</div>
+      <div class="chat-bubble sent">元気です！ありがとうございます。</div>
+    </div>
+  </main>
+  <div class="chat-input-bar">
+    <div class="component" style="flex:1;margin-bottom:0;"><span class="annotation">1</span>
+      <div class="input-field" style="border-radius:20px;min-height:36px;"><span class="placeholder-text">メッセージを入力...</span></div>
+    </div>
+    <div class="component" style="margin-bottom:0;"><span class="annotation">2</span>
+      <div class="btn-send"><i class="fa-solid fa-paper-plane"></i></div>
+    </div>
+  </div>
+</div>
+</div>
+```
+
 ## Blank Shell Skeleton
 
 Use `shell_type: blank` explicit override only (no auto-detect prefix):
