@@ -125,6 +125,12 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Tenant-specific customization points (white-label, custom fields, branding)",
       "- Cross-tenant data access controls and audit",
     ].join("\n"),
+    "detail-design": [
+      "## Project Type: SaaS Detail Design",
+      "- Multi-tenant class design: TenantContext, TenantScopedRepository, TenantResolver",
+      "- API pagination patterns: cursor-based for list endpoints, include tenant isolation in query layer",
+      "- Subscription service classes: PlanManager, BillingAdapter, UsageMeter",
+    ].join("\n"),
     requirements: "## Project Type: SaaS\nInclude SaaS-specific NFRs: multi-tenant data isolation, subscription tiers, API rate limiting, tenant provisioning SLA.",
     "security-design": [
       "## Project Type: SaaS Security",
@@ -166,6 +172,12 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
     ].join("\n"),
   },
   mobile: {
+    "detail-design": [
+      "## Project Type: Mobile Detail Design",
+      "- ViewModel/Repository pattern: ScreenViewModel, DataRepository, RemoteDataSource, LocalDataSource",
+      "- Offline sync classes: SyncManager, ConflictResolver, OfflineQueueProcessor",
+      "- Platform-specific adapters: abstract interfaces with iOS/Android concrete implementations",
+    ].join("\n"),
     "basic-design": [
       "## Project Type: Mobile",
       "Include screen transition diagram for ALL screens.",
@@ -208,6 +220,12 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
     "basic-design": "## Project Type: Landing Page\nFocus on: page structure, conversion funnel, form spec, analytics/tracking integration.",
   },
   government: {
+    "detail-design": [
+      "## Project Type: Government Detail Design",
+      "- Audit trail classes: AuditLogger, AuditEventBuilder, AuditQueryService (full CRUD audit)",
+      "- PII handling: PIIClassifier, DataMaskingService, ConsentValidator",
+      "- Accessibility: AccessibilityValidator, WCAG2.1-AA compliance checker per screen component",
+    ].join("\n"),
     "basic-design": [
       "## Project Type: Government",
       "Include accessibility design (WCAG 2.1 AA) for all screens.",
@@ -229,6 +247,12 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
     ].join("\n"),
   },
   finance: {
+    "detail-design": [
+      "## Project Type: Finance Detail Design",
+      "- Transaction classes: TransactionProcessor, IdempotencyKeyManager, DoubleEntryLedger",
+      "- Audit decorators: @Auditable on all financial operations, AuditTrailService",
+      "- Reconciliation: ReconciliationEngine, DiscrepancyReporter, SettlementCalculator",
+    ].join("\n"),
     "basic-design": [
       "## Project Type: Finance",
       "Include transaction integrity design.",
@@ -248,6 +272,12 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
     ].join("\n"),
   },
   healthcare: {
+    "detail-design": [
+      "## Project Type: Healthcare Detail Design",
+      "- FHIR resource mappers: FHIRPatientMapper, FHIRObservationMapper, BundleBuilder",
+      "- Consent management: ConsentService, ConsentPolicyEngine, AccessDecisionManager",
+      "- HL7 adapters: HL7MessageParser, HL7MessageBuilder, IntegrationBridge",
+    ].join("\n"),
     "basic-design": [
       "## Project Type: Healthcare",
       "Include HL7/FHIR interface design in external interface section.",
@@ -266,6 +296,13 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
     ].join("\n"),
   },
   microservice: {
+    "detail-design": [
+      "## Project Type: Microservice Detail Design",
+      "- Per-service class design: each service has own Repository, Service, Controller layers",
+      "- gRPC proto definitions: include message types and service interfaces in API詳細仕様",
+      "- Saga orchestrator classes: SagaCoordinator, CompensationHandler for distributed transactions",
+      "- Circuit breaker patterns: RetryPolicy, CircuitBreakerConfig per downstream dependency",
+    ].join("\n"),
     "basic-design": [
       "## Project Type: Microservice",
       "### System Architecture (Section 2)",
@@ -324,6 +361,12 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
     ].join("\n"),
   },
   "event-driven": {
+    "detail-design": [
+      "## Project Type: Event-Driven Detail Design",
+      "- Event handler classes: EventConsumer, EventProducer, EventRouter per domain event",
+      "- Dead-letter handling: DLQProcessor, RetryScheduler, PoisonMessageHandler",
+      "- Event schema versioning: EventEnvelope with version field, SchemaRegistry adapter",
+    ].join("\n"),
     "basic-design": [
       "## Project Type: Event-Driven",
       "### Additional Section: イベント設計 (Event Design)",
@@ -354,6 +397,12 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
     ].join("\n"),
   },
   "ai-ml": {
+    "detail-design": [
+      "## Project Type: AI/ML Detail Design",
+      "- Model serving classes: ModelLoader, InferenceEngine, PredictionService, ModelVersionRouter",
+      "- Feature engineering: FeatureExtractor, FeatureStore adapter, FeatureValidator",
+      "- Inference pipeline: PreProcessor, PostProcessor, ResultFormatter with latency budgets per step",
+    ].join("\n"),
     "basic-design": [
       "## Project Type: AI/ML",
       "### External Interface (Section 8)",
@@ -414,6 +463,8 @@ function buildSplitInstructions(
     `## Feature-Scoped ID Rules (MANDATORY)`,
     `Screen IDs: SCR-${prefix}-001, SCR-${prefix}-002... (feature prefix prevents collision).`,
     `Report IDs: RPT-${prefix}-001, RPT-${prefix}-002...`,
+    `Class IDs: CLS-${prefix}-001, CLS-${prefix}-002... (feature prefix prevents collision).`,
+    `Design IDs: DD-${prefix}-001, DD-${prefix}-002...`,
     `Use sequential numbering within this feature scope only.`,
   ].join("\n");
 }

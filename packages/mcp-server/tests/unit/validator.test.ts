@@ -36,6 +36,7 @@ describe("validateCompleteness", () => {
       STRUCTURAL,
       "## 概要", "## モジュール設計", "## クラス設計", "## 画面設計詳細",
       "## DB詳細設計", "## API詳細仕様", "## 処理フロー", "## エラーハンドリング",
+      "## セキュリティ実装", "## パフォーマンス考慮",
     ].join("\n\n");
     const issues = validateCompleteness(content, "detail-design");
     expect(issues).toHaveLength(0);

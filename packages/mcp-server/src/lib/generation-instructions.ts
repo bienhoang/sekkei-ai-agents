@@ -57,12 +57,15 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
 
   "detail-design": [
     "Generate a 詳細設計書 (Detail Design Document) from the provided input.",
-    "Follow the 10-section structure defined in the template.",
+    "Follow ALL sections defined in the template (14 sections: 4 structural + 10 numbered).",
     "Module design with call relationships between modules.",
     "Class specifications: クラス仕様 table with 7 columns.",
     "API detail specs: endpoint, req/res schemas, error codes.",
     "Validation rules: バリデーション規則 table with 7 columns.",
     "Error message list: エラーメッセージ一覧 table with 6 columns.",
+    "Section 9 セキュリティ実装: security countermeasure implementation details per module.",
+    "Section 10 パフォーマンス考慮: performance targets, optimization strategies per module.",
+    "Include Mermaid classDiagram with CLS-xxx IDs matching クラス一覧 table entries.",
     "Include Mermaid sequence diagrams for key processing flows.",
     "Cross-reference SCR-xxx, TBL-xxx, API-xxx IDs from 基本設計書.",
   ].join("\n"),

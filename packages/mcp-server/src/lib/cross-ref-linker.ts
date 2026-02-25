@@ -35,6 +35,7 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["test-plan", "st-spec"],
   ["test-plan", "uat-spec"],
   ["detail-design", "ut-spec"],
+  ["detail-design", "it-spec"],
   ["basic-design", "it-spec"],
   ["basic-design", "st-spec"],
   ["functions-list", "st-spec"],
@@ -58,6 +59,7 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["functions-list", "sitemap"],
   // screen-design and interface-spec chain integration
   ["basic-design", "screen-design"],
+  ["screen-design", "detail-design"],
   ["basic-design", "interface-spec"],
   ["requirements", "interface-spec"],
   // functions-list feeds test planning scope

@@ -62,6 +62,7 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
     ...STRUCTURAL_SECTIONS,
     "概要", "モジュール設計", "クラス設計", "画面設計詳細",
     "DB詳細設計", "API詳細仕様", "処理フロー", "エラーハンドリング",
+    "セキュリティ実装", "パフォーマンス考慮",
   ],
   "test-plan": [
     ...STRUCTURAL_SECTIONS,
@@ -128,6 +129,8 @@ const UPSTREAM_OVERRIDES: Partial<Record<DocType, string[]>> = {
   nfr: ["NFR", "REQ"],
   "security-design": ["API", "NFR", "REQ", "SCR", "TBL"],
   "operation-design": ["NFR", "REQ", "API", "TBL", "F"],
+  "detail-design": ["SCR", "TBL", "API", "REQ", "F", "RPT"],
+  "it-spec": ["API", "SCR", "TBL", "REQ", "F", "TP"],
 };
 
 /** Computed once at module load from CHAIN_PAIRS + ID_ORIGIN */
@@ -487,6 +490,50 @@ export function validateDiagramConsistency(content: string): ValidationIssue[] {
   return issues;
 }
 
+/** Check CLS-xxx from class table appear in classDiagram (detail-design) */
+export function validateClassDiagramConsistency(content: string): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+
+  // Extract CLS IDs from table rows (| CLS-001 |)
+  const tableCLSIds = new Set<string>();
+  for (const m of content.matchAll(/\|\s*(CLS-\d{1,4})/g)) {
+    tableCLSIds.add(m[1]);
+  }
+
+  if (tableCLSIds.size === 0) return issues;
+
+  // Check for classDiagram block
+  const classBlocks = content.match(/```mermaid[\s\S]*?classDiagram[\s\S]*?```/g) ?? [];
+  if (classBlocks.length === 0) {
+    issues.push({
+      type: "completeness",
+      severity: "warning",
+      message: `${tableCLSIds.size} CLS-xxx defined in tables but no classDiagram block found`,
+    });
+    return issues;
+  }
+
+  // Extract class names from classDiagram (CLS-xxx or class CLS_xxx)
+  const diagramCLSIds = new Set<string>();
+  for (const block of classBlocks) {
+    for (const m of block.matchAll(/CLS[-_]?(\d{1,4})/g)) {
+      diagramCLSIds.add(`CLS-${m[1].padStart(3, "0")}`);
+    }
+  }
+
+  for (const id of tableCLSIds) {
+    if (!diagramCLSIds.has(id)) {
+      issues.push({
+        type: "completeness",
+        severity: "warning",
+        message: `${id} in class table but missing from classDiagram`,
+      });
+    }
+  }
+
+  return issues;
+}
+
 /** Check no two API rows share the same HTTP method + endpoint */
 export function validateApiUniqueness(content: string): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
@@ -547,6 +594,11 @@ export function validateDocument(
     issues.push(...validateApiUniqueness(content));
   }
 
+  // Advanced validation for detail-design
+  if (docType === "detail-design") {
+    issues.push(...validateClassDiagramConsistency(content));
+  }
+
   let cross_ref_report: CrossRefReport | undefined;
   if (upstreamContent) {
     cross_ref_report = validateCrossRefs(content, upstreamContent, docType);
@@ -586,7 +638,7 @@ const SHARED_SECTION_HEADINGS: Record<string, string> = {
 /** Required headings for per-feature files */
 const FEATURE_SECTION_HEADINGS: Partial<Record<DocType, string[]>> = {
   "basic-design": ["概要", "業務フロー", "画面設計"],
-  "detail-design": ["概要", "モジュール設計", "画面設計詳細"],
+  "detail-design": ["概要", "モジュール設計", "クラス設計", "画面設計詳細", "API詳細仕様"],
   "ut-spec": ["単体テストケース"],
   "it-spec": ["結合テストケース"],
 };
@@ -656,7 +708,9 @@ export async function validateSplitDocument(
     const content = allContent[doc.shared.length + fi];
     const scrIds = content.match(/\bSCR-[A-Z0-9]+-?\d{1,4}\b/g) ?? [];
     const rptIds = content.match(/\bRPT-[A-Z0-9]+-?\d{1,4}\b/g) ?? [];
-    featureIdSets.set(feature.name, new Set([...scrIds, ...rptIds]));
+    const clsIds = content.match(/\bCLS-[A-Z0-9]+-?\d{1,4}\b/g) ?? [];
+    const ddIds = content.match(/\bDD-[A-Z0-9]+-?\d{1,4}\b/g) ?? [];
+    featureIdSets.set(feature.name, new Set([...scrIds, ...rptIds, ...clsIds, ...ddIds]));
   }
   const seen = new Map<string, string>();
   for (const [featureName, ids] of featureIdSets) {
