@@ -1,6 +1,6 @@
 {
   "name": "@bienhoang/sekkei-preview",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Express+React preview + WYSIWYG editor for Sekkei specification documents",
   "type": "module",
   "bin": {
