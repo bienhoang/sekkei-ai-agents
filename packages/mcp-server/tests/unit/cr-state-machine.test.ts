@@ -1,10 +1,11 @@
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { mkdtemp, rm, readFile } from "node:fs/promises";
+import { mkdtemp, rm, readFile, mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
   validateTransition, createCR, readCR, writeCR, transitionCR,
   listCRs, getCRDir, generateCRId, ALLOWED_TRANSITIONS, isValidCRId,
+  appendCRToRFPDecisions,
 } from "../../src/lib/cr-state-machine.js";
 import type { CRStatus, ChangeRequest } from "../../src/types/change-request.js";
 
@@ -149,6 +150,72 @@ describe("CR state machine", () => {
       expect(isValidCRId("CR-260224")).toBe(false);
       expect(isValidCRId("REQ-001")).toBe(false);
       expect(isValidCRId("")).toBe(false);
+    });
+  });
+
+  // --- RFP Decision Log ---
+  describe("appendCRToRFPDecisions", () => {
+    let rfpDir: string;
+    let rfpBasePath: string;
+
+    beforeAll(async () => {
+      rfpBasePath = await mkdtemp(join(tmpdir(), "sekkei-rfp-cr-test-"));
+      rfpDir = join(rfpBasePath, "workspace-docs", "01-rfp");
+      await mkdir(rfpDir, { recursive: true });
+    });
+    afterAll(async () => {
+      await rm(rfpBasePath, { recursive: true, force: true });
+    });
+
+    const makeCR = (overrides: Partial<ChangeRequest> = {}): ChangeRequest => ({
+      id: "CR-260225-001",
+      status: "APPROVED",
+      origin_doc: "requirements",
+      description: "Add login screen",
+      changed_ids: ["REQ-001", "SCR-010"],
+      impact_summary: "2 screens affected",
+      propagation_steps: [
+        { doc_type: "basic-design", direction: "downstream", status: "done" },
+        { doc_type: "detail-design", direction: "downstream", status: "pending" },
+      ],
+      propagation_index: 0,
+      conflict_warnings: [],
+      created: "2026-02-25",
+      updated: "2026-02-25",
+      history: [{ status: "INITIATED", entered: "2026-02-25" }],
+      ...overrides,
+    });
+
+    it("appends entry to existing 07_decisions.md", async () => {
+      const decisionsPath = join(rfpDir, "07_decisions.md");
+      await writeFile(decisionsPath, "# Decisions\n", "utf-8");
+
+      await appendCRToRFPDecisions(rfpBasePath, makeCR());
+
+      const content = await readFile(decisionsPath, "utf-8");
+      expect(content).toContain("CR-260225-001");
+      expect(content).toContain("Add login screen");
+      expect(content).toContain("[APPROVED]");
+      expect(content).toContain("REQ-001, SCR-010");
+      expect(content).toContain("↓ downstream: 1/2 done");
+    });
+
+    it("skips silently when 07_decisions.md does not exist", async () => {
+      const noRfpBase = join(rfpBasePath, "no-rfp");
+      // Should not throw
+      await appendCRToRFPDecisions(noRfpBase, makeCR());
+    });
+
+    it("handles CR with no propagation steps", async () => {
+      const decisionsPath = join(rfpDir, "07_decisions.md");
+      await writeFile(decisionsPath, "", "utf-8");
+
+      await appendCRToRFPDecisions(rfpBasePath, makeCR({
+        propagation_steps: [],
+      }));
+
+      const content = await readFile(decisionsPath, "utf-8");
+      expect(content).toContain("No propagation steps");
     });
   });
 });

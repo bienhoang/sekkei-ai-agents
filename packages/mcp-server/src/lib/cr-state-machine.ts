@@ -2,7 +2,7 @@
  * CR state machine — YAML persistence, transitions, CRUD operations.
  * Follows rfp-state-machine.ts patterns with yaml package for nested data.
  */
-import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir, readdir, access } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { parse, stringify } from "yaml";
 import { SekkeiError } from "./errors.js";
@@ -201,6 +201,52 @@ function buildCRBody(cr: ChangeRequest): string {
   return lines.join("\n");
 }
 
+// --- RFP Decision Log ---
+
+/** Summarize propagation progress: "↑ upstream: 1/2 done | ↓ downstream: 3/5 done" */
+function formatPropagationSummary(cr: ChangeRequest): string {
+  if (cr.propagation_steps.length === 0) return "No propagation steps";
+
+  const summary: string[] = [];
+  for (const dir of ["upstream", "downstream"] as const) {
+    const steps = cr.propagation_steps.filter(s => s.direction === dir);
+    if (steps.length === 0) continue;
+    const done = steps.filter(s => s.status === "done").length;
+    const skipped = steps.filter(s => s.status === "skipped").length;
+    const arrow = dir === "upstream" ? "↑" : "↓";
+    const parts = [`${done}/${steps.length} done`];
+    if (skipped > 0) parts.push(`${skipped} skipped`);
+    summary.push(`${arrow} ${dir}: ${parts.join(", ")}`);
+  }
+  return summary.join(" | ") || "No propagation steps";
+}
+
+/** Append CR status entry to RFP decisions file. Skips silently if no RFP workspace. */
+export async function appendCRToRFPDecisions(basePath: string, cr: ChangeRequest): Promise<void> {
+  const filePath = join(basePath, DEFAULT_WORKSPACE_DIR, "01-rfp", "07_decisions.md");
+  try {
+    await access(filePath);
+  } catch {
+    return; // No RFP workspace — skip silently
+  }
+
+  const now = new Date().toISOString().slice(0, 10);
+  const entry = [
+    `## ${now} — ${cr.id}: ${cr.description} [${cr.status}]`,
+    `- **Origin**: ${cr.origin_doc}`,
+    `- **Changed IDs**: ${cr.changed_ids.join(", ") || "—"}`,
+    `- **Impact**: ${cr.impact_summary || "Not yet analyzed"}`,
+    `- **Propagation**: ${formatPropagationSummary(cr)}`,
+    "",
+  ].join("\n");
+
+  let existing = "";
+  try { existing = await readFile(filePath, "utf-8"); } catch { /* empty */ }
+  const separator = existing.trim() ? "\n\n" : "";
+  await writeFile(filePath, existing + separator + entry, "utf-8");
+  logger.debug({ crId: cr.id, status: cr.status }, "CR decision logged to RFP");
+}
+
 // --- CRUD ---
 
 export async function createCR(
@@ -255,6 +301,11 @@ export async function transitionCR(
   cr.history.push({ status: toStatus, entered: now, reason });
 
   await writeCR(crFilePath, cr);
+
+  // Append to RFP decision log (best-effort — failure won't break transition)
+  const basePath = dirname(dirname(dirname(crFilePath)));
+  await appendCRToRFPDecisions(basePath, cr).catch(() => {});
+
   logger.debug({ id: cr.id, from: cr.history.at(-2)?.status, to: toStatus }, "CR transitioned");
   return cr;
 }
