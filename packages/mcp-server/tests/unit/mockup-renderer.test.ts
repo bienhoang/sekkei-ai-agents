@@ -33,14 +33,11 @@ const SAMPLE_LAYOUT: ScreenLayout = {
 };
 
 describe("circledNumber", () => {
-  it("converts 1-20 to circled Unicode characters", () => {
-    expect(circledNumber(1)).toBe("①");
-    expect(circledNumber(2)).toBe("②");
-    expect(circledNumber(10)).toBe("⑩");
-    expect(circledNumber(20)).toBe("⑳");
-  });
-
-  it("returns plain digits for n > 20", () => {
+  it("returns plain Latin digits for all numbers", () => {
+    expect(circledNumber(1)).toBe("1");
+    expect(circledNumber(2)).toBe("2");
+    expect(circledNumber(10)).toBe("10");
+    expect(circledNumber(20)).toBe("20");
     expect(circledNumber(21)).toBe("21");
     expect(circledNumber(99)).toBe("99");
   });
@@ -70,10 +67,10 @@ describe("buildMockupHtml", () => {
     expect(html).toContain("ロゴ");
   });
 
-  it("includes circled number characters", () => {
-    expect(html).toContain("①");
-    expect(html).toContain("②");
-    expect(html).toContain("③");
+  it("includes annotation numbers as plain digits", () => {
+    expect(html).toContain(">1<");
+    expect(html).toContain(">2<");
+    expect(html).toContain(">3<");
   });
 
   it("includes required mark for required fields", () => {

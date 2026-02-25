@@ -57,6 +57,42 @@ const TABLE_HEADERS: Record<string, Record<string, string>> = {
 };
 
 /**
+ * Condensed YAML layout format hint for inline use in generation instructions.
+ * Used by basic-design and screen-design GENERATION_INSTRUCTIONS entries.
+ */
+export function buildInlineYamlLayoutHint(): string {
+  return [
+    "For each screen in 画面一覧, provide a structured YAML layout block inside a ```yaml code fence.",
+    "This YAML will be rendered into a visual PNG mockup image.",
+    "",
+    "YAML format:",
+    "```yaml",
+    "layout_type: form   # form | dashboard | list | detail | modal | wizard",
+    "viewport: desktop   # desktop | tablet | mobile",
+    "regions:",
+    "  header:",
+    "    components:",
+    "      - {n: 1, type: logo, label: \"ロゴ\"}",
+    "      - {n: 2, type: nav, label: \"ナビゲーション\"}",
+    "  main:",
+    "    components:",
+    "      - {n: 3, type: text-input, label: \"フィールド名\", required: true}",
+    "      - {n: 4, type: button, label: \"送信\", variant: primary}",
+    "  footer:",
+    "    components:",
+    "      - {n: 5, type: text, label: \"フッターテキスト\"}",
+    "```",
+    "",
+    "Rules:",
+    "- `n` values must be sequential (1, 2, 3...) and unique across regions",
+    "- Component types: text-input, password-input, textarea, select, checkbox, radio, button, link, table, card, nav, logo, text, search-bar, tabs, pagination",
+    "- `variant` for buttons: primary, secondary, danger",
+    "- `required: true` marks mandatory fields (shows ※ in rendered mockup)",
+    "- Do NOT use ASCII art for screen layouts — always use this YAML format",
+  ].join("\n");
+}
+
+/**
  * Build screen design generation instruction for split-mode basic-design.
  * Instructs AI to generate a dedicated screen-design.md with 6 standard sections.
  * Called by SKILL.md; prepended to input_content for the generation call.

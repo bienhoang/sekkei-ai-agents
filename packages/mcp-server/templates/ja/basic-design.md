@@ -173,8 +173,38 @@ stateDiagram-v2
 -->
 
 ### 5.3 画面レイアウト方針
-<!-- AI: Common layout guidelines: header/footer structure, navigation pattern,
-     responsive breakpoints, component library choice. -->
+<!-- AI: For each screen in 画面一覧, provide a structured YAML layout block
+     inside a ```yaml code fence. This YAML will be rendered to a visual
+     PNG mockup image. Do NOT use ASCII art for screen layouts.
+
+     Example YAML layout block:
+     ```yaml
+     layout_type: form   # form | dashboard | list | detail | modal | wizard
+     viewport: desktop   # desktop | tablet | mobile
+     regions:
+       header:
+         components:
+           - {n: 1, type: logo, label: "ロゴ"}
+           - {n: 2, type: nav, label: "ナビゲーション"}
+       main:
+         components:
+           - {n: 3, type: text-input, label: "フィールド名", required: true}
+           - {n: 4, type: button, label: "送信", variant: primary}
+       footer:
+         components:
+           - {n: 5, type: text, label: "フッターテキスト"}
+     ```
+
+     Rules:
+     - `n` values: sequential starting from 1, unique across all regions
+     - `n` numbers correspond to ①②③ in 画面項目定義 table
+     - Component types: text-input, password-input, textarea, select, checkbox,
+       radio, button, link, table, card, nav, logo, text, search-bar, tabs, pagination
+     - `variant` for buttons: primary, secondary, danger
+     - `required: true` marks mandatory fields (shows ※ in rendered mockup)
+
+     Also include common layout guidelines: header/footer structure,
+     navigation pattern, responsive breakpoints, component library choice. -->
 
 <!-- AI SPLIT MODE: When generating in split mode (scope: "feature"), do NOT generate
      per-screen detail specs in this file. Per-screen specs (画面項目定義, バリデーション,

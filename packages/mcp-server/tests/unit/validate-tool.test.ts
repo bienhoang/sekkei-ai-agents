@@ -31,8 +31,8 @@ describe("validate_document tool", () => {
       "## 承認欄",
       "## 配布先",
       "## 用語集",
-      "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 関連要件ID |",
-      "| 1 | 商品 | 登録 | F-001 | 商品登録 | 登録する | REQ-001 |",
+      "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 関連要件ID | 処理分類 | 優先度 |",
+      "| 1 | 商品 | 登録 | F-001 | 商品登録 | 登録する | REQ-001 | 入力 | 高 |",
     ].join("\n");
 
     const result = await callTool(server, "validate_document", {

@@ -141,7 +141,7 @@ const UPSTREAM_ID_TYPES: Record<DocType, string[]> = Object.fromEntries(
 const REVISION_HISTORY_COLUMNS = ["版数", "日付", "変更内容", "変更者"];
 
 const REQUIRED_COLUMNS: Record<DocType, string[][]> = {
-  "functions-list": [REVISION_HISTORY_COLUMNS, ["大分類", "中分類", "機能ID", "機能名", "関連要件ID"]],
+  "functions-list": [REVISION_HISTORY_COLUMNS, ["大分類", "中分類", "機能ID", "機能名", "関連要件ID", "処理分類", "優先度"]],
   requirements: [REVISION_HISTORY_COLUMNS, ["要件ID", "要件名"], ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
   nfr: [REVISION_HISTORY_COLUMNS, ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
   "project-plan": [REVISION_HISTORY_COLUMNS, ["PP-ID"]],

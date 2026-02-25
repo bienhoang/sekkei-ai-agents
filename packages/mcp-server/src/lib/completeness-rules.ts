@@ -139,8 +139,45 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
   "functions-list": [
     {
       check: "function table row",
-      test: (c) => /\|\s*F-\d{3}/.test(c),
-      message: "機能一覧: 機能テーブルにF-xxxが必要です",
+      test: (c) => /\|\s*[A-Z]{1,5}-\d{3}/.test(c),
+      message: "機能一覧: 機能テーブルにF-xxx（またはカスタムプレフィックス）が必要です",
+    },
+    {
+      check: "processing type enum",
+      test: (c) => {
+        const rows = c.match(/\|\s*(入力|照会|帳票|バッチ|API|イベント|スケジューラ|Webhook)\s*\|/g);
+        return rows !== null && rows.length > 0;
+      },
+      message: "機能一覧: 処理分類は有効な値が必要です",
+    },
+    {
+      check: "minimum function count",
+      test: (c) => {
+        const NON_FUNC = /^(REQ|NFR|SCR|TBL|API|CLS|SEC|PP|TP|EV|OP|MIG|PG|UT|IT|ST|UAT)-/;
+        const all = c.match(/[A-Z]{1,5}-\d{3}/g) || [];
+        return all.filter(id => !NON_FUNC.test(id)).length >= 5;
+      },
+      message: "機能一覧: 最低5つの機能が必要です",
+    },
+    {
+      check: "unique function IDs",
+      test: (c) => {
+        const NON_FUNC = /^(REQ|NFR|SCR|TBL|API|CLS|SEC|PP|TP|EV|OP|MIG|PG|UT|IT|ST|UAT)-/;
+        const all = c.match(/\b[A-Z]{1,5}-\d{3,4}\b/g) || [];
+        const funcIds = all.filter(id => !NON_FUNC.test(id));
+        return funcIds.length === new Set(funcIds).size;
+      },
+      message: "機能一覧: 重複した機能IDがあります",
+    },
+    {
+      check: "REQ cross-reference",
+      test: (c) => /REQ-\d{3}/.test(c),
+      message: "機能一覧: REQ-xxx参照が必要です",
+    },
+    {
+      check: "priority enum",
+      test: (c) => /\|\s*(高|中|低)\s*\|/.test(c),
+      message: "機能一覧: 優先度は高/中/低が必要です",
     },
   ],
   "project-plan": [

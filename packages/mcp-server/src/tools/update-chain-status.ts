@@ -16,8 +16,8 @@ const inputSchema = {
     .refine((p) => !p.includes(".."), { message: "config_path must not contain '..'" })
     .describe("Path to sekkei.config.yaml"),
   doc_type: z.string()
-    .regex(/^[a-z][a-z_]{1,30}$/, "doc_type must be lowercase with underscores")
-    .describe("Chain key (e.g. requirements, functions_list, basic_design)"),
+    .regex(/^[a-z][a-z_-]{1,30}$/, "doc_type must be lowercase with underscores or hyphens")
+    .describe("Chain key (e.g. requirements, functions-list, basic-design). Both hyphens and underscores accepted."),
   status: z.enum(CHAIN_STATUSES)
     .describe("New chain status for the document"),
   output: z.string().max(500).optional()
@@ -34,7 +34,9 @@ export interface UpdateChainStatusArgs {
 export async function handleUpdateChainStatus(
   args: UpdateChainStatusArgs
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
-  const { config_path, doc_type, status, output } = args;
+  const { config_path, status, output } = args;
+  // Normalize hyphens to underscores to match YAML chain keys
+  const doc_type = args.doc_type.replace(/-/g, "_");
   logger.info({ config_path, doc_type, status }, "Updating chain status");
 
   let raw: string;

@@ -22,11 +22,10 @@ const VIEWPORT_WIDTHS: Record<string, number> = {
 };
 
 /**
- * Convert annotation number to circled Unicode character.
- * 1→①, 2→②, ... 20→⑳. Numbers >20 return plain digits.
+ * Convert annotation number to display string.
+ * Returns plain Latin digits for all numbers (cleaner in wireframe mockups).
  */
 export function circledNumber(n: number): string {
-  if (n >= 1 && n <= 20) return String.fromCodePoint(0x2460 + n - 1);
   return String(n);
 }
 

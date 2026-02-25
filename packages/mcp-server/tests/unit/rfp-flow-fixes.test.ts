@@ -13,15 +13,15 @@ async function callTool(
 }
 
 /** Helper: create workspace and advance to target phase with required content.
- *  Uses a unique sub-directory of tmpDir as workspace_path to avoid collisions. */
+ *  Uses a unique sub-directory of tmpDir as workspace_path to avoid collisions.
+ *  Returns basePath (project root) — all subsequent actions use project root. */
 async function advanceTo(
   server: McpServer, tmpDir: string, label: string, targetPhase: string,
 ): Promise<string> {
   const basePath = join(tmpDir, label);
-  const r = await callTool(server, "manage_rfp_workspace", {
+  await callTool(server, "manage_rfp_workspace", {
     action: "create", workspace_path: basePath, project_name: label,
   });
-  const ws = JSON.parse(r.content[0].text).workspace;
   const steps: Array<{ write?: [string, string]; phase: string }> = [
     { write: ["01_raw_rfp.md", "# RFP content"], phase: "ANALYZING" },
     { write: ["02_analysis.md", "# Analysis"], phase: "QNA_GENERATION" },
@@ -33,15 +33,15 @@ async function advanceTo(
   for (const step of steps) {
     if (step.write) {
       await callTool(server, "manage_rfp_workspace", {
-        action: "write", workspace_path: ws, filename: step.write[0], content: step.write[1],
+        action: "write", workspace_path: basePath, filename: step.write[0], content: step.write[1],
       });
     }
     await callTool(server, "manage_rfp_workspace", {
-      action: "transition", workspace_path: ws, phase: step.phase,
+      action: "transition", workspace_path: basePath, phase: step.phase,
     });
-    if (step.phase === targetPhase) return ws;
+    if (step.phase === targetPhase) return basePath;
   }
-  return ws;
+  return basePath;
 }
 
 describe("RFP flow fixes", () => {
@@ -145,37 +145,35 @@ describe("RFP flow fixes", () => {
   // --- M2: Content validation ---
   describe("M2: content validation", () => {
     it("blocks forward when required file empty", async () => {
-      const basePath = join(tmpDir, "m2-empty");
-      const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: basePath, project_name: "m2-empty",
+      const emptyBase = join(tmpDir, "m2-empty");
+      await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: emptyBase, project_name: "m2-empty",
       });
-      const ws = JSON.parse(r.content[0].text).workspace;
       const t = await callTool(server, "manage_rfp_workspace", {
-        action: "transition", workspace_path: ws, phase: "ANALYZING",
+        action: "transition", workspace_path: emptyBase, phase: "ANALYZING",
       });
       expect(t.isError).toBe(true);
       expect(t.content[0].text).toContain("01_raw_rfp.md is empty");
     });
 
     it("allows backward without content check", async () => {
-      const ws = await advanceTo(server, tmpDir, "m2-bw", "QNA_GENERATION");
+      const bwBase = await advanceTo(server, tmpDir, "m2-bw", "QNA_GENERATION");
       const r = await callTool(server, "manage_rfp_workspace", {
-        action: "transition", workspace_path: ws, phase: "ANALYZING", force: true,
+        action: "transition", workspace_path: bwBase, phase: "ANALYZING", force: true,
       });
       expect(r.isError).toBeUndefined();
     });
 
     it("allows forward after writing content", async () => {
-      const basePath = join(tmpDir, "m2-ok");
-      const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: basePath, project_name: "m2-ok",
-      });
-      const ws = JSON.parse(r.content[0].text).workspace;
+      const okBase = join(tmpDir, "m2-ok");
       await callTool(server, "manage_rfp_workspace", {
-        action: "write", workspace_path: ws, filename: "01_raw_rfp.md", content: "# RFP",
+        action: "create", workspace_path: okBase, project_name: "m2-ok",
+      });
+      await callTool(server, "manage_rfp_workspace", {
+        action: "write", workspace_path: okBase, filename: "01_raw_rfp.md", content: "# RFP",
       });
       const t = await callTool(server, "manage_rfp_workspace", {
-        action: "transition", workspace_path: ws, phase: "ANALYZING",
+        action: "transition", workspace_path: okBase, phase: "ANALYZING",
       });
       expect(t.isError).toBeUndefined();
     });

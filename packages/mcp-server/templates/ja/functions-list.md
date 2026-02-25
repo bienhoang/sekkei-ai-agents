@@ -14,6 +14,12 @@ status: draft
 author: ""
 reviewer: ""
 approver: ""
+export_hints:
+  excel:
+    freeze_row: 1
+    auto_width: true
+  pdf:
+    orientation: landscape
 ---
 
 <!-- AI: Keigo: Use ですます調 throughout. Never mix formal and plain styles within a section. -->
@@ -66,7 +72,7 @@ approver: ""
      - Use 3-tier hierarchy: 大分類 (subsystem) -> 中分類 (functional category) -> 小機能 (individual function)
      - ID format: F-001, F-002... (sequential). Each F-xxx MUST map to at least one REQ-xxx via 関連要件ID column
      - 関連要件ID: comma-separated REQ-xxx IDs from upstream 要件定義書 that this function implements
-     - 処理分類 must be one of: 入力 (Input) / 照会 (Inquiry) / 帳票 (Report) / バッチ (Batch)
+     - 処理分類 must be one of: 入力 (Input) / 照会 (Inquiry) / 帳票 (Report) / バッチ (Batch) / API / イベント (Event) / スケジューラ (Scheduler) / Webhook
      - 優先度: 高 (High) / 中 (Medium) / 低 (Low)
      - 難易度: 高 / 中 / 低
      - 機能名 should be action verb + object (e.g., 見積書作成, 顧客検索)
@@ -77,7 +83,13 @@ approver: ""
 
 | No. | 大分類 | 中分類 | 機能ID | 機能名 | 機能概要 | 関連要件ID | 処理分類 | 優先度 | 難易度 | 備考 |
 |-----|--------|--------|--------|--------|----------|------------|----------|--------|--------|------|
-| 1 | <!-- AI --> | <!-- AI --> | <!-- AI: F-001 --> | <!-- AI --> | <!-- AI --> | <!-- AI: REQ-001, REQ-002 --> | <!-- AI: 入力/照会/帳票/バッチ --> | <!-- AI: 高/中/低 --> | <!-- AI: 高/中/低 --> | <!-- AI --> |
+| 1 | <!-- AI --> | <!-- AI --> | <!-- AI: F-001 --> | <!-- AI --> | <!-- AI --> | <!-- AI: REQ-001, REQ-002 --> | <!-- AI: 入力/照会/帳票/バッチ/API/イベント/スケジューラ/Webhook --> | <!-- AI: 高/中/低 --> | <!-- AI: 高/中/低 --> | <!-- AI --> |
+
+<!-- AI: If generating >30 functions, split into sub-sections by 大分類.
+     Each sub-section: ## 機能一覧表 — {大分類名} with same 11-column format.
+     Keep F-xxx numbering sequential across all sub-tables. -->
+
+<!-- AI: Optional extra columns may be requested in the generation context. If so, add them after 備考 column. -->
 
 ## 集計
 
@@ -91,3 +103,5 @@ approver: ""
 | 優先度・高 | <!-- AI: count --> |
 | 優先度・中 | <!-- AI: count --> |
 | 優先度・低 | <!-- AI: count --> |
+| 処理分類別 | <!-- AI: count per type (e.g., 入力:3, 照会:2, API:1) --> |
+| REQカバレッジ | <!-- AI: matched/total REQ count from upstream --> |

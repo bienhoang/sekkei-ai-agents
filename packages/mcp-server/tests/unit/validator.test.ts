@@ -135,7 +135,7 @@ describe("validateCrossRefs", () => {
 
 describe("validateTableStructure", () => {
   it("passes when required columns present", () => {
-    const content = "| 版数 | 日付 | 変更内容 | 変更者 |\n| 大分類 | 中分類 | 機能ID | 機能名 | 関連要件ID | 処理分類 |";
+    const content = "| 版数 | 日付 | 変更内容 | 変更者 |\n| 大分類 | 中分類 | 機能ID | 機能名 | 関連要件ID | 処理分類 | 優先度 |";
     const issues = validateTableStructure(content, "functions-list");
     expect(issues).toHaveLength(0);
   });

@@ -4,6 +4,7 @@
  */
 import { readFile, writeFile, mkdir, stat } from "node:fs/promises";
 import { join } from "node:path";
+import YAML from "yaml";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
 import { DEFAULT_WORKSPACE_DIR } from "./constants.js";
@@ -13,6 +14,15 @@ import { RFP_PHASES, RFP_FILES } from "../types/documents.js";
 // --- Constants ---
 
 const PROJECT_NAME_RE = /^[a-z0-9][a-z0-9-]*$/;
+
+/** Terminal phases — can be entered from any active phase; no forward exits except ON_HOLD. */
+export const TERMINAL_PHASES = new Set<RfpPhase>(["DECLINED", "ON_HOLD", "CANCELLED"]);
+
+/** Active (non-terminal) phases in order */
+const ACTIVE_PHASES: readonly RfpPhase[] = [
+  "RFP_RECEIVED", "ANALYZING", "QNA_GENERATION", "WAITING_CLIENT",
+  "DRAFTING", "CLIENT_ANSWERED", "PROPOSAL_UPDATE", "SCOPE_FREEZE",
+];
 
 /** Valid phase transitions (directed graph, includes backward edges) */
 export const ALLOWED_TRANSITIONS: ReadonlyMap<RfpPhase, readonly RfpPhase[]> = new Map([
@@ -24,6 +34,11 @@ export const ALLOWED_TRANSITIONS: ReadonlyMap<RfpPhase, readonly RfpPhase[]> = n
   ["CLIENT_ANSWERED", ["PROPOSAL_UPDATE", "ANALYZING", "QNA_GENERATION"]],
   ["PROPOSAL_UPDATE", ["SCOPE_FREEZE", "QNA_GENERATION", "CLIENT_ANSWERED"]],
   ["SCOPE_FREEZE", ["PROPOSAL_UPDATE"]],
+  // ON_HOLD can reactivate to any active phase
+  ["ON_HOLD", ACTIVE_PHASES as RfpPhase[]],
+  // DECLINED and CANCELLED are true terminal — no exits
+  ["DECLINED", []],
+  ["CANCELLED", []],
 ]);
 
 /** Backward transition edges — require explicit intent */
@@ -72,6 +87,9 @@ export const PHASE_NEXT_ACTION: ReadonlyMap<RfpPhase, string> = new Map([
   ["CLIENT_ANSWERED", "Analyze client answers impact"],
   ["PROPOSAL_UPDATE", "Generate/update proposal"],
   ["SCOPE_FREEZE", "Review scope freeze checklist"],
+  ["DECLINED", "RFP declined — no further action"],
+  ["ON_HOLD", "RFP on hold — resume when client is ready"],
+  ["CANCELLED", "RFP cancelled — workspace archived"],
 ]);
 
 /** Required non-empty files before entering a phase (forward only) */
@@ -106,11 +124,18 @@ export function validateProjectName(name: string): void {
 }
 
 export function validateTransition(from: RfpPhase, to: RfpPhase): boolean {
+  // Any active phase can transition to terminal states
+  if (TERMINAL_PHASES.has(to) && !TERMINAL_PHASES.has(from)) return true;
+  // ON_HOLD can reactivate to any active phase
+  if (from === "ON_HOLD" && !TERMINAL_PHASES.has(to)) return true;
+  // Normal transition check
   const allowed = ALLOWED_TRANSITIONS.get(from);
   return allowed ? allowed.includes(to) : false;
 }
 
 export function isBackwardTransition(from: RfpPhase, to: RfpPhase): boolean {
+  // Terminal transitions are NOT backward (they are final state entries)
+  if (TERMINAL_PHASES.has(to) || TERMINAL_PHASES.has(from)) return false;
   return BACKWARD_TRANSITIONS.has(`${from}->${to}`);
 }
 
@@ -165,30 +190,9 @@ export async function writeStatus(workspacePath: string, status: RfpStatus): Pro
 }
 
 function parseStatusYaml(raw: string): RfpStatus {
-  // Simple YAML-in-frontmatter parser (no external dep needed for this shape)
-  const lines = raw.split("\n");
-  const data: Record<string, unknown> = {};
-  let currentArray: string[] | null = null;
-  let currentKey = "";
-
-  for (const line of lines) {
-    if (line.trim() === "---") continue;
-    const kvMatch = line.match(/^(\w+):\s*(.*)$/);
-    if (kvMatch) {
-      if (currentArray) { data[currentKey] = currentArray; currentArray = null; }
-      const [, key, value] = kvMatch;
-      if (value.trim() === "") {
-        currentArray = [];
-        currentKey = key;
-      } else {
-        data[key] = value.trim();
-      }
-    } else if (line.match(/^\s+-\s+(.*)$/)) {
-      const item = line.replace(/^\s+-\s+/, "").trim();
-      if (currentArray) currentArray.push(item);
-    }
-  }
-  if (currentArray) data[currentKey] = currentArray;
+  // Strip frontmatter delimiters, parse inner YAML
+  const inner = raw.replace(/^---\s*\n/, "").replace(/\n---\s*$/, "").replace(/\n---\s*\n?$/, "");
+  const data = YAML.parse(inner) as Record<string, unknown> ?? {};
 
   const phase = data.phase as string;
   if (!RFP_PHASES.includes(phase as RfpPhase)) {
@@ -196,14 +200,13 @@ function parseStatusYaml(raw: string): RfpStatus {
   }
 
   // Parse qna_round (backward compat: default 0)
-  const qnaRound = data.qna_round ? parseInt(data.qna_round as string, 10) : 0;
+  const qnaRound = typeof data.qna_round === "number" ? data.qna_round : 0;
 
-  // Parse phase_history (backward compat: default [])
+  // Parse phase_history — stored as list of pipe-delimited strings "PHASE|date|reason"
   let phaseHistory: PhaseEntry[] = [];
-  if (data.phase_history && Array.isArray(data.phase_history)) {
-    // phase_history is stored as YAML list of "phase:date:reason" strings
+  if (Array.isArray(data.phase_history)) {
     phaseHistory = (data.phase_history as string[]).map(entry => {
-      const parts = entry.split("|");
+      const parts = String(entry).split("|");
       return {
         phase: parts[0] as RfpPhase,
         entered: parts[1] ?? "",
@@ -213,41 +216,39 @@ function parseStatusYaml(raw: string): RfpStatus {
   }
 
   return {
-    project: (data.project as string) ?? "",
+    project: String(data.project ?? ""),
     phase: phase as RfpPhase,
-    last_update: (data.last_update as string) ?? "",
-    next_action: (data.next_action as string) ?? "",
-    blocking_issues: (data.blocking_issues as string[]) ?? [],
-    assumptions: (data.assumptions as string[]) ?? [],
+    last_update: String(data.last_update ?? ""),
+    next_action: String(data.next_action ?? ""),
+    blocking_issues: Array.isArray(data.blocking_issues) ? (data.blocking_issues as string[]) : [],
+    assumptions: Array.isArray(data.assumptions) ? (data.assumptions as string[]) : [],
     qna_round: qnaRound,
     phase_history: phaseHistory,
+    ...(data.deadline ? { deadline: String(data.deadline) } : {}),
+    ...(data.response_due ? { response_due: String(data.response_due) } : {}),
   };
 }
 
-function sanitizeYamlScalar(v: string): string {
-  return v.replace(/[\r\n|]/g, " ");
-}
-
 function serializeStatusYaml(status: RfpStatus): string {
-  const lines = [
-    "---",
-    `project: ${sanitizeYamlScalar(status.project)}`,
-    `phase: ${status.phase}`,
-    `last_update: ${status.last_update}`,
-    `next_action: ${sanitizeYamlScalar(status.next_action)}`,
-    "blocking_issues:",
-    ...status.blocking_issues.map(i => `  - ${sanitizeYamlScalar(i)}`),
-    "assumptions:",
-    ...status.assumptions.map(a => `  - ${sanitizeYamlScalar(a)}`),
-    `qna_round: ${status.qna_round}`,
-    "phase_history:",
-    ...status.phase_history.map(e =>
-      `  - ${e.phase}|${e.entered}${e.reason ? `|${sanitizeYamlScalar(e.reason)}` : ""}`
-    ),
-    "---",
-    "",
-  ];
-  return lines.join("\n");
+  // Serialize phase_history entries as pipe-delimited strings before YAML stringification
+  const historyStrings = status.phase_history.map(e =>
+    `${e.phase}|${e.entered}${e.reason ? `|${e.reason}` : ""}`
+  );
+
+  const obj: Record<string, unknown> = {
+    project: status.project,
+    phase: status.phase,
+    last_update: status.last_update,
+    next_action: status.next_action,
+    blocking_issues: status.blocking_issues,
+    assumptions: status.assumptions,
+    qna_round: status.qna_round,
+    phase_history: historyStrings,
+    ...(status.deadline ? { deadline: status.deadline } : {}),
+    ...(status.response_due ? { response_due: status.response_due } : {}),
+  };
+
+  return `---\n${YAML.stringify(obj)}---\n`;
 }
 
 // --- History & Navigation ---
@@ -273,15 +274,21 @@ export async function appendDecision(
 ): Promise<void> {
   const filePath = join(workspacePath, "07_decisions.md");
   const now = new Date().toISOString().slice(0, 10);
+
+  let existing = "";
+  try { existing = await readFile(filePath, "utf-8"); } catch { /* new file */ }
+
+  // Count existing decision entries for unique sequence numbering
+  const existingCount = (existing.match(/^## /gm) || []).length;
+  const seq = String(existingCount + 1).padStart(3, "0");
+
   const entry = [
-    `## ${now} — Phase: ${from} → ${to}`,
+    `## D-${seq} ${now} — Phase: ${from} → ${to}`,
     `- **Decision:** ${reason ?? "Phase progression"}`,
     `- **Impact:** ${isBackwardTransition(from, to) ? "Re-entering earlier phase for revision" : "Forward progression"}`,
     "",
   ].join("\n");
 
-  let existing = "";
-  try { existing = await readFile(filePath, "utf-8"); } catch { /* new file */ }
   const separator = existing.trim() ? "\n\n" : "";
   await writeFile(filePath, existing + separator + entry, "utf-8");
   logger.debug({ from, to }, "Decision logged");
@@ -354,23 +361,55 @@ function mergeChecklist(existing: string, incoming: string): string {
 
 // --- Config Generation ---
 
-const SYSTEM_TYPE_MAP: Record<string, string> = {
-  "crud tool": "web", "crud": "web",
-  "workflow system": "internal-system", "workflow": "internal-system",
-  "matching platform": "web",
-  "internal ops": "internal-system", "internal": "internal-system",
-  "saas product": "saas", "saas": "saas",
-  "e-commerce": "web", "ecommerce": "web",
-  "mobile": "mobile", "api": "api", "desktop": "desktop",
-  "lp": "lp", "batch": "batch",
+const SYSTEM_TYPE_WEIGHTS: Record<string, Array<{ type: string; weight: number }>> = {
+  "saas":              [{ type: "saas", weight: 3 }],
+  "subscription":      [{ type: "saas", weight: 2 }],
+  "multi-tenant":      [{ type: "saas", weight: 3 }],
+  "tenant":            [{ type: "saas", weight: 1 }],
+  "e-commerce":        [{ type: "web", weight: 3 }],
+  "ecommerce":         [{ type: "web", weight: 3 }],
+  "shopping cart":     [{ type: "web", weight: 2 }],
+  "payment":           [{ type: "web", weight: 1 }],
+  "crud tool":         [{ type: "web", weight: 3 }],
+  "crud":              [{ type: "web", weight: 2 }],
+  "workflow":          [{ type: "internal-system", weight: 3 }],
+  "approval":          [{ type: "internal-system", weight: 2 }],
+  "internal ops":      [{ type: "internal-system", weight: 3 }],
+  "matching platform": [{ type: "web", weight: 3 }],
+  "matching":          [{ type: "web", weight: 2 }],
+  "mobile app":        [{ type: "mobile", weight: 3 }],
+  "ios":               [{ type: "mobile", weight: 2 }],
+  "android":           [{ type: "mobile", weight: 2 }],
+  "react native":      [{ type: "mobile", weight: 2 }],
+  "flutter":           [{ type: "mobile", weight: 2 }],
+  "api gateway":       [{ type: "api", weight: 3 }],
+  "rest api":          [{ type: "api", weight: 2 }],
+  "graphql":           [{ type: "api", weight: 2 }],
+  "microservice":      [{ type: "api", weight: 2 }],
+  "batch processing":  [{ type: "batch", weight: 3 }],
+  "batch":             [{ type: "batch", weight: 3 }],
+  "etl":               [{ type: "batch", weight: 2 }],
+  "data pipeline":     [{ type: "batch", weight: 2 }],
+  "landing page":      [{ type: "lp", weight: 3 }],
+  "lp":                [{ type: "lp", weight: 2 }],
+  "desktop app":       [{ type: "desktop", weight: 3 }],
+  "electron":          [{ type: "desktop", weight: 2 }],
 };
 
 function detectSystemType(analysisContent: string): string {
   const lower = analysisContent.toLowerCase();
-  for (const [keyword, projectType] of Object.entries(SYSTEM_TYPE_MAP)) {
-    if (lower.includes(keyword)) return projectType;
+  const scores: Record<string, number> = {};
+
+  for (const [keyword, entries] of Object.entries(SYSTEM_TYPE_WEIGHTS)) {
+    if (lower.includes(keyword)) {
+      for (const { type, weight } of entries) {
+        scores[type] = (scores[type] ?? 0) + weight;
+      }
+    }
   }
-  return "web";
+
+  const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+  return sorted.length > 0 ? sorted[0][0] : "web";
 }
 
 interface FeatureSeed {
@@ -387,12 +426,12 @@ function extractFeatureSeeds(proposalContent: string): FeatureSeed[] {
   let inFeatureSection = false;
   let foundTableRows = false;
   for (const line of lines) {
-    if (/^##\s+Feature Seed/.test(line)) { inFeatureSection = true; foundTableRows = false; continue; }
+    if (/^#{1,3}\s+[Ff]eature\s+[Ss]eeds?/.test(line)) { inFeatureSection = true; foundTableRows = false; continue; }
     if (!inFeatureSection) continue;
     // Skip empty lines before table starts
     if (!foundTableRows && line.trim() === "") continue;
-    // Skip header + separator rows
-    if (line.startsWith("|") && (line.includes("---") || line.includes("ID"))) continue;
+    // Skip header + separator rows (handles English and Japanese headers)
+    if (line.startsWith("|") && (line.includes("---") || /\bID\b/i.test(line) || /名前|表示/.test(line))) continue;
     // Data rows
     if (line.startsWith("|")) {
       foundTableRows = true;
@@ -466,7 +505,7 @@ export async function recoverPhase(workspacePath: string): Promise<RfpPhase> {
   if (has("05_proposal.md") && has("04_client_answers.md")) return "PROPOSAL_UPDATE";
   if (has("05_proposal.md")) return "DRAFTING";
   if (has("04_client_answers.md")) return "CLIENT_ANSWERED";
-  if (has("03_questions.md")) return "WAITING_CLIENT";
+  if (has("03_questions.md")) return "QNA_GENERATION";
   if (has("02_analysis.md")) return "ANALYZING";
   return "RFP_RECEIVED";
 }

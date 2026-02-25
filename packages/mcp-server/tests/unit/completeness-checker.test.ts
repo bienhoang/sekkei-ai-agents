@@ -67,16 +67,126 @@ describe("validateContentDepth — ut-spec", () => {
 });
 
 describe("validateContentDepth — functions-list", () => {
-  it("warns when no F-xxx row in table", () => {
+  /** Full valid content with all 6 rules satisfied */
+  const FULL_VALID = [
+    "## 機能一覧",
+    "| F-001 | 商品登録 | REQ-001 |入力|高|",
+    "| F-002 | 商品検索 | REQ-002 |照会|中|",
+    "| F-003 | 在庫管理 | REQ-003 |バッチ|低|",
+    "| F-004 | 帳票出力 | REQ-004 |帳票|高|",
+    "| F-005 | API連携 | REQ-005 |API|中|",
+  ].join("\n");
+
+  it("warns when no function ID row in table", () => {
     const content = "## 機能一覧\n| 大分類 | 機能名 |\n| 商品管理 | 商品一覧 |";
     const issues = validateContentDepth(content, "functions-list");
-    expect(issues.some((i) => i.message.includes("F-xxx"))).toBe(true);
+    expect(issues.some((i) => i.message.includes("F-xxx") || i.message.includes("カスタムプレフィックス"))).toBe(true);
   });
 
-  it("returns no issues when F-001 present in table", () => {
-    const content = "## 機能一覧\n| F-001 | 商品登録 | 新規登録 |";
-    const issues = validateContentDepth(content, "functions-list");
+  it("returns no issues with full valid functions-list content", () => {
+    const issues = validateContentDepth(FULL_VALID, "functions-list");
     expect(issues).toHaveLength(0);
+  });
+
+  it("accepts custom-prefix IDs (SAL-001) in completeness check", () => {
+    const content = [
+      "| SAL-001 | 見積作成 | REQ-001 |入力|高|",
+      "| SAL-002 | 見積検索 | REQ-002 |照会|中|",
+      "| SAL-003 | 受注登録 | REQ-003 |入力|高|",
+      "| SAL-004 | 受注検索 | REQ-004 |照会|低|",
+      "| SAL-005 | 出荷管理 | REQ-005 |バッチ|中|",
+    ].join("\n");
+    const issues = validateContentDepth(content, "functions-list");
+    // function table row check should pass with custom prefix
+    expect(issues.some((i) => i.message.includes("カスタムプレフィックス"))).toBe(false);
+  });
+
+  it("validates 処理分類 enum — rejects invalid values", () => {
+    const content = [
+      "| F-001 | 商品登録 | REQ-001 |無効|高|",
+      "| F-002 | 商品検索 | REQ-002 |無効|中|",
+      "| F-003 | 在庫管理 | REQ-003 |無効|低|",
+      "| F-004 | 帳票出力 | REQ-004 |無効|高|",
+      "| F-005 | API連携 | REQ-005 |無効|中|",
+    ].join("\n");
+    const issues = validateContentDepth(content, "functions-list");
+    expect(issues.some((i) => i.message.includes("処理分類"))).toBe(true);
+  });
+
+  it("validates 処理分類 enum — accepts new types (API, イベント, スケジューラ, Webhook)", () => {
+    const content = [
+      "| F-001 | API連携 | REQ-001 |API|高|",
+      "| F-002 | イベント処理 | REQ-002 |イベント|中|",
+      "| F-003 | スケジュール | REQ-003 |スケジューラ|低|",
+      "| F-004 | Webhook受信 | REQ-004 |Webhook|高|",
+      "| F-005 | データ入力 | REQ-005 |入力|中|",
+    ].join("\n");
+    const issues = validateContentDepth(content, "functions-list");
+    expect(issues.some((i) => i.message.includes("処理分類"))).toBe(false);
+  });
+
+  it("validates 優先度 enum presence", () => {
+    const content = [
+      "| F-001 | 商品登録 | REQ-001 |入力||",
+      "| F-002 | 商品検索 | REQ-002 |照会||",
+      "| F-003 | 在庫管理 | REQ-003 |バッチ||",
+      "| F-004 | 帳票出力 | REQ-004 |帳票||",
+      "| F-005 | API連携 | REQ-005 |API||",
+    ].join("\n");
+    const issues = validateContentDepth(content, "functions-list");
+    expect(issues.some((i) => i.message.includes("優先度"))).toBe(true);
+  });
+
+  it("detects duplicate function IDs", () => {
+    const content = [
+      "| F-001 | 商品登録 | REQ-001 |入力|高|",
+      "| F-001 | 商品検索 | REQ-002 |照会|中|",
+      "| F-003 | 在庫管理 | REQ-003 |バッチ|低|",
+      "| F-004 | 帳票出力 | REQ-004 |帳票|高|",
+      "| F-005 | API連携 | REQ-005 |API|中|",
+    ].join("\n");
+    const issues = validateContentDepth(content, "functions-list");
+    expect(issues.some((i) => i.message.includes("重複"))).toBe(true);
+  });
+
+  it("warns when fewer than 5 functions", () => {
+    const content = [
+      "| F-001 | 商品登録 | REQ-001 |入力|高|",
+      "| F-002 | 商品検索 | REQ-002 |照会|中|",
+    ].join("\n");
+    const issues = validateContentDepth(content, "functions-list");
+    expect(issues.some((i) => i.message.includes("最低5つ"))).toBe(true);
+  });
+
+  it("warns when no REQ-xxx cross-reference", () => {
+    const content = [
+      "| F-001 | 商品登録 | |入力|高|",
+      "| F-002 | 商品検索 | |照会|中|",
+      "| F-003 | 在庫管理 | |バッチ|低|",
+      "| F-004 | 帳票出力 | |帳票|高|",
+      "| F-005 | API連携 | |API|中|",
+    ].join("\n");
+    const issues = validateContentDepth(content, "functions-list");
+    expect(issues.some((i) => i.message.includes("REQ-xxx"))).toBe(true);
+  });
+
+  it("validates required columns now include 処理分類 and 優先度 (7 columns)", () => {
+    // Use validateDocument's table structure check (not content depth)
+    const content = [
+      "# 機能一覧",
+      "## 改訂履歴",
+      "| 版数 | 日付 | 変更内容 | 変更者 |",
+      "| 1.0 | 2026-01-01 | 初版作成 | テスト |",
+      "## 承認欄",
+      "## 配布先",
+      "## 用語集",
+      "## 機能一覧",
+      "| 大分類 | 中分類 | 機能ID | 機能名 | 関連要件ID |",
+    ].join("\n");
+    // Missing 処理分類 and 優先度 → should flag missing columns
+    const result = validateDocument(content, "functions-list");
+    const colIssues = result.issues.filter((i) => i.type === "missing_column");
+    expect(colIssues.some((i) => i.message.includes("処理分類") || i.message.includes("優先度"))).toBe(true);
   });
 });
 
@@ -189,7 +299,7 @@ const VALID_FUNCTIONS_LIST = [
   "## 用語集",
   "## 機能一覧",
   "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 関連要件ID | 処理分類 | 優先度 | 難易度 | 備考 |",
-  "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規商品を登録する | REQ-001 | 入力 | 高 | 中 | |",
+  "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規 | REQ-001 | 入力 | 高 | 中 | |",
 ].join("\n");
 
 describe("validateDocument — backward compatibility (no check_completeness flag)", () => {
@@ -222,11 +332,23 @@ describe("validateDocument — check_completeness: true", () => {
     expect(result.valid).toBe(true);
   });
 
-  it("returns no completeness issues for functions-list with F-xxx row", () => {
-    const content = VALID_FUNCTIONS_LIST.replace(
-      "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規商品を登録する | REQ-001 | 入力 | 高 | 中 | |",
-      "| 1 | 商品管理 | 商品登録 | F-001 | 商品登録 | 新規商品を登録する | REQ-001 | 入力 | 高 | 中 | |"
-    );
+  it("returns no completeness issues for functions-list with sufficient F-xxx rows", () => {
+    const content = [
+      "# 機能一覧",
+      "## 改訂履歴",
+      "| 版数 | 日付 | 変更内容 | 変更者 |",
+      "| 1.0 | 2026-01-01 | 初版作成 | テスト |",
+      "## 承認欄",
+      "## 配布先",
+      "## 用語集",
+      "## 機能一覧",
+      "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 関連要件ID | 処理分類 | 優先度 | 難易度 | 備考 |",
+      "| 1 | 商品管理 | 商品登録 | F-001 | 商品登録 | 新規 | REQ-001 | 入力 | 高 | 中 | |",
+      "| 2 | 商品管理 | 商品検索 | F-002 | 商品検索 | 検索 | REQ-002 | 照会 | 中 | 低 | |",
+      "| 3 | 在庫管理 | 在庫確認 | F-003 | 在庫確認 | 確認 | REQ-003 | 照会 | 高 | 中 | |",
+      "| 4 | 帳票管理 | 帳票出力 | F-004 | 帳票出力 | 出力 | REQ-004 | 帳票 | 中 | 低 | |",
+      "| 5 | バッチ処理 | データ連携 | F-005 | データ連携 | 連携 | REQ-005 | バッチ | 低 | 低 | |",
+    ].join("\n");
     const result = validateDocument(content, "functions-list", undefined, { check_completeness: true });
     const completenessIssues = result.issues.filter((i) => i.type === "completeness");
     expect(completenessIssues).toHaveLength(0);

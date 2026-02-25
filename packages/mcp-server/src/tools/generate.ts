@@ -394,7 +394,7 @@ export async function handleGenerateDocument(
       );
     }
 
-    // Config-driven features: learning mode and simple mode
+    // Config-driven features: learning mode, extra columns
     if (config_path) {
       try {
         const raw = await readFile(config_path, "utf-8");
@@ -402,8 +402,13 @@ export async function handleGenerateDocument(
         if (projectCfg?.learning_mode === true) {
           sections.push(``, buildLearningInstruction());
         }
+        // Extra columns for functions-list
+        const extraCols = (projectCfg as unknown as Record<string, unknown>)?.functions_list as { extra_columns?: string[] } | undefined;
+        if (doc_type === "functions-list" && extraCols?.extra_columns?.length) {
+          sections.push(``, `## Extra Columns`, `Include these additional columns after 備考: ${extraCols.extra_columns.join(", ")}`);
+        }
       } catch {
-        // config read failed — skip learning mode
+        // config read failed — skip config features
       }
     }
 

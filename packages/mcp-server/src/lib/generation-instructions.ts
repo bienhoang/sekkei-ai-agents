@@ -14,9 +14,12 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Use 3-tier hierarchy: 大分類 -> 中分類 -> 小機能.",
     "ID format: F-001, F-002... (sequential, NOT prefix-based).",
     "Every F-xxx MUST map to at least one REQ-xxx in the 関連要件ID column.",
-    "Processing types: 入力/照会/帳票/バッチ.",
+    "Processing types: 入力/照会/帳票/バッチ/API/イベント/スケジューラ/Webhook.",
     "Priority: 高/中/低. Fill all 11 columns per row.",
     "Generate at least 10 functions covering the scope described.",
+    "For large projects (>30 functions): split the 機能一覧表 into sub-sections by 大分類, each with its own heading (## 機能一覧表 — {大分類名}) and table. Maintain sequential F-xxx numbering across all sub-tables.",
+    "Optional extra columns (if specified in config): platform (iOS/Android/Web/Backend/Shared), sprint (iteration number), external_system (external API dependency), migration_status (AS-IS/TO-BE/新規/廃止), feature_flag (feature flag name). Add these columns after 備考 if present in the generation context.",
+    "In 集計 section: include counts by 処理分類, and REQ coverage metric showing how many upstream REQ-xxx are referenced.",
   ].join("\n"),
 
   requirements: [

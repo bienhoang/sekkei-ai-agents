@@ -72,7 +72,7 @@ No. | テストケースID | テスト対象 | テスト観点 | 前提条件 | 
 
 | Document | Prefix | Format | Example |
 |----------|--------|--------|---------|
-| 機能一覧 | F- or subsystem prefix | [PREFIX]-001 | SAL-001 |
+| 機能一覧 | F- (default) or subsystem prefix (opt-in) | F-001 (or SAL-001) | F-001 |
 | 要件定義書 (機能) | REQ- | REQ-001 | REQ-001 |
 | 要件定義書 (非機能) | NFR- | NFR-001 | NFR-001 |
 | 画面一覧 | SCR- | SCR-001 | SCR-001 |
@@ -90,6 +90,22 @@ No. | テストケースID | テスト対象 | テスト観点 | 前提条件 | 
 - **照会 (Inquiry):** Search and display functions
 - **帳票 (Report):** Report generation and export
 - **バッチ (Batch):** Scheduled/background processing
+- **API:** External/internal API endpoints
+- **イベント (Event):** Event-driven processing
+- **スケジューラ (Scheduler):** Cron/timer-triggered jobs
+- **Webhook:** External callback endpoints
+
+## Optional Extra Columns (機能一覧)
+
+Configure in `sekkei.config.yaml` → `functions_list.extra_columns`:
+
+| Column | Values | Use Case |
+|--------|--------|----------|
+| platform | iOS/Android/Web/Backend/Shared | Multi-platform projects |
+| sprint | Iteration number | Agile projects |
+| external_system | External API dependency | Integration-heavy systems |
+| migration_status | AS-IS/TO-BE/新規/廃止 | Migration projects |
+| feature_flag | Feature flag name | Feature-flagged rollouts |
 
 ## Priority & Difficulty (優先度・難易度)
 

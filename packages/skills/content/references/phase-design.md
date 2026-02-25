@@ -85,6 +85,13 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
       - Include Mermaid diagrams for architecture and ER diagrams
       - Cross-reference REQ-xxx and F-xxx IDs from upstream documents
    e. Save output to `{output.directory}/03-system/basic-design.md`
+   f. **Render screen mockups (auto):**
+      - If the saved basic-design.md contains YAML layout blocks in section 5:
+        a. Call MCP tool `render_screen_mockup` with `markdown_path: "{output.directory}/03-system/basic-design.md"` and `output_dir: "{output.directory}/03-system"`
+        b. For each rendered PNG path returned, insert `![SCR-xxx](./images/SCR-xxx.png)` after the corresponding YAML block in the markdown
+        c. Keep YAML block in a `<!-- yaml-source ... -->` HTML comment for re-rendering
+      - If Playwright not available (status: "skipped"), YAML blocks remain as human-readable structured text — no error
+      - If no YAML blocks found (status: "no_layouts"), skip silently
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "basic_design"`,
    `status: "complete"`, `output: "03-system/basic-design.md"`
 7. Call MCP tool `validate_document` with saved content and `doc_type: "basic-design"`.

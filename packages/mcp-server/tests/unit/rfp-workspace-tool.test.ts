@@ -16,7 +16,8 @@ async function callTool(
 describe("manage_rfp_workspace tool", () => {
   let server: McpServer;
   let tmpDir: string;
-  let wsPath: string;
+  // basePath = project root (passed to all non-create actions)
+  let basePath: string;
 
   beforeAll(async () => {
     tmpDir = await mkdtemp(join(tmpdir(), "sekkei-rfp-tool-test-"));
@@ -36,7 +37,7 @@ describe("manage_rfp_workspace tool", () => {
   });
 
   it("create: creates workspace and returns path", async () => {
-    const basePath = makeBase("tool-test");
+    basePath = makeBase("tool-test");
     const result = await callTool(server, "manage_rfp_workspace", {
       action: "create", workspace_path: basePath, project_name: "tool-test",
     });
@@ -44,12 +45,12 @@ describe("manage_rfp_workspace tool", () => {
     const data = JSON.parse(result.content[0].text);
     expect(data.success).toBe(true);
     expect(data.phase).toBe("RFP_RECEIVED");
-    wsPath = data.workspace;
+    // data.workspace is the actual rfp dir — subsequent actions use basePath (project root)
   });
 
   it("status: returns current phase and file inventory", async () => {
     const result = await callTool(server, "manage_rfp_workspace", {
-      action: "status", workspace_path: wsPath,
+      action: "status", workspace_path: basePath,
     });
     expect(result.isError).toBeUndefined();
     const data = JSON.parse(result.content[0].text);
@@ -60,7 +61,7 @@ describe("manage_rfp_workspace tool", () => {
 
   it("write: saves content to workspace file", async () => {
     const result = await callTool(server, "manage_rfp_workspace", {
-      action: "write", workspace_path: wsPath,
+      action: "write", workspace_path: basePath,
       filename: "02_analysis.md", content: "# Analysis\nTest content",
     });
     expect(result.isError).toBeUndefined();
@@ -70,7 +71,7 @@ describe("manage_rfp_workspace tool", () => {
 
   it("read: returns file content", async () => {
     const result = await callTool(server, "manage_rfp_workspace", {
-      action: "read", workspace_path: wsPath, filename: "02_analysis.md",
+      action: "read", workspace_path: basePath, filename: "02_analysis.md",
     });
     expect(result.isError).toBeUndefined();
     expect(result.content[0].text).toContain("# Analysis");
@@ -78,11 +79,11 @@ describe("manage_rfp_workspace tool", () => {
 
   it("transition: advances phase with valid transition", async () => {
     await callTool(server, "manage_rfp_workspace", {
-      action: "write", workspace_path: wsPath,
+      action: "write", workspace_path: basePath,
       filename: "01_raw_rfp.md", content: "# RFP\nTest RFP content",
     });
     const result = await callTool(server, "manage_rfp_workspace", {
-      action: "transition", workspace_path: wsPath, phase: "ANALYZING",
+      action: "transition", workspace_path: basePath, phase: "ANALYZING",
     });
     expect(result.isError).toBeUndefined();
     const data = JSON.parse(result.content[0].text);
@@ -92,7 +93,7 @@ describe("manage_rfp_workspace tool", () => {
 
   it("transition: rejects invalid transition", async () => {
     const result = await callTool(server, "manage_rfp_workspace", {
-      action: "transition", workspace_path: wsPath, phase: "SCOPE_FREEZE",
+      action: "transition", workspace_path: basePath, phase: "SCOPE_FREEZE",
     });
     expect(result.isError).toBe(true);
     expect(result.content[0].text).toContain("Invalid transition");
@@ -107,7 +108,7 @@ describe("manage_rfp_workspace tool", () => {
 
   it("read: rejects missing filename", async () => {
     const result = await callTool(server, "manage_rfp_workspace", {
-      action: "read", workspace_path: wsPath,
+      action: "read", workspace_path: basePath,
     });
     expect(result.isError).toBe(true);
   });
@@ -116,7 +117,7 @@ describe("manage_rfp_workspace tool", () => {
   describe("history action", () => {
     it("returns phase history after transitions", async () => {
       const result = await callTool(server, "manage_rfp_workspace", {
-        action: "history", workspace_path: wsPath,
+        action: "history", workspace_path: basePath,
       });
       expect(result.isError).toBeUndefined();
       const data = JSON.parse(result.content[0].text);
@@ -127,13 +128,12 @@ describe("manage_rfp_workspace tool", () => {
   // --- Back Action ---
   describe("back action", () => {
     it("returns error on first phase (no previous)", async () => {
-      const basePath = makeBase("back-test");
-      const freshResult = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: basePath, project_name: "back-test",
+      const backBase = makeBase("back-test");
+      await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: backBase, project_name: "back-test",
       });
-      const freshWs = JSON.parse(freshResult.content[0].text).workspace;
       const result = await callTool(server, "manage_rfp_workspace", {
-        action: "back", workspace_path: freshWs,
+        action: "back", workspace_path: backBase,
       });
       expect(result.isError).toBe(true);
       expect(result.content[0].text).toContain("No previous phase");
@@ -142,26 +142,25 @@ describe("manage_rfp_workspace tool", () => {
 
   // --- Backward Transition Force ---
   describe("backward transitions", () => {
-    let bwWsPath: string;
+    let bwBase: string;
 
     it("setup: create workspace and advance to CLIENT_ANSWERED", async () => {
-      const basePath = makeBase("backward-test");
-      const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: basePath, project_name: "backward-test",
+      bwBase = makeBase("backward-test");
+      await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: bwBase, project_name: "backward-test",
       });
-      bwWsPath = JSON.parse(r.content[0].text).workspace;
-      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwWsPath, filename: "01_raw_rfp.md", content: "# RFP" });
-      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "ANALYZING" });
-      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwWsPath, filename: "02_analysis.md", content: "# Analysis" });
-      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "QNA_GENERATION" });
-      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "WAITING_CLIENT" });
-      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwWsPath, filename: "04_client_answers.md", content: "# Answers" });
-      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwWsPath, phase: "CLIENT_ANSWERED" });
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwBase, filename: "01_raw_rfp.md", content: "# RFP" });
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwBase, phase: "ANALYZING" });
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwBase, filename: "02_analysis.md", content: "# Analysis" });
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwBase, phase: "QNA_GENERATION" });
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwBase, phase: "WAITING_CLIENT" });
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: bwBase, filename: "04_client_answers.md", content: "# Answers" });
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: bwBase, phase: "CLIENT_ANSWERED" });
     });
 
     it("rejects backward without force", async () => {
       const result = await callTool(server, "manage_rfp_workspace", {
-        action: "transition", workspace_path: bwWsPath, phase: "ANALYZING",
+        action: "transition", workspace_path: bwBase, phase: "ANALYZING",
       });
       expect(result.isError).toBe(true);
       expect(result.content[0].text).toContain("requires force: true");
@@ -169,7 +168,7 @@ describe("manage_rfp_workspace tool", () => {
 
     it("allows backward with force", async () => {
       const result = await callTool(server, "manage_rfp_workspace", {
-        action: "transition", workspace_path: bwWsPath, phase: "ANALYZING", force: true,
+        action: "transition", workspace_path: bwBase, phase: "ANALYZING", force: true,
       });
       expect(result.isError).toBeUndefined();
       const data = JSON.parse(result.content[0].text);
@@ -182,15 +181,14 @@ describe("manage_rfp_workspace tool", () => {
   // --- QNA Round ---
   describe("qna_round increment", () => {
     it("increments on QNA_GENERATION transition", async () => {
-      const basePath = makeBase("qna-round-test");
-      const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: basePath, project_name: "qna-round-test",
+      const qnaBase = makeBase("qna-round-test");
+      await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: qnaBase, project_name: "qna-round-test",
       });
-      const qnaWs = JSON.parse(r.content[0].text).workspace;
-      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: qnaWs, filename: "01_raw_rfp.md", content: "# RFP" });
-      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: qnaWs, phase: "ANALYZING" });
-      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: qnaWs, filename: "02_analysis.md", content: "# Analysis" });
-      const qnaResult = await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: qnaWs, phase: "QNA_GENERATION" });
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: qnaBase, filename: "01_raw_rfp.md", content: "# RFP" });
+      await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: qnaBase, phase: "ANALYZING" });
+      await callTool(server, "manage_rfp_workspace", { action: "write", workspace_path: qnaBase, filename: "02_analysis.md", content: "# Analysis" });
+      const qnaResult = await callTool(server, "manage_rfp_workspace", { action: "transition", workspace_path: qnaBase, phase: "QNA_GENERATION" });
       const data = JSON.parse(qnaResult.content[0].text);
       expect(data.qna_round).toBe(1);
     });
@@ -199,13 +197,12 @@ describe("manage_rfp_workspace tool", () => {
   // --- Generate Config ---
   describe("generate-config action", () => {
     it("rejects when not at SCOPE_FREEZE/PROPOSAL_UPDATE", async () => {
-      const basePath = makeBase("genconfig-test");
-      const r = await callTool(server, "manage_rfp_workspace", {
-        action: "create", workspace_path: basePath, project_name: "genconfig-test",
+      const gcBase = makeBase("genconfig-test");
+      await callTool(server, "manage_rfp_workspace", {
+        action: "create", workspace_path: gcBase, project_name: "genconfig-test",
       });
-      const gcWs = JSON.parse(r.content[0].text).workspace;
       const result = await callTool(server, "manage_rfp_workspace", {
-        action: "generate-config", workspace_path: gcWs,
+        action: "generate-config", workspace_path: gcBase,
       });
       expect(result.isError).toBe(true);
       expect(result.content[0].text).toContain("requires SCOPE_FREEZE");

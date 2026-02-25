@@ -65,13 +65,15 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
 4. Use the returned template + AI instructions to generate the 機能一覧
 5. Follow these rules strictly:
    - 3-tier hierarchy: 大分類 → 中分類 → 小機能
-   - ID format: `[PREFIX]-001` (derive prefix from 大分類)
-   - 処理分類: 入力 / 照会 / 帳票 / バッチ
+   - ID format: `F-001` (sequential). For split mode with custom prefixes, use subsystem prefix (e.g., SAL-001)
+   - 処理分類: 入力 / 照会 / 帳票 / バッチ / API / イベント / スケジューラ / Webhook
    - 優先度 & 難易度: 高 / 中 / 低
    - Cross-reference REQ-xxx IDs from upstream 要件定義書
    - Generate 10+ functions minimum
+   - For large projects (>30 functions): split into sub-sections by 大分類 with separate tables
+   - If `functions_list.extra_columns` in config, extra columns are appended after 備考
 6. Save output to `{output.directory}/04-functions-list/functions-list.md`
-7. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "functions_list"`, `status: "complete"`, `output: "04-functions-list/functions-list.md"`
+7. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "functions-list"`, `status: "complete"`, `output: "04-functions-list/functions-list.md"`
 8. Call MCP tool `validate_document` with saved content and `doc_type: "functions-list"`. Show results as non-blocking.
 9. **Count 大分類 feature groups** from the generated `functions-list.md`:
    - Scan for distinct values in the 大分類 column of the 機能一覧 table

@@ -158,9 +158,9 @@ describe("rfp-state-machine", () => {
       expect(await recoverPhase(recWs)).toBe("ANALYZING");
     });
 
-    it("returns WAITING_CLIENT when 03_questions exists", async () => {
+    it("returns QNA_GENERATION when 03_questions exists", async () => {
       await writeWorkspaceFile(recWs, "03_questions.md", "questions content");
-      expect(await recoverPhase(recWs)).toBe("WAITING_CLIENT");
+      expect(await recoverPhase(recWs)).toBe("QNA_GENERATION");
     });
 
     it("returns DRAFTING when 05_proposal exists without 04", async () => {
@@ -234,16 +234,18 @@ describe("rfp-state-machine", () => {
       ws = await createWorkspace(base, "decision-proj");
     });
 
-    it("appends decision entry on transition", async () => {
+    it("appends decision entry on transition with sequential ID", async () => {
       await appendDecision(ws, "RFP_RECEIVED", "ANALYZING", "Start analysis");
       const content = await readWorkspaceFile(ws, "07_decisions.md");
+      expect(content).toContain("D-001");
       expect(content).toContain("RFP_RECEIVED → ANALYZING");
       expect(content).toContain("Start analysis");
     });
 
-    it("includes backward impact label", async () => {
+    it("includes backward impact label and sequential IDs", async () => {
       await appendDecision(ws, "CLIENT_ANSWERED", "ANALYZING", "Scope changed");
       const content = await readWorkspaceFile(ws, "07_decisions.md");
+      expect(content).toContain("D-002");
       expect(content).toContain("Re-entering earlier phase for revision");
     });
   });
