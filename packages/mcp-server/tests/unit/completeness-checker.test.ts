@@ -235,10 +235,43 @@ describe("validateContentDepth — operation-design", () => {
     expect(issues.some((i) => i.message.includes("OP-xxx"))).toBe(true);
   });
 
-  it("returns no issues with 3+ OP-xxx IDs", () => {
-    const content = "OP-001 再起動\nOP-002 バックアップ\nOP-003 ログ確認";
+  it("returns no issues with complete operation-design content", () => {
+    const content = [
+      "OP-001 再起動\nOP-002 バックアップ\nOP-003 ログ確認",
+      "| SLA項目 | 目標値 |\n| 稼働率 | 99.9% |",
+      "RPO: 1時間\nRTO: 4時間",
+      "| 監視対象 | メトリクス | 閾値(警告) |\n| CPU | 使用率 | 80% |",
+      "| ジョブID | ジョブ名 |\n| JOB-001 | 日次バックアップ |",
+      "NFR-001 可用性",
+    ].join("\n");
     const issues = validateContentDepth(content, "operation-design");
     expect(issues).toHaveLength(0);
+  });
+
+  it("warns on SLA vague terms", () => {
+    const content = [
+      "OP-001 再起動\nOP-002 バックアップ\nOP-003 ログ確認",
+      "| SLA項目 | 目標値 |\n| 稼働率 | 高い |",
+      "RPO: 1時間\nRTO: 4時間",
+      "| 監視対象 | メトリクス |\n| CPU | 使用率 |",
+      "| ジョブID | ジョブ名 |\n| JOB-001 | バッチ |",
+      "NFR-001",
+    ].join("\n");
+    const issues = validateContentDepth(content, "operation-design");
+    expect(issues.some(i => i.message.includes("曖昧"))).toBe(true);
+  });
+
+  it("warns when RPO/RTO missing", () => {
+    const content = [
+      "OP-001 再起動\nOP-002 バックアップ\nOP-003 ログ確認",
+      "| SLA項目 | 目標値 |\n| 稼働率 | 99.9% |",
+      "バックアップ: 毎日実施",
+      "| 監視対象 | メトリクス |\n| CPU | 使用率 |",
+      "| ジョブID | ジョブ名 |\n| JOB-001 | バッチ |",
+      "NFR-001",
+    ].join("\n");
+    const issues = validateContentDepth(content, "operation-design");
+    expect(issues.some(i => i.message.includes("RPO"))).toBe(true);
   });
 });
 

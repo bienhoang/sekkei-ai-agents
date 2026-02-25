@@ -14,6 +14,13 @@ Parent: `SKILL.md` → Workflow Router → Supplementary.
    - If missing → WARN: "NFR not found. Operation-design will only reference REQ-xxx IDs.
      Run `/sekkei:nfr` first for complete cross-referencing."
    - Continue (not blocking)
+3. Check `{output.directory}/03-system/basic-design.md` exists
+   - If missing → WARN: "Basic-design not found. Operation-design will skip API-xxx/TBL-xxx monitoring targets.
+     Run `/sekkei:basic-design` first for complete infrastructure context."
+   - Continue (not blocking)
+4. Check `{output.directory}/04-functions-list/functions-list.md` exists
+   - If missing → WARN: "Functions-list not found. Job management will skip F-xxx batch references."
+   - Continue (not blocking)
 
 **Interview questions (ask before generating):**
 - What is the operational team structure?
@@ -25,13 +32,19 @@ Parent: `SKILL.md` → Workflow Router → Supplementary.
 3. **Load upstream content:**
    - Read `{output.directory}/02-requirements/requirements.md` → req_content
    - Read `{output.directory}/02-requirements/nfr.md` → nfr_content (if exists)
-   - upstream = req_content + "\n\n" + nfr_content
+   - Read `{output.directory}/03-system/basic-design.md` → bd_content (if exists)
+   - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
+   - upstream = req_content + "\n\n" + nfr_content + "\n\n" + bd_content + "\n\n" + fl_content
 4. Call MCP tool `generate_document` with `doc_type: "operation-design"`, `upstream_content: upstream`, `project_type`, and `language` from config (default: "ja"). Pass `input_lang` if input is not Japanese.
 5. Follow these rules strictly:
    - 6-section structure: 運用体制, バックアップ・リストア, 監視・アラート, 障害対応手順, ジョブ管理, SLA定義
-   - 障害対応手順: OP-001 format with 6 columns
-   - SLA定義: numeric targets required (no vague terms)
-   - Cross-reference NFR-xxx, REQ-xxx IDs from upstream
+   - 障害対応手順: OP-001 format with 6 columns (OP-ID, 手順名, 障害レベル, 手順内容, 担当者, 想定時間)
+   - 障害レベル values: 重大/警告/軽微
+   - SLA定義: numeric targets required (no vague terms: 高い/十分/適切/良好/高速 prohibited)
+   - バックアップ: RPO and RTO required for every data store. Reference TBL-xxx if basic-design available.
+   - 監視: reference API-xxx endpoints as monitoring targets if basic-design available
+   - ジョブ管理: reference F-xxx batch functions if functions-list available
+   - Cross-reference NFR-xxx, REQ-xxx, API-xxx, TBL-xxx, F-xxx IDs from upstream
 6. Call MCP tool `validate_document` with saved content, `doc_type: "operation-design"`,
    and `upstream_content`. Show results as non-blocking.
 7. Save output to `{output.directory}/07-operations/operation-design.md`

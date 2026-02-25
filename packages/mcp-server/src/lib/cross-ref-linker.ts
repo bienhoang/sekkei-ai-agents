@@ -43,6 +43,9 @@ export const CHAIN_PAIRS: [string, string][] = [
   // Supplementary
   ["requirements", "operation-design"],
   ["nfr", "operation-design"],
+  ["basic-design", "operation-design"],
+  ["functions-list", "operation-design"],
+  ["security-design", "operation-design"],
   ["basic-design", "migration-design"],
   ["requirements", "migration-design"],
   ["operation-design", "migration-design"],

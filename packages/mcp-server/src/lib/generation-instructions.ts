@@ -169,10 +169,12 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
   "operation-design": [
     "Generate a 運用設計書 (Operation Design Document) from the provided input.",
     "Include all 6 sections: 運用体制, バックアップ・リストア方針, 監視・アラート定義, 障害対応手順, ジョブ管理, SLA定義.",
-    "障害対応手順: Use OP-001 format with columns: OP-ID, 手順名, 手順内容, 担当者, 想定時間.",
-    "SLA定義: Must include numeric targets (稼働率 %, RTO, RPO). Prohibit vague terms.",
-    "ジョブ管理: List batch jobs with schedule (cron), retry policy, failure alert.",
-    "Cross-reference NFR-xxx and REQ-xxx IDs from upstream documents.",
+    "障害対応手順: Use OP-001 format with 6 columns: OP-ID, 手順名, 障害レベル (重大/警告/軽微), 手順内容, 担当者, 想定時間.",
+    "バックアップ・リストア方針: Every data store MUST have RPO and RTO values. Reference TBL-xxx from upstream if available.",
+    "監視・アラート定義: Include numeric thresholds (警告/異常) for each metric. Reference API-xxx endpoints as monitoring targets if upstream basic-design is provided.",
+    "SLA定義: Every SLA item MUST have a specific numeric target (稼働率 %, RTO, RPO). Prohibited vague terms: 高い, 十分, 適切, 良好, 高速.",
+    "ジョブ管理: List batch jobs with schedule (cron), dependencies, retry policy, failure alert. Reference F-xxx from upstream functions-list if available.",
+    "Cross-reference NFR-xxx and REQ-xxx IDs from upstream documents. If basic-design is provided, reference API-xxx, TBL-xxx for monitoring targets and backup targets.",
   ].join("\n"),
 
   "migration-design": [

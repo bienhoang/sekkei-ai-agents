@@ -226,6 +226,48 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => (c.match(/OP-\d{3}/g) || []).length >= 3,
       message: "運用設計書: 障害対応手順にOP-xxxが3つ以上必要です",
     },
+    {
+      check: "SLA numeric targets",
+      test: (c: string) => {
+        const slaRows = c.split("\n").filter(l => /\|\s*(稼働率|応答時間|SLA|RTO|RPO)/.test(l));
+        if (slaRows.length === 0) return false;
+        return slaRows.some(row => /\d+(\.\d+)?[%秒ms時間分]/.test(row));
+      },
+      message: "運用設計書: SLA定義に数値目標が必要です（例: 99.9%, 30秒以内）",
+    },
+    {
+      check: "SLA vague terms",
+      test: (c: string) => {
+        const slaRows = c.split("\n").filter(l => /\|\s*(稼働率|応答|SLA|RTO|RPO|目標値)/.test(l));
+        const vaguePattern = /高い|十分|適切|良好|高速/;
+        return !slaRows.some(row => vaguePattern.test(row));
+      },
+      message: "運用設計書: SLA目標値に曖昧な表現があります（高い・十分・適切・良好・高速は数値に置換してください）",
+    },
+    {
+      check: "backup RPO/RTO",
+      test: (c: string) => /RPO/.test(c) && /RTO/.test(c),
+      message: "運用設計書: バックアップ方針にRPOとRTOの定義が必要です",
+    },
+    {
+      check: "monitoring threshold",
+      test: (c: string) => {
+        const hasMonitorTable = /\|\s*(監視対象|メトリクス)/.test(c);
+        const hasThreshold = /\|\s*閾値/.test(c);
+        return hasMonitorTable && hasThreshold;
+      },
+      message: "運用設計書: 監視・アラート定義に閾値付きメトリクスが必要です",
+    },
+    {
+      check: "job schedule entry",
+      test: (c: string) => /\|\s*(ジョブID|ジョブ名)/.test(c),
+      message: "運用設計書: ジョブ管理にジョブエントリが必要です",
+    },
+    {
+      check: "NFR cross-reference",
+      test: (c: string) => /NFR-\d{3}/.test(c),
+      message: "運用設計書: NFR-xxx参照が必要です（上流の非機能要件をクロスリファレンス）",
+    },
   ],
   "migration-design": [
     {

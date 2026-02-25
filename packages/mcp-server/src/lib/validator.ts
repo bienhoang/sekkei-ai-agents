@@ -127,6 +127,7 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
 const UPSTREAM_OVERRIDES: Partial<Record<DocType, string[]>> = {
   nfr: ["NFR", "REQ"],
   "security-design": ["API", "NFR", "REQ", "SCR", "TBL"],
+  "operation-design": ["NFR", "REQ", "API", "TBL", "F"],
 };
 
 /** Computed once at module load from CHAIN_PAIRS + ID_ORIGIN */
@@ -156,7 +157,7 @@ const REQUIRED_COLUMNS: Record<DocType, string[][]> = {
   "uat-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
   "crud-matrix": [["機能ID", "機能名"]],
   "traceability-matrix": [["要件ID"]],
-  "operation-design": [REVISION_HISTORY_COLUMNS, ["OP-ID", "手順名", "担当者"]],
+  "operation-design": [REVISION_HISTORY_COLUMNS, ["OP-ID", "手順名", "障害レベル", "手順内容", "担当者", "想定時間"]],
   "migration-design": [REVISION_HISTORY_COLUMNS, ["MIG-ID", "対象データ", "移行方法"]],
   "sitemap": [["ページID", "ページ名"]],
   "test-evidence": [REVISION_HISTORY_COLUMNS, ["エビデンスID", "テストケースID"]],
