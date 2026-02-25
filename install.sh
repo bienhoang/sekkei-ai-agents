@@ -136,16 +136,34 @@ SKILL file: $SKILL_DEST/SKILL.md
 EOF
 }
 
+# ── Document generation commands ──
 create_subcmd "init" "Initialize Sekkei project config" ""
-create_subcmd "functions-list" "Generate 機能一覧 (Function List)" "@input"
+create_subcmd "rfp" "Presales RFP lifecycle" "[@project-name]"
 create_subcmd "requirements" "Generate 要件定義書 (Requirements)" "@input"
+create_subcmd "functions-list" "Generate 機能一覧 (Function List)" "@input"
+create_subcmd "nfr" "Generate 非機能要件定義書 (NFR)" "@requirements"
+create_subcmd "project-plan" "Generate プロジェクト計画書 (Project Plan)" "@req"
 create_subcmd "basic-design" "Generate 基本設計書 (Basic Design)" "@input"
+create_subcmd "security-design" "Generate セキュリティ設計書 (Security Design)" "@bd"
 create_subcmd "detail-design" "Generate 詳細設計書 (Detail Design)" "@input"
+create_subcmd "mockup" "Generate HTML screen mockups from screen definitions" ""
+# ── Test commands ──
+create_subcmd "test-plan" "Generate テスト計画書 (Test Plan)" "@req"
 create_subcmd "test-spec" "Generate テスト仕様書 (Test Spec)" "@input"
+create_subcmd "ut-spec" "Generate 単体テスト仕様書 (UT Spec)" "@detail-design"
+create_subcmd "it-spec" "Generate 結合テスト仕様書 (IT Spec)" "@basic-design"
+create_subcmd "st-spec" "Generate システムテスト仕様書 (ST Spec)" "@basic-design"
+create_subcmd "uat-spec" "Generate 受入テスト仕様書 (UAT Spec)" "@requirements"
+# ── Cross-cutting commands ──
 create_subcmd "matrix" "Generate CRUD図 or トレーサビリティ" ""
 create_subcmd "sitemap" "Generate サイトマップ (System Structure Map)" ""
 create_subcmd "operation-design" "Generate 運用設計書" "@input"
 create_subcmd "migration-design" "Generate 移行設計書" "@input"
+# ── Workflow commands ──
+create_subcmd "change" "Change request lifecycle" ""
+create_subcmd "plan" "Create generation plan for large documents" "@doc-type"
+create_subcmd "implement" "Execute a generation plan phase by phase" "@plan-path"
+# ── Utility commands ──
 create_subcmd "validate" "Validate document completeness" "@doc"
 create_subcmd "status" "Show document chain progress" ""
 create_subcmd "export" "Export to Excel, PDF, or Word" "@doc --format=xlsx|pdf|docx"
@@ -156,8 +174,11 @@ create_subcmd "diff-visual" "Color-coded revision Excel (朱書き)" "@before @a
 create_subcmd "preview" "Start Express+React docs preview with WYSIWYG editor" "[--guide] [--docs path] [--port N]"
 create_subcmd "version" "Show version and health check" ""
 create_subcmd "uninstall" "Remove Sekkei from Claude Code" "[--force]"
+create_subcmd "rebuild" "Rebuild and re-install Sekkei skill + MCP" ""
 create_subcmd "doctor" "Check installation health and fix suggestions" ""
-ok "Created 21 sub-commands → /sekkei:*"
+
+SUBCMD_COUNT=$(ls "$SUBCMD_DIR"/*.md 2>/dev/null | wc -l | tr -d ' ')
+ok "Created $SUBCMD_COUNT sub-commands → /sekkei:*"
 
 # ── 4. Register MCP Server ─────────────────────────────────────────────
 step "Registering MCP server in Claude Code settings"
