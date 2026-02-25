@@ -13,3 +13,6 @@ packages/mcp-server/coverage/
 __pycache__/
 .turbo/
 plans/
+packages/mcp-server/plans/
+packages/skills/plans/
+packages/preview/plans/
