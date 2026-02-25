@@ -68,6 +68,7 @@ export function buildInlineYamlLayoutHint(): string {
     "YAML format:",
     "```yaml",
     "layout_type: form   # form | dashboard | list | detail | modal | wizard",
+    "shell_type: admin   # admin | auth | onboarding | public | error | email | print | blank (auto-detected from function ID, override here)",
     "viewport: desktop   # desktop | tablet | mobile",
     "regions:",
     "  header:",
@@ -88,6 +89,7 @@ export function buildInlineYamlLayoutHint(): string {
     "- Component types: text-input, password-input, textarea, select, checkbox, radio, button, link, table, card, nav, logo, text, search-bar, tabs, pagination",
     "- `variant` for buttons: primary, secondary, danger",
     "- `required: true` marks mandatory fields (shows ※ in rendered mockup)",
+    "- `shell_type` is auto-detected from function ID prefix (F-AUTH→auth, F-ONB→onboarding, F-PUB/F-LP→public, F-ERR→error, F-MAIL/F-EMAIL→email, F-PRINT→print); set explicitly only to override",
     "- Do NOT use ASCII art for screen layouts — always use this YAML format",
   ].join("\n");
 }
@@ -122,6 +124,7 @@ export function buildScreenDesignInstruction(featureId: string, language = "ja")
     `### YAML Layout Format`,
     `\`\`\`yaml`,
     `layout_type: form   # form | dashboard | list | detail | modal | wizard`,
+    `shell_type: admin   # admin | auth | onboarding | public | error | email | print | blank (auto-detected from function ID, override here)`,
     `viewport: desktop   # desktop | tablet | mobile`,
     `regions:`,
     `  header:`,

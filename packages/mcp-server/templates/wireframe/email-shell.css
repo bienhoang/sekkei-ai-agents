@@ -1,0 +1,37 @@
+/* email-shell.css — Sekkei Mockup: Email template screens
+ * 600px centered container with email-safe fonts. Visual preview only.
+ * Link via: <link rel="stylesheet" href="email-shell.css">
+ */
+
+:root {
+  --color-primary: #2563EB; --color-primary-hover: #1D4ED8; --color-primary-light: #EFF6FF;
+  --color-bg: #F1F5F9; --color-surface: #FFFFFF;
+  --color-text: #1E293B; --color-muted: #64748B;
+  --color-border: #E2E8F0; --color-border-strong: #CBD5E1;
+  --color-danger: #EF4444; --color-annotation: #EF4444;
+  --radius-sm: 6px; --radius-md: 8px;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #DDE3EA; font-family: var(--font-sans); font-size: 14px; color: var(--color-text); line-height: 1.6; }
+
+/* Email shell layout */
+.email-shell { display: flex; justify-content: center; background: #E2E8F0; padding: 32px 16px; max-width: var(--viewport-width, 1024px); min-height: 600px; }
+.email-container { width: 100%; max-width: 600px; background: var(--color-surface); border: 1px solid var(--color-border); }
+.email-header { padding: 24px; text-align: center; background: var(--color-primary); color: white; }
+.email-header-logo { font-size: 20px; font-weight: 700; }
+.email-body { padding: 32px 24px; }
+.email-heading { font-size: 18px; font-weight: 600; color: var(--color-text); margin-bottom: 12px; }
+.email-text { font-size: 14px; color: var(--color-muted); margin-bottom: 16px; line-height: 1.7; }
+.email-button { display: inline-block; padding: 12px 28px; background: var(--color-primary); color: white; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; text-decoration: none; text-align: center; }
+.email-divider { height: 1px; background: var(--color-border); margin: 24px 0; }
+.email-footer { padding: 20px 24px; background: var(--color-bg); text-align: center; font-size: 11px; color: var(--color-muted); border-top: 1px solid var(--color-border); }
+
+/* Shared components */
+.component { position: relative; margin-bottom: 14px; }
+.annotation { position: absolute; top: -6px; left: -6px; z-index: 100; width: 26px; height: 26px; background: var(--color-annotation); color: white; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(239,68,68,0.3); }
+
+/* Screen wrapper */
+.screen-wrap { padding: 30px; max-width: calc(var(--viewport-width, 1024px) + 60px); margin: 30px auto; background: white; border-radius: var(--radius-md); }
+.screen-separator { margin: 40px 0; padding: 10px 0; border-top: 3px dashed var(--color-border-strong); text-align: center; font-size: 13px; font-weight: 600; color: var(--color-muted); text-transform: uppercase; letter-spacing: 1px; }

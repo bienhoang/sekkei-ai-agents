@@ -122,13 +122,19 @@ mkdir -p "$SKILL_DEST"
 cp -R "$SKILL_SRC/" "$SKILL_DEST/"
 ok "Copied skill → $SKILL_DEST"
 
-# Copy wireframe CSS for mockup generation
-CSS_SRC="$TEMPLATES_DIR/wireframe/admin-shell.css"
-if [[ -f "$CSS_SRC" ]]; then
-  cp "$CSS_SRC" "$SKILL_DEST/admin-shell.css"
-  ok "Copied admin-shell.css → $SKILL_DEST"
+# Copy wireframe CSS files for mockup generation
+CSS_DIR="$TEMPLATES_DIR/wireframe"
+CSS_COUNT=0
+for css_file in "$CSS_DIR"/*-shell.css; do
+  if [[ -f "$css_file" ]]; then
+    cp "$css_file" "$SKILL_DEST/$(basename "$css_file")"
+    CSS_COUNT=$((CSS_COUNT + 1))
+  fi
+done
+if [[ $CSS_COUNT -gt 0 ]]; then
+  ok "Copied $CSS_COUNT shell CSS files → $SKILL_DEST"
 else
-  warn "admin-shell.css not found at $CSS_SRC — mockup CSS unavailable"
+  warn "No *-shell.css files found at $CSS_DIR — mockup CSS unavailable"
 fi
 
 # Register /sekkei slash command + sub-commands in Claude Code

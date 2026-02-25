@@ -1,0 +1,51 @@
+/* auth-shell.css — Sekkei Mockup: Auth/Login screens
+ * Centered card on gradient background. No sidebar/header.
+ * Link via: <link rel="stylesheet" href="auth-shell.css">
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+:root {
+  /* Same design tokens as admin-shell */
+  --color-primary: #2563EB; --color-primary-hover: #1D4ED8; --color-primary-light: #EFF6FF;
+  --color-bg: #F1F5F9; --color-surface: #FFFFFF;
+  --color-text: #1E293B; --color-muted: #64748B;
+  --color-border: #E2E8F0; --color-border-strong: #CBD5E1;
+  --color-danger: #EF4444; --color-annotation: #EF4444;
+  --color-input-bg: #FFFFFF;
+  --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+  --font-sans: 'Inter', 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #DDE3EA; font-family: var(--font-sans); font-size: 14px; color: var(--color-text); line-height: 1.5; }
+
+/* Auth shell layout */
+.auth-shell { min-height: 600px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, #1E293B 0%, #334155 50%, #1E293B 100%); padding: 40px 20px; max-width: var(--viewport-width, 1024px); }
+.auth-card { background: var(--color-surface); border-radius: var(--radius-lg); padding: 40px; width: 100%; max-width: 420px; box-shadow: var(--shadow-lg); }
+.auth-logo { width: 48px; height: 48px; background: var(--color-primary); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; margin: 0 auto 20px; }
+.auth-title { font-size: 22px; font-weight: 700; text-align: center; margin-bottom: 6px; color: var(--color-text); }
+.auth-subtitle { font-size: 13px; color: var(--color-muted); text-align: center; margin-bottom: 28px; }
+.auth-divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; font-size: 12px; color: var(--color-muted); }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+.auth-link { font-size: 13px; color: var(--color-primary); text-align: center; display: block; margin-top: 16px; }
+.auth-footer { margin-top: 24px; font-size: 11px; color: rgba(255,255,255,0.5); text-align: center; }
+
+/* Shared components (same as admin-shell) */
+.component { position: relative; margin-bottom: 14px; }
+.annotation { position: absolute; top: -6px; left: -6px; z-index: 100; width: 26px; height: 26px; background: var(--color-annotation); color: white; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(239,68,68,0.3); }
+.input-label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: var(--color-text); }
+.required-mark { color: var(--color-danger); margin-left: 2px; }
+.input-field { display: block; width: 100%; padding: 9px 12px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-input-bg); font-size: 14px; min-height: 40px; }
+.placeholder-text { color: var(--color-muted); font-size: 13px; }
+.btn { display: inline-block; padding: 9px 20px; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; }
+.btn-primary { background: var(--color-primary); color: white; width: 100%; }
+.btn-secondary { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border-strong); }
+.btn-social { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 9px 20px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-surface); font-size: 14px; color: var(--color-text); }
+.checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-muted); margin-bottom: 14px; }
+
+/* Screen wrapper */
+.screen-wrap { padding: 30px; max-width: calc(var(--viewport-width, 1024px) + 60px); margin: 30px auto; background: white; border-radius: var(--radius-md); }
+.screen-separator { margin: 40px 0; padding: 10px 0; border-top: 3px dashed var(--color-border-strong); text-align: center; font-size: 13px; font-weight: 600; color: var(--color-muted); text-transform: uppercase; letter-spacing: 1px; }

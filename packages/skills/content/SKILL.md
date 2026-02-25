@@ -81,6 +81,7 @@ Commands: basic-design, security-design, detail-design
 ### Screen Mockups
 
 → Read `references/mockup-command.md`
+→ If non-admin shell type detected (auth, error, onboarding, public, email, print, blank): also read `references/mockup-shells.md`
 Commands: mockup
 
 ### Test Phase
@@ -167,4 +168,5 @@ workspace-docs/
 - `references/doc-standards.md` — Japanese documentation standards and column headers
 - `references/v-model-guide.md` — V-model workflow and chain-of-documents guide
 - `references/plan-orchestrator.md` — Plan orchestration logic for large document generation
-- `references/mockup-command.md` — Screen mockup generation: HTML admin-shell, CSS reference, annotation rules
+- `references/mockup-command.md` — Screen mockup generation: shell detection, admin-shell skeleton, Chart.js, CSS reference, annotation rules
+- `references/mockup-shells.md` — Non-admin shell skeletons: auth, error, onboarding, public, email, print, blank

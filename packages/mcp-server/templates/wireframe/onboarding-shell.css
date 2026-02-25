@@ -1,0 +1,60 @@
+/* onboarding-shell.css — Sekkei Mockup: Onboarding/Wizard screens
+ * Logo at top, stepper progress, centered content card, step nav.
+ * Link via: <link rel="stylesheet" href="onboarding-shell.css">
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap');
+
+:root {
+  --color-primary: #2563EB; --color-primary-hover: #1D4ED8; --color-primary-light: #EFF6FF;
+  --color-bg: #F1F5F9; --color-surface: #FFFFFF;
+  --color-text: #1E293B; --color-muted: #64748B;
+  --color-border: #E2E8F0; --color-border-strong: #CBD5E1;
+  --color-danger: #EF4444; --color-annotation: #EF4444;
+  --color-input-bg: #FFFFFF;
+  --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.1);
+  --font-sans: 'Inter', 'Noto Sans JP', system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #DDE3EA; font-family: var(--font-sans); font-size: 14px; color: var(--color-text); line-height: 1.5; }
+
+/* Onboarding shell layout */
+.onboarding-shell { min-height: 600px; display: flex; flex-direction: column; background: var(--color-bg); max-width: var(--viewport-width, 1024px); }
+.onboarding-header { display: flex; align-items: center; gap: 10px; padding: 16px 24px; background: var(--color-surface); border-bottom: 1px solid var(--color-border); }
+.onboarding-logo { width: 32px; height: 32px; background: var(--color-primary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; }
+.onboarding-brand { font-size: 15px; font-weight: 600; color: var(--color-text); }
+.onboarding-body { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 32px 24px; }
+.onboarding-content { width: 100%; max-width: 560px; background: var(--color-surface); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-md); }
+.onboarding-title { font-size: 20px; font-weight: 600; margin-bottom: 8px; text-align: center; }
+.onboarding-subtitle { font-size: 13px; color: var(--color-muted); text-align: center; margin-bottom: 24px; }
+.onboarding-footer { display: flex; justify-content: space-between; padding: 20px 24px; max-width: 560px; width: 100%; margin: 0 auto; }
+
+/* Stepper (reused from admin-shell) */
+.stepper { display: flex; align-items: center; margin-bottom: 28px; max-width: 560px; width: 100%; }
+.step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+.step:not(:last-child)::after { content: ''; position: absolute; top: 14px; left: 50%; width: 100%; height: 2px; background: var(--color-border); }
+.step.completed:not(:last-child)::after { background: var(--color-primary); }
+.step-circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--color-border); background: var(--color-surface); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--color-muted); position: relative; z-index: 1; }
+.step.active .step-circle { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+.step.completed .step-circle { border-color: var(--color-primary); background: var(--color-primary); color: white; }
+.step-label { font-size: 11px; margin-top: 6px; color: var(--color-muted); text-align: center; }
+.step.active .step-label { color: var(--color-primary); font-weight: 500; }
+
+/* Shared components */
+.component { position: relative; margin-bottom: 14px; }
+.annotation { position: absolute; top: -6px; left: -6px; z-index: 100; width: 26px; height: 26px; background: var(--color-annotation); color: white; border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(239,68,68,0.3); }
+.input-label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: var(--color-text); }
+.required-mark { color: var(--color-danger); margin-left: 2px; }
+.input-field { display: block; width: 100%; padding: 9px 12px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-input-bg); font-size: 14px; min-height: 40px; }
+.placeholder-text { color: var(--color-muted); font-size: 13px; }
+.select-field { display: block; width: 100%; padding: 9px 12px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-input-bg); font-size: 14px; }
+.btn { display: inline-block; padding: 9px 20px; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; text-align: center; }
+.btn-primary { background: var(--color-primary); color: white; }
+.btn-secondary { background: var(--color-surface); color: var(--color-text); border: 1px solid var(--color-border-strong); }
+
+/* Screen wrapper */
+.screen-wrap { padding: 30px; max-width: calc(var(--viewport-width, 1024px) + 60px); margin: 30px auto; background: white; border-radius: var(--radius-md); }
+.screen-separator { margin: 40px 0; padding: 10px 0; border-top: 3px dashed var(--color-border-strong); text-align: center; font-size: 13px; font-weight: 600; color: var(--color-muted); text-transform: uppercase; letter-spacing: 1px; }

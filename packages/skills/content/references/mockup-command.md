@@ -2,7 +2,7 @@
 
 # Screen Mockup Generation
 
-Generate HTML screen mockups from screen definitions using the admin-shell template.
+Generate HTML screen mockups from screen definitions using shell-type templates.
 Output: interactive HTML files with numbered annotations mapping to 画面項目定義 tables.
 
 ## Prerequisites
@@ -11,6 +11,35 @@ Output: interactive HTML files with numbered annotations mapping to 画面項目
 2. Screen definitions exist in one of:
    - **Split mode**: `features/{id}/screen-design.md` (per-feature)
    - **Monolithic**: `03-system/basic-design.md` § 画面一覧
+
+## Shell Detection
+
+Determine the shell type for each screen based on function ID prefix:
+
+| Prefix Pattern | Shell Type | CSS File | Layout |
+|----------------|-----------|----------|--------|
+| `F-AUTH-*` | auth | `auth-shell.css` | Centered card on gradient bg |
+| `F-ONB-*` | onboarding | `onboarding-shell.css` | Logo + stepper + centered content |
+| `F-PUB-*`, `F-LP-*` | public | `public-shell.css` | Top nav + hero + sections + footer |
+| `F-ERR-*` | error | `error-shell.css` | Centered icon + message |
+| `F-MAIL-*`, `F-EMAIL-*` | email | `email-shell.css` | 600px email container |
+| `F-PRINT-*` | print | `print-shell.css` | A4 clean layout |
+| Everything else | admin | `admin-shell.css` | Sidebar + Header + Content |
+
+Note: `blank` shell has no auto-detect prefix — use `shell_type: blank` explicit override only.
+
+**Override**: If `shell_type` is specified in screen-design.md YAML block, use that instead:
+```yaml
+layout_type: form
+shell_type: auth    # force auth shell regardless of function ID
+viewport: desktop
+```
+
+**Workflow step 4a update**: Before copying HTML skeleton, check function ID prefix → select correct shell type → use corresponding HTML skeleton and CSS file.
+
+**Workflow step 5 update**: Copy the CSS file(s) used by screens in this batch:
+- Source: `~/.claude/skills/sekkei/{shell-type}-shell.css`
+- Destination: `{output.directory}/11-mockups/{shell-type}-shell.css`
 
 ## Invocation Modes
 
@@ -40,8 +69,8 @@ Output: interactive HTML files with numbered annotations mapping to 画面項目
    c. Fill `.shell-content` with screen-specific components
    d. Add content-area annotations (sequential from 1)
    e. Save to `{output.directory}/11-mockups/{function-id}-{screen-name-kebab}.html`
-5. Copy `admin-shell.css` to `{output.directory}/11-mockups/admin-shell.css`
-   - Source: `~/.claude/skills/sekkei/admin-shell.css` (installed by `install.sh`)
+5. Copy shell CSS file(s) to `{output.directory}/11-mockups/`
+   - Source: `~/.claude/skills/sekkei/{shell-type}-shell.css` (installed by `install.sh`)
 6. Continue to screenshot steps below
 
 ### Screenshot-only mode (`--screenshot`)
@@ -85,6 +114,12 @@ const { chromium } = require('playwright');
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
 await page.goto(`file://${absolutePathToHtml}`, { waitUntil: 'networkidle' });
+// Wait for Chart.js canvases to finish rendering
+// Note: __chart is an undocumented Chart.js v4 internal; CDN pins @4, catch() handles breakage
+await page.waitForFunction(() => {
+  const canvases = document.querySelectorAll('.chart-container canvas');
+  return canvases.length === 0 || [...canvases].every(c => c.getContext('2d').__chart);
+}, { timeout: 5000 }).catch(() => {});
 const wraps = await page.locator('.screen-wrap').all();
 for (let i = 0; i < wraps.length; i++) {
   await wraps[i].screenshot({ path: `output-${i}.png` });
@@ -158,6 +193,10 @@ Every generated HTML file MUST use this exact structure:
 </html>
 ```
 
+## Non-Admin Shell Skeletons
+
+For non-admin shell types (auth, error, onboarding, public, email, print, blank), read `references/mockup-shells.md` for HTML skeletons, CSS class references, and layout examples.
+
 ## CSS Class Reference
 
 ### Shell Structure
@@ -202,7 +241,10 @@ Every generated HTML file MUST use this exact structure:
 | Class | Purpose |
 |-------|---------|
 | `.stat-card` | KPI card with `.stat-value` + `.stat-label` |
-| `.chart-placeholder` | Chart placeholder box |
+| `.chart-placeholder` | Legacy chart placeholder box (fallback) |
+| `.chart-card` | Chart wrapper card (white bg, border, shadow) |
+| `.chart-title` | Chart heading text |
+| `.chart-container` | Fixed-height canvas wrapper (280px) |
 | `.wf-table` | Data table |
 | `.wf-table-title` | Table heading |
 | `.badge` | Status badge pill |
@@ -244,10 +286,104 @@ Every generated HTML file MUST use this exact structure:
 | `.screen-wrap` | Padding wrapper per screen |
 | `.screen-separator` | Dashed divider between screens |
 
+## Chart.js Integration
+
+When a screen contains charts (dashboard, analytics, reports), use real Chart.js instead of `.chart-placeholder`.
+
+### CDN Include
+Add before `</head>`:
+```html
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+```
+
+### Chart HTML Pattern
+```html
+<div class="component full-span"><span class="annotation">{N}</span>
+  <div class="chart-card">
+    <div class="chart-title">{Chart Title}</div>
+    <div class="chart-container">
+      <canvas id="chart-{unique-id}"></canvas>
+    </div>
+  </div>
+</div>
+```
+
+### Chart Script (before </body>)
+```html
+<script>
+const chartColors = {
+  primary: '#2563EB', primaryLight: '#93C5FD',
+  secondary: '#10B981', secondaryLight: '#6EE7B7',
+  accent: '#F59E0B', accentLight: '#FCD34D',
+  danger: '#EF4444', dangerLight: '#FCA5A5',
+  gray: '#64748B', grayLight: '#CBD5E1'
+};
+
+new Chart(document.getElementById('chart-{unique-id}'), {
+  type: 'bar',  // bar | line | pie | doughnut
+  data: {
+    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+    datasets: [{
+      label: '{Dataset Label}',
+      data: [120, 190, 150, 210, 180, 240],
+      backgroundColor: chartColors.primary
+    }]
+  },
+  options: {
+    animation: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'top' } },
+    scales: { y: { beginAtZero: true } }
+  }
+});
+</script>
+```
+
+### Chart Safety Rules
+1. **ALWAYS** set `animation: false` — required for screenshot
+2. **ALWAYS** use `.chart-container` with fixed height (280px) — prevents layout blow-up
+3. **ALWAYS** set `responsive: true` + `maintainAspectRatio: false`
+4. **Max 4 charts per screen** — more charts risk layout overflow
+5. Each canvas needs unique `id` attribute
+
+### Chart Recipe Table
+| Context | Type | Labels | Sample Data Range |
+|---------|------|--------|-------------------|
+| Sales/Revenue | bar or line | 月 names (1月〜12月) | 100-1000 |
+| User counts | line with fill | 月 or 週 names | 10-500 |
+| Status distribution | pie or doughnut | Status names (完了, 進行中, 未着手) | percentages summing to 100 |
+| Comparison | grouped bar | Category names | varies |
+| Time series | line | Date strings | varies |
+
+### Pie/Doughnut Variant
+For pie/doughnut charts, omit `scales` and use array `backgroundColor`:
+```javascript
+{
+  type: 'doughnut',
+  data: {
+    labels: ['完了', '進行中', '未着手'],
+    datasets: [{
+      data: [45, 35, 20],
+      backgroundColor: [chartColors.primary, chartColors.secondary, chartColors.gray]
+    }]
+  },
+  options: { animation: false, responsive: true, maintainAspectRatio: false }
+}
+```
+
 ## Annotation Rules
 
-1. **Content-area only**: Annotations go ONLY inside `.shell-content`
-2. **No shell annotations**: Do NOT annotate header or sidebar elements
+1. **Content-area only**: Annotations go ONLY inside the content area:
+   - `admin`: `.shell-content`
+   - `auth`: `.auth-card`
+   - `onboarding`: `.onboarding-content`
+   - `public`: `.public-hero` + `.public-section`
+   - `error`: `.error-actions`
+   - `email`: `.email-body`
+   - `print`: `.print-content`
+   - `blank`: `.blank-shell` (entire shell is content)
+2. **No shell annotations**: Do NOT annotate header, sidebar, footer chrome elements
 3. **Sequential from 1**: Number starting from 1 per screen, incrementing for each interactive element
 4. **Mapping**: Each annotation number maps to a row in 画面項目定義 table (section 2 of screen-design.md)
 5. **Syntax**: Wrap in `.component` with `.annotation` badge:
@@ -277,12 +413,16 @@ Every generated HTML file MUST use this exact structure:
     <div class="component"><span class="annotation">1</span>
       <div class="stat-card"><div class="stat-value">1,234</div><div class="stat-label">総ユーザー数</div></div>
     </div>
-    <!-- more stat-cards... -->
+    <!-- more stat-cards (annotations 2, 3) -->
     <div class="component full-span"><span class="annotation">4</span>
-      <div class="chart-placeholder"><i class="fa-solid fa-chart-line"></i> [Chart: 月次推移]</div>
+      <div class="chart-card">
+        <div class="chart-title">月次推移</div>
+        <div class="chart-container"><canvas id="chart-monthly"></canvas></div>
+      </div>
     </div>
   </div>
 </main>
+<!-- Chart.js script before </body> — see Chart.js Integration section -->
 ```
 
 ### List
