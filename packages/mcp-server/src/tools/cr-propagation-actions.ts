@@ -1,5 +1,5 @@
 /**
- * Propagation-related CR action handlers: analyze, propagate_next, validate.
+ * Propagation-related CR action handlers: analyze, propagate_next, propagate_confirm, simulate, validate.
  */
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -31,7 +31,11 @@ export async function handleAnalyze(args: ChangeRequestArgs): Promise<ToolResult
   const entries = findAffectedSections(cr.changed_ids, docs);
   const report = buildImpactReport(cr.changed_ids, entries);
 
-  const steps = computePropagationOrder(cr.origin_doc);
+  // IMP-3: pass skip_docs and max_depth options
+  const steps = computePropagationOrder(cr.origin_doc, {
+    maxDepth: args.max_depth,
+    skipDocs: args.skip_docs,
+  });
 
   const upstreamDocs = new Map<string, string>();
   for (const step of steps) {
@@ -40,8 +44,13 @@ export async function handleAnalyze(args: ChangeRequestArgs): Promise<ToolResult
       if (content) upstreamDocs.set(step.doc_type, content);
     }
   }
+
+  // BUG-5: only scan lines containing changed IDs to reduce noise
   const originContent = docs.get(cr.origin_doc) ?? "";
-  const backfill = generateBackfillSuggestions(cr.origin_doc, "", originContent, upstreamDocs);
+  const changedLines = originContent.split("\n").filter(line =>
+    cr.changed_ids.some(id => line.includes(id))
+  ).join("\n");
+  const backfill = generateBackfillSuggestions(cr.origin_doc, "", changedLines, upstreamDocs);
 
   const updated = await readCR(filePath);
   updated.impact_summary = `${report.total_affected_sections} affected sections across ${new Set(entries.map(e => e.doc_type)).size} documents`;
@@ -138,7 +147,20 @@ export async function handlePropagateNext(args: ChangeRequestArgs): Promise<Tool
     }
   }
 
-  current.propagation_steps[idx] = { ...step, status: "done", note: args.note };
+  // BUG-1: set status to "instructed" instead of "done" — step gets instructions but isn't confirmed yet
+  current.propagation_steps[idx] = { ...step, status: "instructed", note: args.note };
+
+  // IMP-6: track upstream doc content hash for change verification
+  if (step.direction === "upstream" && args.config_path) {
+    try {
+      const docs = await loadChainDocs(args.config_path);
+      const targetContent = docs.get(step.doc_type) ?? "";
+      const { createHash } = await import("node:crypto");
+      const hash = createHash("md5").update(targetContent).digest("hex").slice(0, 8);
+      current.propagation_steps[idx] = { ...current.propagation_steps[idx], content_hash: hash };
+    } catch { /* non-blocking */ }
+  }
+
   current.propagation_index = idx + 1;
   current.updated = new Date().toISOString().slice(0, 10);
   await writeCR(filePath, current);
@@ -158,6 +180,78 @@ export async function handlePropagateNext(args: ChangeRequestArgs): Promise<Tool
   }
 
   return ok(JSON.stringify(response));
+}
+
+export async function handlePropagateConfirm(args: ChangeRequestArgs): Promise<ToolResult> {
+  const crId = requireCrId(args);
+  const filePath = crFilePath(args.workspace_path, crId);
+  const cr = await readCR(filePath);
+  if (cr.status !== "PROPAGATING") return err(`propagate_confirm requires PROPAGATING status, got ${cr.status}`);
+
+  // Find last instructed step
+  const idx = cr.propagation_steps.findIndex(s => s.status === "instructed");
+  if (idx === -1) return err("No instructed step to confirm. Call propagate_next first.");
+
+  cr.propagation_steps[idx] = { ...cr.propagation_steps[idx], status: "done", note: args.note ?? cr.propagation_steps[idx].note };
+  cr.updated = new Date().toISOString().slice(0, 10);
+
+  // IMP-6: check if upstream doc was actually modified by comparing hash
+  let upstream_changed: boolean | undefined;
+  if (cr.propagation_steps[idx].direction === "upstream" && cr.propagation_steps[idx].content_hash && args.config_path) {
+    try {
+      const docs = await loadChainDocs(args.config_path);
+      const currentContent = docs.get(cr.propagation_steps[idx].doc_type) ?? "";
+      const { createHash } = await import("node:crypto");
+      const currentHash = createHash("md5").update(currentContent).digest("hex").slice(0, 8);
+      upstream_changed = currentHash !== cr.propagation_steps[idx].content_hash;
+    } catch { /* non-blocking */ }
+  }
+
+  await writeCR(filePath, cr);
+
+  const result: Record<string, unknown> = {
+    confirmed_step: idx + 1,
+    doc_type: cr.propagation_steps[idx].doc_type,
+    direction: cr.propagation_steps[idx].direction,
+    remaining: cr.propagation_steps.filter(s => s.status === "pending").length,
+  };
+
+  if (upstream_changed !== undefined) {
+    result.upstream_changed = upstream_changed;
+  }
+
+  return ok(JSON.stringify(result));
+}
+
+export async function handleSimulate(args: ChangeRequestArgs): Promise<ToolResult> {
+  if (!args.origin_doc) return err("origin_doc required for simulate");
+  if (!args.config_path) return err("config_path required for simulate");
+  if (!args.changed_ids?.length && !args.description) return err("changed_ids or description required");
+
+  const changedIds = args.changed_ids ?? [];
+  const docs = await loadChainDocs(args.config_path);
+  const entries = findAffectedSections(changedIds, docs);
+  const report = buildImpactReport(changedIds, entries);
+
+  // IMP-3: apply maxDepth and skipDocs to simulate as well
+  const steps = computePropagationOrder(args.origin_doc, {
+    maxDepth: args.max_depth,
+    skipDocs: args.skip_docs,
+  });
+
+  return ok(JSON.stringify({
+    dry_run: true,
+    origin_doc: args.origin_doc,
+    changed_ids: changedIds,
+    impact: {
+      total_affected_sections: report.total_affected_sections,
+      affected_docs: report.affected_docs,
+      dependency_graph: report.dependency_graph,
+      suggested_actions: report.suggested_actions,
+    },
+    propagation_steps: steps,
+    total_steps: steps.length,
+  }));
 }
 
 export async function handleValidate(args: ChangeRequestArgs): Promise<ToolResult> {

@@ -12,11 +12,12 @@ import {
 
 const execFileAsync = promisify(execFile);
 import { detectConflicts } from "../lib/cr-conflict-detector.js";
-import { appendGlobalChangelog } from "../lib/changelog-manager.js";
+import { appendGlobalChangelog, getLastChangelogVersion } from "../lib/changelog-manager.js";
 import type { ChangeRequestArgs, ToolResult } from "./change-request.js";
 import { ok, err } from "./change-request.js";
 import {
   handleAnalyze, handlePropagateNext, handleValidate,
+  handlePropagateConfirm, handleSimulate,
 } from "./cr-propagation-actions.js";
 
 export function crFilePath(workspacePath: string, crId: string): string {
@@ -60,10 +61,13 @@ async function handleCreate(args: ChangeRequestArgs): Promise<ToolResult> {
     const newLines = args.new_content.split("\n");
     for (const id of newIds) {
       if (oldIds.has(id) && !changedIds.includes(id)) {
-        // Simple heuristic: if the line containing the ID changed, it's modified
-        const oldLine = oldLines.find(l => l.includes(id)) ?? "";
-        const newLine = newLines.find(l => l.includes(id)) ?? "";
-        if (oldLine !== newLine) changedIds.push(id);
+        // Compare ALL lines containing each ID, not just first match
+        const oldMatches = oldLines.filter(l => l.includes(id)).sort();
+        const newMatches = newLines.filter(l => l.includes(id)).sort();
+        // Changed if line count differs or any line content differs
+        if (oldMatches.length !== newMatches.length || oldMatches.some((line, i) => line !== newMatches[i])) {
+          changedIds.push(id);
+        }
       }
     }
   }
@@ -132,15 +136,18 @@ async function handleComplete(args: ChangeRequestArgs): Promise<ToolResult> {
       } catch { /* import/load non-blocking */ }
     }
 
-    // Helper: extract version from a doc file
+    // Helper: extract version from a doc file, fallback to last CHANGELOG entry (IMP-4)
     async function getVersion(docType: string): Promise<string> {
       if (!docPaths || !extractVersion || !fsReadFile) return "";
       const path = docPaths.get(docType);
       if (!path) return "";
       try {
         const content = await fsReadFile(path, "utf-8");
-        return extractVersion(content);
-      } catch { return ""; }
+        const version = extractVersion(content);
+        if (version) return version;
+      } catch { /* fall through */ }
+      // IMP-4: fallback to last version from global changelog
+      return getLastChangelogVersion(args.workspace_path, docType);
     }
 
     // Log origin doc
@@ -176,7 +183,21 @@ async function handleStatus(args: ChangeRequestArgs): Promise<ToolResult> {
   const crId = requireCrId(args);
   const filePath = crFilePath(args.workspace_path, crId);
   const cr = await readCR(filePath);
-  return ok(JSON.stringify(cr));
+
+  // IMP-5: include propagation progress summary
+  const progress = {
+    total_steps: cr.propagation_steps.length,
+    done: cr.propagation_steps.filter(s => s.status === "done").length,
+    instructed: cr.propagation_steps.filter(s => s.status === "instructed").length,
+    pending: cr.propagation_steps.filter(s => s.status === "pending").length,
+    skipped: cr.propagation_steps.filter(s => s.status === "skipped").length,
+    upstream_done: cr.propagation_steps.filter(s => s.direction === "upstream" && s.status === "done").length,
+    upstream_total: cr.propagation_steps.filter(s => s.direction === "upstream").length,
+    downstream_done: cr.propagation_steps.filter(s => s.direction === "downstream" && s.status === "done").length,
+    downstream_total: cr.propagation_steps.filter(s => s.direction === "downstream").length,
+  };
+
+  return ok(JSON.stringify({ ...cr, progress }));
 }
 
 async function handleList(args: ChangeRequestArgs): Promise<ToolResult> {
@@ -208,11 +229,11 @@ async function handleRollback(args: ChangeRequestArgs): Promise<ToolResult> {
     return err(`rollback requires PROPAGATING status, got ${cr.status}`);
   }
 
-  // Find the pre-propagation checkpoint commit
+  // Find checkpoint commit
   let logOutput: string;
   try {
     const result = await execFileAsync("git", [
-      "-C", args.workspace_path, "log", "--oneline", "-20",
+      "-C", args.workspace_path, "log", "--oneline", "-50",
     ]);
     logOutput = result.stdout;
   } catch {
@@ -221,38 +242,43 @@ async function handleRollback(args: ChangeRequestArgs): Promise<ToolResult> {
 
   const expectedMsg = `chore: pre-${crId} checkpoint`;
   const checkpointLine = logOutput.split("\n").find(line => line.includes(expectedMsg));
-
   if (!checkpointLine) {
-    return err(`No checkpoint found for ${crId} in recent 20 commits`);
+    return err(`No checkpoint found for ${crId} in recent 50 commits`);
   }
-
   const sha = checkpointLine.trim().split(" ")[0];
 
+  // Safe rollback: stash uncommitted changes, then revert to checkpoint on a new branch
   try {
-    await execFileAsync("git", ["-C", args.workspace_path, "reset", "--hard", sha]);
-  } catch {
-    return err(`git reset --hard ${sha} failed`);
+    // Stash any uncommitted work first
+    await execFileAsync("git", ["-C", args.workspace_path, "stash", "push", "-m", `pre-rollback-${crId}`]).catch(() => {});
+    // Create rollback branch from checkpoint
+    const branchName = `rollback/${crId}`;
+    await execFileAsync("git", ["-C", args.workspace_path, "checkout", "-b", branchName, sha]);
+  } catch (e) {
+    return err(`Rollback failed: ${e instanceof Error ? e.message : "unknown error"}`);
   }
 
-  await transitionCR(filePath, "APPROVED", `Rolled back to checkpoint ${sha}`);
+  await transitionCR(filePath, "APPROVED", `Rolled back to checkpoint ${sha} (branch: rollback/${crId})`);
 
-  return ok(JSON.stringify({ success: true, reverted_to: sha }));
+  return ok(JSON.stringify({ success: true, reverted_to: sha, branch: `rollback/${crId}`, stashed: true }));
 }
 
 // --- Dispatch ---
 
 export async function handleCRAction(args: ChangeRequestArgs): Promise<ToolResult> {
   switch (args.action) {
-    case "create":         return handleCreate(args);
-    case "analyze":        return handleAnalyze(args);
-    case "approve":        return handleApprove(args);
-    case "propagate_next": return handlePropagateNext(args);
-    case "validate":       return handleValidate(args);
-    case "complete":       return handleComplete(args);
-    case "status":         return handleStatus(args);
-    case "list":           return handleList(args);
-    case "cancel":         return handleCancel(args);
-    case "rollback":       return handleRollback(args);
-    default:               return err(`Unknown action: ${args.action}`);
+    case "create":            return handleCreate(args);
+    case "analyze":           return handleAnalyze(args);
+    case "approve":           return handleApprove(args);
+    case "propagate_next":    return handlePropagateNext(args);
+    case "propagate_confirm": return handlePropagateConfirm(args);
+    case "simulate":          return handleSimulate(args);
+    case "validate":          return handleValidate(args);
+    case "complete":          return handleComplete(args);
+    case "status":            return handleStatus(args);
+    case "list":              return handleList(args);
+    case "cancel":            return handleCancel(args);
+    case "rollback":          return handleRollback(args);
+    default:                  return err(`Unknown action: ${args.action}`);
   }
 }

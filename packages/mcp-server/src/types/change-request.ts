@@ -15,8 +15,9 @@ export type PropagationDirection = (typeof PROPAGATION_DIRECTIONS)[number];
 export interface PropagationStep {
   doc_type: string;
   direction: PropagationDirection;
-  status: "pending" | "done" | "skipped";
+  status: "pending" | "instructed" | "done" | "skipped";
   note?: string;
+  content_hash?: string;  // IMP-6: MD5 hash of upstream doc at instruction time
 }
 
 export interface CRHistoryEntry {

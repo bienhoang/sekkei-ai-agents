@@ -8,7 +8,7 @@ import { handleCRAction } from "./cr-actions.js";
 import { logger } from "../lib/logger.js";
 
 export const CR_ACTIONS = [
-  "create", "analyze", "approve", "propagate_next",
+  "create", "analyze", "approve", "propagate_next", "propagate_confirm", "simulate",
   "validate", "complete", "status", "list", "cancel", "rollback",
 ] as const;
 
@@ -44,6 +44,10 @@ const inputSchema = {
     .describe("When true, return suggested content snippets for upstream propagation steps"),
   partial: z.boolean().optional()
     .describe("When true, skip incomplete-steps check in validate (for mid-propagation validation)"),
+  skip_docs: z.array(z.string().max(50)).max(20).optional()
+    .describe("Doc types to skip during propagation"),
+  max_depth: z.number().int().min(1).max(10).optional()
+    .describe("Max propagation depth (hops from origin)"),
 };
 
 export interface ChangeRequestArgs {
@@ -61,6 +65,8 @@ export interface ChangeRequestArgs {
   note?: string;
   suggest_content?: boolean;
   partial?: boolean;
+  skip_docs?: string[];
+  max_depth?: number;
 }
 
 export type ToolResult = { content: Array<{ type: "text"; text: string }>; isError?: boolean };

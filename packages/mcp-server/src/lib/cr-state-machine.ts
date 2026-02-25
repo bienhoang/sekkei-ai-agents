@@ -170,7 +170,7 @@ function buildCRBody(cr: ChangeRequest): string {
     lines.push("| # | Document | Direction | Status | Note |");
     lines.push("|---|----------|-----------|--------|------|");
     cr.propagation_steps.forEach((step, i) => {
-      const icon = step.status === "done" ? "✅" : step.status === "skipped" ? "⏭️" : "⏳";
+      const icon = step.status === "done" ? "✅" : step.status === "skipped" ? "⏭️" : step.status === "instructed" ? "🔄" : "⏳";
       lines.push(`| ${i + 1} | ${step.doc_type} | ${step.direction} | ${icon} ${step.status} | ${step.note ?? ""} |`);
     });
     lines.push("");

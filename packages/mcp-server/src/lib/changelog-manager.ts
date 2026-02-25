@@ -42,27 +42,59 @@ export function incrementVersion(version: string): string {
   return `${major}.${nextMinor}`;
 }
 
-/** Extract latest version from 改訂履歴 table (last 版数 value) */
+/** Extract latest version from 改訂履歴 table — collects all versions and returns maximum */
 export function extractVersionFromContent(content: string): string {
   const lines = content.split("\n");
   let capturing = false;
-  let lastVersion = "";
+  const versions: string[] = [];
   for (const line of lines) {
     if (/^#{1,4}\s+改訂履歴/.test(line)) { capturing = true; continue; }
     if (capturing && /^#{1,4}\s/.test(line)) break;
     if (capturing) {
-      // Standard: | 1.0 | or | v1.0 |
-      const match = line.match(/^\|\s*v?(\d+\.\d+)\s*\|/);
-      if (match) { lastVersion = match[1]; continue; }
-      // Alternative: | 版数 1.0 |
-      const altMatch = line.match(/^\|\s*版数\s*(\d+\.\d+)\s*\|/);
-      if (altMatch) { lastVersion = altMatch[1]; }
+      // Match version anywhere in a table row (not just first cell)
+      const matches = line.matchAll(/v?(\d+\.\d+)/g);
+      for (const m of matches) {
+        // Only capture if it looks like a version (not a random decimal)
+        const val = m[1];
+        if (parseFloat(val) < 100) versions.push(val);
+      }
     }
   }
-  if (!lastVersion) {
+  if (versions.length === 0) {
     logger.warn("extractVersionFromContent: no version found in 改訂履歴");
+    return "";
   }
-  return lastVersion;
+  // Return highest version (handles unsorted tables)
+  versions.sort((a, b) => {
+    const [aMaj, aMin] = a.split(".").map(Number);
+    const [bMaj, bMin] = b.split(".").map(Number);
+    return aMaj !== bMaj ? aMaj - bMaj : aMin - bMin;
+  });
+  return versions[versions.length - 1];
+}
+
+/** Read last version for a doc type from global changelog (fallback) */
+export async function getLastChangelogVersion(
+  workspacePath: string,
+  docType: string,
+): Promise<string> {
+  const changelogPath = join(workspacePath, DEFAULT_WORKSPACE_DIR, "CHANGELOG.md");
+  try {
+    const content = await readFile(changelogPath, "utf-8");
+    const lines = content.split("\n");
+    // Scan table rows in reverse for matching doc type
+    for (let i = lines.length - 1; i >= 0; i--) {
+      const line = lines[i];
+      if (!line.startsWith("|")) continue;
+      const cells = line.split("|").map(c => c.trim());
+      // Table: | date | docType | version | changes | author | crId |
+      if (cells.length >= 4 && cells[2] === docType && cells[3]) {
+        const version = cells[3].replace(/^v/, "");
+        if (/^\d+\.\d+$/.test(version)) return version;
+      }
+    }
+  } catch { /* non-blocking */ }
+  return "";
 }
 
 export async function appendGlobalChangelog(
