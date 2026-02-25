@@ -3,8 +3,8 @@
  * for the skill layer to orchestrate actual document generation.
  */
 import { z } from "zod";
-import { readFile } from "node:fs/promises";
-import { dirname } from "node:path";
+import { readFile, stat } from "node:fs/promises";
+import { dirname, resolve, sep } from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { loadTemplate } from "../lib/template-loader.js";
@@ -28,7 +28,10 @@ import { loadGlossary } from "../lib/glossary-native.js";
 import { extractAllIds } from "../lib/id-extractor.js";
 import { resolveOutputPath } from "../lib/resolve-output-path.js";
 import { autoCommit } from "../lib/git-committer.js";
-import { appendGlobalChangelog } from "../lib/changelog-manager.js";
+import { appendGlobalChangelog, extractVersionFromContent, incrementVersion } from "../lib/changelog-manager.js";
+
+/** Cache for server-side upstream extraction briefs (5-min TTL) */
+const upstreamBriefCache = new Map<string, { brief: string; expires: number }>();
 
 const inputSchema = {
   doc_type: z.enum(DOC_TYPES).describe("Type of document to generate"),
@@ -41,6 +44,8 @@ const inputSchema = {
     .describe("Override default keigo level for this document type"),
   upstream_content: z.string().max(500_000).optional()
     .describe("Content of the upstream document in the V-model chain. IDs will be extracted and injected as constraints."),
+  upstream_paths: z.array(z.string().max(500).refine((p) => !p.includes(".."), { message: "upstream path must not contain '..'" })).max(5).optional()
+    .describe("Paths to upstream docs for server-side extraction; relative to output.directory"),
   project_type: z.enum(PROJECT_TYPES).optional()
     .describe("Project type for conditional section instructions. Read from sekkei.config.yaml project.type."),
   feature_name: z.string().regex(/^[a-z][a-z0-9-]{1,49}$/).optional()
@@ -75,6 +80,8 @@ const inputSchema = {
     content: z.string().max(200_000).describe("Content from this source"),
   })).max(10).optional()
     .describe("Multiple input sources. Each requirement will be tagged with its origin source in 出典 column."),
+  post_actions: z.array(z.enum(["update_chain_status"])).max(1).optional()
+    .describe("Run these actions server-side after building generation context"),
 };
 
 /** Extract existing 改訂履歴 section from document content */
@@ -564,6 +571,7 @@ export interface GenerateDocumentArgs {
   input_lang?: string;
   keigo_override?: string;
   upstream_content?: string;
+  upstream_paths?: string[];
   project_type?: ProjectType;
   feature_name?: string;
   scope?: "shared" | "feature";
@@ -578,6 +586,7 @@ export interface GenerateDocumentArgs {
   change_description?: string;
   append_mode?: boolean;
   input_sources?: Array<{ name: string; content: string }>;
+  post_actions?: Array<"update_chain_status">;
   templateDir?: string;
   overrideDir?: string;
 }
@@ -586,10 +595,10 @@ export async function handleGenerateDocument(
   args: GenerateDocumentArgs
 ): Promise<{ content: Array<{ type: "text"; text: string }>; isError?: boolean }> {
   const { doc_type, input_content, project_name, language, input_lang, keigo_override,
-    upstream_content, project_type, feature_name, scope, output_path, config_path,
+    upstream_content, upstream_paths, project_type, feature_name, scope, output_path, config_path,
     source_code_path, include_confidence, include_traceability, ticket_ids,
     existing_content, auto_insert_changelog, change_description,
-    append_mode, input_sources,
+    append_mode, input_sources, post_actions,
     templateDir: tDir, overrideDir } = args;
   if (scope && !SPLIT_ALLOWED.has(doc_type)) {
     return {
@@ -603,6 +612,89 @@ export async function handleGenerateDocument(
     const cfg = loadConfig();
     const resolvedTemplateDir = tDir ?? cfg.templateDir;
     const template = await loadTemplate(resolvedTemplateDir, doc_type, language ?? "ja", overrideDir);
+
+    // Single config read (Phase 03: dedup)
+    let projectCfg: ProjectConfig | null = null;
+    if (config_path) {
+      try {
+        projectCfg = parseYaml(await readFile(config_path, "utf-8")) as ProjectConfig;
+      } catch { /* config optional */ }
+    }
+
+    // Single staleness check (Phase 03: dedup)
+    let stalenessWarnings: Array<{ upstream: string; upstreamModified: string; message: string }> = [];
+    if (existing_content && config_path) {
+      try {
+        const { checkDocStaleness } = await import("../lib/doc-staleness.js");
+        stalenessWarnings = await checkDocStaleness(config_path, doc_type);
+      } catch { /* non-blocking */ }
+    }
+
+    // Server-side upstream extraction (Phase 04)
+    let serverUpstreamBlock = "";
+    if (upstream_paths && upstream_paths.length > 0 && !projectCfg) {
+      logger.warn({ upstream_paths }, "upstream_paths provided but config_path missing — extraction requires config for path resolution");
+    }
+    if (upstream_paths && upstream_paths.length > 0 && projectCfg) {
+      try {
+        const { extractUpstreamItems, formatUpstreamContext } = await import("../lib/upstream-extractor.js");
+        const { deriveUpstreamIdTypes } = await import("../lib/cross-ref-linker.js");
+        const outputDir = (projectCfg as any)?.output?.directory as string | undefined;
+        const workspaceRoot = dirname(config_path!);
+        const baseDir = outputDir ? resolve(workspaceRoot, outputDir) : workspaceRoot;
+
+        const prefixes = deriveUpstreamIdTypes(doc_type);
+        if (prefixes.length === 0) {
+          prefixes.push("REQ", "F", "NFR");
+        }
+
+        const allItems: import("../lib/upstream-extractor.js").UpstreamItem[] = [];
+
+        // Build cache key from paths + mtimes
+        const mtimes: number[] = [];
+        const resolvedPaths: string[] = [];
+        for (const p of upstream_paths) {
+          const abs = resolve(baseDir, p);
+          // Path containment security check
+          if (!abs.startsWith(baseDir + sep) && abs !== baseDir) {
+            logger.warn({ path: p, baseDir }, "upstream_paths: path outside workspace, skipping");
+            continue;
+          }
+          resolvedPaths.push(abs);
+          try {
+            const s = await stat(abs);
+            mtimes.push(s.mtimeMs);
+          } catch {
+            mtimes.push(0);
+          }
+        }
+
+        const cacheKey = resolvedPaths.join("|") + "|" + mtimes.join("|");
+        const cached = upstreamBriefCache.get(cacheKey);
+        if (cached && cached.expires > Date.now()) {
+          serverUpstreamBlock = cached.brief;
+        } else {
+          for (const abs of resolvedPaths) {
+            try {
+              const fileContent = await readFile(abs, "utf-8");
+              const docName = abs.split(sep).slice(-2).join("/");
+              allItems.push(...extractUpstreamItems(fileContent, prefixes, docName));
+            } catch (err) {
+              logger.warn({ err, path: abs }, "upstream_paths: failed to read file, skipping");
+            }
+          }
+
+          const brief = formatUpstreamContext(allItems);
+          if (brief) {
+            serverUpstreamBlock = `## Upstream Reference\n${brief}`;
+            upstreamBriefCache.set(cacheKey, { brief: serverUpstreamBlock, expires: Date.now() + 300_000 });
+          }
+        }
+      } catch (err) {
+        logger.warn({ err }, "upstream_paths extraction failed — falling back to upstream_content");
+      }
+    }
+
     const instructions = scope
       ? buildSplitInstructions(doc_type, scope, feature_name)
       : GENERATION_INSTRUCTIONS[doc_type];
@@ -610,11 +702,17 @@ export async function handleGenerateDocument(
 
     // Priority chain: tool input param → template frontmatter → hardcoded default
     const effectiveKeigo = keigo_override ?? template.metadata.keigo ?? KEIGO_MAP[doc_type];
-    const keigoBlock = buildKeigoInstruction(effectiveKeigo as Parameters<typeof buildKeigoInstruction>[0]);
+    // Skip keigo block when it matches the template-declared default (Phase 02: consolidation)
+    const keigoBlock = (effectiveKeigo === template.metadata.keigo)
+      ? ""
+      : buildKeigoInstruction(effectiveKeigo as Parameters<typeof buildKeigoInstruction>[0]);
 
-    const upstreamIdsBlock = upstream_content
-      ? buildUpstreamIdsBlock(upstream_content as string)
-      : "";
+    // upstream_paths takes priority over upstream_content (Phase 04)
+    const upstreamIdsBlock = serverUpstreamBlock
+      ? serverUpstreamBlock
+      : upstream_content
+        ? buildUpstreamIdsBlock(upstream_content as string)
+        : "";
 
     let codeContextBlock = "";
     if (source_code_path && (doc_type === "detail-design" || doc_type === "ut-spec")) {
@@ -647,7 +745,11 @@ export async function handleGenerateDocument(
       bilingualBlock = buildBilingualInstructions(input_lang as Parameters<typeof buildBilingualInstructions>[0], glossaryTerms);
     }
 
-    const outputLangBlock = buildOutputLanguageInstruction(language ?? "ja");
+    const effectiveLang = language ?? "ja";
+    // Skip output lang block when it matches the template-declared default (Phase 02: consolidation)
+    const outputLangBlock = (effectiveLang === template.metadata.output_language)
+      ? ""
+      : buildOutputLanguageInstruction(effectiveLang);
 
     const sections = [
       `# Document Generation Context`,
@@ -660,11 +762,12 @@ export async function handleGenerateDocument(
       `## AI Instructions`,
       ``,
       instructions,
-      ``,
-      keigoBlock,
+      ...(keigoBlock ? [``, keigoBlock] : []),
     ];
 
-    sections.push(``, outputLangBlock);
+    if (outputLangBlock) {
+      sections.push(``, outputLangBlock);
+    }
 
     if (bilingualBlock) {
       sections.push(``, bilingualBlock);
@@ -704,42 +807,37 @@ export async function handleGenerateDocument(
 
     // Trust features: confidence and traceability annotations
     // Priority chain: tool input param → template frontmatter → default (true)
+    // Skip separate blocks when instructions already contain inline annotation rules (Phase 02: consolidation)
+    const instrHasAnnotations = instructions.includes("Confidence:") && instructions.includes("Traceability:");
     const shouldConfidence = include_confidence ?? template.metadata.include_confidence ?? true;
     const shouldTraceability = include_traceability ?? template.metadata.include_traceability ?? true;
-    if (shouldConfidence) {
+    if (shouldConfidence && !instrHasAnnotations) {
       sections.push(``, buildConfidenceInstruction());
     }
-    if (shouldTraceability) {
+    if (shouldTraceability && !instrHasAnnotations) {
       sections.push(``, buildTraceabilityInstruction());
     }
 
     // Pre-generate advisory: check if upstream docs changed since last generation
-    if (existing_content && config_path) {
-      try {
-        const { checkDocStaleness } = await import("../lib/doc-staleness.js");
-        const stalenessWarnings = await checkDocStaleness(config_path, doc_type);
-        if (stalenessWarnings.length > 0) {
-          const advisory = [
-            "## Advisory: Upstream Changes Detected",
-            "",
-            "The following upstream documents have changed since this document was last generated:",
-            "",
-            "| Upstream Doc | Modified |",
-            "|-------------|----------|",
-            ...stalenessWarnings.map(w => `| ${w.upstream} | ${w.upstreamModified} |`),
-            "",
-            "Consider updating upstream content before regeneration.",
-          ];
-          sections.push(``, advisory.join("\n"));
-        }
-      } catch { /* non-blocking */ }
+    if (stalenessWarnings.length > 0) {
+      const advisory = [
+        "## Advisory: Upstream Changes Detected",
+        "",
+        "The following upstream documents have changed since this document was last generated:",
+        "",
+        "| Upstream Doc | Modified |",
+        "|-------------|----------|",
+        ...stalenessWarnings.map(w => `| ${w.upstream} | ${w.upstreamModified} |`),
+        "",
+        "Consider updating upstream content before regeneration.",
+      ];
+      sections.push(``, advisory.join("\n"));
     }
 
     // Auto-insert 改訂履歴 row when requested
     let effectiveExistingContent = existing_content;
     let insertedVersion: string | undefined;
     if (auto_insert_changelog && existing_content) {
-      const { extractVersionFromContent, incrementVersion } = await import("../lib/changelog-manager.js");
       const oldVer = extractVersionFromContent(existing_content);
       insertedVersion = incrementVersion(oldVer);
       const today = new Date().toISOString().slice(0, 10);
@@ -767,20 +865,14 @@ export async function handleGenerateDocument(
     }
 
     // Config-driven features: learning mode, extra columns
-    if (config_path) {
-      try {
-        const raw = await readFile(config_path, "utf-8");
-        const projectCfg = parseYaml(raw) as ProjectConfig;
-        if (projectCfg?.learning_mode === true) {
-          sections.push(``, buildLearningInstruction());
-        }
-        // Extra columns for functions-list
-        const extraCols = (projectCfg as unknown as Record<string, unknown>)?.functions_list as { extra_columns?: string[] } | undefined;
-        if (doc_type === "functions-list" && extraCols?.extra_columns?.length) {
-          sections.push(``, `## Extra Columns`, `Include these additional columns after 備考: ${extraCols.extra_columns.join(", ")}`);
-        }
-      } catch {
-        // config read failed — skip config features
+    if (projectCfg) {
+      if (projectCfg.learning_mode === true) {
+        sections.push(``, buildLearningInstruction());
+      }
+      // Extra columns for functions-list
+      const extraCols = (projectCfg as unknown as Record<string, unknown>)?.functions_list as { extra_columns?: string[] } | undefined;
+      if (doc_type === "functions-list" && extraCols?.extra_columns?.length) {
+        sections.push(``, `## Extra Columns`, `Include these additional columns after 備考: ${extraCols.extra_columns.join(", ")}`);
       }
     }
 
@@ -814,22 +906,17 @@ export async function handleGenerateDocument(
 
     const finalOutput = output + pathNote;
 
-    if (output_path && config_path) {
+    if (output_path && projectCfg?.autoCommit === true) {
       try {
-        const raw = await readFile(config_path, "utf-8");
-        const projectCfg = parseYaml(raw) as ProjectConfig;
-        if (projectCfg?.autoCommit === true) {
-          await autoCommit(output_path, doc_type);
-        }
+        await autoCommit(output_path, doc_type);
       } catch (err) {
-        logger.warn({ err, config_path }, "git auto-commit config read failed — skipping");
+        logger.warn({ err, config_path }, "git auto-commit failed — skipping");
       }
     }
 
     // Global changelog: append entry when regenerating existing document
     if (effectiveExistingContent && config_path) {
       try {
-        const { extractVersionFromContent, incrementVersion } = await import("../lib/changelog-manager.js");
         const oldVersion = extractVersionFromContent(existing_content ?? "");
         const nextVersion = insertedVersion ?? incrementVersion(oldVersion);
         const workspacePath = dirname(config_path);
@@ -846,25 +933,35 @@ export async function handleGenerateDocument(
 
     // Advisory staleness check — non-blocking
     let advisoryOutput = finalOutput;
-    if (config_path) {
-      try {
-        const raw2 = await readFile(config_path, "utf-8");
-        const cfg2 = parseYaml(raw2) as ProjectConfig;
-        if (cfg2?.autoValidate) {
-          const { checkDocStaleness } = await import("../lib/doc-staleness.js");
-          const stale = await checkDocStaleness(config_path, doc_type);
-          if (stale && stale.length > 0) {
-            const advisory = stale.map(w => `- ${w.message}`).join("\n");
-            advisoryOutput += `\n\n---\n**Staleness Advisory (自動チェック):**\n${advisory}`;
-          }
-        }
-      } catch (e) {
-        logger.warn({ err: e }, "auto-validate staleness check failed");
-      }
+    if (projectCfg?.autoValidate && stalenessWarnings.length > 0) {
+      const advisory = stalenessWarnings.map(w => `- ${w.message}`).join("\n");
+      advisoryOutput += `\n\n---\n**Staleness Advisory (自動チェック):**\n${advisory}`;
     }
 
+    // Post-actions: run server-side after generation context is built (Phase 06)
+    const postResults: string[] = [];
+    if (post_actions?.includes("update_chain_status") && config_path && suggestedPath) {
+      try {
+        const { handleUpdateChainStatus } = await import("./update-chain-status.js");
+        const chainDocType = doc_type.replace(/-/g, "_");
+        const result = await handleUpdateChainStatus({
+          config_path,
+          doc_type: chainDocType,
+          status: "complete",
+          output: suggestedPath,
+        });
+        const resultText = result.content[0]?.text ?? "";
+        postResults.push(result.isError ? `⚠ Chain status: ${resultText}` : `✓ ${resultText}`);
+      } catch (e) {
+        postResults.push(`⚠ Chain status update failed: ${(e as Error).message}`);
+      }
+    }
+    const postSection = postResults.length > 0
+      ? `\n\n## Post-actions Results\n${postResults.join("\n")}`
+      : "";
+
     return {
-      content: [{ type: "text", text: advisoryOutput }],
+      content: [{ type: "text", text: advisoryOutput + postSection }],
     };
   } catch (err) {
     const message =
@@ -882,8 +979,8 @@ export function registerGenerateDocumentTool(server: McpServer, templateDir: str
     "generate_document",
     "Generate a Japanese specification document using template + AI instructions",
     inputSchema,
-    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description, append_mode, input_sources }) => {
-      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description, append_mode, input_sources, templateDir, overrideDir });
+    async ({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, upstream_paths, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description, append_mode, input_sources, post_actions }) => {
+      return handleGenerateDocument({ doc_type, input_content, project_name, language, input_lang, keigo_override, upstream_content, upstream_paths, project_type, feature_name, scope, output_path, config_path, source_code_path, include_confidence, include_traceability, ticket_ids, existing_content, auto_insert_changelog, change_description, append_mode, input_sources, post_actions, templateDir, overrideDir });
     }
   );
 }

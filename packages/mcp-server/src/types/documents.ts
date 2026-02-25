@@ -116,6 +116,7 @@ export interface DocumentMeta {
   approvals?: ApprovalEntry[];
   // Per-template generation overrides (optional)
   keigo?: KeigoLevel;
+  output_language?: Language;
   include_confidence?: boolean;
   include_traceability?: boolean;
 }

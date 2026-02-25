@@ -36,7 +36,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
   "basic-design": [
     "Generate a 基本設計書 (Basic Design Document) from the provided input.",
     "Follow the 10-section structure defined in the template.",
-    "Screen list: SCR-001 format with 8 columns.",
+    "Screen list: SCR-001 format with 8 columns. Table prefix: M- (Master), T- (Transaction), L- (Log); 物理名 snake_case.",
     "Table definitions: TBL-001 format with 8 columns.",
     "API list: API-001 format with 8 columns.",
     "Report list: RPT-001 format with 6 columns (Section 6).",
@@ -48,6 +48,9 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "If project has report generation → expand Section 6 帳票設計 with output format specs.",
     "If project has mobile screens → include screen transition diagram with platform annotations.",
     "If no external APIs → Section 8.2 外部システム連携 can be marked N/A with rationale.",
+    "",
+    "Confidence: Add <!-- confidence: high|medium|low --> after each generated section heading. high=directly stated in input, medium=inferred, low=assumed.",
+    "Traceability: In each section referencing upstream IDs, add <!-- trace: REQ-xxx,F-xxx --> comment listing the IDs used.",
     "",
     "### Section 5.3 — Screen Layout (画面レイアウト方針)",
     buildInlineYamlLayoutHint(),
