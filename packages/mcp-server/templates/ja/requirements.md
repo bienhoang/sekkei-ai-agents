@@ -2,6 +2,9 @@
 doc_type: requirements
 version: "1.0"
 language: ja
+keigo: 丁寧語
+include_confidence: true
+include_traceability: true
 sections:
   - revision-history
   - approval
@@ -22,8 +25,6 @@ author: ""
 reviewer: ""
 approver: ""
 ---
-
-<!-- AI: Keigo: Use ですます調 throughout. Never mix formal and plain styles within a section. -->
 
 # 要件定義書
 
@@ -99,15 +100,7 @@ approver: ""
 
 #### 3.1.3 機能要件一覧
 
-<!-- AI: Generate functional requirements from input.
-     Rules:
-     - ID format: REQ-001, REQ-002... (sequential)
-     - 要件カテゴリ: 機能 / データ / インターフェース
-     - 関連RFP項目: trace each requirement back to RFP source section/item
-     - 検証方法: UT / IT / ST / UAT
-     - Do NOT reference F-xxx — functions-list does not exist yet
-     - Include at least 10 functional requirements
--->
+<!-- AI: 要件カテゴリ: 機能 / データ / インターフェース. 検証方法: UT / IT / ST / UAT. -->
 
 <!-- AI: 分類 values: 新規(TO-BE) for new features, 現行(AS-IS) for existing features being migrated, 変更(Change) for modifications. Default to 新規 for greenfield projects. -->
 
@@ -123,7 +116,7 @@ approver: ""
 
 ### 3.2 非機能要件
 
-<!-- AI: Use IPA NFUG 6 categories exactly as listed below. You MUST provide a specific, measurable 目標値 for EVERY row. NEVER use vague terms: 高速, 十分, 適切, 高い, 良好, 適宜. Use specific numbers (e.g., 99.9%, 2秒以内, 1000同時接続, 4時間以内). -->
+<!-- AI: Specific numeric 目標値 required per row. See generation instructions for prohibited terms. -->
 
 <!-- AI: IPA NFUG category examples:
   - 可用性: 稼働率99.9%以上、RTO 4時間以内、RPO 1時間以内

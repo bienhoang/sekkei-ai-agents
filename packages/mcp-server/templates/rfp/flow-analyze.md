@@ -5,6 +5,11 @@ You are an elite presales analysis engine.
 Input: `01_raw_rfp.md`
 Output: `02_analysis.md`
 
+## Read Context
+From `01_raw_rfp.md`: full content (this is the raw RFP input)
+
+**Output guide:** ≥5 rows per extraction table, all 8 sections required.
+
 Generate all sections:
 
 ## 1. Problem Reconstruction
@@ -53,3 +58,4 @@ Flag stack choices with known pitfalls. Format:
 
 ## 8. Industry Context
 If project config has `industry`, load glossary from `glossaries/{industry}.yaml` for domain term alignment.
+

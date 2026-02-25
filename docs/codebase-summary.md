@@ -167,7 +167,7 @@ sekkei/
 │           ├── content/               # Skill definition files
 │           └── references/ (6 files)
 │               ├── doc-standards.md, v-model-guide.md
-│               ├── rfp-loop.md, plan-orchestrator.md, rfp-manager.md, rfp-command.md
+│               ├── plan-orchestrator.md, rfp-manager.md, rfp-command.md
 ├── templates/                     # Specification Templates (22 MD + 15 YAML)
 │   ├── ja/                        # Japanese templates (22 files)
 │   │   ├── basic-design.md        # Basic design (split)

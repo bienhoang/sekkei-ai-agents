@@ -9,7 +9,7 @@ import { join } from "node:path";
 import { logger } from "../lib/logger.js";
 import { SekkeiError } from "../lib/errors.js";
 
-const RFP_FLOWS = ["analyze", "questions", "draft", "impact", "proposal", "freeze", "routing"] as const;
+const RFP_FLOWS = ["analyze", "questions", "draft", "impact", "proposal", "freeze"] as const;
 type RfpFlow = (typeof RFP_FLOWS)[number];
 
 export function registerRfpResources(server: McpServer, templateDir: string): void {
@@ -30,7 +30,7 @@ export function registerRfpResources(server: McpServer, templateDir: string): vo
       throw new SekkeiError("RFP_WORKSPACE_ERROR", `Invalid RFP flow: ${rawFlow}`);
     }
 
-    const filename = rawFlow === "routing" ? "routing.md" : `flow-${rawFlow}.md`;
+    const filename = `flow-${rawFlow}.md`;
     const filePath = join(templateDir, "rfp", filename);
 
     logger.debug({ flow: rawFlow }, "Resource read: rfp instruction");

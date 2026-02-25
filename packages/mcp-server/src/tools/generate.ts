@@ -608,7 +608,8 @@ export async function handleGenerateDocument(
       : GENERATION_INSTRUCTIONS[doc_type];
     const name = project_name ?? "Unnamed Project";
 
-    const effectiveKeigo = keigo_override ?? KEIGO_MAP[doc_type];
+    // Priority chain: tool input param → template frontmatter → hardcoded default
+    const effectiveKeigo = keigo_override ?? template.metadata.keigo ?? KEIGO_MAP[doc_type];
     const keigoBlock = buildKeigoInstruction(effectiveKeigo as Parameters<typeof buildKeigoInstruction>[0]);
 
     const upstreamIdsBlock = upstream_content
@@ -701,11 +702,14 @@ export async function handleGenerateDocument(
       sections.push(``, codeContextBlock);
     }
 
-    // Trust features: confidence and traceability annotations (default: on)
-    if (include_confidence !== false) {
+    // Trust features: confidence and traceability annotations
+    // Priority chain: tool input param → template frontmatter → default (true)
+    const shouldConfidence = include_confidence ?? template.metadata.include_confidence ?? true;
+    const shouldTraceability = include_traceability ?? template.metadata.include_traceability ?? true;
+    if (shouldConfidence) {
       sections.push(``, buildConfidenceInstruction());
     }
-    if (include_traceability !== false) {
+    if (shouldTraceability) {
       sections.push(``, buildTraceabilityInstruction());
     }
 

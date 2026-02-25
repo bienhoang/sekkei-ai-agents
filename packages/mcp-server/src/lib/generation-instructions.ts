@@ -23,16 +23,14 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
   ].join("\n"),
 
   requirements: [
-    "Generate a 要件定義書 (Requirements Definition) from the provided input.",
-    "Follow the 10-section structure defined in the template.",
-    "Functional requirements: REQ-001 format.",
-    "Non-functional requirements: NFR-001 format with measurable targets.",
-    "Include acceptance criteria for each major requirement.",
-    "This is the FIRST document after RFP — defines REQ-xxx and NFR-xxx IDs that all downstream docs reference.",
-    "Input comes from 01-rfp workspace (RFP analysis, stakeholder notes, scope freeze). Do NOT reference F-xxx — functions-list does not exist yet.",
-    "For 非機能要件: Apply IPA NFUG 6 categories (可用性/性能・拡張性/運用・保守性/移行性/セキュリティ/システム環境・エコロジー). Every NFR-xxx MUST have a specific numeric 目標値. Prohibited vague terms: 高速, 十分, 適切, 高い, 良好.",
-    "When preset is 'agile': Use user story format for functional requirements: 'As a [role], I want [feature], so that [benefit]'. Skip detailed 現状課題 subsections and 附録. Keep NFR table with numeric targets.",
-    "If input content exceeds 200KB, organize requirements by subsystem (大分類). Generate at least 3 REQ-xxx per subsystem for comprehensive coverage.",
+    "Generate 要件定義書 following template's 10-section structure.",
+    "IDs: REQ-001 (functional), NFR-001 (non-functional). This is the FIRST chain doc — do NOT reference F-xxx.",
+    "Each major requirement needs acceptance criteria.",
+    "NFR: IPA NFUG 6 categories, every NFR-xxx needs numeric 目標値. Prohibited: 高速/十分/適切/高い/良好.",
+    "Agile preset: user story format ('As a [role], I want [feature], so that [benefit]'), skip 現状課題 detail and 附録.",
+    "Input >200KB: organize by subsystem (大分類), ≥3 REQ-xxx per subsystem.",
+    "",
+    "VALIDATION TARGETS: ≥3 REQ-xxx total, ≥1 NFR-xxx per IPA category with numeric 目標値, 検証方法 (UT/IT/ST/UAT) in ≥80% REQ rows, 関連RFP項目 traced for each REQ.",
   ].join("\n"),
 
   "basic-design": [

@@ -5,6 +5,13 @@ You are an elite presales analysis engine.
 Input: `02_analysis.md`, `05_proposal.md`
 Output: `06_scope_freeze.md`
 
+## Read Context
+From `02_analysis.md`: §Hidden Risks, §Real System Type (drives dynamic checklist)
+From `05_proposal.md`: §Scope summary, §Architecture suggestion, §Assumptions
+Flag any assumptions not validated by client answers.
+
+**Output guide:** All 6 base checklist items + ≥3 dynamic items by system type.
+
 ## Scope Freeze Checklist (Base)
 - workflow_defined: YES/NO
 - user_roles_confirmed: YES/NO
@@ -21,7 +28,11 @@ Add items based on detected system type:
 - **Internal ops**: data_migration_plan, legacy_integration_confirmed
 
 ## Contract Danger Points
-Clauses that must be clarified before signing.
+
+| # | Clause / Area | Risk Level | Resolution Required |
+|---|--------------|------------|-------------------|
+
+Risk levels: HIGH (block signing), MEDIUM (add clause), LOW (note only).
 
 ## Engineering Confidence Level
 - **LOW** → do not sign yet
@@ -31,3 +42,4 @@ Clauses that must be clarified before signing.
 ## Handoff Readiness Score
 Calculate: (completed_checklist_items / total_checklist_items) × 100.
 Score ≥80 = ready. Score 50-79 = conditional. Score <50 = not ready.
+

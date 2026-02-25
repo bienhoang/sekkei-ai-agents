@@ -121,7 +121,6 @@ cp adapters/copilot/copilot-instructions.md .github/
 | `rfp://instructions/impact` | Answer impact assessment prompt |
 | `rfp://instructions/proposal` | Proposal generation prompt |
 | `rfp://instructions/freeze` | Scope freeze prompt |
-| `rfp://routing` | Phase → flow mapping table |
 
 ## Document Types
 

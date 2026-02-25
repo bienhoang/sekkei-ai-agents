@@ -17,7 +17,7 @@
 │  Layer 2: STATE MANAGER (rfp-manager.md)                     │
 │  Workspace CRUD, phase tracking, file persistence, recovery  │
 ├──────────────────────────────────────────────────────────────┤
-│  Layer 3: ANALYSIS ENGINE (rfp-loop.md)                      │
+│  Layer 3: ANALYSIS ENGINE (templates/rfp/flow-*.md)          │
 │  6 flows: analyze, questions, draft, impact, proposal, freeze│
 └──────────────────────────────────────────────────────────────┘
           ↕ MCP Tool: manage_rfp_workspace

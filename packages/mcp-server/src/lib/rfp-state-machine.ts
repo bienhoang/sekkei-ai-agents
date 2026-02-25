@@ -497,8 +497,8 @@ export async function generateConfigFromWorkspace(workspacePath: string): Promis
 
 // --- Phase Recovery ---
 
-export async function recoverPhase(workspacePath: string): Promise<RfpPhase> {
-  const inv = await getFileInventory(workspacePath);
+export async function recoverPhase(workspacePath: string, inventory?: RfpFileInventory): Promise<RfpPhase> {
+  const inv = inventory ?? await getFileInventory(workspacePath);
   const has = (f: string) => inv.files[f]?.exists && inv.files[f]?.size > 0;
 
   if (has("06_scope_freeze.md")) return "SCOPE_FREEZE";
@@ -511,14 +511,15 @@ export async function recoverPhase(workspacePath: string): Promise<RfpPhase> {
 }
 
 export async function getFileInventory(workspacePath: string): Promise<RfpFileInventory> {
-  const files: Record<string, { exists: boolean; size: number }> = {};
-  for (const file of RFP_FILES) {
-    try {
-      const s = await stat(join(workspacePath, file));
-      files[file] = { exists: true, size: s.size };
-    } catch {
-      files[file] = { exists: false, size: 0 };
-    }
-  }
-  return { files };
+  const entries = await Promise.all(
+    RFP_FILES.map(async (file) => {
+      try {
+        const s = await stat(join(workspacePath, file));
+        return [file, { exists: true, size: s.size }] as const;
+      } catch {
+        return [file, { exists: false, size: 0 }] as const;
+      }
+    })
+  );
+  return { files: Object.fromEntries(entries) };
 }

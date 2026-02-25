@@ -73,7 +73,7 @@ export async function handleRfpWorkspace(args: RfpWorkspaceArgs): Promise<ToolRe
         const rfpPath = resolveRfpPath(args.workspace_path);
         const status = await readStatus(rfpPath);
         const inventory = await getFileInventory(rfpPath);
-        const recovered = await recoverPhase(rfpPath);
+        const recovered = await recoverPhase(rfpPath, inventory);
         return ok(JSON.stringify({ ...status, recovered_phase: recovered, ...inventory }));
       }
 

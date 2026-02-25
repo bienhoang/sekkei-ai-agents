@@ -86,23 +86,25 @@ This interactive wizard creates `sekkei.config.yaml`, sets up the output directo
 
 End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
+**Principles:** MVP-first. Workflow > UI. Admin tools > user UI. Auth always underestimated.
+**Constraints:** Assume RFP incomplete. Assume hidden manual ops. DO NOT jump to architecture before analysis. DO NOT trust initial requirements fully.
+
 **State management:** Use MCP tool `manage_rfp_workspace` for all workspace operations.
 **Analysis instructions:** Read MCP resource `rfp://instructions/{flow}` for each analysis phase.
-**Supplementary context:** `references/rfp-command.md`, `references/rfp-manager.md`, `references/rfp-loop.md`.
+**Supplementary context:** `references/rfp-command.md` (UX, dashboard), `references/rfp-manager.md` (state, actions).
 
 1. Call `manage_rfp_workspace(action: "status", workspace_path: ".")` — if workspace missing, call with `action: "create", project_name: "<name>"`
-2. Read routing: `rfp://instructions/routing` → get phase→flow mapping
-3. Route per current phase:
+2. Route per current phase:
    - `RFP_RECEIVED` → read `rfp://instructions/analyze` → Flow 1
    - `ANALYZING` → read `rfp://instructions/questions` → Flow 2
-   - `QNA_GENERATION` → Ask: wait for client or BUILD_NOW?
-   - `WAITING_CLIENT` → Check for client answers
+   - `QNA_GENERATION` → Ask: wait for client or BUILD_NOW? (SKIP_QNA → DRAFTING, BUILD_NOW → DRAFTING)
+   - `WAITING_CLIENT` → Check for client answers (BUILD_NOW → DRAFTING)
    - `DRAFTING` → read `rfp://instructions/draft` → Flow 3
    - `CLIENT_ANSWERED` → read `rfp://instructions/impact` → Flow 4
    - `PROPOSAL_UPDATE` → read `rfp://instructions/proposal` → Flow 5
    - `SCOPE_FREEZE` → read `rfp://instructions/freeze` → Flow 6
-4. Call `manage_rfp_workspace(action: "write", filename: "<output>", content: "<result>")` → save output
-5. Call `manage_rfp_workspace(action: "transition", phase: "<next>")` → advance phase
+3. Call `manage_rfp_workspace(action: "write", filename: "<output>", content: "<result>")` → save output
+4. Call `manage_rfp_workspace(action: "transition", phase: "<next>")` → advance phase
 
 **On SCOPE_FREEZE with HIGH/MEDIUM confidence:**
 → Prompt: "Scope frozen. Confidence: {level}. Run `/sekkei:requirements` with `05_proposal.md` as input? [Y/n]"
@@ -1023,9 +1025,8 @@ workspace-docs/
 
 ## References
 
-- `references/rfp-command.md` — RFP entrypoint: routing table, UX patterns, delegation model
-- `references/rfp-manager.md` — RFP workspace: state management, file persistence, recovery
-- `references/rfp-loop.md` — RFP analysis: 6 presales flows, risk detection, Q&A generation
+- `references/rfp-command.md` — RFP entrypoint: UX patterns, progress dashboard, navigation
+- `references/rfp-manager.md` — RFP workspace: file list, status schema, tool actions
 - `references/doc-standards.md` — Japanese documentation standards and column headers
 - `references/v-model-guide.md` — V-model workflow and chain-of-documents guide
 - `references/plan-orchestrator.md` — Plan orchestration logic for large document generation

@@ -114,6 +114,10 @@ export interface DocumentMeta {
   approved_date?: string;
   related_tickets?: string[];
   approvals?: ApprovalEntry[];
+  // Per-template generation overrides (optional)
+  keigo?: KeigoLevel;
+  include_confidence?: boolean;
+  include_traceability?: boolean;
 }
 
 /** Template loaded from disk: frontmatter + markdown body */

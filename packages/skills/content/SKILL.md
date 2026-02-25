@@ -66,7 +66,7 @@ This interactive wizard creates `sekkei.config.yaml`, sets up the output directo
 
 ### RFP
 
-→ Read `references/rfp-command.md` (routing), `references/rfp-manager.md` (state), `references/rfp-loop.md` (analysis)
+→ Read `references/rfp-command.md` (UX, dashboard), `references/rfp-manager.md` (state, actions)
 
 ### Requirements Phase
 
@@ -161,9 +161,8 @@ workspace-docs/
 - `references/phase-test.md` — Test phase: test-plan, ut-spec, it-spec, st-spec, uat-spec
 - `references/phase-supplementary.md` — Supplementary: matrix, sitemap, operation-design, migration-design
 - `references/utilities.md` — Utilities: validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild
-- `references/rfp-command.md` — RFP entrypoint: routing table, UX patterns, delegation model
-- `references/rfp-manager.md` — RFP workspace: state management, file persistence, recovery
-- `references/rfp-loop.md` — RFP analysis: 6 presales flows, risk detection, Q&A generation
+- `references/rfp-command.md` — RFP entrypoint: UX patterns, progress dashboard, navigation
+- `references/rfp-manager.md` — RFP workspace: file list, status schema, tool actions
 - `references/change-request-command.md` — Change request workflow: impact analysis, propagation, conflict detection
 - `references/doc-standards.md` — Japanese documentation standards and column headers
 - `references/v-model-guide.md` — V-model workflow and chain-of-documents guide

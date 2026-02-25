@@ -68,8 +68,7 @@ Use `manage_rfp_workspace` tool + `rfp://instructions/*` resources for presales 
 
 **Orchestration:**
 1. `manage_rfp_workspace(action: "status")` → get current phase
-2. Read `rfp://instructions/routing` → get phase→flow mapping
-3. Read `rfp://instructions/{flow}` → get analysis instructions (analyze/questions/draft/impact/proposal/freeze)
-4. Execute analysis per instructions
-5. `manage_rfp_workspace(action: "write", filename, content)` → save output
-6. `manage_rfp_workspace(action: "transition", phase)` → advance phase
+2. Read `rfp://instructions/{flow}` → get analysis instructions (analyze/questions/draft/impact/proposal/freeze)
+3. Execute analysis per instructions
+4. `manage_rfp_workspace(action: "write", filename, content)` → save output
+5. `manage_rfp_workspace(action: "transition", phase)` → advance phase

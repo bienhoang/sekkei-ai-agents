@@ -18,13 +18,30 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
    > "No input source available. Either provide input with `@input` or run `/sekkei:rfp` first to create the RFP workspace in `01-rfp/`."
 4. Check `chain.requirements.status` in sekkei.config.yaml. If `in-progress`, warn: 'Requirements generation may already be in progress. Continue anyway? [Y/n]'
 
-**Interview questions (ask before generating):**
+**Interview (2 rounds — ask each group in a single prompt):**
+
+**Round 1 — Scope & Scale** (feeds §1 概要, §2 現状課題):
 - What is the project scope? (confirm from RFP or clarify if no RFP)
-- Are there compliance/regulatory requirements? (個人情報保護法, SOC2, ISO27001, etc.)
-- Performance targets? (response time, concurrent users, uptime SLA)
-- Security requirements level? (basic, enterprise, government)
 - Target user count and scale? (affects NFR numeric targets)
+- Performance targets? (response time, concurrent users, uptime SLA)
+
+**Round 2 — Technical & Compliance** (feeds §3 要件定義, §4 制約条件):
+- Are there compliance/regulatory requirements? (個人情報保護法, SOC2, ISO27001, etc.)
+- Security requirements level? (basic, enterprise, government)
 - Any technology constraints already decided? (platform, language, cloud provider)
+
+**After interview, format answers as structured context block:**
+```yaml
+# Interview Context (inject into generate_document input_content prefix)
+interview_context:
+  scope: "{user's scope answer}"
+  user_count: "{user's scale answer}"
+  performance_targets: "{user's performance answer}"
+  compliance: "{user's compliance answer}"
+  security_level: "{user's security answer}"
+  tech_constraints: "{user's tech answer}"
+```
+Prepend this YAML block to the input_content before calling generate_document.
 
 1. Read 01-rfp/ workspace content if available (analysis, scope freeze, decisions)
    - If combined input exceeds 400KB, warn: 'Input is very large (>400KB). Consider summarizing or splitting by subsystem for better results.' Proceed if user confirms.
@@ -42,11 +59,12 @@ Parent: `SKILL.md` → Workflow Router → Requirements Phase.
    - Include acceptance criteria for each major requirement
    - If `preset: agile` in sekkei.config.yaml, use user story format: 'As a [role], I want [feature], so that [benefit]' instead of detailed 機能要件一覧 table
 7. Save output to `{output.directory}/02-requirements/requirements.md`
-8. Call MCP tool `validate_document` with the saved file content and `doc_type: "requirements"`. Show results:
-   - If no issues: "Validation passed."
-   - If warnings: show them as non-blocking warnings
-   - If errors: show them but do NOT abort — document already saved
-9. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "requirements"`, `status: "complete"` if no errors, or `status: "generated"` if validation errors found, `output: "02-requirements/requirements.md"`
+8. In parallel:
+   a. Call MCP tool `validate_document` with saved content and `doc_type: "requirements"`
+   b. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "requirements"`, `status: "complete"`, `output: "02-requirements/requirements.md"`
+9. After both complete:
+   - Show validation results (no issues / warnings / errors)
+   - If validation returned errors: call `update_chain_status` again with `status: "in-progress"` to downgrade
 10. Suggest next steps (can run in parallel):
    > "Requirements complete. Next steps (can run in parallel):
    > - `/sekkei:functions-list` — generate 機能一覧 from requirements
