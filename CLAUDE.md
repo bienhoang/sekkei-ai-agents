@@ -10,7 +10,7 @@ Monorepo for **Sekkei (設計)** — an AI Documentation Agent that generates Ja
 
 - `packages/mcp-server/` — TypeScript MCP server (the main codebase, has its own CLAUDE.md)
 - `packages/preview/` — VitePress preview + Milkdown WYSIWYG editor
-- `packages/skills/` — Claude Code SKILL.md with 30 sub-commands + reference docs
+- `packages/skills/` — Claude Code SKILL.md with 31 sub-commands + reference docs
 - `packages/mcp-server/python/` — Python export fallback (Excel via openpyxl, PDF via WeasyPrint, glossary, diff)
 - `packages/mcp-server/templates/` — 22 Markdown templates with YAML frontmatter (`ja/` for Japanese)
 - `packages/mcp-server/adapters/` — Platform configs for Claude Code, Cursor, Copilot

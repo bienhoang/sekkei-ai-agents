@@ -1,6 +1,6 @@
 # Tham Chiếu Lệnh — Quick Reference
 
-> Lookup nhanh tất cả 30 lệnh. Xem thứ tự prerequisite trước khi chạy.
+> Lookup nhanh tất cả lệnh (31 slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
 
 ---
 
@@ -24,35 +24,36 @@
 
 ---
 
-## Section 2: Tài Liệu Bổ Sung (4 lệnh)
+## Section 2: Tài Liệu Bổ Sung (5 lệnh)
 
 | # | Lệnh | Syntax | Input | Output | Prerequisite |
 |---|------|--------|-------|--------|-------------|
-| 14 | **matrix** | `/sekkei:matrix` | Tài liệu hiện có trong chain | CRUD図 / トレーサビリティマトリクス | basic-design |
-| 15 | **sitemap** | `/sekkei:sitemap` | Tài liệu hiện có trong chain | サイトマップ — phân cấp màn hình (PG-xxx) | basic-design |
-| 16 | **operation-design** | `/sekkei:operation-design @input` | Mô tả yêu cầu vận hành | 運用設計書 — backup, monitoring, DR, SLA | basic-design |
-| 17 | **migration-design** | `/sekkei:migration-design @input` | Mô tả hệ thống cũ và plan | 移行設計書 — data migration, cutover plan | basic-design |
+| 14 | **mockup** | `/sekkei:mockup` | Screen defs từ screen-design.md / basic-design.md | HTML mockups trong `11-mockups/` + PNG screenshots nhúng vào tài liệu | basic-design |
+| 15 | **matrix** | `/sekkei:matrix` | Tài liệu hiện có trong chain | CRUD図 / トレーサビリティマトリクス | basic-design |
+| 16 | **sitemap** | `/sekkei:sitemap` | Tài liệu hiện có trong chain | サイトマップ — phân cấp màn hình (PG-xxx) | basic-design |
+| 17 | **operation-design** | `/sekkei:operation-design @input` | Mô tả yêu cầu vận hành | 運用設計書 — backup, monitoring, DR, SLA | basic-design |
+| 18 | **migration-design** | `/sekkei:migration-design @input` | Mô tả hệ thống cũ và plan | 移行設計書 — data migration, cutover plan | basic-design |
 
 ---
 
-## Section 3: Lệnh Tiện Ích (13 lệnh)
+## Section 3: Lệnh Tiện Ích (14 lệnh)
 
 | # | Lệnh | Syntax | Options / Subcommands | Mục đích |
 |---|------|--------|-----------------------|----------|
-| 18 | **validate** | `/sekkei:validate [@doc]` | Không có arg = validate cả chain | Kiểm tra completeness, broken cross-ref IDs, thiếu section |
-| 19 | **status** | `/sekkei:status` | — | Xem tiến độ chain, gợi ý tài liệu tiếp theo |
-| 20 | **export** | `/sekkei:export @doc --format=xlsx` | `xlsx` / `pdf` / `docx` | Export sang Excel (IPA 4-sheet) / PDF / Word |
-| 21 | **translate** | `/sekkei:translate @doc --lang=en` | `--lang=en` / `--lang=vi` | Dịch tài liệu, giữ nguyên cross-ref IDs |
-| 22 | **glossary** | `/sekkei:glossary [subcommand]` | `add` / `list` / `find` / `export` / `import` | Quản lý thuật ngữ dự án |
-| 23 | **change** | `/sekkei:change` | `--resume` / `--status` / `--list` / `--cancel` / `--rollback` | Quản lý lifecycle của change request (変更要求書) |
-| 24 | **update** | `/sekkei:update @doc` | `--since <git-ref>` | Phát hiện upstream changes, sinh danh sách tài liệu cần cập nhật |
-| 25 | **diff-visual** | `/sekkei:diff-visual @before @after` | — | Export Excel màu thể hiện diff giữa 2 version |
-| 26 | **plan** | `/sekkei:plan @doc-type` | — | Khảo sát yêu cầu + tạo kế hoạch triển khai nhiều phase |
-| 27 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
-| 28 | **preview** | `/sekkei:preview` | `--docs` / `--guide` / `--port <number>` / `--no-open` / `--help` | Khởi động Express preview server tại localhost:4983 |
-| 29 | **version** | `/sekkei:version` | `--json` | Version info + MCP server status |
-| 30 | **doctor** | `sekkei doctor` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
-| 31 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |
+| 19 | **validate** | `/sekkei:validate [@doc]` | Không có arg = validate cả chain | Kiểm tra completeness, broken cross-ref IDs, thiếu section |
+| 20 | **status** | `/sekkei:status` | — | Xem tiến độ chain, gợi ý tài liệu tiếp theo |
+| 21 | **export** | `/sekkei:export @doc --format=xlsx` | `xlsx` / `pdf` / `docx` | Export sang Excel (IPA 4-sheet) / PDF / Word |
+| 22 | **translate** | `/sekkei:translate @doc --lang=en` | `--lang=en` / `--lang=vi` | Dịch tài liệu, giữ nguyên cross-ref IDs |
+| 23 | **glossary** | `/sekkei:glossary [subcommand]` | `add` / `list` / `find` / `export` / `import` | Quản lý thuật ngữ dự án |
+| 24 | **change** | `/sekkei:change` | `--resume` / `--status` / `--list` / `--cancel` / `--rollback` | Quản lý lifecycle của change request (変更要求書) |
+| 25 | **update** | `/sekkei:update @doc` | `--since <git-ref>` | Phát hiện upstream changes, sinh danh sách tài liệu cần cập nhật |
+| 26 | **diff-visual** | `/sekkei:diff-visual @before @after` | — | Export Excel màu thể hiện diff giữa 2 version |
+| 27 | **plan** | `/sekkei:plan @doc-type` | — | Khảo sát yêu cầu + tạo kế hoạch triển khai nhiều phase |
+| 28 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
+| 29 | **preview** | `/sekkei:preview` | `--docs` / `--guide` / `--port <number>` / `--no-open` / `--help` | Khởi động Express preview server tại localhost:4983 |
+| 30 | **version** | `/sekkei:version` | `--json` | Version info + MCP server status |
+| 31 | **doctor** | `sekkei doctor` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
+| 32 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |
 
 ---
 
@@ -81,6 +82,12 @@
 | `find` | `/sekkei:glossary find "勤怠"` |
 | `export` | `/sekkei:glossary export --format=xlsx` |
 | `import` | `/sekkei:glossary import @glossary.xlsx` |
+
+**Mockup modes:**
+| Mode | Syntax | Mục đích |
+|------|--------|----------|
+| Full | `/sekkei:mockup` | Tạo HTML từ screen defs → chụp ảnh → nhúng PNG vào tài liệu |
+| Screenshot only | `/sekkei:mockup --screenshot` | Chụp lại ảnh từ HTML đã có (sau khi chỉnh sửa thủ công) |
 
 **Change request flags:**
 | Flag | Mục đích |

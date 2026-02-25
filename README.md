@@ -50,7 +50,7 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 |---------|---------|-------------|
 | [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.3.1 | Core MCP server — document generation, validation, export, CLI |
 | [@bienhoang/sekkei-preview](./packages/preview/) | 1.3.0 | Express+React live preview with VitePress-like UI + Tiptap v3 WYSIWYG editor |
-| [@bienhoang/sekkei-skills](./packages/skills/) | 1.4.1 | Claude Code slash commands (`/sekkei:*`) |
+| [@bienhoang/sekkei-skills](./packages/skills/) | 1.4.1 | Claude Code slash commands (`/sekkei:*`) — 31 sub-commands |
 
 ## Quick Start
 
@@ -150,7 +150,7 @@ Built with citty. Available commands:
 
 ## Slash Commands (Claude Code)
 
-30 sub-commands covering the full V-model workflow:
+31 sub-commands covering the full V-model workflow:
 
 **Requirements Phase**
 
@@ -170,6 +170,7 @@ Built with citty. Available commands:
 | `/sekkei:basic-design @input` | Generate 基本設計書 (Basic Design) |
 | `/sekkei:security-design @input` | Generate セキュリティ設計書 (Security Design) |
 | `/sekkei:detail-design @input` | Generate 詳細設計書 (Detail Design) |
+| `/sekkei:mockup` | Generate HTML screen mockups with screenshots from screen definitions |
 
 **Test Phase**
 

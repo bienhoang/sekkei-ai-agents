@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, basic-design, security-design, detail-design, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, basic-design, security-design, detail-design, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
 ---
 
 # Sekkei (設計) Documentation Agent

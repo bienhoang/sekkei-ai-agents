@@ -130,6 +130,56 @@ Sekkei sẽ tự động trích xuất các yêu cầu phi chức năng (NFR-xxx
 
 ---
 
+## 8. Tạo Mockup màn hình — `/sekkei:mockup`
+
+Sau khi hoàn thành Thiết kế cơ bản (hoặc Thiết kế màn hình riêng), bạn có thể tạo **mockup HTML tương tác** trực tiếp từ các định nghĩa màn hình trong tài liệu.
+
+**Câu lệnh thực hiện:**
+
+```
+/sekkei:mockup                    # Tạo HTML + chụp ảnh + nhúng PNG vào tài liệu
+/sekkei:mockup --screenshot       # Chỉ chụp lại ảnh từ HTML đã có (sau khi chỉnh sửa thủ công)
+```
+
+**Quy trình hoạt động:**
+
+1. Đọc định nghĩa màn hình từ `screen-design.md` (split mode) hoặc `basic-design.md` (monolithic mode)
+2. Đọc `functions-list.md` để tạo menu sidebar điều hướng
+3. Tạo file HTML cho mỗi màn hình sử dụng template admin-shell (header, sidebar, content area)
+4. Đánh số annotation (1, 2, 3...) cho các phần tử tương tác — mapping với bảng 画面項目定義
+5. Chụp ảnh mỗi HTML bằng Playwright (1440x900, retina 2x)
+6. Nhúng PNG screenshot vào tài liệu thiết kế tương ứng
+
+**Kết quả:**
+- HTML files: `{output.directory}/11-mockups/{function-id}-{screen-name}.html`
+- Screenshots: `features/{id}/assets/images/` (split) hoặc `03-system/assets/images/` (monolithic)
+
+**Quy trình sử dụng điển hình:**
+
+```
+/sekkei:basic-design @requirements.md    # Tạo thiết kế cơ bản (bao gồm danh sách màn hình)
+/sekkei:mockup                           # Tạo HTML mockup + screenshot
+(chỉnh sửa HTML thủ công nếu cần)
+/sekkei:mockup --screenshot              # Chụp lại ảnh sau khi chỉnh sửa
+```
+
+> [!TIP]
+> CSS framework (`admin-shell.css`) cung cấp sẵn các component: form, table, dashboard grid, wizard stepper, stat cards. Bạn có thể chỉnh sửa HTML trực tiếp rồi chạy `--screenshot` để cập nhật ảnh mà không cần tạo lại HTML.
+
+> [!TIP]
+> Nếu dự án đã có mã nguồn (source code), bạn có thể cung cấp đường dẫn để Sekkei tự động phân tích cấu trúc lớp, API endpoints và entity — giúp tạo ra thiết kế chi tiết chính xác hơn:
+> ```
+> /sekkei:detail-design @basic-design.md --source-path=./src
+> ```
+
+## Lưu ý thường gặp
+
+- Đảm bảo mọi `SCR-xxx` trong Thiết kế cơ bản đều có `CLS-xxx` tương ứng trong Thiết kế chi tiết.
+- Nếu sử dụng chế độ tách file (split mode), kiểm tra rằng tham chiếu chéo giữa các file con vẫn nhất quán.
+- Thông tin bảo mật nhạy cảm (mật khẩu, khóa API) không được xuất hiện trực tiếp trong tài liệu thiết kế.
+
+---
+
 ## Xác thực & Hoàn tất giai đoạn
 
 ```bash
