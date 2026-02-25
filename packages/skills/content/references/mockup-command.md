@@ -41,8 +41,7 @@ Output: interactive HTML files with numbered annotations mapping to 画面項目
    d. Add content-area annotations (sequential from 1)
    e. Save to `{output.directory}/11-mockups/{function-id}-{screen-name-kebab}.html`
 5. Copy `admin-shell.css` to `{output.directory}/11-mockups/admin-shell.css`
-   - Source: this file is bundled at `packages/mcp-server/templates/wireframe/admin-shell.css`
-   - If running via MCP, read the CSS content and write it to the output directory
+   - Source: `~/.claude/skills/sekkei/admin-shell.css` (installed by `install.sh`)
 6. Continue to screenshot steps below
 
 ### Screenshot-only mode (`--screenshot`)
@@ -69,8 +68,18 @@ Output: interactive HTML files with numbered annotations mapping to 画面項目
 
 ### Screenshot Script (Playwright)
 
+Playwright is installed in the Sekkei MCP server package. To resolve it from any project directory,
+set `NODE_PATH` to the sekkei installation's `node_modules/`:
+
+```bash
+# Resolve sekkei install root from the CLI binary
+SEKKEI_ROOT="$(dirname "$(dirname "$(realpath "$(which sekkei)")")")"
+export NODE_PATH="$SEKKEI_ROOT/node_modules"
+```
+
+Then write and run an ESM screenshot script (`.mjs` extension):
+
 ```javascript
-// Playwright screenshot (already installed for PDF export)
 // viewport: 1440px for full HD clarity; deviceScaleFactor: 2 for crisp retina output
 import { chromium } from 'playwright';
 const browser = await chromium.launch();
@@ -82,6 +91,8 @@ for (let i = 0; i < wraps.length; i++) {
 }
 await browser.close();
 ```
+
+Run with: `NODE_PATH="$SEKKEI_ROOT/node_modules" node screenshot.mjs`
 
 Alternatively, use `chrome-devtools` or `agent-browser` skill for browser automation.
 

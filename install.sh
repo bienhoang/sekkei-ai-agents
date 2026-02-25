@@ -84,6 +84,14 @@ if [[ ! -f "$MCP_ENTRY" ]]; then
 fi
 ok "Entry point: $MCP_ENTRY"
 
+# Install Playwright Chromium browser for mockup screenshots
+if npx playwright --version &>/dev/null; then
+  npx playwright install chromium 2>&1 | tail -1
+  ok "Playwright Chromium browser installed"
+else
+  warn "Playwright not found — mockup screenshots unavailable"
+fi
+
 # ── 2b. Build sekkei-preview Package ─────────────────────────────────
 PREVIEW_DIR="$SCRIPT_DIR/packages/preview"
 PREVIEW_CLI=""
@@ -113,6 +121,15 @@ fi
 mkdir -p "$SKILL_DEST"
 cp -R "$SKILL_SRC/" "$SKILL_DEST/"
 ok "Copied skill → $SKILL_DEST"
+
+# Copy wireframe CSS for mockup generation
+CSS_SRC="$TEMPLATES_DIR/wireframe/admin-shell.css"
+if [[ -f "$CSS_SRC" ]]; then
+  cp "$CSS_SRC" "$SKILL_DEST/admin-shell.css"
+  ok "Copied admin-shell.css → $SKILL_DEST"
+else
+  warn "admin-shell.css not found at $CSS_SRC — mockup CSS unavailable"
+fi
 
 # Register /sekkei slash command + sub-commands in Claude Code
 COMMANDS_DIR="$CLAUDE_DIR/commands"
