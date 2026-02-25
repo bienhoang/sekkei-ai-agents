@@ -10,6 +10,7 @@ import { deriveUpstreamIdTypes } from "./cross-ref-linker.js";
 import { SekkeiError } from "./errors.js";
 import { validateKeigoComprehensive } from "./keigo-validator.js";
 import { CONTENT_DEPTH_RULES } from "./completeness-rules.js";
+import { validateMermaidBlocks } from "./mermaid-validator.js";
 
 export interface ValidationIssue {
   type: "missing_section" | "missing_id" | "orphaned_id" | "missing_column" | "keigo_violation" | "completeness" | "staleness" | "changelog_preservation";
@@ -435,6 +436,82 @@ function validateFrontmatterStatus(content: string): ValidationIssue[] {
   return [];
 }
 
+/** Validate SCR IDs in stateDiagram match screen table; TBL IDs in erDiagram match table list */
+export function validateDiagramConsistency(content: string): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+
+  // Extract SCR IDs from stateDiagram blocks
+  const stateBlocks = content.match(/```mermaid[\s\S]*?stateDiagram[\s\S]*?```/g) ?? [];
+  const diagramSCRs = new Set<string>();
+  for (const block of stateBlocks) {
+    for (const m of block.matchAll(/SCR[-_]?([A-Z]*-?)(\d{1,4})/g)) {
+      diagramSCRs.add(`SCR-${m[2].padStart(3, "0")}`);
+    }
+  }
+
+  // Extract SCR IDs from table rows (| SCR-001 |)
+  const tableSCRs = new Set<string>();
+  for (const m of content.matchAll(/\|\s*(SCR-\d{1,4})/g)) {
+    tableSCRs.add(m[1]);
+  }
+
+  if (diagramSCRs.size > 0 && tableSCRs.size > 0) {
+    for (const id of tableSCRs) {
+      if (!diagramSCRs.has(id)) {
+        issues.push({
+          type: "completeness",
+          severity: "warning",
+          message: `${id} in screen table but missing from transition diagram`,
+        });
+      }
+    }
+  }
+
+  // Extract TBL IDs from erDiagram blocks
+  const erBlocks = content.match(/```mermaid[\s\S]*?erDiagram[\s\S]*?```/g) ?? [];
+  if (erBlocks.length > 0) {
+    const tableTBLs = new Set<string>();
+    for (const m of content.matchAll(/\|\s*(TBL-\d{1,4})/g)) {
+      tableTBLs.add(m[1]);
+    }
+    if (tableTBLs.size === 0) {
+      issues.push({
+        type: "completeness",
+        severity: "warning",
+        message: "ER diagram exists but no TBL-xxx entries in table definition",
+      });
+    }
+  }
+
+  return issues;
+}
+
+/** Check no two API rows share the same HTTP method + endpoint */
+export function validateApiUniqueness(content: string): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+  const apiRows = content.split("\n").filter(l => /\|\s*API-\d+/.test(l));
+  const seen = new Map<string, string>();
+
+  for (const row of apiRows) {
+    const cells = row.split("|").map(c => c.trim()).filter(Boolean);
+    if (cells.length < 4) continue;
+    const apiId = cells[0];
+    const endpoint = cells[1];
+    const method = cells[2];
+    const key = `${method.toUpperCase()}:${endpoint}`;
+    const existing = seen.get(key);
+    if (existing) {
+      issues.push({
+        type: "completeness",
+        severity: "error",
+        message: `Duplicate API endpoint: ${apiId} and ${existing} both use ${method} ${endpoint}`,
+      });
+    }
+    seen.set(key, apiId);
+  }
+  return issues;
+}
+
 /** Run full validation on a document */
 export function validateDocument(
   content: string,
@@ -452,6 +529,21 @@ export function validateDocument(
   if (options?.check_completeness === true) {
     issues.push(...validateContentDepth(content, docType));
     issues.push(...validateRevisionHistoryContent(content));
+    // Mermaid diagram validation
+    const mermaidIssues = validateMermaidBlocks(content);
+    for (const mi of mermaidIssues) {
+      issues.push({
+        type: "completeness",
+        severity: "warning",
+        message: mi.message,
+      });
+    }
+  }
+
+  // Advanced validation for basic-design
+  if (docType === "basic-design") {
+    issues.push(...validateDiagramConsistency(content));
+    issues.push(...validateApiUniqueness(content));
   }
 
   let cross_ref_report: CrossRefReport | undefined;
@@ -462,6 +554,14 @@ export function validateDocument(
     }
     for (const id of cross_ref_report.orphaned) {
       issues.push({ type: "orphaned_id", message: `ID not found in upstream: ${id}` });
+    }
+    // Warn if upstream coverage < 80%
+    if (cross_ref_report.coverage < 80) {
+      issues.push({
+        type: "missing_id",
+        severity: "warning",
+        message: `Upstream ID coverage is ${cross_ref_report.coverage}% (< 80%). ${cross_ref_report.missing.length} IDs not referenced.`,
+      });
     }
   }
 
@@ -546,6 +646,30 @@ export async function validateSplitDocument(
   let crossRefReport: CrossRefReport | undefined;
   if (upstreamContent) {
     crossRefReport = validateCrossRefs(merged, upstreamContent, docType);
+  }
+
+  // Cross-feature duplicate ID check (SCR, RPT)
+  const featureIdSets = new Map<string, Set<string>>();
+  for (let fi = 0; fi < doc.features.length; fi++) {
+    const feature = doc.features[fi];
+    const content = allContent[doc.shared.length + fi];
+    const scrIds = content.match(/\bSCR-[A-Z0-9]+-?\d{1,4}\b/g) ?? [];
+    const rptIds = content.match(/\bRPT-[A-Z0-9]+-?\d{1,4}\b/g) ?? [];
+    featureIdSets.set(feature.name, new Set([...scrIds, ...rptIds]));
+  }
+  const seen = new Map<string, string>();
+  for (const [featureName, ids] of featureIdSets) {
+    for (const id of ids) {
+      const existing = seen.get(id);
+      if (existing && existing !== featureName) {
+        aggregateIssues.push({
+          type: "completeness" as const,
+          severity: "error" as const,
+          message: `Duplicate ID ${id} found in features "${existing}" and "${featureName}"`,
+        });
+      }
+      seen.set(id, featureName);
+    }
   }
 
   const allIssues = perFile.flatMap(f => f.issues).concat(aggregateIssues);

@@ -232,6 +232,29 @@ body {
 }
 .button-group { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
 
+/* Wireframe table */
+.wf-table-title { font-size: 13px; font-weight: 600; color: #495057; margin-bottom: 6px; }
+.wf-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  color: #495057;
+}
+.wf-table th {
+  background: #f1f3f5;
+  font-weight: 600;
+  text-align: left;
+  padding: 8px 10px;
+  border: 1px solid #dee2e6;
+  font-size: 12px;
+  color: #495057;
+}
+.wf-table td {
+  padding: 8px 10px;
+  border: 1px solid #dee2e6;
+  color: #adb5bd;
+}
+
 /* Annotation circles */
 .annotation {
   position: absolute;

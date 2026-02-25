@@ -137,6 +137,18 @@ export async function appendGlobalChangelog(
     } catch {
       content = HEADER;
     }
+
+    // Dedup: skip if same docType + version already exists on the same date
+    const existingRows = content.split("\n").filter(l => l.startsWith("|"));
+    const isDuplicate = existingRows.some(row => {
+      const cells = row.split("|").map(c => c.trim());
+      return cells[1] === entry.date && cells[2] === entry.docType && cells[3] === entry.version;
+    });
+    if (isDuplicate) {
+      logger.info({ docType: entry.docType, version: entry.version }, "Changelog entry already exists — skipping duplicate");
+      return;
+    }
+
     const row = formatRow(entry);
     const updated = content.trimEnd() + "\n" + row + "\n";
     await writeFile(changelogPath, updated, "utf-8");

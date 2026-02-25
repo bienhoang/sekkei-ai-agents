@@ -27,6 +27,18 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c) => /\|\s*API-\d+/.test(c),
       message: "基本設計書: API一覧にAPI-xxxが必要です",
     },
+    {
+      check: "API mandatory columns",
+      test: (c) => {
+        const apiRows = c.split("\n").filter(l => /\|\s*API-\d+/.test(l));
+        if (apiRows.length === 0) return true;
+        const headerLine = c.split("\n").find(l => /API\s*ID.*エンドポイント/.test(l));
+        if (!headerLine) return true; // no formal header → skip column count check
+        const cols = headerLine.split("|").filter(s => s.trim()).length;
+        return cols >= 8;
+      },
+      message: "基本設計書: API一覧に8列（API ID, エンドポイント, HTTPメソッド, 機能説明, リクエスト, レスポンス, セキュリティ, 呼び出し元）が必要です",
+    },
   ],
   "requirements": [
     {

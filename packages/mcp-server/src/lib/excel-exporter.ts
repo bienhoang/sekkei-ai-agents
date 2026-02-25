@@ -74,6 +74,28 @@ function applyCodeStyle(row: ExcelJS.Row): void {
   row.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFF8DC" } };
 }
 
+/** Apply conditional formatting to status columns */
+function applyStatusFormatting(sheet: ExcelJS.Worksheet): void {
+  const STATUS_COLORS: Record<string, string> = {
+    draft: "FFFFFF00",
+    review: "FFD0E4F7",
+    approved: "FF92D050",
+    revised: "FFFFA500",
+    obsolete: "FFCCCCCC",
+  };
+
+  sheet.eachRow((row) => {
+    row.eachCell((cell) => {
+      const val = String(cell.value ?? "").trim().toLowerCase();
+      const color = STATUS_COLORS[val];
+      if (color) {
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: color } };
+        cell.font = { bold: true };
+      }
+    });
+  });
+}
+
 function autoFitColumns(sheet: ExcelJS.Worksheet): void {
   sheet.columns.forEach((col) => {
     let max = 10;
@@ -224,6 +246,9 @@ export async function exportToExcel(input: ExcelExportInput): Promise<ExcelExpor
     addCoverSheet(wb, meta, pName);
     addSectionSheets(wb, body);
   }
+
+  // Apply status formatting to all sheets
+  wb.eachSheet((sheet) => applyStatusFormatting(sheet));
 
   await wb.xlsx.writeFile(output_path);
   const { size } = await stat(output_path);

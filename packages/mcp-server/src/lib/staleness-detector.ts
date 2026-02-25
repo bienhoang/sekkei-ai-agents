@@ -59,6 +59,8 @@ function clamp(value: number, min: number, max: number): number {
 }
 
 function calcScore(daysSince: number, numFiles: number, linesChanged: number): number {
+  // Ignore trivial changes: < 5 total lines changed
+  if (linesChanged < 5) return 0;
   return Math.round(
     clamp(daysSince / 90, 0, 1) * 40 +
       clamp(numFiles / 10, 0, 1) * 30 +
@@ -163,7 +165,20 @@ export async function detectStaleness(
       : ["diff", "--name-only", `${sinceRef}..HEAD`];
 
     const nameOnly = await git.raw(diffArgs);
-    changedFiles = nameOnly.split("\n").map((f) => f.trim()).filter(Boolean);
+    const NON_SOURCE_PATTERNS = [
+      /\.(test|spec)\.[jt]sx?$/,
+      /\/__tests__\//,
+      /\/test\//,
+      /\.config\.[jt]s$/,
+      /\.env/,
+      /package-lock\.json$/,
+      /yarn\.lock$/,
+    ];
+    changedFiles = nameOnly
+      .split("\n")
+      .map((f) => f.trim())
+      .filter(Boolean)
+      .filter((f) => !NON_SOURCE_PATTERNS.some((p) => p.test(f)));
 
     const statArgs = isSinceFlag
       ? ["diff", "--stat", sinceRef]

@@ -69,7 +69,12 @@ export type Priority = (typeof PRIORITIES)[number];
 export const KEIGO_LEVELS = ["丁寧語", "謙譲語", "simple"] as const;
 export type KeigoLevel = (typeof KEIGO_LEVELS)[number];
 
-export const PROJECT_TYPES = ["web", "mobile", "api", "desktop", "lp", "internal-system", "saas", "batch", "government", "finance", "healthcare"] as const;
+export const PROJECT_TYPES = [
+  "web", "mobile", "api", "desktop", "lp",
+  "internal-system", "saas", "batch",
+  "government", "finance", "healthcare",
+  "microservice", "hybrid", "event-driven", "ai-ml",
+] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
 
 export const PRESETS = ["enterprise", "standard", "agile"] as const;

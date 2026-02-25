@@ -53,6 +53,19 @@ function loadTemplate(layoutType: string): string {
 }
 
 /**
+ * Parse table label to extract title and column names.
+ * Supports formats: "タイトル（col1 / col2 / col3）" or "タイトル（col1/col2/col3）"
+ * Also supports parentheses: "タイトル(col1 / col2)"
+ */
+export function parseTableColumns(label: string): { title: string; columns: string[] } {
+  const match = label.match(/^(.+?)[（(](.+?)[）)]$/);
+  if (!match) return { title: label, columns: [] };
+  const title = match[1].trim();
+  const columns = match[2].split(/\s*[/／]\s*/).map(c => c.trim()).filter(Boolean);
+  return { title, columns };
+}
+
+/**
  * Build a self-contained HTML string from a ScreenLayout.
  * The HTML includes inline CSS and Google Fonts link — ready for Playwright screenshot.
  */
@@ -63,6 +76,21 @@ export function buildMockupHtml(layout: ScreenLayout): string {
   const hbs = Handlebars.create();
   hbs.registerHelper("eq", (a: unknown, b: unknown) => a === b);
   hbs.registerHelper("circledNumber", (n: number) => circledNumber(n));
+  hbs.registerHelper("renderTable", (label: string) => {
+    const { title, columns } = parseTableColumns(label);
+    if (columns.length === 0) {
+      return new Handlebars.SafeString(`<div class="table-placeholder">[${Handlebars.Utils.escapeExpression(label)}]</div>`);
+    }
+    const esc = Handlebars.Utils.escapeExpression;
+    const headerCells = columns.map(c => `<th>${esc(c)}</th>`).join("");
+    const sampleRow = columns.map(() => `<td>—</td>`).join("");
+    const rows = [sampleRow, sampleRow, sampleRow].join("</tr><tr>");
+    return new Handlebars.SafeString(
+      `<div class="wf-table-title">${esc(title)}</div>` +
+      `<table class="wf-table"><thead><tr>${headerCells}</tr></thead>` +
+      `<tbody><tr>${rows}</tr></tbody></table>`
+    );
+  });
 
   const compiled = hbs.compile(templateSrc);
 

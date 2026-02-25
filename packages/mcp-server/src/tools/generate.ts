@@ -109,34 +109,199 @@ function buildUpstreamIdsBlock(content: string): string {
   ].join("\n");
 }
 
-/** Project-type-specific additional instructions (sparse) */
+/** Project-type-specific additional instructions */
 const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocType, string>>>> = {
   saas: {
-    "basic-design": "## Project Type: SaaS\nInclude multi-tenant architecture section. Address tenant isolation strategy, billing integration points, subscription management.",
-    requirements: "## Project Type: SaaS\nInclude SaaS-specific NFRs: multi-tenant data isolation, subscription tiers, API rate limiting.",
+    "basic-design": [
+      "## Project Type: SaaS",
+      "Include multi-tenant architecture section. Address:",
+      "- Tenant isolation strategy (shared DB / DB per tenant / schema per tenant)",
+      "- Billing integration points in API design",
+      "- Subscription management screens (SCR-xxx for tenant admin)",
+      "- Data partitioning in DB design (tenant_id foreign key pattern)",
+      "",
+      "### Additional: テナント分離設計",
+      "- Tenant data isolation enforcement (row-level security / schema separation)",
+      "- Tenant-specific customization points (white-label, custom fields, branding)",
+      "- Cross-tenant data access controls and audit",
+    ].join("\n"),
+    requirements: "## Project Type: SaaS\nInclude SaaS-specific NFRs: multi-tenant data isolation, subscription tiers, API rate limiting, tenant provisioning SLA.",
   },
   "internal-system": {
-    "basic-design": "## Project Type: Internal System\nInclude migration design references (移行設計). Address legacy system interfaces, data migration approach.",
-    requirements: "## Project Type: Internal System\nInclude operational requirements: batch schedule, help desk SLA, training plan.",
+    "basic-design": [
+      "## Project Type: Internal System",
+      "Include migration design references (移行設計). Address:",
+      "- AS-IS vs TO-BE comparison in system architecture (Section 2)",
+      "- Legacy system interfaces in external interface (Section 8)",
+      "- Data migration approach in DB design (Section 7)",
+      "- Parallel run period design if applicable",
+      "",
+      "### Additional: 移行戦略 (Migration Strategy)",
+      "- Migration phases and timeline",
+      "- Data migration plan per table (mapping, transformation rules)",
+      "- API compatibility matrix (old endpoints → new endpoints)",
+      "- Rollback triggers and procedures",
+    ].join("\n"),
+    requirements: "## Project Type: Internal System\nInclude operational requirements: batch schedule, help desk SLA, training plan. Add migration-specific requirements if system replacement.",
   },
   mobile: {
-    "basic-design": "## Project Type: Mobile\nInclude screen transition diagram for all screens. Push notification spec. OS version support matrix.",
+    "basic-design": [
+      "## Project Type: Mobile",
+      "Include screen transition diagram for ALL screens.",
+      "- Push notification spec in external interface",
+      "- OS version support matrix (iOS/Android minimum versions)",
+      "- Offline mode behavior per screen if applicable",
+      "- App lifecycle events (background/foreground) affecting data sync",
+    ].join("\n"),
   },
   batch: {
-    "basic-design": "## Project Type: Batch\nInclude ジョブスケジュール table: job-ID, trigger, frequency, dependency, timeout, retry policy.",
-    "detail-design": "## Project Type: Batch\nFor each batch process: input/output file specs, error handling procedure, restart procedure.",
+    "basic-design": [
+      "## Project Type: Batch",
+      "Include ジョブスケジュール table: job-ID, trigger, frequency, dependency, timeout, retry policy.",
+      "- Job dependency chain visualization (Mermaid flowchart: Job A → Job B → Job C)",
+      "- Error recovery strategy per job type (retry/skip/manual intervention)",
+      "- Data volume estimation per batch (ピーク時データ量 column in TBL table)",
+      "- Monitoring & alerting thresholds for batch failures",
+    ].join("\n"),
+    "detail-design": "## Project Type: Batch\nFor each batch process: input/output file specs, error handling procedure, restart procedure, estimated execution time.",
   },
   lp: {
     "basic-design": "## Project Type: Landing Page\nFocus on: page structure, conversion funnel, form spec, analytics/tracking integration.",
   },
   government: {
+    "basic-design": [
+      "## Project Type: Government",
+      "Include accessibility design (WCAG 2.1 AA) for all screens.",
+      "- Audit trail design section (who did what, when)",
+      "- Data retention policy per table in DB design",
+      "- PII (個人情報) marking on fields/tables",
+      "- Digital Agency (デジタル庁) guideline compliance notes",
+    ].join("\n"),
     requirements: "## Project Type: Government\n法令要件セクションを追加: デジタル庁ガイドライン準拠, 監査要件, 政府セキュリティ要件を含めること",
   },
   finance: {
+    "basic-design": [
+      "## Project Type: Finance",
+      "Include transaction integrity design.",
+      "- FISC安全対策基準 compliance in security design section",
+      "- Audit logging for all financial transactions",
+      "- Data encryption at rest for sensitive financial data",
+    ].join("\n"),
     requirements: "## Project Type: Finance\n金融庁ガイドライン, FISC安全対策基準への準拠を明記. 取引記録保存要件セクションを追加",
   },
   healthcare: {
+    "basic-design": [
+      "## Project Type: Healthcare",
+      "Include HL7/FHIR interface design in external interface section.",
+      "- Patient data protection (3省2ガイドライン準拠)",
+      "- Medical device integration specs if applicable",
+      "- Consent management screens",
+    ].join("\n"),
     requirements: "## Project Type: Healthcare\n医療情報ガイドライン参照. HL7/FHIR連携要件を検討. 個人情報保護（医療特則）セクションを追加",
+  },
+  microservice: {
+    "basic-design": [
+      "## Project Type: Microservice",
+      "### System Architecture (Section 2)",
+      "- Generate SEPARATE system architecture diagrams per service domain",
+      "- Include inter-service communication diagram (Mermaid flowchart with service nodes)",
+      "- Specify communication protocols per service pair (REST, gRPC, message queue)",
+      "",
+      "### DB Design (Section 7)",
+      "- Generate SEPARATE ER diagrams per service domain (bounded context)",
+      "- Each service owns its database — no cross-service direct DB access",
+      "- Include data consistency strategy (eventual consistency, saga pattern)",
+      "",
+      "### External Interface (Section 8)",
+      "- Distinguish internal APIs (service-to-service) vs external APIs (client-facing)",
+      "- Internal APIs: add columns for circuit breaker, retry policy, timeout",
+      "- API gateway routing table if applicable",
+      "",
+      "### Additional Section: サービス間通信設計",
+      "Add section after Section 8:",
+      "| サービス | 通信先 | プロトコル | 同期/非同期 | リトライ方針 | サーキットブレーカー |",
+    ].join("\n"),
+    requirements: [
+      "## Project Type: Microservice",
+      "Include service decomposition strategy in scope.",
+      "Each service boundary should map to functional requirements grouping.",
+      "Add NFRs for: inter-service latency, distributed tracing, service mesh overhead.",
+    ].join("\n"),
+  },
+  hybrid: {
+    "basic-design": [
+      "## Project Type: Hybrid (Mobile + Web)",
+      "### Screen Design (Section 5)",
+      "- Use platform prefixes: SCR-W-001 (Web), SCR-M-001 (Mobile)",
+      "- Generate SEPARATE screen transition diagrams per platform",
+      "- Include responsive design breakpoints: desktop (1200px+), tablet (768-1199px), mobile (<768px)",
+      "",
+      "### Platform-Specific UX",
+      "- Web: keyboard shortcuts, breadcrumb navigation, browser back behavior",
+      "- Mobile: swipe gestures, pull-to-refresh, bottom navigation pattern",
+      "- Shared: common business logic, API contracts identical across platforms",
+      "",
+      "### External Interface (Section 8)",
+      "- Push notification spec (Firebase/APNs) for mobile",
+      "- WebSocket/SSE spec for web real-time updates",
+      "- Shared REST API backend (single API serves both platforms)",
+    ].join("\n"),
+  },
+  "event-driven": {
+    "basic-design": [
+      "## Project Type: Event-Driven",
+      "### Additional Section: イベント設計 (Event Design)",
+      "Add after Section 8. Include:",
+      "| イベントID | イベント名 | プロデューサー | コンシューマー | ペイロード | 順序保証 |",
+      "",
+      "### Additional Section: メッセージフロー (Message Flow)",
+      "- Mermaid sequence diagram showing event flow between services/components",
+      "- Message queue/broker topology (Kafka topics, RabbitMQ exchanges, SQS queues)",
+      "",
+      "### System Architecture (Section 2)",
+      "- Include message broker/event bus in architecture diagram",
+      "- Show async communication paths with dashed arrows",
+      "",
+      "### DB Design (Section 7)",
+      "- CQRS: if applicable, show read model and write model separately",
+      "- Event store table (if event sourcing pattern used)",
+      "",
+      "### Non-Functional Design (Section 9)",
+      "- Message delivery guarantees (at-least-once, exactly-once)",
+      "- Dead letter queue strategy",
+      "- Event replay/reprocessing capability",
+    ].join("\n"),
+    requirements: [
+      "## Project Type: Event-Driven",
+      "Include event-specific NFRs: message throughput, end-to-end latency, delivery guarantees.",
+      "Define event schema versioning strategy in constraints section.",
+    ].join("\n"),
+  },
+  "ai-ml": {
+    "basic-design": [
+      "## Project Type: AI/ML",
+      "### External Interface (Section 8)",
+      "- ML model serving endpoints: distinguish from regular REST APIs",
+      "- Include inference latency SLA, model version header, A/B routing",
+      "- Input validation for model inputs (schema, data type, value ranges)",
+      "",
+      "### Additional Section: ML パイプライン設計",
+      "Add after Section 8 (if training pipeline is in scope):",
+      "- Training data source → preprocessing → model training → evaluation → deployment flow",
+      "- Model registry and versioning strategy",
+      "- Feature store integration if applicable",
+      "",
+      "### Non-Functional Design (Section 9)",
+      "- Model inference latency targets (p50, p95, p99)",
+      "- GPU/compute resource requirements",
+      "- Model monitoring: drift detection, accuracy degradation alerts",
+      "- Explainability requirements (SHAP/LIME if regulated industry)",
+    ].join("\n"),
+    requirements: [
+      "## Project Type: AI/ML",
+      "Include ML-specific NFRs: inference latency, model accuracy thresholds, retraining frequency.",
+      "Address ethical considerations: bias detection, explainability requirements.",
+    ].join("\n"),
   },
 };
 
@@ -161,6 +326,7 @@ function buildSplitInstructions(
     ].join("\n");
   }
   const label = featureName ?? "unknown";
+  const prefix = featureName ? featureName.split("-").map(w => w[0]?.toUpperCase()).join("") : "UNK";
   return [
     base,
     "",
@@ -168,6 +334,11 @@ function buildSplitInstructions(
     `Generate ONLY sections specific to feature "${label}".`,
     "Focus: business-flow, screen-design, report-design, scoped functions.",
     "Reference 03-system/ sections by cross-reference only — do not duplicate.",
+    "",
+    `## Feature-Scoped ID Rules (MANDATORY)`,
+    `Screen IDs: SCR-${prefix}-001, SCR-${prefix}-002... (feature prefix prevents collision).`,
+    `Report IDs: RPT-${prefix}-001, RPT-${prefix}-002...`,
+    `Use sequential numbering within this feature scope only.`,
   ].join("\n");
 }
 

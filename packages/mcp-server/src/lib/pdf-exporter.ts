@@ -24,6 +24,34 @@ export interface PdfExportResult {
   file_size: number;
 }
 
+interface TocEntry {
+  level: number;
+  text: string;
+  id: string;
+}
+
+function extractToc(content: string): TocEntry[] {
+  const entries: TocEntry[] = [];
+  const headingRe = /^(#{1,2})\s+(.+)$/gm;
+  let match;
+  while ((match = headingRe.exec(content)) !== null) {
+    const level = match[1].length;
+    const text = match[2].trim();
+    const id = text.replace(/[^\w\u3000-\u9fff]+/g, "-").toLowerCase();
+    entries.push({ level, text, id });
+  }
+  return entries;
+}
+
+function buildTocHtml(entries: TocEntry[]): string {
+  if (entries.length === 0) return "";
+  const items = entries.map(e => {
+    const indent = e.level === 1 ? "" : "margin-left:16px;";
+    return `<li style="${indent}"><a href="#${e.id}" style="text-decoration:none;color:#333;">${e.text}</a></li>`;
+  });
+  return `<div style="page-break-after:always;"><h2 style="border-bottom:2px solid #333;">目次</h2><ul style="list-style:none;padding:0;">${items.join("")}</ul></div>`;
+}
+
 function buildHtmlPage(bodyHtml: string, fontPaths: { regular: string; bold: string }): string {
   return `<!DOCTYPE html>
 <html lang="ja">
@@ -41,7 +69,7 @@ function buildHtmlPage(bodyHtml: string, fontPaths: { regular: string; bold: str
       font-weight: bold;
     }
     body { font-family: 'Noto Sans JP', sans-serif; font-size: 10pt; line-height: 1.6; color: #333; }
-    h1 { font-size: 16pt; border-bottom: 2px solid #333; padding-bottom: 4px; }
+    h1 { font-size: 16pt; border-bottom: 2px solid #333; padding-bottom: 4px; page-break-before: always; }
     h2 { font-size: 13pt; border-bottom: 1px solid #888; padding-bottom: 2px; }
     h3 { font-size: 11pt; }
     table { border-collapse: collapse; width: 100%; margin: 8px 0; }
@@ -80,7 +108,9 @@ export async function exportToPdf(input: PdfExportInput): Promise<PdfExportResul
   const titleMatch = content.match(/^#\s+(.+)$/m);
   const title = titleMatch?.[1] ?? project_name ?? "Document";
 
-  const html = buildHtmlPage(bodyHtml, fontPaths);
+  const tocEntries = extractToc(content);
+  const tocHtml = buildTocHtml(tocEntries);
+  const html = buildHtmlPage(tocHtml + bodyHtml, fontPaths);
 
   const browser = await launchBrowser();
   try {

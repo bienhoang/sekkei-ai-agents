@@ -140,7 +140,8 @@ approver: ""
 
 <!-- AI: Generate screen inventory from functions and requirements.
      Rules:
-     - ID format: SCR-001, SCR-002... (sequential)
+     - Monolithic mode ID format: SCR-001, SCR-002... (sequential global)
+     - Split mode ID format: SCR-{FEATURE_PREFIX}-001 (e.g., SCR-SAL-001 for sales-management)
      - 処理分類: 入力 / 照会 / 帳票
      - 使用者: Role names from requirements (営業, 管理者, システム管理者, etc.)
      - Map to function IDs where applicable

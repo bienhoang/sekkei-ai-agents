@@ -51,7 +51,7 @@
           {{else if (eq this.type "icon-button")}}
             <span class="icon-btn" title="{{this.label}}">...</span>
           {{else if (eq this.type "table")}}
-            <div class="table-placeholder">[{{this.label}}]</div>
+            {{{renderTable this.label}}}
           {{else if (eq this.type "card")}}
             <div class="card-placeholder">{{this.label}}</div>
           {{else if (eq this.type "stat-card")}}
@@ -97,7 +97,7 @@
         {{else if (eq this.type "breadcrumb")}}<div class="breadcrumb"><span>{{this.label}}</span></div>
         {{else if (eq this.type "tabs")}}<div class="tabs"><span class="tab-item active">{{this.label}}</span><span class="tab-item">Tab 2</span></div>
         {{else if (eq this.type "pagination")}}<div class="pagination"><span>&laquo;</span><span>1</span><span>2</span><span>&raquo;</span></div>
-        {{else if (eq this.type "table")}}<div class="table-placeholder">[{{this.label}}]</div>
+        {{else if (eq this.type "table")}}{{{renderTable this.label}}}
         {{else if (eq this.type "button")}}<span class="btn {{#if (eq this.variant "primary")}}btn-primary{{else if (eq this.variant "danger")}}btn-danger{{else}}btn-secondary{{/if}}">{{this.label}}</span>
         {{else}}<div class="text-content">{{this.label}}</div>
         {{/if}}

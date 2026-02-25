@@ -67,6 +67,7 @@ export const ID_ORIGIN: Record<string, string | string[]> = {
   SCR: "basic-design",
   TBL: "basic-design",
   API: "basic-design",
+  RPT: "basic-design",
   SEC: "security-design",
   CLS: "detail-design",
   DD: "detail-design",
@@ -116,13 +117,16 @@ export function deriveUpstreamIdTypes(
 
 /** Check if a prefix originates from the given doc type */
 function isOriginOf(prefix: string, docType: string): boolean {
-  const origin = ID_ORIGIN[prefix];
+  // Handle feature-scoped prefixes: "SCR-SAL" → base prefix "SCR"
+  const basePrefix = prefix.includes("-") ? prefix.split("-")[0] : prefix;
+  const origin = ID_ORIGIN[basePrefix] ?? ID_ORIGIN[prefix];
+  if (!origin) return false;
   if (Array.isArray(origin)) return origin.includes(docType);
   return origin === docType;
 }
 
 /** Standard ID regex — same pattern as id-extractor.ts */
-const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
+const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|RPT|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
 
 /** Validate configPath: no path traversal, must end in .yaml/.yml */
 function validateConfigPath(configPath: string): void {
