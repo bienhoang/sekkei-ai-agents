@@ -1,22 +1,14 @@
-> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
-
 # Requirements Phase Commands
 
 Command workflows for the requirements phase of the V-model document chain.
-Parent: `SKILL.md` → Workflow Router → Requirements Phase.
 
 **V2 Chain Order:** RFP → requirements → { functions-list, nfr, project-plan } (parallel after requirements)
 
 ## `/sekkei:requirements @input`
 
 **Prerequisite check (MUST run before interview):**
-1. If `@input` argument provided by user → input source confirmed, proceed
-2. If no `@input`:
-   a. Check if `{output.directory}/01-rfp/` directory exists and contains `.md` files
-   b. If exists → glob all `.md` files in `{output.directory}/01-rfp/`, sort by filename, concatenate as input, proceed
-3. If neither condition met → **ABORT**. Do NOT proceed to interview. Tell user:
-   > "No input source available. Either provide input with `@input` or run `/sekkei:rfp` first to create the RFP workspace in `01-rfp/`."
-4. Check `chain.requirements.status` in sekkei.config.yaml. If `in-progress`, warn: 'Requirements generation may already be in progress. Continue anyway? [Y/n]'
+1. If `@input` provided → proceed. Else check `{output.directory}/01-rfp/` for `.md` files → concatenate as input, proceed. If neither → **ABORT**: "No input source. Run `/sekkei:rfp` first."
+2. Read `chain.requirements.status` from `sekkei.config.yaml` — if `in-progress`, warn: "Requirements generation may already be in progress. Continue? [Y/n]"
 
 **Interview (2 rounds — ask each group in a single prompt):**
 
@@ -92,7 +84,8 @@ Prepend this YAML block to the input_content before calling generate_document.
    - If `functions_list.extra_columns` in config, extra columns are appended after 備考
 6. Save output to `{output.directory}/04-functions-list/functions-list.md`
 7. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "functions-list"`, `status: "complete"`, `output: "04-functions-list/functions-list.md"`
-8. Call MCP tool `validate_document` with saved content and `doc_type: "functions-list"`. Show results as non-blocking.
+8. Call MCP tool `validate_document` with saved content and `doc_type: "functions-list"`.
+   **Post-generation validation (mandatory):** If validation reports errors (missing sections, broken cross-refs): fix inline before finalizing. If validation passes: proceed.
 9. **Count 大分類 feature groups** from the generated `functions-list.md`:
    - Scan for distinct values in the 大分類 column of the 機能一覧 table
    - Derive a short feature ID for each (2–5 uppercase letters, e.g., "AUTH", "SALES", "REPORT")
@@ -141,17 +134,15 @@ Prepend this YAML block to the input_content before calling generate_document.
    - Cross-reference REQ-xxx IDs from 要件定義書
 5. Save output to `{output.directory}/02-requirements/nfr.md`
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "nfr"`, `status: "complete"`, `output: "02-requirements/nfr.md"`
-7. Call MCP tool `validate_document` with saved content and `doc_type: "nfr"`. Show results as non-blocking.
+7. Call MCP tool `validate_document` with saved content and `doc_type: "nfr"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 
 ## `/sekkei:project-plan @requirements`
 
 **Prerequisite check (MUST run before interview):**
-1. Load `sekkei.config.yaml` — read `chain.requirements.status` and `chain.requirements.output`
-2. If `chain.requirements.status` != "complete" → **ABORT**. Tell user:
-   > "Requirements not complete. Run `/sekkei:requirements` first."
-3. Read requirements content from `chain.requirements.output` path
-4. Check `chain.functions_list.status` — if "complete", also read `chain.functions_list.output` content
-5. Concatenate both as `upstream_content` (requirements first, then functions-list if available)
+1. Read `chain.requirements.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Requirements not complete. Run `/sekkei:requirements` first."
+2. Read upstream from `chain.requirements.output`; if `chain.functions_list.status` is `"complete"`, also read `chain.functions_list.output`
+3. Concatenate as `upstream_content` (requirements first, functions-list if available) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 - Team size and composition? (developers, QA, PM, etc.)

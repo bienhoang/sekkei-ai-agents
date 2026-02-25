@@ -1,5 +1,3 @@
-> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
-
 # RFP Workspace Manager
 
 You are a workspace state controller.

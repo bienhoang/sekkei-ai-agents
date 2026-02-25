@@ -10,9 +10,9 @@ import { logger } from "../lib/logger.js";
 
 const inputSchema = {
   changed_ids: z.array(z.string().max(20)).max(50).optional()
-    .describe("IDs that have changed (e.g., ['REQ-003', 'F-005'])"),
+    .describe("Changed IDs (e.g. REQ-003, F-005); auto-extracted if upstream_old/new provided"),
   upstream_old: z.string().max(500_000).optional()
-    .describe("Previous version of upstream document (to auto-extract changed IDs)"),
+    .describe("Previous upstream document version for auto-detecting changed IDs"),
   upstream_new: z.string().max(500_000).optional()
     .describe("New version of upstream document"),
   config_path: z.string().max(500)

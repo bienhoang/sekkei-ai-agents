@@ -7,6 +7,10 @@ description: "Generate Japanese specification documents (設計書) following V-
 
 Generate Japanese software specification documents following the V-model document chain.
 
+## Output Language
+
+All user-facing output (document content, prompts, confirmations) must use `project.language` from `sekkei.config.yaml`. Default: `"ja"` (Japanese). Override per call with the `language` parameter on `generate_document`.
+
 ## Document Generation Commands
 
 ### Requirements Phase
@@ -164,8 +168,6 @@ workspace-docs/
 - `references/rfp-command.md` — RFP entrypoint: UX patterns, progress dashboard, navigation
 - `references/rfp-manager.md` — RFP workspace: file list, status schema, tool actions
 - `references/change-request-command.md` — Change request workflow: impact analysis, propagation, conflict detection
-- `references/doc-standards.md` — Japanese documentation standards and column headers
-- `references/v-model-guide.md` — V-model workflow and chain-of-documents guide
 - `references/plan-orchestrator.md` — Plan orchestration logic for large document generation
 - `references/mockup-command.md` — Screen mockup generation: shell detection, admin-shell skeleton, Chart.js, CSS reference, annotation rules
 - `references/mockup-shells.md` — Non-admin shell skeletons: auth, error, onboarding, public, email, print, blank

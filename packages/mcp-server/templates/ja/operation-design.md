@@ -23,13 +23,13 @@ approver: ""
 
 # 運用設計書
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
 | 1.0  | YYYY-MM-DD | 初版作成 | <!-- AI: Author name --> |
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -37,17 +37,17 @@ approver: ""
 | 確認者 | | |
 | 承認者 | | |
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List stakeholders: PMO, 運用チーム, インフラチーム, 顧客担当者. Format as bullet list. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key operational terms used in this document. -->
 
-## 1. 運用体制
+## 1. 運用体制 <!-- required -->
 
 <!-- AI: Define operational team structure, roles, and escalation path.
      Include on-call rotation schedule if applicable.
@@ -57,7 +57,7 @@ approver: ""
 |------|------|--------|-----------|
 <!-- AI: Fill with team roles and responsibilities -->
 
-## 2. バックアップ・リストア方針
+## 2. バックアップ・リストア方針 <!-- required -->
 
 <!-- AI: Define backup strategy: full/incremental schedule, retention period, storage location.
      Include RPO/RTO targets from NFR requirements.
@@ -67,7 +67,7 @@ approver: ""
 |------|-----------------|------|---------|-----|-----|
 <!-- AI: Fill for each data store (DB, file storage, logs) -->
 
-## 3. 監視・アラート定義
+## 3. 監視・アラート定義 <!-- required -->
 
 <!-- AI: Define monitoring targets, thresholds, alert channels.
      Include system metrics (CPU, memory, disk), application metrics (response time, error rate),
@@ -77,7 +77,7 @@ approver: ""
 |---------|-----------|-----------|-----------|--------|---------|
 <!-- AI: Fill for each monitoring target -->
 
-## 4. 障害対応手順
+## 4. 障害対応手順 <!-- required -->
 
 <!-- AI: Document incident response procedures.
      ID format: OP-001, OP-002...
@@ -87,7 +87,7 @@ approver: ""
 |-------|--------|-----------|---------|--------|---------|
 | OP-001 | <!-- AI --> | <!-- AI: 重大/警告/軽微 --> | <!-- AI --> | <!-- AI --> | <!-- AI --> |
 
-## 5. ジョブ管理
+## 5. ジョブ管理 <!-- required -->
 
 <!-- AI: List batch jobs and scheduled tasks.
      Include: execution schedule, dependencies, retry policy, failure notification. -->
@@ -96,7 +96,7 @@ approver: ""
 |---------|--------|---------------|---------|------------|-----------|
 <!-- AI: Fill for each scheduled job -->
 
-## 6. SLA定義
+## 6. SLA定義 <!-- required -->
 
 <!-- AI: Define Service Level Agreement targets.
      MANDATORY: Every SLA item must have a specific numeric target.

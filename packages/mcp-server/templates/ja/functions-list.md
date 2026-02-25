@@ -26,7 +26,7 @@ export_hints:
 
 # 機能一覧
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
@@ -34,7 +34,7 @@ export_hints:
 
 <!-- AI: Add rows for each revision. 版数 increments as 1.0, 1.1, 2.0. -->
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -44,17 +44,17 @@ export_hints:
 
 <!-- AI: Leave 氏名 and 日付 blank — these are filled by humans after review. -->
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List the stakeholders and teams who will receive this document (e.g., PMO, 開発チーム, 顧客担当者). Format as bullet list. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key technical or business terms used in this document. Include Japanese term, plain-language explanation, and English equivalent if applicable. -->
 
-## プロジェクト情報
+## プロジェクト情報 <!-- optional -->
 <!-- AI: Fill project name, system name, version, date from project config or ask user. -->
 
 | 項目 | 内容 |
@@ -65,7 +65,7 @@ export_hints:
 | 作成日 | <!-- AI: today's date YYYY-MM-DD --> |
 | 作成者 | <!-- AI: author or "AI Generated" --> |
 
-## 機能一覧表
+## 機能一覧表 <!-- required -->
 
 <!-- AI: Generate rows from input content.
      Rules:
@@ -91,7 +91,7 @@ export_hints:
 
 <!-- AI: Optional extra columns may be requested in the generation context. If so, add them after 備考 column. -->
 
-## 集計
+## 集計 <!-- optional -->
 
 <!-- AI: Generate summary counts after completing the table above. -->
 

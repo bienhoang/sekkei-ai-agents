@@ -60,6 +60,8 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │  • Staleness Detector → git diff + scoring (v3)        │   │
 │  │  • Structure Rules    → anti-chaos validation (v3)     │   │
 │  │  • Google Sheets Exporter → markdown→sheets (v3)       │   │
+│  │  • Upstream Extractor → parse IDs from upstream docs    │   │
+│  │    (server-side 5-min cache, reduces context size)     │   │
 │  └─────────────────────────────────────────────────────────┘   │
 └────────────────┬────────────────────────────────────────────────┘
                  │ execFile (Node.js)

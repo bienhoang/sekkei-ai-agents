@@ -23,31 +23,31 @@ const inputSchema = {
   config_path: z.string().max(500).optional()
     .refine(p => !p || !p.includes(".."), { message: "no path traversal" })
     .refine(p => !p || /\.ya?ml$/i.test(p), { message: "must be .yaml/.yml" })
-    .describe("Path to sekkei.config.yaml (for analyze/propagate_next/validate)"),
+    .describe("Path to sekkei.config.yaml; required for analyze/propagate_next/validate"),
   origin_doc: z.string().max(50).optional()
-    .describe("Origin doc type (required for create)"),
+    .describe("Origin doc type; required for create"),
   description: z.string().max(2000).optional()
-    .describe("Change description (required for create)"),
+    .describe("Change description; required for create"),
   changed_ids: z.array(z.string().max(20)).max(50).optional()
-    .describe("Changed IDs (for create)"),
+    .describe("Changed IDs; used for create"),
   old_content: z.string().max(500_000).optional()
-    .describe("Previous doc content (for create auto-detect mode)"),
+    .describe("Previous doc content for auto-detect mode"),
   new_content: z.string().max(500_000).optional()
-    .describe("Updated doc content (for create auto-detect mode)"),
+    .describe("Updated doc content for auto-detect mode"),
   status_filter: z.string().max(20).optional()
-    .describe("Filter for list action"),
+    .describe("Status filter for list action"),
   reason: z.string().max(500).optional()
     .describe("Reason for cancel"),
   note: z.string().max(2000).optional()
     .describe("Note for propagate_next step"),
   suggest_content: z.boolean().optional()
-    .describe("When true, return suggested content snippets for upstream propagation steps"),
+    .describe("Return suggested content snippets for propagation steps"),
   partial: z.boolean().optional()
-    .describe("When true, skip incomplete-steps check in validate (for mid-propagation validation)"),
+    .describe("Skip incomplete-steps check in validate (mid-propagation)"),
   skip_docs: z.array(z.string().max(50)).max(20).optional()
     .describe("Doc types to skip during propagation"),
   max_depth: z.number().int().min(1).max(10).optional()
-    .describe("Max propagation depth (hops from origin)"),
+    .describe("Max propagation depth in hops from origin"),
 };
 
 export interface ChangeRequestArgs {

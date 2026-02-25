@@ -21,7 +21,7 @@ const RFP_ACTIONS = ["create", "status", "transition", "write", "read", "history
 
 const inputSchema = {
   action: z.enum(RFP_ACTIONS)
-    .describe("Workspace action: create | status | transition | write | read | history | back | generate-config"),
+    .describe("RFP workspace action to perform"),
   workspace_path: z.string().max(500)
     .refine((p) => !p.includes(".."), { message: "workspace_path must not contain .." })
     .describe("Path to project root directory"),

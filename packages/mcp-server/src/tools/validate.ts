@@ -11,25 +11,25 @@ import { logger } from "../lib/logger.js";
 
 const inputSchema = {
   content: z.string().max(500_000).optional()
-    .describe("Markdown document content to validate (not needed when manifest_path or structure_path provided)"),
-  doc_type: z.enum(DOC_TYPES).optional().describe("Type of document being validated (not needed for structure validation)"),
+    .describe("Markdown document content to validate"),
+  doc_type: z.enum(DOC_TYPES).optional().describe("Document type to validate"),
   upstream_content: z.string().max(500_000).optional().describe("Upstream document content for cross-reference checking"),
   manifest_path: z.string().max(500).optional()
     .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "Must be .yaml/.yml" })
     .describe("Path to _index.yaml for split document validation"),
   structure_path: z.string().max(500).optional()
     .refine((p) => !p || !p.includes(".."), { message: "Path must not contain .." })
-    .describe("Path to output directory for numbered structure validation"),
+    .describe("Output directory path for numbered structure validation"),
   check_completeness: z.boolean().optional()
-    .describe("Run content depth checks (required ID patterns, table rows per doc type)"),
+    .describe("Run ID pattern and table-row depth checks per doc type"),
   check_structure_rules: z.boolean().optional()
-    .describe("Check document structure against template rules (section ordering, required fields)"),
+    .describe("Check section ordering and required fields against template rules"),
   preset: z.enum(["enterprise", "standard", "agile"]).optional()
-    .describe("Strictness preset (default: standard)"),
+    .describe("Validation strictness preset (default: standard)"),
   config_path: z.string().max(500).optional()
     .refine((p) => !p || !p.includes(".."), { message: "config_path must not contain .." })
     .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "config_path must be .yaml/.yml" })
-    .describe("Path to sekkei.config.yaml — enables staleness detection for the document"),
+    .describe("Path to sekkei.config.yaml; enables staleness detection"),
 };
 
 export interface ValidateDocumentArgs {

@@ -163,12 +163,12 @@ describe("generate_document: st-spec", () => {
     });
 
     const text = result.content[0].text;
-    expect(text).toContain("Available Upstream IDs");
+    expect(text).toContain("Upstream Cross-Reference Checklist");
     expect(text).toContain("SCR-001");
     expect(text).toContain("TBL-001");
     expect(text).toContain("F-001");
     expect(text).toContain("API-001");
-    expect(text).toContain("ONLY these IDs");
+    expect(text).toContain("verify all checkboxes");
   });
 
   it("ignores source_code_path (only detail-design and ut-spec use it)", async () => {
@@ -284,7 +284,7 @@ describe("generate_document: uat-spec", () => {
     });
 
     const text = result.content[0].text;
-    expect(text).toContain("Available Upstream IDs");
+    expect(text).toContain("Upstream Cross-Reference Checklist");
     expect(text).toContain("REQ-001");
     expect(text).toContain("REQ-002");
     expect(text).toContain("NFR-001");
@@ -465,7 +465,7 @@ describe("generate_document: ut-spec", () => {
     });
 
     const text = result.content[0].text;
-    expect(text).toContain("Available Upstream IDs");
+    expect(text).toContain("Upstream Cross-Reference Checklist");
     expect(text).toContain("CLS-001");
     expect(text).toContain("CLS-002");
     expect(text).toContain("DD-001");
@@ -627,7 +627,7 @@ describe("generate_document: it-spec", () => {
     });
 
     const text = result.content[0].text;
-    expect(text).toContain("Available Upstream IDs");
+    expect(text).toContain("Upstream Cross-Reference Checklist");
     expect(text).toContain("API-001");
     expect(text).toContain("API-002");
     expect(text).toContain("SCR-001");

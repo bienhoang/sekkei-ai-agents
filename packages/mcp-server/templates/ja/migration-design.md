@@ -22,13 +22,13 @@ approver: ""
 
 # 移行設計書
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
 | 1.0  | YYYY-MM-DD | 初版作成 | <!-- AI: Author name --> |
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -36,17 +36,17 @@ approver: ""
 | 確認者 | | |
 | 承認者 | | |
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List stakeholders: PMO, 開発チーム, インフラチーム, 運用チーム, 顧客担当者. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key migration terms used in this document. -->
 
-## 1. 移行方針
+## 1. 移行方針 <!-- required -->
 
 <!-- AI: Define overall migration strategy.
      Include: migration approach (big bang / phased / parallel run),
@@ -59,7 +59,7 @@ approver: ""
 ### 1.2 移行スケジュール
 <!-- AI: Timeline with milestones and go/no-go checkpoints. -->
 
-## 2. データ移行計画
+## 2. データ移行計画 <!-- required -->
 
 <!-- AI: Document data migration steps.
      ID format: MIG-001, MIG-002...
@@ -76,7 +76,7 @@ approver: ""
 ### 2.2 データクレンジング
 <!-- AI: Rules for cleaning invalid/duplicate data before migration. -->
 
-## 3. システム切替手順
+## 3. システム切替手順 <!-- required -->
 
 <!-- AI: Step-by-step cutover procedure with timing estimates.
      Include: pre-cutover checks, DNS switch, service restart, post-cutover verification. -->
@@ -85,7 +85,7 @@ approver: ""
 |------|---------|--------|---------|---------|
 <!-- AI: Fill with cutover steps in chronological order -->
 
-## 4. ロールバック計画
+## 4. ロールバック計画 <!-- required -->
 
 <!-- AI: MANDATORY: Step-by-step rollback procedure.
      Include: trigger conditions, rollback steps, time estimates, data recovery.
@@ -100,7 +100,7 @@ approver: ""
 |------|---------|--------|---------|---------|
 <!-- AI: Fill with rollback steps in reverse chronological order -->
 
-## 5. 移行テスト計画
+## 5. 移行テスト計画 <!-- required -->
 
 <!-- AI: Define migration testing strategy.
      Include: test environments, test data preparation, validation criteria.

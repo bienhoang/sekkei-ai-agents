@@ -1,26 +1,13 @@
-> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
-
 # Supplementary Commands
 
 Command workflows for supplementary documents (operation, migration, matrix, sitemap).
-Parent: `SKILL.md` → Workflow Router → Supplementary.
 
 ## `/sekkei:operation-design @input`
 
 **Prerequisite check (MUST run before interview):**
-1. Check `{output.directory}/02-requirements/requirements.md` exists
-   - If missing → ABORT: "Requirements not found. Run `/sekkei:requirements` first."
-2. Check `{output.directory}/02-requirements/nfr.md` exists
-   - If missing → WARN: "NFR not found. Operation-design will only reference REQ-xxx IDs.
-     Run `/sekkei:nfr` first for complete cross-referencing."
-   - Continue (not blocking)
-3. Check `{output.directory}/03-system/basic-design.md` exists
-   - If missing → WARN: "Basic-design not found. Operation-design will skip API-xxx/TBL-xxx monitoring targets.
-     Run `/sekkei:basic-design` first for complete infrastructure context."
-   - Continue (not blocking)
-4. Check `{output.directory}/04-functions-list/functions-list.md` exists
-   - If missing → WARN: "Functions-list not found. Job management will skip F-xxx batch references."
-   - Continue (not blocking)
+1. Verify `{output.directory}/02-requirements/requirements.md` exists — abort if missing: "Run `/sekkei:requirements` first."
+2. Check nfr.md, basic-design.md, functions-list.md — warn if any missing (not blocking; missing files reduce cross-reference coverage)
+3. Load all found files as `upstream_content` and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 - What is the operational team structure?
@@ -46,21 +33,17 @@ Parent: `SKILL.md` → Workflow Router → Supplementary.
    - ジョブ管理: reference F-xxx batch functions if functions-list available
    - Cross-reference NFR-xxx, REQ-xxx, API-xxx, TBL-xxx, F-xxx IDs from upstream
 6. Call MCP tool `validate_document` with saved content, `doc_type: "operation-design"`,
-   and `upstream_content`. Show results as non-blocking.
+   and `upstream_content`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 7. Save output to `{output.directory}/07-operations/operation-design.md`
 8. Update chain status if configured: `operation_design.status: complete`
 
 ## `/sekkei:migration-design @input`
 
 **Prerequisite check (MUST run before interview):**
-1. Check `{output.directory}/03-system/basic-design.md` exists
-   - If missing → ABORT: "Basic-design not found. Run `/sekkei:basic-design` first."
-2. Check `{output.directory}/02-requirements/requirements.md` exists
-   - If missing → WARN: "Requirements not found. Migration-design will have limited REQ-xxx references."
-   - Continue (not blocking)
-3. Check `{output.directory}/07-operations/operation-design.md` exists
-   - If missing → WARN: "Operation-design not found. Migration-design will skip OP-xxx references."
-   - Continue (not blocking)
+1. Verify `{output.directory}/03-system/basic-design.md` exists — abort if missing: "Run `/sekkei:basic-design` first."
+2. Check requirements.md, operation-design.md — warn if any missing (not blocking; missing files reduce cross-reference coverage)
+3. Load all found files as `upstream_content` and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 - Migration approach preference? (big bang / phased / parallel run)
@@ -81,7 +64,8 @@ Parent: `SKILL.md` → Workflow Router → Supplementary.
    - ロールバック計画: step-by-step with time estimates required
    - Cross-reference TBL-xxx, REQ-xxx, OP-xxx IDs from upstream
 6. Call MCP tool `validate_document` with saved content, `doc_type: "migration-design"`,
-   and `upstream_content`. Show results as non-blocking.
+   and `upstream_content`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 7. Save output to `{output.directory}/06-data/migration-design.md`
 8. Update chain status if configured: `migration_design.status: complete`
 
@@ -95,16 +79,9 @@ Parent: `SKILL.md` → Workflow Router → Supplementary.
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
 3. **For CRUD図 (`crud-matrix`):**
 
-   **Prerequisite check:**
-   - Check `{output.directory}/04-functions-list/functions-list.md` exists
-     - If missing → ABORT: "Functions-list not found. Run `/sekkei:functions-list` first."
-   - Check `{output.directory}/03-system/basic-design.md` exists
-     - If missing → ABORT: "Basic-design not found (need TBL-xxx). Run `/sekkei:basic-design` first."
+   Verify functions-list.md and basic-design.md both exist — abort if either missing (need F-xxx and TBL-xxx IDs). upstream = functions-list.md + basic-design.md.
 
-   a. **Load upstream content:**
-      - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content
-      - Read `{output.directory}/03-system/basic-design.md` → bd_content
-      - upstream = fl_content + "\n\n" + bd_content
+   a. **Load upstream content:** upstream = fl_content + "\n\n" + bd_content
    b. Call MCP tool `generate_document` with `doc_type: "crud-matrix"`, `upstream_content: upstream`
    c. AI generates markdown table: rows=functions, columns=tables, cells=C/R/U/D
    d. Call `export_document` with `doc_type: "crud-matrix"`, `format: "xlsx"`
@@ -113,12 +90,7 @@ Parent: `SKILL.md` → Workflow Router → Supplementary.
 
 4. **For トレーサビリティマトリックス (`traceability-matrix`):**
 
-   **Prerequisite check:**
-   - Check `{output.directory}/02-requirements/requirements.md` exists
-     - If missing → ABORT: "Requirements not found. Run `/sekkei:requirements` first."
-   - Check `{output.directory}/03-system/basic-design.md` exists
-     - If missing → WARN: "Basic-design not found. Traceability coverage will be partial."
-     - Continue (not blocking)
+   Verify requirements.md exists — abort if missing. basic-design.md missing → warn, continue.
 
    a. **Load upstream content:**
       - Read all chain documents from `{output.directory}/`:
@@ -138,11 +110,7 @@ Parent: `SKILL.md` → Workflow Router → Supplementary.
 
 ## `/sekkei:sitemap`
 
-**Prerequisite check (MUST run before interview):**
-1. Check `{output.directory}/04-functions-list/functions-list.md` exists
-   - If missing → WARN: "Functions-list not found. Sitemap will not have F-xxx cross-references.
-     Run `/sekkei:functions-list` first for complete mapping."
-   - Continue (not blocking — sitemap can work from user description alone)
+**Prerequisite check:** functions-list.md recommended (warn if missing, not blocking — sitemap works from user description alone).
 
 **Interview questions (ask before generating):**
 - System type? (web/mobile/API/internal system/SaaS)
@@ -159,7 +127,8 @@ Parent: `SKILL.md` → Workflow Router → Supplementary.
    - Code analysis results (if available)
 5. AI generates: tree structure (hierarchical list) + page list table (PG-xxx IDs)
 6. Call MCP tool `validate_document` with saved content, `doc_type: "sitemap"`,
-   and `upstream_content`. Show results as non-blocking.
+   and `upstream_content`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 7. Save to `{output.directory}/03-system/sitemap.md`
 8. Optionally call `export_document` with `doc_type: "sitemap"`, `format: "xlsx"` or `"pdf"`
 9. Report: file path, total pages/screens count, hierarchy depth

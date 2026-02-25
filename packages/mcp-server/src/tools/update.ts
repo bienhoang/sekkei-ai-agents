@@ -16,14 +16,14 @@ const inputSchema = {
   downstream_content: z.string().max(500_000).optional()
     .describe("Downstream document to check for impacts"),
   revision_mode: z.boolean().default(false)
-    .describe("When true, output includes change markers and revision history row suggestion (朱書き)"),
+    .describe("Include 朱書き change markers and revision history row suggestion"),
   check_staleness: z.boolean().optional()
-    .describe("Check code-to-doc staleness via git diff analysis (requires config_path)"),
+    .describe("Check code-to-doc staleness via git diff (requires config_path)"),
   config_path: z.string().max(500).optional()
     .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "config_path must be .yaml/.yml" })
-    .describe("Path to sekkei.config.yaml (required for check_staleness mode)"),
+    .describe("Path to sekkei.config.yaml; required for staleness check"),
   since: z.string().max(100).optional()
-    .describe("Git ref to compare against (tag, branch, commit, or relative like '30d')"),
+    .describe("Git ref to compare against (tag, branch, commit, or relative e.g. 30d)"),
 };
 
 async function handleAnalyzeUpdate(args: {

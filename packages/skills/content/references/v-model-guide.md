@@ -1,5 +1,3 @@
-> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
-
 # V-Model Workflow & Chain-of-Documents Guide
 
 ## V-Model Overview

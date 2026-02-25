@@ -21,7 +21,7 @@ approver: ""
 
 # 結合テスト仕様書
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
@@ -29,7 +29,7 @@ approver: ""
 
 <!-- AI: Add rows for each revision. 版数 increments as 1.0, 1.1, 2.0. -->
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -39,21 +39,21 @@ approver: ""
 
 <!-- AI: Leave 氏名 and 日付 blank — these are filled by humans after review. -->
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List the stakeholders and teams who will receive this document. Format as bullet list. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key terms: API, インターフェース, 画面遷移, レスポンス, エラーハンドリング, スタブ, デフェクト, etc. -->
 
-## 1. テスト設計
+## 1. テスト設計 <!-- required -->
 
 <!-- AI: Describe integration test design approach. Focus on interface contracts between components. Include: テスト対象インターフェース一覧 (API-xxx from 基本設計書, SCR-xxx 画面ID, TBL-xxx テーブルID), テスト手法 (トップダウン/ボトムアップ/ビッグバン), テスト環境構成, スタブ・ドライバー方針. Reference API-xxx, SCR-xxx, TBL-xxx from 基本設計書. -->
 
-## 2. 結合テストケース
+## 2. 結合テストケース <!-- required -->
 
 <!-- AI: Generate test cases focused on interface contracts, API integration, and screen transitions. ID format: IT-001, IT-002... テスト観点: API契約検証, 画面遷移, データ整合性, エラー伝播, タイムアウト処理. -->
 
@@ -65,7 +65,7 @@ approver: ""
 
 <!-- AI: Focus on: API-xxx インターフェース契約 (request/response schema), SCR-xxx 画面遷移フロー, TBL-xxx データ整合性 (CRUD operations), 認証・認可の境界, タイムアウト・エラー伝播. -->
 
-## 3. トレーサビリティ
+## 3. トレーサビリティ <!-- required -->
 
 <!-- AI: Map test cases to design artifacts. Traceability direction: API-xxx → SCR-xxx → IT-xxx. -->
 
@@ -75,7 +75,7 @@ approver: ""
 
 <!-- AI: Ensure every API-xxx from 基本設計書 has at least one IT-xxx. Include TBL-xxx where data persistence is verified. -->
 
-## 4. デフェクト報告
+## 4. デフェクト報告 <!-- required -->
 
 <!-- AI: Leave this section mostly blank — it is filled during test execution. Provide the table header only. -->
 

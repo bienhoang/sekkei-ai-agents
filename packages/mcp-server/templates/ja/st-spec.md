@@ -21,7 +21,7 @@ approver: ""
 
 # システムテスト仕様書
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
@@ -29,7 +29,7 @@ approver: ""
 
 <!-- AI: Add rows for each revision. 版数 increments as 1.0, 1.1, 2.0. -->
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -39,21 +39,21 @@ approver: ""
 
 <!-- AI: Leave 氏名 and 日付 blank — these are filled by humans after review. -->
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List the stakeholders and teams who will receive this document. Format as bullet list. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key terms: E2Eテスト, 負荷テスト, セキュリティテスト, 性能テスト, 回帰テスト, デフェクト, etc. -->
 
-## 1. テスト設計
+## 1. テスト設計 <!-- required -->
 
 <!-- AI: Describe system test design approach. Focus on end-to-end system behavior, NOT individual feature scope. Include: テスト対象システム範囲, テスト観点 (機能E2E/性能/セキュリティ/障害回復), テスト環境 (本番同等構成), テストデータ方針, 非機能テスト計画 (負荷ツール等). Reference F-xxx from 機能一覧, SCR-xxx and TBL-xxx from 基本設計書. -->
 
-## 2. システムテストケース
+## 2. システムテストケース <!-- required -->
 
 <!-- AI: Generate system-level test cases. ID format: ST-001, ST-002... テスト観点: E2Eシナリオ, 性能・負荷, セキュリティ, 障害回復, データ整合性. Do NOT scope to individual features — test system as a whole. -->
 
@@ -65,7 +65,7 @@ approver: ""
 
 <!-- AI: Cover all system-level test types: E2Eシナリオ (主要業務フロー全体), 性能テスト (NFR-xxx の目標値を検証), セキュリティテスト (SEC-xxx 対策の有効性確認), 障害回復テスト (RTO/RPO 検証), 回帰テスト (既存機能への影響確認). -->
 
-## 3. トレーサビリティ
+## 3. トレーサビリティ <!-- required -->
 
 <!-- AI: Map test cases to design artifacts. Traceability direction: F-xxx → SCR-xxx → ST-xxx. Include TBL-xxx and NFR-xxx where applicable. -->
 
@@ -75,7 +75,7 @@ approver: ""
 
 <!-- AI: Ensure every F-xxx from 機能一覧 is covered by at least one ST-xxx. NFR-xxx 性能・セキュリティ要件も ST-xxx にマッピングすること. -->
 
-## 4. デフェクト報告
+## 4. デフェクト報告 <!-- required -->
 
 <!-- AI: Leave this section mostly blank — it is filled during test execution. Provide the table header only. -->
 

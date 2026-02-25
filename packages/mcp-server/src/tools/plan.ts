@@ -35,7 +35,7 @@ const inputSchema = {
   phase_status: z.enum(["pending", "in_progress", "completed", "skipped"]).optional()
     .describe("New phase status (for update)"),
   survey_data: z.record(z.unknown()).optional()
-    .describe("Survey Round 2 data to persist in plan frontmatter"),
+    .describe("Survey Round 2 data to persist in plan frontmatter (for create)"),
   new_features: z.array(z.object({
     id: z.string().max(30).regex(/^[a-z][a-z0-9-]{1,49}$/, "kebab-case feature ID"),
     name: z.string().max(100),

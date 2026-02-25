@@ -5,9 +5,17 @@
 import { readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { parse as parseYaml } from "yaml";
+import { simpleGit } from "simple-git";
 import { CHAIN_PAIRS } from "./cross-ref-linker.js";
 import { logger } from "./logger.js";
 import type { ProjectConfig, StalenessWarning } from "../types/documents.js";
+
+/** Module-level git instance cache keyed by repoRoot to avoid repeated construction overhead */
+const gitInstances = new Map<string, ReturnType<typeof simpleGit>>();
+function getGit(repoRoot: string): ReturnType<typeof simpleGit> {
+  if (!gitInstances.has(repoRoot)) gitInstances.set(repoRoot, simpleGit(repoRoot));
+  return gitInstances.get(repoRoot)!;
+}
 
 /**
  * Load chain document file paths from config.
@@ -71,8 +79,7 @@ export async function loadChainDocPaths(configPath: string): Promise<Map<string,
 /** Get git last-modified date for a file path. Returns ISO string or null. */
 async function gitLastModified(repoRoot: string, filePath: string): Promise<string | null> {
   try {
-    const { simpleGit } = await import("simple-git");
-    const git = simpleGit(repoRoot);
+    const git = getGit(repoRoot);
     const log = await git.log({ file: filePath, maxCount: 1, format: { date: "%aI" } });
     return log.latest?.date ?? null;
   } catch {
@@ -90,30 +97,40 @@ export async function checkChainStaleness(configPath: string): Promise<Staleness
     const repoRoot = dirname(resolve(configPath));
     const warnings: StalenessWarning[] = [];
 
-    // Cache git dates to avoid repeated lookups
-    const dateCache = new Map<string, string | null>();
-    async function getDate(docType: string): Promise<string | null> {
-      if (dateCache.has(docType)) return dateCache.get(docType) ?? null;
-      const path = docPaths.get(docType);
-      if (!path) { dateCache.set(docType, null); return null; }
-      let date = await gitLastModified(repoRoot, path);
-      // For split-docs, take max of system_output and features_output timestamps
-      const featPath = docPaths.get(`${docType}:features`);
-      if (featPath) {
-        const featDate = await gitLastModified(repoRoot, featPath);
-        if (featDate && (!date || new Date(featDate) > new Date(date))) {
-          date = featDate;
-        }
-      }
-      dateCache.set(docType, date);
-      return date;
+    // Collect all unique docTypes referenced in CHAIN_PAIRS that have paths
+    const uniqueDocTypes = new Set<string>();
+    for (const [upstream, downstream] of CHAIN_PAIRS) {
+      if (docPaths.has(upstream)) uniqueDocTypes.add(upstream);
+      if (docPaths.has(downstream)) uniqueDocTypes.add(downstream);
     }
+
+    // Pre-fetch all git dates in parallel
+    const dateCache = new Map<string, string | null>();
+    await Promise.all(
+      Array.from(uniqueDocTypes).map(async (docType) => {
+        const path = docPaths.get(docType);
+        if (!path) { dateCache.set(docType, null); return; }
+
+        // For split-docs, fetch both paths in parallel and take max
+        const featPath = docPaths.get(`${docType}:features`);
+        const [date, featDate] = await Promise.all([
+          gitLastModified(repoRoot, path),
+          featPath ? gitLastModified(repoRoot, featPath) : Promise.resolve(null),
+        ]);
+
+        let resolved = date;
+        if (featDate && (!resolved || new Date(featDate) > new Date(resolved))) {
+          resolved = featDate;
+        }
+        dateCache.set(docType, resolved);
+      })
+    );
 
     for (const [upstream, downstream] of CHAIN_PAIRS) {
       if (!docPaths.has(upstream) || !docPaths.has(downstream)) continue;
 
-      const upDate = await getDate(upstream);
-      const downDate = await getDate(downstream);
+      const upDate = dateCache.get(upstream) ?? null;
+      const downDate = dateCache.get(downstream) ?? null;
       if (!upDate || !downDate) continue;
 
       if (new Date(upDate).getTime() > new Date(downDate).getTime()) {
@@ -150,30 +167,36 @@ export async function checkDocStaleness(configPath: string, docType: string): Pr
 
     const downPath = docPaths.get(docType);
     if (!downPath) return [];
-    let downDate = await gitLastModified(repoRoot, downPath);
-    // For split-docs, take max of system_output and features_output timestamps
-    const featPath = docPaths.get(`${docType}:features`);
-    if (featPath) {
-      const featDate = await gitLastModified(repoRoot, featPath);
-      if (featDate && (!downDate || new Date(featDate) > new Date(downDate))) {
-        downDate = featDate;
-      }
-    }
-    if (!downDate) return [];
 
-    for (const [upstream] of relevantPairs) {
-      const upPath = docPaths.get(upstream);
-      if (!upPath) continue;
-      const upDate = await gitLastModified(repoRoot, upPath);
+    // Fetch downstream date (with split-doc handling) and all upstream dates in parallel
+    const featPath = docPaths.get(`${docType}:features`);
+    const upstreamDocTypes = relevantPairs.map(([up]) => up).filter((up) => docPaths.has(up));
+
+    const [downDate, featDate, ...upDates] = await Promise.all([
+      gitLastModified(repoRoot, downPath),
+      featPath ? gitLastModified(repoRoot, featPath) : Promise.resolve(null),
+      ...upstreamDocTypes.map((up) => gitLastModified(repoRoot, docPaths.get(up)!)),
+    ]);
+
+    // Resolve downstream date (max of main + features)
+    let resolvedDownDate = downDate;
+    if (featDate && (!resolvedDownDate || new Date(featDate) > new Date(resolvedDownDate))) {
+      resolvedDownDate = featDate;
+    }
+    if (!resolvedDownDate) return [];
+
+    for (let i = 0; i < upstreamDocTypes.length; i++) {
+      const upstream = upstreamDocTypes[i];
+      const upDate = upDates[i];
       if (!upDate) continue;
 
-      if (new Date(upDate).getTime() > new Date(downDate).getTime()) {
+      if (new Date(upDate).getTime() > new Date(resolvedDownDate).getTime()) {
         warnings.push({
           upstream,
           downstream: docType,
           upstreamModified: upDate,
-          downstreamModified: downDate,
-          message: `${upstream} (${upDate}) is newer than ${docType} (${downDate})`,
+          downstreamModified: resolvedDownDate,
+          message: `${upstream} (${upDate}) is newer than ${docType} (${resolvedDownDate})`,
         });
       }
     }

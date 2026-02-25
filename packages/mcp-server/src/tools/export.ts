@@ -20,32 +20,32 @@ const EXPORT_FORMATS = ["xlsx", "pdf", "docx", "gsheet"] as const;
 const inputSchema = {
   content: z.string().max(500_000).optional().describe("Markdown document content to export"),
   doc_type: z.enum(DOC_TYPES).describe("Document type"),
-  format: z.enum(EXPORT_FORMATS).describe("Export format: xlsx, pdf, docx, gsheet"),
+  format: z.enum(EXPORT_FORMATS).describe("Export format: xlsx, pdf, docx, or gsheet"),
   output_path: z.string().max(500).optional()
     .refine((p) => !p || /\.(xlsx|pdf|docx)$/i.test(p), { message: "output_path must end with .xlsx, .pdf, or .docx (not needed for gsheet)" })
-    .describe("Output file path (not needed for gsheet format)"),
+    .describe("Output file path (omit for gsheet)"),
   config_path: z.string().max(500).optional()
     .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "config_path must be .yaml/.yml" })
-    .describe("Path to sekkei.config.yaml (required for Google export to load credentials)"),
+    .describe("Path to sekkei.config.yaml; required for Google Sheets export"),
   project_name: z.string().optional().describe("Project name for cover page"),
   source: z.enum(["file", "manifest"]).default("file")
-    .describe("Content source: direct file content or manifest-based merge"),
+    .describe("Content source: file content or manifest-based merge"),
   manifest_path: z.string().max(500).optional()
     .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "manifest_path must be .yaml/.yml" })
-    .describe("Path to _index.yaml manifest (required when source=manifest)"),
+    .describe("Path to _index.yaml manifest; required when source=manifest"),
   feature_name: z.string().regex(/^[a-z][a-z0-9-]{1,49}$/).optional()
-    .describe("Feature folder name (kebab-case) to export a single feature"),
+    .describe("Kebab-case feature folder name to export a single feature"),
   template_path: z.string().max(500).optional()
     .refine((p) => !p || p.toLowerCase().endsWith(".xlsx"), {
       message: "template_path must end with .xlsx",
     })
-    .describe("Path to an existing .xlsx template to fill instead of generating from scratch"),
+    .describe("Existing .xlsx template to fill instead of generating from scratch"),
   diff_mode: z.boolean().optional()
-    .describe("Enable 朱書き (redline) diff highlighting in Excel: additions=green, deletions=red+strikethrough"),
+    .describe("Enable 朱書き redline diff in Excel (additions=green, deletions=red)"),
   old_path: z.string().max(500).optional()
-    .describe("Path to the previous version file (required when diff_mode=true)"),
+    .describe("Previous version file path; required when diff_mode=true"),
   read_only: z.boolean().optional()
-    .describe("Strip internal metadata (confidence, traceability, learning annotations) for external sharing"),
+    .describe("Strip confidence/traceability annotations for external sharing"),
 };
 
 export interface ExportDocumentArgs {

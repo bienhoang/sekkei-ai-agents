@@ -109,11 +109,11 @@ describe("generate_document: project-plan", () => {
     });
 
     const text = result.content[0].text;
-    expect(text).toContain("Available Upstream IDs");
+    expect(text).toContain("Upstream Cross-Reference Checklist");
     expect(text).toContain("REQ-001");
     expect(text).toContain("REQ-002");
     expect(text).toContain("F-001");
-    expect(text).toContain("ONLY these IDs");
+    expect(text).toContain("verify all checkboxes");
   });
 });
 
@@ -884,5 +884,46 @@ describe("generate_document: project_type has no effect on simple generators", (
     expect(result.isError).toBeUndefined();
     expect(result.content[0].text).toContain("移行設計書");
     expect(result.content[0].text).not.toContain("Project Type: Government");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// 8. template_mode: skeleton
+// ---------------------------------------------------------------------------
+
+describe("generate_document: template_mode skeleton", () => {
+  it("skeleton mode injects only heading lines from template", async () => {
+    const result = await handleGenerateDocument({
+      doc_type: "project-plan",
+      input_content: "Test skeleton mode",
+      language: "ja",
+      template_mode: "skeleton",
+      templateDir: TEMPLATE_DIR,
+    });
+
+    expect(result.isError).toBeUndefined();
+    const text = result.content[0].text;
+    // Should contain the skeleton header
+    expect(text).toContain("## Template (skeleton)");
+    // Skeleton lines must all start with # headings
+    const skeletonBlock = text.split("## Template (skeleton)")[1]?.split("## Input Content")[0] ?? "";
+    const nonHeadingContentLines = skeletonBlock.split("\n")
+      .filter(l => l.trim().length > 0 && !/^#{1,4}\s/.test(l));
+    expect(nonHeadingContentLines.length).toBe(0);
+  });
+
+  it("full mode (default) injects complete template content", async () => {
+    const result = await handleGenerateDocument({
+      doc_type: "project-plan",
+      input_content: "Test full mode",
+      language: "ja",
+      template_mode: "full",
+      templateDir: TEMPLATE_DIR,
+    });
+
+    expect(result.isError).toBeUndefined();
+    const text = result.content[0].text;
+    expect(text).toContain("## Template\n");
+    expect(text).not.toContain("## Template (skeleton)");
   });
 });

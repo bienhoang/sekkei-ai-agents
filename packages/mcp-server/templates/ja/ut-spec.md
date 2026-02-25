@@ -21,7 +21,7 @@ approver: ""
 
 # 単体テスト仕様書
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
@@ -29,7 +29,7 @@ approver: ""
 
 <!-- AI: Add rows for each revision. 版数 increments as 1.0, 1.1, 2.0. -->
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -39,21 +39,21 @@ approver: ""
 
 <!-- AI: Leave 氏名 and 日付 blank — these are filled by humans after review. -->
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List the stakeholders and teams who will receive this document. Format as bullet list. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key terms: 正常系, 異常系, 境界値, スタブ, モック, カバレッジ, デフェクト, etc. -->
 
-## 1. テスト設計
+## 1. テスト設計 <!-- required -->
 
 <!-- AI: Describe unit test design approach for this module/class. Include: テスト対象モジュール・クラス一覧 (CLS-xxx IDs from 詳細設計書), テスト手法 (ホワイトボックス, 境界値分析, 同値分割), カバレッジ目標 (ステートメント/ブランチ), テストフレームワーク, スタブ・モック方針. Reference DD-xxx from 詳細設計書. -->
 
-## 2. 単体テストケース
+## 2. 単体テストケース <!-- required -->
 
 <!-- AI: Generate test cases for each module/class (CLS-xxx). テスト観点 MUST cover: 正常系 (normal flow), 異常系 (error/exception handling), 境界値 (boundary values). Generate at least 5 test cases per module. ID format: UT-001, UT-002... -->
 
@@ -65,7 +65,7 @@ approver: ""
 
 <!-- AI: Continue rows for all modules. Minimum 5 cases per CLS-xxx. Cover: 正常系, 異常系 (null/空文字/型不一致), 境界値 (最小値/最大値/±1). -->
 
-## 3. トレーサビリティ
+## 3. トレーサビリティ <!-- required -->
 
 <!-- AI: Map test cases to design artifacts. Traceability direction: DD-xxx → CLS-xxx → UT-xxx. -->
 
@@ -75,7 +75,7 @@ approver: ""
 
 <!-- AI: Ensure every CLS-xxx from 詳細設計書 has at least one UT-xxx. Missing traceability = test gap. -->
 
-## 4. デフェクト報告
+## 4. デフェクト報告 <!-- required -->
 
 <!-- AI: Leave this section mostly blank — it is filled during test execution. Provide the table header only. -->
 

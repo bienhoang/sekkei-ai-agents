@@ -1,19 +1,13 @@
-> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
-
 # Design Phase Commands
 
 Command workflows for the design phase of the V-model document chain.
-Parent: `SKILL.md` → Workflow Router → Design Phase.
 
 ## `/sekkei:basic-design @input`
 
 **Prerequisite check (MUST run before interview):**
-1. Check `{output.directory}/02-requirements/requirements.md` exists
-   - If missing → ABORT: "Requirements not found. Run `/sekkei:requirements` first."
-2. Check `{output.directory}/04-functions-list/functions-list.md` exists
-   - If missing → WARN: "Functions-list not found. Basic-design will only reference REQ-xxx IDs.
-     Run `/sekkei:functions-list` first for complete cross-referencing."
-   - Continue (not blocking)
+1. Verify `{output.directory}/02-requirements/requirements.md` exists — abort if missing: "Run `/sekkei:requirements` first."
+2. Verify `{output.directory}/04-functions-list/functions-list.md` exists — warn if missing (not blocking): "Functions-list not found; basic-design will only reference REQ-xxx IDs."
+3. Pass both files as `upstream_content` to `generate_document` (requirements mandatory; functions-list if present)
 
 **Interview questions (ask before generating):**
 - What architecture pattern? (monolith, microservices, serverless)
@@ -79,7 +73,7 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
    e. **Suggest HTML mockup generation:**
       - Inform user: "Basic design complete with screen definitions. Run `/sekkei:mockup` to generate HTML mockups."
 6. Call MCP tool `validate_document` with saved content and `doc_type: "basic-design"`.
-   Show results as non-blocking.
+   **Post-generation validation (mandatory):** If validation reports errors (missing sections, broken cross-refs): fix inline before finalizing. If validation passes: proceed to update chain status.
 7. Suggest next steps:
    > "Basic design complete. Next steps:
    > - `/sekkei:mockup` — generate HTML screen mockups
@@ -90,13 +84,9 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 ## `/sekkei:security-design @basic-design`
 
 **Prerequisite check (MUST run before interview):**
-1. Check `{output.directory}/03-system/basic-design.md` exists (or check `chain.basic_design.status`)
-   - If missing → ABORT: "Basic design not found. Run `/sekkei:basic-design` first."
-2. Read basic-design content as primary upstream
-3. Optionally load requirements + nfr for fuller cross-referencing:
-   - If `chain.requirements.output` exists → read as additional upstream
-   - If `chain.nfr.output` exists → read as additional upstream
-4. Concatenate all as `upstream_content` (requirements + nfr + basic-design)
+1. Verify `{output.directory}/03-system/basic-design.md` exists (or `chain.basic_design.status == "complete"`) — abort if missing: "Run `/sekkei:basic-design` first."
+2. Load basic-design as primary upstream; also load requirements and nfr if `chain.*.output` paths exist
+3. Concatenate as `upstream_content` (requirements + nfr + basic-design) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 
@@ -128,7 +118,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "security_design"`,
    `status: "complete"`, `output: "03-system/security-design.md"`
 7. Call MCP tool `validate_document` with saved content and `doc_type: "security-design"`.
-   Show results as non-blocking.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 8. Suggest next steps:
    > "Security design complete. Next steps:
    > - `/sekkei:detail-design` — generate 詳細設計書
@@ -137,24 +127,10 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 ## `/sekkei:detail-design @input`
 
 **Prerequisite check (MUST run before interview):**
-1. Check basic-design exists (3-tier check):
-   a. If `sekkei.config.yaml` exists → check `chain.basic_design.status == "complete"` (preferred)
-   b. Else if split config active → check at least one `{output.directory}/features/*/basic-design.md` exists
-   c. Else → check `{output.directory}/03-system/basic-design.md` exists
-   - If ALL checks fail → ABORT: "Basic design not found. Run `/sekkei:basic-design` first."
+1. Confirm basic-design exists: check `chain.basic_design.status == "complete"` in config, or any `features/*/basic-design.md`, or `03-system/basic-design.md` — abort if all fail: "Run `/sekkei:basic-design` first."
 2. **Load upstream (mode-aware):**
-   a. Read `sekkei.config.yaml` → check `split.detail-design` exists
-   b. **If split mode:**
-      - Read ALL `{output.directory}/shared/*.md` → shared_content
-      - Read `{output.directory}/02-requirements/requirements.md` → req_content (if exists)
-      - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
-      - global_upstream = shared_content + "\n\n" + req_content + "\n\n" + fl_content
-      - (Per-feature upstream assembled in §4 below)
-   c. **If monolithic:**
-      - Read `{output.directory}/03-system/basic-design.md` → bd_content
-      - Read `{output.directory}/02-requirements/requirements.md` → req_content (if exists)
-      - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
-      - upstream_content = bd_content + "\n\n" + req_content + "\n\n" + fl_content
+   - **Split mode** (`split.detail-design` in config): global_upstream = `shared/*.md` + requirements.md + functions-list.md (per-feature upstream assembled in §4 below)
+   - **Monolithic**: upstream_content = basic-design.md + requirements.md + functions-list.md (last two if they exist)
 
 **Interview questions (ask before generating):**
 - Programming language and framework?
@@ -210,7 +186,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
    - **If split mode:** `status: "complete"`, `system_output: "03-system/"`, `features_output: "05-features/"`
    - **If monolithic:** `status: "complete"`, `output: "03-system/detail-design.md"`
 7. Call MCP tool `validate_document` with saved content and `doc_type: "detail-design"`.
-   Show results as non-blocking.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 8. Suggest next steps:
    > "Detail design complete. Next steps:
    > - `/sekkei:ut-spec` — generate 単体テスト仕様書

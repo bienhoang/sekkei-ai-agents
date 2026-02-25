@@ -24,7 +24,7 @@ approver: ""
 
 # 非機能要件定義書
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
@@ -32,7 +32,7 @@ approver: ""
 
 <!-- AI: Add rows for each revision. 版数 increments as 1.0, 1.1, 2.0. -->
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -42,21 +42,21 @@ approver: ""
 
 <!-- AI: Leave 氏名 and 日付 blank — these are filled by humans after review. -->
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List the stakeholders and teams who will receive this document (e.g., PMO, 開発チーム, 顧客担当者). Format as bullet list. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key technical terms. Include RTO, RPO, SLA, TLS, etc. as applicable. -->
 
-## 1. 非機能要件概要
+## 1. 非機能要件概要 <!-- required -->
 
 <!-- AI: Summarize the scope and approach of non-functional requirements for this system. Reference the REQ-xxx IDs from the 要件定義書 that drive these NFRs. Describe IPA NFUG 6-category coverage. -->
 
-## 2. 非機能要件一覧
+## 2. 非機能要件一覧 <!-- required -->
 
 <!-- AI: Each NFR MUST have a numeric 目標値. NEVER use vague terms: 高速, 十分, 適切, 高い, 良好, 適宜. Use specific numbers (e.g., 99.9%, 2秒以内, 1000同時接続, 4時間以内). Map to REQ-xxx from 要件定義書. -->
 
@@ -69,30 +69,30 @@ approver: ""
 | NFR-005 | セキュリティ | <!-- AI --> | <!-- AI: e.g., TLS 1.3以上 --> | <!-- AI --> | 高 |
 | NFR-006 | システム環境・エコロジー | <!-- AI --> | <!-- AI: e.g., CPU使用率通常時70%以下 --> | <!-- AI --> | 低 |
 
-## 3. 可用性
+## 3. 可用性 <!-- required -->
 
 <!-- AI: Detail availability requirements. Include: 稼働率目標, RTO (Recovery Time Objective), RPO (Recovery Point Objective), 計画停止時間, 障害時の縮退運転方針. All values must be numeric. -->
 
-## 4. 性能・拡張性
+## 4. 性能・拡張性 <!-- required -->
 
 <!-- AI: Detail performance and scalability requirements. Include: 応答時間 (P50/P95/P99), スループット, 同時接続数, データ量上限, スケールアウト条件. All values must be numeric. -->
 
-## 5. 運用・保守性
+## 5. 運用・保守性 <!-- required -->
 
 <!-- AI: Detail operability and maintainability requirements. Include: 監視・アラート応答時間, ログ保持期間, バックアップ頻度・保持期間, デプロイ所要時間, MTTR目標. All values numeric. -->
 
-## 6. 移行性
+## 6. 移行性 <!-- required -->
 
 <!-- AI: Detail migration requirements. Include: 移行期間, データ移行方式, 移行データ整合性確認方法, 並行稼働期間, ロールバック手順. If no migration needed, state 新規開発のため既存システムなし. -->
 
-## 7. セキュリティ
+## 7. セキュリティ <!-- required -->
 
 <!-- AI: Detail security requirements. Include: 認証方式, 暗号化方式 (TLS version), パスワードポリシー, アクセスログ保持期間, 脆弱性スキャン頻度. Reference REQ-xxx and NFR-xxx IDs. -->
 
-## 8. システム環境・エコロジー
+## 8. システム環境・エコロジー <!-- required -->
 
 <!-- AI: Detail environment and ecology requirements. Include: サーバースペック最低要件, OS・ミドルウェアバージョン, PUE目標, CPU/メモリ使用率上限, クラウドリージョン要件. If N/A, state 理由を明記. -->
 
-## 9. 参考資料
+## 9. 参考資料 <!-- optional -->
 
 <!-- AI: List referenced documents: 要件定義書 (REQ-xxx), IPA NFUG ガイドライン, 関連標準. -->

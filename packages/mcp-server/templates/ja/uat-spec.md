@@ -21,7 +21,7 @@ approver: ""
 
 # 受入テスト仕様書
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
@@ -29,7 +29,7 @@ approver: ""
 
 <!-- AI: Add rows for each revision. 版数 increments as 1.0, 1.1, 2.0. -->
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -39,21 +39,21 @@ approver: ""
 
 <!-- AI: Leave 氏名 and 日付 blank — these are filled by humans after review. -->
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List the stakeholders and teams who will receive this document. Format as bullet list. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key terms: 受入基準, ビジネスシナリオ, ユーザーロール, サインオフ, デフェクト, etc. -->
 
-## 1. テスト設計
+## 1. テスト設計 <!-- required -->
 
 <!-- AI: Describe UAT design approach. Focus on business scenarios from the user's perspective — NOT technical feature scope. Include: テスト目的 (ビジネス要件の充足確認), テスト参加者 (実業務ユーザー, PMO, 顧客担当者), テスト環境 (本番同等), テストデータ方針 (実業務データに近いデータ使用), サインオフ手順. Reference REQ-xxx from 要件定義書, NFR-xxx from 非機能要件定義書. -->
 
-## 2. 受入テストケース
+## 2. 受入テストケース <!-- required -->
 
 <!-- AI: Generate UAT test cases as business scenarios written in user-facing language. ID format: UAT-001, UAT-002... テスト観点: ビジネスシナリオ達成, ユーザビリティ, 非機能受入 (性能/可用性). Do NOT scope to individual features — write from end-user business perspective. -->
 
@@ -65,7 +65,7 @@ approver: ""
 
 <!-- AI: Write all test steps and expected results in plain business Japanese understandable by non-technical users. Cover: 主要ビジネスシナリオ (REQ-xxx ごと), 非機能受入基準 (NFR-xxx の目標値をユーザー視点で確認), エラー時のユーザー体験 (エラーメッセージの分かりやすさ), アクセシビリティ・ユーザビリティ. -->
 
-## 3. トレーサビリティ
+## 3. トレーサビリティ <!-- required -->
 
 <!-- AI: Map test cases to requirements. Traceability direction: REQ-xxx → NFR-xxx → UAT-xxx. -->
 
@@ -75,7 +75,7 @@ approver: ""
 
 <!-- AI: Ensure every REQ-xxx from 要件定義書 has at least one UAT-xxx. NFR-xxx 受入基準も UAT-xxx にマッピングすること. Missing traceability = acceptance gap. -->
 
-## 4. デフェクト報告
+## 4. デフェクト報告 <!-- required -->
 
 <!-- AI: Leave this section mostly blank — it is filled during test execution. Provide the table header only. -->
 

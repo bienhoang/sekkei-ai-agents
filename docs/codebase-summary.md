@@ -57,9 +57,10 @@ sekkei/
 │   │   │   │   ├── cr-propagation.ts  # CR propagation order (upstream + downstream BFS) (55 LOC)
 │   │   │   │   ├── cr-backfill.ts     # Upstream backfill suggestion generator (65 LOC)
 │   │   │   │   ├── cr-conflict-detector.ts # Parallel CR conflict detection (50 LOC)
-│   │   │   │   └── git-committer.ts   # Git commit helper (58 LOC)
+│   │   │   │   ├── git-committer.ts   # Git commit helper (58 LOC)
+│   │   │   │   └── upstream-extractor.ts # Extract IDs from upstream docs (server-side, 5-min cache, 139 LOC)
 │   │   │   ├── tools/                 # MCP Tool Handlers (12 tools)
-│   │   │   │   ├── generate.ts        # generate_document tool (+ v3 source_code_path, Phase A confidence/traceability)
+│   │   │   │   ├── generate.ts        # generate_document tool (+ v3 source_code_path, Phase A confidence/traceability, upstream_paths, post_actions)
 │   │   │   │   ├── validate.ts        # validate_document tool (4 modes + v3 structure rules)
 │   │   │   │   ├── chain-status.ts    # get_chain_status tool
 │   │   │   │   ├── export.ts          # export_document tool (+ v3 gsheet, Phase A read_only mode)

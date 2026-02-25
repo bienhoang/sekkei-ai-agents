@@ -5,10 +5,18 @@
 import { dirname, resolve } from "node:path";
 import { readFile } from "node:fs/promises";
 import { parse as parseYaml } from "yaml";
+import { simpleGit } from "simple-git";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
 import { resolveOutputPath } from "./resolve-output-path.js";
 import type { ProjectConfig, DocType } from "../types/documents.js";
+
+/** Module-level git instance cache keyed by repoRoot to avoid repeated construction overhead */
+const gitInstances = new Map<string, ReturnType<typeof simpleGit>>();
+function getGit(repoRoot: string): ReturnType<typeof simpleGit> {
+  if (!gitInstances.has(repoRoot)) gitInstances.set(repoRoot, simpleGit(repoRoot));
+  return gitInstances.get(repoRoot)!;
+}
 
 export interface StalenessEntry {
   featureId: string;
@@ -124,9 +132,8 @@ export async function detectStaleness(
     };
   }
 
-  const { simpleGit } = await import("simple-git");
   const repoRoot = dirname(resolve(configPath));
-  const git = simpleGit(repoRoot);
+  const git = getGit(repoRoot);
 
   // Verify git repo
   try {
@@ -190,57 +197,58 @@ export async function detectStaleness(
   }
 
   const outputDir = config.output?.directory ?? "output";
-  const features: StalenessEntry[] = [];
+  // Process all features in parallel — each git log call is independent
+  const features: StalenessEntry[] = await Promise.all(
+    Object.entries(config.feature_file_map).map(async ([featureId, mapping]) => {
+      const matched = changedFiles.filter((f) => matchGlob(f, mapping.files));
 
-  for (const [featureId, mapping] of Object.entries(config.feature_file_map)) {
-    const matched = changedFiles.filter((f) => matchGlob(f, mapping.files));
+      let lastDocUpdate: string | null = null;
+      let daysSinceDocUpdate = 0;
 
-    let lastDocUpdate: string | null = null;
-    let daysSinceDocUpdate = 0;
+      if (matched.length > 0) {
+        try {
+          // Build per-feature doc paths via resolveOutputPath
+          const affectedTypes = getAffectedDocTypes(featureId);
+          const featureDocPaths = affectedTypes
+            .map((dt) => resolveOutputPath(dt as DocType))
+            .filter((p): p is string => p != null)
+            .map((p) => `${outputDir}/${p}`);
 
-    if (matched.length > 0) {
-      try {
-        // Build per-feature doc paths via resolveOutputPath
-        const affectedTypes = getAffectedDocTypes(featureId);
-        const featureDocPaths = affectedTypes
-          .map((dt) => resolveOutputPath(dt as DocType))
-          .filter((p): p is string => p != null)
-          .map((p) => `${outputDir}/${p}`);
-
-        // git log with per-feature paths (not whole outputDir)
-        const logOutput = await git.raw([
-          "log", "-1", "--format=%aI", "--", ...featureDocPaths,
-        ]);
-        const trimmed = logOutput.trim();
-        if (trimmed) {
-          lastDocUpdate = trimmed;
-          const docDate = new Date(lastDocUpdate).getTime();
-          daysSinceDocUpdate = Math.round((Date.now() - docDate) / 86_400_000);
+          // git log with per-feature paths (not whole outputDir)
+          const logOutput = await git.raw([
+            "log", "-1", "--format=%aI", "--", ...featureDocPaths,
+          ]);
+          const trimmed = logOutput.trim();
+          if (trimmed) {
+            lastDocUpdate = trimmed;
+            const docDate = new Date(lastDocUpdate).getTime();
+            daysSinceDocUpdate = Math.round((Date.now() - docDate) / 86_400_000);
+          }
+        } catch {
+          daysSinceDocUpdate = 90; // assume worst case
         }
-      } catch {
-        daysSinceDocUpdate = 90; // assume worst case
       }
-    }
 
-    const linesForFeature = matched.length > 0
-      ? Math.round(totalLinesChanged * (matched.length / Math.max(changedFiles.length, 1)))
-      : 0;
+      const linesForFeature = matched.length > 0
+        ? Math.round(totalLinesChanged * (matched.length / Math.max(changedFiles.length, 1)))
+        : 0;
 
-    const score = matched.length > 0
-      ? calcScore(daysSinceDocUpdate, matched.length, linesForFeature)
-      : 0;
+      const score = matched.length > 0
+        ? calcScore(daysSinceDocUpdate, matched.length, linesForFeature)
+        : 0;
 
-    features.push({
-      featureId,
-      label: mapping.label,
-      score,
-      changedFiles: matched,
-      linesChanged: linesForFeature,
-      lastDocUpdate,
-      daysSinceDocUpdate,
-      affectedDocTypes: getAffectedDocTypes(featureId),
-    });
-  }
+      return {
+        featureId,
+        label: mapping.label,
+        score,
+        changedFiles: matched,
+        linesChanged: linesForFeature,
+        lastDocUpdate,
+        daysSinceDocUpdate,
+        affectedDocTypes: getAffectedDocTypes(featureId),
+      };
+    })
+  );
 
   const overallScore =
     features.length > 0

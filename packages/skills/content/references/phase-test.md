@@ -1,9 +1,6 @@
-> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
-
 # Test Phase Commands
 
 Command workflows for the test phase of the V-model document chain.
-Parent: `SKILL.md` → Workflow Router → Test Phase.
 
 ## Split Mode Detection
 
@@ -28,13 +25,9 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 ## `/sekkei:test-plan @requirements`
 
 **Prerequisite check (MUST run before interview):**
-1. Load `sekkei.config.yaml` — read `chain.requirements.status`
-2. If `chain.requirements.status` != "complete" → **ABORT**. Tell user:
-   > "Requirements not complete. Run `/sekkei:requirements` first."
-3. Read requirements content from `chain.requirements.output`
-4. Check `chain.nfr.status` — if "complete", also read nfr content
-5. Check `chain.basic_design.status` — if "complete", also read basic-design content
-6. Concatenate all as `upstream_content` (requirements + nfr + basic-design, in that order)
+1. Read `chain.requirements.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Run `/sekkei:requirements` first."
+2. Read upstream from `chain.requirements.output`; also load nfr and basic-design if their chain status is `"complete"`
+3. Concatenate as `upstream_content` (requirements + nfr + basic-design) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 - Test scope and what is out of scope?
@@ -53,7 +46,8 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "test_plan"`,
    `status: "complete"`, `output: "08-test/test-plan.md"`
 7. Call MCP tool `validate_document` with saved content, `doc_type: "test-plan"`,
-   and `upstream_content`. Show results as non-blocking.
+   and `upstream_content`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 8. Suggest next steps:
    > "Test plan complete. Next steps (based on V-model):
    > - `/sekkei:ut-spec @detail-design` — generate 単体テスト仕様書
@@ -64,12 +58,9 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 ## `/sekkei:ut-spec @detail-design`
 
 **Prerequisite check (MUST run before interview):**
-1. Call MCP tool `get_chain_status` with `config_path` — read full chain
-2. If `chain.detail_design.status` != "complete" → **ABORT**. Tell user:
-   > "Detail design not complete. Run `/sekkei:detail-design` first."
-3. Read detail-design content from `chain.detail_design.output` (or `system_output` + `features_output` if split)
-4. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
-5. Concatenate as `upstream_content` (detail-design + test-plan if available)
+1. Read `chain.detail_design.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Run `/sekkei:detail-design` first."
+2. Read upstream from `chain.detail_design.output` (or `system_output` + `features_output` if split); also load test-plan if `chain.test_plan.status == "complete"`
+3. Concatenate as `upstream_content` (detail-design + test-plan if available) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 - Target modules/classes for unit testing?
@@ -91,17 +82,15 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "ut_spec"`,
    `status: "complete"`, `output: <saved_path_from_step_5>`
 7. Call MCP tool `validate_document` with saved content, `doc_type: "ut-spec"`,
-   and `upstream_content`. Show results as non-blocking.
+   and `upstream_content`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 
 ## `/sekkei:it-spec @basic-design`
 
 **Prerequisite check (MUST run before interview):**
-1. Call MCP tool `get_chain_status` with `config_path` — read full chain
-2. If `chain.basic_design.status` != "complete" → **ABORT**. Tell user:
-   > "Basic design not complete. Run `/sekkei:basic-design` first."
-3. Read basic-design content from `chain.basic_design.output` (or `system_output` + `features_output` if split)
-4. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
-5. Concatenate as `upstream_content` (basic-design + test-plan if available)
+1. Read `chain.basic_design.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Run `/sekkei:basic-design` first."
+2. Read upstream from `chain.basic_design.output` (or split outputs); also load test-plan if `chain.test_plan.status == "complete"`
+3. Concatenate as `upstream_content` (basic-design + test-plan if available) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 - Integration scope? (API-to-API, screen-to-API, DB integration, external services)
@@ -121,18 +110,15 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "it_spec"`,
    `status: "complete"`, `output: <saved_path_from_step_5>`
 7. Call MCP tool `validate_document` with saved content, `doc_type: "it-spec"`,
-   and `upstream_content`. Show results as non-blocking.
+   and `upstream_content`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 
 ## `/sekkei:st-spec @basic-design`
 
 **Prerequisite check (MUST run before interview):**
-1. Call MCP tool `get_chain_status` with `config_path` — read full chain
-2. If `chain.basic_design.status` != "complete" → **ABORT**. Tell user:
-   > "Basic design not complete. Run `/sekkei:basic-design` first."
-3. Read basic-design content from `chain.basic_design.output` (or `system_output` + `features_output` if split)
-4. If `chain.functions_list.status` == "complete" → also read functions-list content
-5. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
-6. Concatenate as `upstream_content` (basic-design + functions-list + test-plan, in order of availability)
+1. Read `chain.basic_design.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Run `/sekkei:basic-design` first."
+2. Read upstream from `chain.basic_design.output`; also load functions-list and test-plan if their chain status is `"complete"`
+3. Concatenate as `upstream_content` (basic-design + functions-list + test-plan) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 - Key E2E business scenarios to validate?
@@ -152,18 +138,15 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "st_spec"`,
    `status: "complete"`, `output: "08-test/st-spec.md"`
 7. Call MCP tool `validate_document` with saved content, `doc_type: "st-spec"`,
-   and `upstream_content`. Show results as non-blocking.
+   and `upstream_content`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
 
 ## `/sekkei:uat-spec @requirements`
 
 **Prerequisite check (MUST run before interview):**
-1. Call MCP tool `get_chain_status` with `config_path` — read full chain
-2. If `chain.requirements.status` != "complete" → **ABORT**. Tell user:
-   > "Requirements not complete. Run `/sekkei:requirements` first."
-3. Read requirements content from `chain.requirements.output`
-4. If `chain.nfr.status` == "complete" → also read nfr content
-5. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
-6. Concatenate as `upstream_content` (requirements + nfr + test-plan, in order of availability)
+1. Read `chain.requirements.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Run `/sekkei:requirements` first."
+2. Read upstream from `chain.requirements.output`; also load nfr and test-plan if their chain status is `"complete"`
+3. Concatenate as `upstream_content` (requirements + nfr + test-plan) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
 - Key business scenarios for acceptance?
@@ -183,4 +166,5 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "uat_spec"`,
    `status: "complete"`, `output: "08-test/uat-spec.md"`
 7. Call MCP tool `validate_document` with saved content, `doc_type: "uat-spec"`,
-   and `upstream_content`. Show results as non-blocking.
+   and `upstream_content`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.

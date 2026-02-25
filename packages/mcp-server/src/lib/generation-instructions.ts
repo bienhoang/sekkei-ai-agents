@@ -86,42 +86,16 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
 
   "security-design": [
     "Generate a セキュリティ設計書 (Security Design) from basic-design + requirements + nfr.",
-    "9 core sections + 3 optional: セキュリティ方針, セキュリティ対策一覧, 認証・認可設計, データ保護, 通信セキュリティ, 脆弱性対策, 監査ログ, インシデント対応, 参考資料. Optional: APIセキュリティ, 鍵管理, サプライチェーンセキュリティ.",
-    "",
-    "## セキュリティ対策一覧 (Section 2)",
-    "Table: SEC-ID | 対策項目 | 対策内容 | 対象 | 優先度 | 備考.",
-    "ID format: SEC-001. Generate at least 10 SEC entries covering all OWASP Top 10 categories.",
-    "Each SEC entry MUST reference at least 1 upstream ID (REQ-xxx, NFR-xxx, API-xxx, SCR-xxx).",
-    "優先度 values: 高, 中, 低 only.",
-    "",
-    "## 認証・認可設計 (Section 3)",
-    "Specify: auth method (OAuth2/SAML/JWT/OpenID Connect), session management, RBAC design.",
-    "Password: bcrypt (cost≥12) or Argon2id. Never MD5/SHA1.",
-    "Include: MFA strategy, session timeout policy, failed login lockout threshold.",
-    "",
-    "## データ保護 (Section 4)",
-    "Include: PII data flow (input→processing→storage→deletion), data classification matrix.",
-    "Encryption at rest: AES-256. Key management strategy (rotation, revocation).",
-    "Data retention policy per data category with specific durations.",
-    "",
-    "## 通信セキュリティ (Section 5)",
-    "TLS 1.3+ mandatory. Specify cipher suites. HSTS header required.",
-    "API security: rate limiting strategy, CORS policy, API key management.",
-    "",
-    "## 脆弱性対策 (Section 6)",
-    "Map each countermeasure to OWASP Top 10 category (A01-A10).",
-    "Cover: SQLi (prepared statements), XSS (output escaping), CSRF (token-based), SSRF, path traversal.",
-    "Dependency security: SCA tool, update policy, SBOM consideration.",
-    "",
-    "## 監査ログ (Section 7)",
-    "Log items: timestamp, user ID, action, target resource, IP address, result (success/fail).",
-    "Retention: specify exact days (e.g., 90 days online, 1 year archive).",
-    "Tamper protection: append-only, hash chain or WORM storage.",
-    "",
-    "## インシデント対応 (Section 8)",
-    "Severity matrix: S1 (critical, 1h response), S2 (high, 4h), S3 (medium, 24h), S4 (low, 72h).",
-    "Include: detection method, escalation chain, post-incident review process.",
-    "",
+    "9 sections: セキュリティ方針, セキュリティ対策一覧, 認証・認可設計, データ保護, 通信セキュリティ, 脆弱性対策, 監査ログ, インシデント対応, 参考資料.",
+    "SEC-001 table: SEC-ID | 対策項目 | 対策内容 | 対象 | 優先度 (高/中/低) | 備考. ≥10 entries, all OWASP Top 10.",
+    "Each SEC entry: reference ≥1 upstream ID (REQ-xxx, NFR-xxx, API-xxx, SCR-xxx).",
+    "認証: auth method (OAuth2/SAML/JWT), RBAC, MFA strategy, session timeout, lockout policy.",
+    "Password: bcrypt (cost≥12) or Argon2id — never MD5/SHA1.",
+    "データ保護: PII data flow (input→processing→storage→deletion), AES-256 at rest, retention policy.",
+    "通信: TLS 1.3+, cipher suites, HSTS. API: rate limiting, CORS, API key management.",
+    "脆弱性: map each to OWASP A01-A10. Cover SQLi, XSS, CSRF, SSRF, path traversal.",
+    "監査ログ: timestamp, user ID, action, resource, IP, result. Retention: exact days. Tamper-proof.",
+    "インシデント: S1 (critical,1h) / S2 (high,4h) / S3 (medium,24h) / S4 (low,72h). Escalation chain.",
     "Cross-reference REQ-xxx, NFR-xxx, API-xxx, SCR-xxx, TBL-xxx IDs from upstream.",
   ].join("\n"),
 
@@ -205,20 +179,33 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Generate a 運用設計書 (Operation Design Document) from the provided input.",
     "Include all 6 sections: 運用体制, バックアップ・リストア方針, 監視・アラート定義, 障害対応手順, ジョブ管理, SLA定義.",
     "障害対応手順: Use OP-001 format with 6 columns: OP-ID, 手順名, 障害レベル (重大/警告/軽微), 手順内容, 担当者, 想定時間.",
-    "バックアップ・リストア方針: Every data store MUST have RPO and RTO values. Reference TBL-xxx from upstream if available.",
-    "監視・アラート定義: Include numeric thresholds (警告/異常) for each metric. Reference API-xxx endpoints as monitoring targets if upstream basic-design is provided.",
-    "SLA定義: Every SLA item MUST have a specific numeric target (稼働率 %, RTO, RPO). Prohibited vague terms: 高い, 十分, 適切, 良好, 高速.",
-    "ジョブ管理: List batch jobs with schedule (cron), dependencies, retry policy, failure alert. Reference F-xxx from upstream functions-list if available.",
-    "Cross-reference NFR-xxx and REQ-xxx IDs from upstream documents. If basic-design is provided, reference API-xxx, TBL-xxx for monitoring targets and backup targets.",
+    "Runbook structure: each OP entry is a self-contained runbook step (check → action → verify).",
+    "Alert threshold guidance: define both 警告 (warning) and 異常 (critical) thresholds per metric.",
+    "On-call escalation format: L1 → L2 → L3 escalation path with contact and SLA per level.",
+    "バックアップ・リストア方針: every data store MUST have RPO and RTO values. Reference TBL-xxx.",
+    "Restore procedure: include step-by-step restore test schedule (monthly recommended).",
+    "監視・アラート定義: numeric thresholds required. Reference API-xxx as monitoring targets.",
+    "SLA定義: every item MUST have numeric target. Prohibited: 高い, 十分, 適切, 良好, 高速.",
+    "SLA breach response: define what happens when SLA is breached (incident, compensation).",
+    "ジョブ管理: list batch jobs with cron schedule, dependencies, retry policy, failure alert.",
+    "Reference F-xxx from functions-list for batch jobs if available.",
+    "Cross-reference NFR-xxx, REQ-xxx, API-xxx, TBL-xxx IDs from upstream documents.",
   ].join("\n"),
 
   "migration-design": [
     "Generate a 移行設計書 (Migration Design Document) from the provided input.",
     "Include all 5 sections: 移行方針, データ移行計画, システム切替手順, ロールバック計画, 移行テスト計画.",
-    "データ移行計画: Use MIG-001 format with columns: MIG-ID, 対象データ, 移行方法, 検証方法, 担当者.",
-    "ロールバック計画: Must include step-by-step rollback procedure with time estimates.",
-    "移行テスト計画: Reference TBL-xxx IDs for data validation targets.",
+    "ID format: MIG-001. Columns: MIG-ID, 対象データ, 移行方法, 検証方法, 担当者, データ量, 想定時間.",
+    "移行方針: state the approach (big bang / phased / parallel run) with rationale.",
+    "データ移行計画: include data volume estimates (row counts or GB). Reference TBL-xxx IDs.",
+    "システム切替手順: step-by-step cutover procedure with estimated time per step and owner.",
+    "Zero-downtime strategy: if required, describe blue-green or canary approach.",
+    "ロールバック計画: define rollback trigger criteria, step-by-step rollback with time window.",
+    "Rollback decision point: state latest go/no-go decision time before point-of-no-return.",
+    "移行テスト計画: data integrity checks, count reconciliation, spot-check sampling strategy.",
     "Cross-reference TBL-xxx, REQ-xxx, and OP-xxx IDs from upstream documents.",
+    "Data cutover sequence: list tables in dependency order (FK constraints).",
+    "Risk: identify top 3 migration risks with mitigation steps.",
   ].join("\n"),
 
   "sitemap": [
@@ -227,19 +214,22 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Output TWO sections:",
     "",
     "### Section 1: サイトマップツリー (Tree Structure)",
-    "Use indented markdown list to show parent-child hierarchy:",
-    "- トップページ (TOP)",
-    "  - ユーザー管理 (F-001)",
-    "    - ユーザー一覧",
-    "    - ユーザー登録",
-    "  - 注文管理 (F-002)",
+    "Use indented markdown list to show parent-child hierarchy.",
+    "Hierarchy depth rules: max 3 levels recommended (top → category → page). Flatten if deeper.",
+    "URL convention: use kebab-case for URL paths (e.g., /user-management/list).",
+    "Access control annotation: mark pages requiring authentication with [要認証] or role (e.g., [管理者]).",
+    "Example format:",
+    "- トップページ (TOP) [公開]",
+    "  - ユーザー管理 (F-001) [要認証]",
+    "    - ユーザー一覧 /users",
+    "    - ユーザー登録 /users/new",
     "",
     "### Section 2: ページ一覧 (Page/Screen List Table)",
-    "Columns: | ページID | ページ名 | URL/ルート | 親ページ | 関連機能 (F-xxx) | 処理概要 |",
+    "Columns: | ページID | ページ名 | URL/ルート | 親ページ | 関連機能 (F-xxx) | アクセス権限 | 処理概要 |",
     "Every page/screen must have a unique ID (PG-001 format).",
     "Map F-xxx IDs from 機能一覧 to relevant pages where applicable.",
-    "For web systems: include URL paths. For mobile: screen names. For API: endpoint groups. For batch: job categories.",
     "Include all user-facing pages AND admin/management pages.",
+    "For web: URL paths. For mobile: screen names. For API: endpoint groups. For batch: job categories.",
   ].join("\n"),
 
   "test-evidence": [
@@ -260,35 +250,49 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "1. 会議情報 — date, time, location, purpose",
     "2. 出席者 — attendees table with role and organization",
     "3. 議題 — numbered agenda items",
-    "4. 決定事項 — decisions table linking to document IDs (REQ-xxx, SCR-xxx) where applicable",
-    "5. アクション項目 — action items table: assignee, deadline, status (未着手/進行中/完了)",
-    "Every decision MUST reference affected document IDs if applicable.",
-    "Action items MUST include assignee and deadline.",
+    "4. 決定事項 — decisions table with columns: 決定ID, 決定内容, 関連ドキュメントID, 決定者",
+    "5. アクション項目 — who/what/when format: 担当者, 作業内容, 期限, ステータス (未着手/進行中/完了)",
+    "Decision log: separate decisions (合意した事項) from discussion points (議論した事項) clearly.",
+    "Action item format: each item must have single owner (not 'team'), specific deadline (date not 'soon').",
+    "Decisions MUST reference affected doc IDs (REQ-xxx, SCR-xxx, F-xxx) if applicable.",
+    "Discussion points that need follow-up: capture as action items, not decisions.",
+    "Next meeting: include date/time/agenda for next meeting if discussed.",
+    "Prohibited: vague action items without owner or deadline.",
   ].join("\n"),
 
   "decision-record": [
     "Generate a 設計判断記録 (Architecture Decision Record / ADR) from the provided discussion notes.",
-    "Use ADR-001 format for decision record ID.",
+    "Use ADR-001 format for decision record ID. Follow ADR format: context/decision/consequences.",
     "Required sections:",
-    "1. コンテキスト — background and problem statement",
+    "1. コンテキスト — background, problem statement, constraints driving the decision",
     "2. 検討事項 — options table: | 選択肢 | メリット | デメリット | 判定 (採用/却下) |",
-    "3. 決定内容 — selected option with rationale",
-    "4. 影響範囲 — consequences (positive and negative), affected document IDs",
-    "5. 参加者 — participants list with roles",
-    "At least 2 options MUST be listed. Decision MUST reference affected document IDs.",
+    "3. 決定内容 — selected option with rationale (WHY this option over alternatives)",
+    "4. 影響範囲 — positive consequences, negative consequences, affected document IDs",
+    "5. ステータス — lifecycle: 提案中 → 承認済み → 廃止済み. Include date of each transition.",
+    "6. 参加者 — participants list with roles and organization",
+    "At least 2 options MUST be listed in 検討事項 (rejected options document explored alternatives).",
+    "Decision MUST reference affected doc IDs (REQ-xxx, NFR-xxx, F-xxx, API-xxx).",
+    "Consequences: be explicit about trade-offs accepted (e.g., 'we accept higher cost for lower latency').",
+    "Status lifecycle: an ADR can be superseded — reference the superseding ADR-xxx if applicable.",
+    "One decision per ADR — split compound decisions into separate ADR records.",
   ].join("\n"),
 
   "interface-spec": [
     "Generate a IF仕様書 (Interface Specification) from the provided input.",
     "Use IF-001 format for interface specification ID.",
     "Required sections:",
-    "1. インターフェース概要 — name, owner, consumer, purpose",
-    "2. データフォーマット — request/response schema tables",
-    "3. プロトコル — communication protocol, authentication, encoding",
-    "4. エラーハンドリング — error codes, retry policy, timeout",
-    "5. SLA定義 — availability, latency targets, throughput",
-    "6. 承認 — approval chain for both parties",
-    "Each interface MUST clearly define both sides' responsibilities.",
+    "1. インターフェース概要 — name, owner (provider), consumer, purpose, version",
+    "2. データフォーマット — request/response schema tables with field name, type, required, description",
+    "3. プロトコル — communication protocol (REST/gRPC/MQ), authentication, encoding (UTF-8/etc.)",
+    "4. エラーハンドリング — error code table: | エラーコード | HTTP status | メッセージ | 原因 | 対処 |",
+    "5. SLA定義 — availability %, latency p95/p99, throughput (req/s), timeout values",
+    "6. 承認 — approval chain signed by both provider and consumer parties",
+    "API contract versioning: specify version (v1, v2), deprecation policy, backward compat strategy.",
+    "Error code table: define all error codes from E-001 (or HTTP 4xx/5xx) with retry guidance.",
+    "Breaking change policy: how version bumps are communicated and migration path.",
+    "Each interface MUST define both sides' responsibilities (provider SLA, consumer obligations).",
+    "Idempotency: state if operations are idempotent and which retry strategies are safe.",
+    "Cross-reference API-xxx IDs from basic-design if upstream doc is provided.",
   ].join("\n"),
 
   "screen-design": [
@@ -340,28 +344,54 @@ export const KEIGO_MAP: Record<DocType, KeigoLevel> = {
   "screen-design": "simple",
 };
 
+/** Concrete before/after examples per keigo level — keys match KeigoLevel type */
+const KEIGO_EXAMPLES: Record<KeigoLevel, [string, string][]> = {
+  "丁寧語": [
+    ["システムがデータを処理する", "システムがデータを処理します"],
+    ["エラーが発生した場合、ログを確認する", "エラーが発生した場合、ログを確認してください"],
+    ["設計方針は以下の通りだ", "設計方針は以下の通りです"],
+  ],
+  "謙譲語": [
+    ["システムがデータを処理する", "システムがデータを処理いたします"],
+    ["ご確認ください", "ご確認いただけますようお願いいたします"],
+    ["報告する", "ご報告申し上げます"],
+  ],
+  "simple": [
+    ["システムがデータを処理します", "システムがデータを処理する"],
+    ["確認が必要です", "確認が必要である"],
+    ["問題がある場合は対応します", "問題がある場合は対応するものとする"],
+  ],
+};
+
 /** Build keigo style instruction for AI generation context */
 export function buildKeigoInstruction(level: KeigoLevel): string {
+  let baseInstruction: string;
   switch (level) {
     case "丁寧語":
-      return [
+      baseInstruction = [
         "## Writing Style (敬語)",
         "Use ですます調 throughout. Every sentence must end with です or ます.",
         "Never use だ or である for sentence endings.",
       ].join("\n");
+      break;
     case "謙譲語":
-      return [
+      baseInstruction = [
         "## Writing Style (敬語)",
         "Use 謙譲語 keigo throughout. Be appropriately humble.",
         "Maintain consistent formal register across all sections.",
       ].join("\n");
+      break;
     case "simple":
-      return [
+      baseInstruction = [
         "## Writing Style (敬語)",
         "Use である調 throughout. Sentences end with である, する, した, etc.",
         "Never use です or ます for sentence endings.",
       ].join("\n");
+      break;
   }
+  const examples = KEIGO_EXAMPLES[level] ?? KEIGO_EXAMPLES["丁寧語"];
+  const exBlock = examples.map(([bad, good]) => `  ✗ 「${bad}」\n  ✓ 「${good}」`).join("\n");
+  return `${baseInstruction}\n例:\n${exBlock}`;
 }
 
 /** Language display names for bilingual and output language instruction blocks */

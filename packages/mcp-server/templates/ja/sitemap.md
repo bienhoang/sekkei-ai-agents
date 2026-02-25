@@ -42,13 +42,13 @@ Include user-facing AND admin/management pages.
 
 # サイトマップ
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更者 | 変更内容 |
 |------|------|--------|----------|
 | 1.0  |      |        | 初版作成 |
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 | 署名 |
 |------|------|------|------|
@@ -56,14 +56,14 @@ Include user-facing AND admin/management pages.
 | 確認者 | | | |
 | 承認者 | | | |
 
-## システム概要
+## システム概要 <!-- optional -->
 
 <!-- Brief description of system type (web/mobile/API/internal/SaaS) and scope -->
 
-## サイトマップツリー
+## サイトマップツリー <!-- required -->
 
 <!-- Generate hierarchical tree structure here based on input sources -->
 
-## ページ一覧
+## ページ一覧 <!-- required -->
 
 <!-- Generate page list table here with PG-xxx IDs -->

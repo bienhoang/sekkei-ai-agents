@@ -3,14 +3,10 @@
  */
 import { writeFile, stat } from "node:fs/promises";
 import { resolve } from "node:path";
-import { execFile as execFileCb } from "node:child_process";
-import { promisify } from "node:util";
-import { chromium } from "playwright";
 import { marked } from "marked";
 import { ensureFonts } from "./font-manager.js";
+import { browserPool } from "./browser-pool.js";
 import { logger } from "./logger.js";
-
-const execFile = promisify(execFileCb);
 
 export interface PdfExportInput {
   content: string;
@@ -85,16 +81,6 @@ function buildHtmlPage(bodyHtml: string, fontPaths: { regular: string; bold: str
 </html>`;
 }
 
-async function launchBrowser() {
-  try {
-    return await chromium.launch({ headless: true });
-  } catch {
-    logger.info("Chromium not found — installing via playwright...");
-    await execFile("npx", ["playwright", "install", "chromium"], { timeout: 300_000 });
-    return await chromium.launch({ headless: true });
-  }
-}
-
 export async function exportToPdf(input: PdfExportInput): Promise<PdfExportResult> {
   const { content, output_path, project_name } = input;
   // Prevent path traversal
@@ -112,7 +98,7 @@ export async function exportToPdf(input: PdfExportInput): Promise<PdfExportResul
   const tocHtml = buildTocHtml(tocEntries);
   const html = buildHtmlPage(tocHtml + bodyHtml, fontPaths);
 
-  const browser = await launchBrowser();
+  const browser = await browserPool.acquire();
   try {
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: "networkidle" });
@@ -134,6 +120,6 @@ export async function exportToPdf(input: PdfExportInput): Promise<PdfExportResul
     logger.info({ output_path, size }, "PDF exported");
     return { file_path: output_path, file_size: size };
   } finally {
-    await browser.close();
+    browserPool.release(); // return to pool — browser stays alive for next export
   }
 }

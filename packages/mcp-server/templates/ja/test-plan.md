@@ -24,7 +24,7 @@ approver: ""
 
 # テスト計画書
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更内容 | 変更者 |
 |------|------|----------|--------|
@@ -32,7 +32,7 @@ approver: ""
 
 <!-- AI: Add rows for each revision. 版数 increments as 1.0, 1.1, 2.0. -->
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 |
 |------|------|------|
@@ -42,21 +42,21 @@ approver: ""
 
 <!-- AI: Leave 氏名 and 日付 blank — these are filled by humans after review. -->
 
-## 配布先
+## 配布先 <!-- required -->
 
 <!-- AI: List the stakeholders and teams who will receive this document. Format as bullet list. -->
 
-## 用語集
+## 用語集 <!-- required -->
 
 | 用語 | 説明 | 英語表記 |
 |------|------|----------|
 <!-- AI: Extract 5-10 key testing terms: 単体テスト, 結合テスト, システムテスト, 受入テスト, 入口基準, 出口基準, デフェクト, テストカバレッジ, etc. -->
 
-## 1. テスト方針
+## 1. テスト方針 <!-- required -->
 
 <!-- AI: State the overall testing policy. Include: テストの目的, 品質目標 (欠陥検出率, カバレッジ目標), テストアプローチ (リスクベースド, 要件ベースド), 適用するテスト標準. Reference REQ-xxx and F-xxx from upstream documents. -->
 
-## 2. テスト戦略
+## 2. テスト戦略 <!-- required -->
 
 ### 2.1 テスト範囲
 
@@ -77,28 +77,28 @@ approver: ""
 
 <!-- AI: Describe test techniques to be used: ブラックボックステスト, ホワイトボックステスト, 境界値分析, 同値分割, デシジョンテーブル, 探索的テスト. -->
 
-## 3. テスト環境
+## 3. テスト環境 <!-- required -->
 
 <!-- AI: Detail test environments. Include: 環境構成図 (開発/テスト/本番), ハードウェア・ソフトウェア要件, テストデータ方針 (本番データ使用可否, マスキング要否), ツール一覧. -->
 
-## 4. テストスケジュール
+## 4. テストスケジュール <!-- optional -->
 
 <!-- AI: Define test schedule aligned with project plan PP-xxx. Include: 各テストレベルの開始・終了予定日, マイルストーン, バッファ期間. Format as table or Gantt reference. -->
 
-## 5. 体制・役割
+## 5. 体制・役割 <!-- optional -->
 
 <!-- AI: Define test team structure. Include: テストマネージャー, テストリーダー, テスター, 開発者, 顧客担当者の役割と責任. Format as table: | 役割 | 氏名/チーム | 責任範囲 | -->
 
-## 6. リスクと対策
+## 6. リスクと対策 <!-- optional -->
 
 <!-- AI: Identify testing risks and countermeasures. Format as table:
 | リスクID | リスク内容 | 発生確率 | 影響度 | 対応策 |
 Consider: スケジュール遅延, テストデータ不足, 環境構築遅延, スキル不足. -->
 
-## 7. 完了基準
+## 7. 完了基準 <!-- required -->
 
 <!-- AI: Define overall test completion criteria. Include: 全テストケース実行完了, 欠陥残存数上限 (重大度別), テストカバレッジ達成率, 顧客承認取得. All criteria must be measurable with specific numbers. -->
 
-## 8. 参考資料
+## 8. 参考資料 <!-- optional -->
 
 <!-- AI: List referenced documents: 要件定義書 (REQ-xxx), 機能一覧 (F-xxx), 非機能要件定義書 (NFR-xxx), プロジェクト計画書 (PP-xxx). -->

@@ -75,9 +75,9 @@ describe("generate_document: crud-matrix", () => {
     expect(text).toContain("TBL-001");
     expect(text).toContain("TBL-002");
 
-    // Should contain the "Available Upstream IDs" block
-    expect(text).toContain("Available Upstream IDs");
-    expect(text).toContain("MUST reference ONLY these IDs");
+    // Should contain the "Upstream Cross-Reference Checklist" block
+    expect(text).toContain("Upstream Cross-Reference Checklist");
+    expect(text).toContain("MUST appear at least once");
   });
 
   it("includes template content in output", async () => {
@@ -147,7 +147,7 @@ describe("generate_document: traceability-matrix", () => {
     expect(result.isError).toBeUndefined();
     const text = result.content[0].text;
     // No upstream IDs block when no upstream_content provided
-    expect(text).not.toContain("Available Upstream IDs");
+    expect(text).not.toContain("Upstream Cross-Reference Checklist");
   });
 
   it("rejects split mode for traceability-matrix", async () => {

@@ -29,13 +29,13 @@ Output MUST be a single markdown table. Example:
 
 # CRUD図
 
-## 改訂履歴
+## 改訂履歴 <!-- required -->
 
 | 版数 | 日付 | 変更者 | 変更内容 |
 |------|------|--------|----------|
 | 1.0  |      |        | 初版作成 |
 
-## 承認欄
+## 承認欄 <!-- required -->
 
 | 役割 | 氏名 | 日付 | 署名 |
 |------|------|------|------|
@@ -43,6 +43,6 @@ Output MUST be a single markdown table. Example:
 | 確認者 | | | |
 | 承認者 | | | |
 
-## CRUD マトリックス
+## CRUD マトリックス <!-- required -->
 
 <!-- Generate CRUD table here based on upstream functions-list and basic-design -->

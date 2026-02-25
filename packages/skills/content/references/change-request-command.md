@@ -1,5 +1,3 @@
-> 📌 All user-facing output must use `project.language` from `sekkei.config.yaml`. See SKILL.md §Output Language.
-
 # /sekkei:change — Change Request Lifecycle
 
 Track and propagate specification changes across the V-model chain.
@@ -166,6 +164,22 @@ Load CR via action=status → check status → route:
 | CANCELLED | Show status only (rollback already applied) |
 
 Use `--rollback CR-ID` to undo a CR that is `PROPAGATING`, `VALIDATED`, or `COMPLETED`.
+
+---
+
+# Changelog (改訂履歴) Preservation
+
+**Standard 改訂履歴 insert procedure** (used by both CR propagation and `/sekkei:update`):
+
+1. Read the target document from disk
+2. Find the `## 改訂履歴` table; parse the last data row to extract current version number
+3. Compute next version: increment minor by 0.1 (e.g., "1.0" → "1.1")
+4. Build new row: `| {next_version} | {today YYYY-MM-DD} | {change_summary} | |`
+5. Insert row immediately after the last data row
+6. Show updated 改訂履歴 section to user for review
+7. If user confirms: save document; if downstream regeneration: pass updated content as `existing_content` to `generate_document`
+
+**Post-generation check:** After `generate_document` completes, compare 改訂履歴 rows between `existing_content` and new output. If any rows are missing: warn user — "⚠ 改訂履歴 preservation check failed. Recommend re-running generation." If all rows preserved + 1 new row: confirm — "✓ 改訂履歴 preserved successfully."
 
 ---
 

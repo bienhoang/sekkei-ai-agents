@@ -1,13 +1,17 @@
-import { describe, it, expect, beforeAll } from "@jest/globals";
+import { describe, it, expect, beforeEach } from "@jest/globals";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { loadTemplate, loadSharedTemplate } from "../../src/lib/template-loader.js";
+import { loadTemplate, loadSharedTemplate, clearTemplateCache } from "../../src/lib/template-loader.js";
 import { SekkeiError } from "../../src/lib/errors.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_DIR = resolve(__dirname, "../../templates");
 
 describe("loadTemplate", () => {
+  beforeEach(() => {
+    clearTemplateCache();
+  });
+
   it("loads functions-list template with valid frontmatter", async () => {
     const result = await loadTemplate(TEMPLATE_DIR, "functions-list", "ja");
 
@@ -49,9 +53,27 @@ describe("loadTemplate", () => {
       loadTemplate("/nonexistent/path", "functions-list", "ja")
     ).rejects.toThrow(SekkeiError);
   });
+
+  it("returns same object reference on second call (cache hit)", async () => {
+    const first = await loadTemplate(TEMPLATE_DIR, "functions-list", "ja");
+    const second = await loadTemplate(TEMPLATE_DIR, "functions-list", "ja");
+    expect(first).toBe(second); // same object reference = cache hit
+  });
+
+  it("does NOT share cache across different base directories", async () => {
+    const first = await loadTemplate(TEMPLATE_DIR, "functions-list", "ja");
+    // Different base dir — should throw, not return cached first result
+    await expect(
+      loadTemplate("/nonexistent/path", "functions-list", "ja")
+    ).rejects.toThrow(SekkeiError);
+  });
 });
 
 describe("loadSharedTemplate", () => {
+  beforeEach(() => {
+    clearTemplateCache();
+  });
+
   it("loads cover-page shared template", async () => {
     const content = await loadSharedTemplate(TEMPLATE_DIR, "cover-page");
 

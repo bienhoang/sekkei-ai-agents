@@ -209,6 +209,8 @@ export function validateCrossRefs(
   for (const type of upstreamTypes) {
     upstreamIds.push(...(upstreamIdMap.get(type) ?? []));
   }
+  // O(n+m) Set-based lookup — avoids O(n×m) Array.includes() in inner loops
+  const upstreamIdSet = new Set<string>(upstreamIds);
 
   // Find which upstream IDs are referenced in the current doc
   const referencedIds: string[] = [];
@@ -226,7 +228,7 @@ export function validateCrossRefs(
   for (const type of upstreamTypes) {
     const currentIds = extractIdsByType(currentContent, type);
     for (const id of currentIds) {
-      if (!upstreamIds.includes(id)) {
+      if (!upstreamIdSet.has(id)) {
         orphaned.push(id);
       }
     }
