@@ -12,3 +12,4 @@ packages/mcp-server/coverage/
 .agent/
 __pycache__/
 .turbo/
+plans/
