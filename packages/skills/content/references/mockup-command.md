@@ -71,17 +71,17 @@ Output: interactive HTML files with numbered annotations mapping to 画面項目
 Playwright is installed in the Sekkei MCP server package. To resolve it from any project directory,
 set `NODE_PATH` to the sekkei installation's `node_modules/`:
 
-```bash
-# Resolve sekkei install root from the CLI binary
-SEKKEI_ROOT="$(dirname "$(dirname "$(realpath "$(which sekkei)")")")"
-export NODE_PATH="$SEKKEI_ROOT/node_modules"
-```
-
-Then write and run an ESM screenshot script (`.mjs` extension):
+Write and run an ESM screenshot script (`.mjs` extension):
 
 ```javascript
+// Resolve playwright from sekkei's own node_modules (ESM ignores NODE_PATH)
+import { createRequire } from 'module';
+import { execSync } from 'child_process';
+const sekkeiRoot = execSync('dirname "$(dirname "$(realpath "$(which sekkei)")")"').toString().trim();
+const require = createRequire(sekkeiRoot + '/node_modules/');
+const { chromium } = require('playwright');
+
 // viewport: 1440px for full HD clarity; deviceScaleFactor: 2 for crisp retina output
-import { chromium } from 'playwright';
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
 await page.goto(`file://${absolutePathToHtml}`, { waitUntil: 'networkidle' });
@@ -92,7 +92,7 @@ for (let i = 0; i < wraps.length; i++) {
 await browser.close();
 ```
 
-Run with: `NODE_PATH="$SEKKEI_ROOT/node_modules" node screenshot.mjs`
+Run with: `node screenshot.mjs`
 
 Alternatively, use `chrome-devtools` or `agent-browser` skill for browser automation.
 
