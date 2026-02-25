@@ -29,26 +29,51 @@ export function circledNumber(n: number): string {
   return String(n);
 }
 
-/** Load blueprint.css content */
+/** Load embedded font as base64 @font-face CSS block (cached per process) */
+let fontFaceCache: string | null = null;
+function loadFontFace(): string {
+  if (fontFaceCache) return fontFaceCache;
+  try {
+    const woff2 = readFileSync(join(WIREFRAME_DIR, "fonts", "NotoSansJP-Regular-subset.woff2"));
+    const b64 = woff2.toString("base64");
+    fontFaceCache = `@font-face {
+  font-family: 'Noto Sans JP';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(data:font/woff2;base64,${b64}) format('woff2');
+}\n`;
+  } catch {
+    fontFaceCache = ""; // graceful fallback — system font used
+  }
+  return fontFaceCache;
+}
+
+/** Load blueprint.css content with embedded font */
 function loadCss(): string {
   try {
-    return readFileSync(join(WIREFRAME_DIR, "blueprint.css"), "utf-8");
+    const css = readFileSync(join(WIREFRAME_DIR, "blueprint.css"), "utf-8");
+    return loadFontFace() + css;
   } catch {
     throw new SekkeiError("MOCKUP_ERROR", "blueprint.css not found in templates/wireframe/");
   }
 }
 
-/** Load a .hbs template by layout type, falling back to form.hbs */
+/** Load a layout .hbs template by type from layouts/ directory */
 function loadTemplate(layoutType: string): string {
   try {
-    return readFileSync(join(WIREFRAME_DIR, `${layoutType}.hbs`), "utf-8");
+    return readFileSync(join(WIREFRAME_DIR, "layouts", `${layoutType}.hbs`), "utf-8");
   } catch {
-    // Fall back to form template for layout types not yet implemented
-    try {
-      return readFileSync(join(WIREFRAME_DIR, "form.hbs"), "utf-8");
-    } catch {
-      throw new SekkeiError("MOCKUP_ERROR", `Template "${layoutType}.hbs" not found in templates/wireframe/`);
-    }
+    throw new SekkeiError("MOCKUP_ERROR", `Layout template "${layoutType}.hbs" not found in templates/wireframe/layouts/`);
+  }
+}
+
+/** Load the shared component partial */
+function loadComponentPartial(): string {
+  try {
+    return readFileSync(join(WIREFRAME_DIR, "partials", "component.hbs"), "utf-8");
+  } catch {
+    throw new SekkeiError("MOCKUP_ERROR", "component.hbs partial not found in templates/wireframe/partials/");
   }
 }
 
@@ -65,17 +90,38 @@ export function parseTableColumns(label: string): { title: string; columns: stri
   return { title, columns };
 }
 
+/** Split slash-separated label into items array */
+export function parseSlashItems(label: string): string[] {
+  return label.split(/\s*\/\s*/).map(s => s.trim()).filter(Boolean);
+}
+
+/** Return first character of label, or "?" if empty */
+export function firstChar(label: string): string {
+  return label.trim().charAt(0) || "?";
+}
+
+/** Generate array of page number strings from label (clamped 1–10, default 3) */
+export function parsePageCount(label: string): string[] {
+  const n = Math.max(1, Math.min(parseInt(label, 10) || 3, 10));
+  return Array.from({ length: n }, (_, i) => String(i + 1));
+}
+
 /**
  * Build a self-contained HTML string from a ScreenLayout.
- * The HTML includes inline CSS and Google Fonts link — ready for Playwright screenshot.
+ * The HTML includes inline CSS and embedded fonts — ready for Playwright screenshot.
  */
 export function buildMockupHtml(layout: ScreenLayout): string {
   const css = loadCss();
   const templateSrc = loadTemplate(layout.layout_type);
+  const componentPartialSrc = loadComponentPartial();
 
   const hbs = Handlebars.create();
+  hbs.registerPartial("component", componentPartialSrc);
   hbs.registerHelper("eq", (a: unknown, b: unknown) => a === b);
   hbs.registerHelper("circledNumber", (n: number) => circledNumber(n));
+  hbs.registerHelper("parseSlashItems", parseSlashItems);
+  hbs.registerHelper("firstChar", firstChar);
+  hbs.registerHelper("parsePageCount", parsePageCount);
   hbs.registerHelper("renderTable", (label: string) => {
     const { title, columns } = parseTableColumns(label);
     if (columns.length === 0) {
@@ -104,6 +150,19 @@ export function buildMockupHtml(layout: ScreenLayout): string {
   for (const name of Object.keys(layout.regions)) {
     if (!regionOrder.includes(name)) {
       regionEntries.push({ name, region: layout.regions[name] });
+    }
+  }
+
+  // Wizard: derive completed state for steps before active step
+  if (layout.layout_type === "wizard") {
+    const stepsEntry = regionEntries.find(e => e.name === "steps");
+    if (stepsEntry) {
+      const activeIdx = stepsEntry.region.components.findIndex(c => c.active);
+      if (activeIdx >= 0) {
+        for (let i = 0; i < activeIdx; i++) {
+          (stepsEntry.region.components[i] as Record<string, unknown>)._completed = true;
+        }
+      }
     }
   }
 

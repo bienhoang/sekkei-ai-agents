@@ -46,6 +46,8 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["basic-design", "operation-design"],
   ["functions-list", "operation-design"],
   ["security-design", "operation-design"],
+  ["security-design", "test-plan"],
+  ["security-design", "st-spec"],
   ["basic-design", "migration-design"],
   ["requirements", "migration-design"],
   ["operation-design", "migration-design"],

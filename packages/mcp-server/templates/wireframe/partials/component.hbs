@@ -1,0 +1,70 @@
+<div class="component{{#if this.width}} w-{{this.width}}{{/if}}">
+  <span class="annotation">{{circledNumber this.n}}</span>
+  {{#if (eq this.type "text-input")}}
+    <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+    <div class="input-field"></div>
+  {{else if (eq this.type "password-input")}}
+    <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+    <div class="input-field">••••••••</div>
+  {{else if (eq this.type "number-input")}}
+    <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+    <div class="input-field">0</div>
+  {{else if (eq this.type "date-input")}}
+    <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+    <div class="input-field">YYYY-MM-DD</div>
+  {{else if (eq this.type "textarea")}}
+    <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+    <div class="textarea-field"></div>
+  {{else if (eq this.type "select")}}
+    <label class="input-label">{{this.label}}{{#if this.required}}<span class="required-mark">※</span>{{/if}}</label>
+    <div class="select-field">{{this.label}}を選択</div>
+  {{else if (eq this.type "checkbox")}}
+    <div class="checkbox-wrap"><input type="checkbox" disabled> {{this.label}}</div>
+  {{else if (eq this.type "radio")}}
+    <div class="radio-wrap"><input type="radio" disabled> {{this.label}}</div>
+  {{else if (eq this.type "toggle")}}
+    <div class="toggle-wrap"><div class="toggle-track"></div> {{this.label}}</div>
+  {{else if (eq this.type "button")}}
+    <div class="button-group">
+      <span class="btn {{#if (eq this.variant "primary")}}btn-primary{{else if (eq this.variant "danger")}}btn-danger{{else}}btn-secondary{{/if}} btn-block">{{this.label}}</span>
+    </div>
+  {{else if (eq this.type "link")}}
+    <div style="text-align:center"><span class="link">{{this.label}}</span></div>
+  {{else if (eq this.type "table")}}
+    {{{renderTable this.label}}}
+  {{else if (eq this.type "card")}}
+    <div class="card-placeholder">{{this.label}}</div>
+  {{else if (eq this.type "nav")}}
+    <span class="text-content">{{this.label}}</span>
+  {{else if (eq this.type "logo")}}
+    <span class="logo">{{this.label}}</span>
+  {{else if (eq this.type "text")}}
+    <div class="text-content">{{this.label}}</div>
+  {{else if (eq this.type "search-bar")}}
+    <div class="search-bar"><div class="input-field" style="min-width:200px"></div><span class="btn btn-secondary">検索</span></div>
+  {{else if (eq this.type "image-placeholder")}}
+    <div class="image-placeholder">[{{this.label}}]</div>
+  {{else if (eq this.type "icon-button")}}
+    <span class="icon-btn" title="{{this.label}}">{{firstChar this.label}}</span>
+  {{else if (eq this.type "stat-card")}}
+    <div class="stat-card"><div class="stat-value">--</div><div class="stat-label">{{this.label}}</div></div>
+  {{else if (eq this.type "chart-placeholder")}}
+    <div class="chart-placeholder">[Chart: {{this.label}}]</div>
+  {{else if (eq this.type "badge")}}
+    <span class="badge">{{this.label}}</span>
+  {{else if (eq this.type "avatar")}}
+    <span class="avatar">{{firstChar this.label}}</span>
+  {{else if (eq this.type "alert")}}
+    <div class="alert-box">{{this.label}}</div>
+  {{else if (eq this.type "breadcrumb")}}
+    <div class="breadcrumb">{{#each (parseSlashItems this.label)}}<span>{{this}}</span>{{/each}}</div>
+  {{else if (eq this.type "tabs")}}
+    <div class="tabs">{{#each (parseSlashItems this.label)}}<span class="tab-item{{#if @first}} active{{/if}}">{{this}}</span>{{/each}}</div>
+  {{else if (eq this.type "sidebar")}}
+    <div class="sidebar">{{#each (parseSlashItems this.label)}}<div class="sidebar-item{{#if @first}} active{{/if}}">{{this}}</div>{{/each}}</div>
+  {{else if (eq this.type "pagination")}}
+    <div class="pagination"><span>&laquo;</span>{{#each (parsePageCount this.label)}}<span>{{this}}</span>{{/each}}<span>&raquo;</span></div>
+  {{else}}
+    <div class="text-content">{{this.label}}</div>
+  {{/if}}
+</div>

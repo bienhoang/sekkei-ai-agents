@@ -55,8 +55,8 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
   ],
   "security-design": [
     ...STRUCTURAL_SECTIONS,
-    "セキュリティ方針", "認証・認可設計", "データ保護",
-    "通信セキュリティ", "脆弱性対策", "監査ログ",
+    "セキュリティ方針", "セキュリティ対策一覧", "認証・認可設計", "データ保護",
+    "通信セキュリティ", "脆弱性対策", "監査ログ", "インシデント対応",
   ],
   "detail-design": [
     ...STRUCTURAL_SECTIONS,
@@ -148,7 +148,7 @@ const REQUIRED_COLUMNS: Record<DocType, string[][]> = {
   nfr: [REVISION_HISTORY_COLUMNS, ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
   "project-plan": [REVISION_HISTORY_COLUMNS, ["PP-ID"]],
   "basic-design": [REVISION_HISTORY_COLUMNS, ["画面ID"], ["テーブルID"], ["API"]],
-  "security-design": [REVISION_HISTORY_COLUMNS, ["SEC-ID", "対策項目"]],
+  "security-design": [REVISION_HISTORY_COLUMNS, ["SEC-ID", "対策項目", "対策内容", "優先度"]],
   "detail-design": [REVISION_HISTORY_COLUMNS, ["クラスID"], ["エラーコード"]],
   "test-plan": [REVISION_HISTORY_COLUMNS, ["TP-ID"]],
   "ut-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],

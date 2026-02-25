@@ -114,13 +114,25 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
 4. Concatenate all as `upstream_content` (requirements + nfr + basic-design)
 
 **Interview questions (ask before generating):**
-- Authentication method? (OAuth2, SAML, OpenID Connect, custom)
+
+Base questions (always ask):
+- Authentication method? (OAuth2, SAML, OpenID Connect, JWT, custom)
 - Data classification levels? (公開, 社内, 機密, 極秘)
-- Applicable compliance? (個人情報保護法, PCI-DSS, HIPAA, ISMS)
+- Applicable compliance? (個人情報保護法, PCI-DSS, HIPAA, ISMS, FISC, SOC2)
+- Third-party integrations requiring security review? (payment, analytics, SSO providers)
+- Cloud provider and infrastructure? (AWS, GCP, Azure, on-premise)
+
+Conditional questions (check `project_type` in sekkei.config.yaml):
+- If `saas`: Tenant isolation strategy? (shared DB / schema per tenant / DB per tenant)
+- If `mobile`: Mobile-specific security? (certificate pinning, biometric auth, jailbreak detection)
+- If `government`: Security clearance level? (一般, 秘, 機密)
+- If `finance`: FISC/PCI-DSS compliance tier? (Level 1-4)
+- If `healthcare`: 3省2ガイドライン compliance scope?
+- If `microservice`: Service mesh / API gateway? (Istio, Kong, custom)
 
 1. Use `upstream_content` prepared in prerequisite check above
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
-3. Call MCP tool `generate_document` with `doc_type: "security-design"`, `upstream_content`, and `language` from config
+3. Call MCP tool `generate_document` with `doc_type: "security-design"`, `upstream_content` (including interview answers as context), `language` from config, and `project_type` from config
 4. Follow these rules strictly:
    - ID format: `SEC-001`
    - Address OWASP Top 10 risks explicitly

@@ -126,6 +126,20 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Cross-tenant data access controls and audit",
     ].join("\n"),
     requirements: "## Project Type: SaaS\nInclude SaaS-specific NFRs: multi-tenant data isolation, subscription tiers, API rate limiting, tenant provisioning SLA.",
+    "security-design": [
+      "## Project Type: SaaS Security",
+      "### Tenant Isolation",
+      "- Tenant-scoped API keys and token isolation",
+      "- Data isolation strategy (row-level security / schema / DB per tenant)",
+      "- Cross-tenant access prevention controls",
+      "### API Security",
+      "- Per-tenant rate limiting and quota management",
+      "- API gateway authentication (OAuth2 + tenant context)",
+      "- Webhook security (signature verification, replay protection)",
+      "### Infrastructure",
+      "- Shared infrastructure security boundaries",
+      "- Secret management per tenant (key rotation, scoping)",
+    ].join("\n"),
   },
   "internal-system": {
     "basic-design": [
@@ -143,6 +157,13 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Rollback triggers and procedures",
     ].join("\n"),
     requirements: "## Project Type: Internal System\nInclude operational requirements: batch schedule, help desk SLA, training plan. Add migration-specific requirements if system replacement.",
+    "security-design": [
+      "## Project Type: Internal System Security",
+      "- Active Directory / LDAP integration for authentication",
+      "- Internal network zone security (DMZ, trusted zone, restricted zone)",
+      "- VPN access requirements for remote users",
+      "- Legacy system integration security (API compatibility, data sanitization)",
+    ].join("\n"),
   },
   mobile: {
     "basic-design": [
@@ -152,6 +173,16 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- OS version support matrix (iOS/Android minimum versions)",
       "- Offline mode behavior per screen if applicable",
       "- App lifecycle events (background/foreground) affecting data sync",
+    ].join("\n"),
+    "security-design": [
+      "## Project Type: Mobile Security",
+      "- Certificate pinning for API communication",
+      "- Secure local storage (Keychain/Keystore)",
+      "- Biometric authentication integration",
+      "- Jailbreak/root detection strategy",
+      "- OAuth2 + PKCE flow for mobile clients",
+      "- Offline data encryption",
+      "- Screenshot/screen recording prevention for sensitive screens",
     ].join("\n"),
   },
   batch: {
@@ -164,6 +195,14 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Monitoring & alerting thresholds for batch failures",
     ].join("\n"),
     "detail-design": "## Project Type: Batch\nFor each batch process: input/output file specs, error handling procedure, restart procedure, estimated execution time.",
+    "security-design": [
+      "## Project Type: Batch Security",
+      "- Batch job execution identity (service account, least privilege)",
+      "- Input file validation and sanitization before processing",
+      "- Temporary file cleanup and secure deletion after job completion",
+      "- Encrypted data transfer for batch input/output files",
+      "- Job execution audit logging (start, end, records processed, errors)",
+    ].join("\n"),
   },
   lp: {
     "basic-design": "## Project Type: Landing Page\nFocus on: page structure, conversion funnel, form spec, analytics/tracking integration.",
@@ -178,6 +217,16 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Digital Agency (デジタル庁) guideline compliance notes",
     ].join("\n"),
     requirements: "## Project Type: Government\n法令要件セクションを追加: デジタル庁ガイドライン準拠, 監査要件, 政府セキュリティ要件を含めること",
+    "security-design": [
+      "## Project Type: Government Security",
+      "- Data sovereignty requirements (国内データ保管義務)",
+      "- 個人情報保護法 detailed compliance matrix",
+      "- Security clearance level mapping to data access",
+      "- Full audit trail for all data operations (retention: minimum 5 years)",
+      "- Tamper-evident logging (hash chain or WORM)",
+      "- PII data flow diagram mandatory",
+      "- Privacy Impact Assessment (PIA) reference",
+    ].join("\n"),
   },
   finance: {
     "basic-design": [
@@ -188,6 +237,15 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Data encryption at rest for sensitive financial data",
     ].join("\n"),
     requirements: "## Project Type: Finance\n金融庁ガイドライン, FISC安全対策基準への準拠を明記. 取引記録保存要件セクションを追加",
+    "security-design": [
+      "## Project Type: Finance Security",
+      "- FISC安全対策基準 compliance mapping per SEC entry",
+      "- PCI-DSS requirements if handling card data",
+      "- Transaction integrity: idempotency, double-spend prevention",
+      "- Real-time fraud detection integration points",
+      "- HSM usage for cryptographic key storage",
+      "- Key rotation schedule (quarterly for data keys, annually for master keys)",
+    ].join("\n"),
   },
   healthcare: {
     "basic-design": [
@@ -198,6 +256,14 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Consent management screens",
     ].join("\n"),
     requirements: "## Project Type: Healthcare\n医療情報ガイドライン参照. HL7/FHIR連携要件を検討. 個人情報保護（医療特則）セクションを追加",
+    "security-design": [
+      "## Project Type: Healthcare Security",
+      "- 3省2ガイドライン (厚労省・経産省・総務省) compliance matrix",
+      "- PHI (Protected Health Information) handling procedures",
+      "- Consent management design for patient data access",
+      "- Medical record encryption (at rest and in transit)",
+      "- Emergency access override (break-glass) procedures",
+    ].join("\n"),
   },
   microservice: {
     "basic-design": [
@@ -226,6 +292,16 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "Include service decomposition strategy in scope.",
       "Each service boundary should map to functional requirements grouping.",
       "Add NFRs for: inter-service latency, distributed tracing, service mesh overhead.",
+    ].join("\n"),
+    "security-design": [
+      "## Project Type: Microservice Security",
+      "- mTLS for inter-service communication",
+      "- Service mesh security policies (Istio/Linkerd authorization)",
+      "- Centralized authentication at API gateway level",
+      "- Per-service rate limiting and DDoS protection",
+      "- Container image scanning and runtime security",
+      "- Network policies (pod-to-pod isolation)",
+      "- Secret injection via Vault/KMS (no env var secrets)",
     ].join("\n"),
   },
   hybrid: {

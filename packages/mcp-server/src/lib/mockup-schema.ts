@@ -27,11 +27,12 @@ export const ComponentSchema = z.object({
   label: z.string(),
   required: z.boolean().optional(),
   variant: ButtonVariant.optional(),
-  width: z.string().optional(),
+  width: z.enum(["sm", "md", "lg", "full"]).optional(),
+  active: z.boolean().optional(),
 }).passthrough();
 
 export const RegionSchema = z.object({
-  style: z.string().optional(),
+  style: z.enum(["row", "grid"]).optional(),
   width: z.string().optional(),
   components: z.array(ComponentSchema),
 }).passthrough();
@@ -62,3 +63,5 @@ export const ScreenLayoutSchema = z.object({
 export type ScreenLayout = z.infer<typeof ScreenLayoutSchema>;
 export type ScreenComponent = z.infer<typeof ComponentSchema>;
 export type ScreenRegion = z.infer<typeof RegionSchema>;
+export type ComponentWidth = "sm" | "md" | "lg" | "full";
+export type RegionStyle = "row" | "grid";

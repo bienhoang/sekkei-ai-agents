@@ -32,7 +32,6 @@ regions:
     components:
       - {n: 1, type: logo, label: "ロゴ"}
   main:
-    style: centered-form
     components:
       - {n: 2, type: text-input, label: "メールアドレス", required: true}
       - {n: 3, type: password-input, label: "パスワード", required: true}

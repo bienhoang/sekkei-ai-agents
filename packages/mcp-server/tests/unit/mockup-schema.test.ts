@@ -12,7 +12,6 @@ const VALID_LAYOUT = {
   viewport: "desktop",
   regions: {
     main: {
-      style: "centered-form",
       components: [
         { n: 1, type: "text-input", label: "メールアドレス", required: true },
         { n: 2, type: "password-input", label: "パスワード", required: true },
@@ -31,7 +30,6 @@ layout_type: form
 viewport: desktop
 regions:
   main:
-    style: centered-form
     components:
       - {n: 1, type: text-input, label: メールアドレス, required: true}
       - {n: 2, type: password-input, label: パスワード, required: true}
@@ -128,6 +126,42 @@ describe("ScreenLayoutSchema", () => {
     };
     const result = ScreenLayoutSchema.safeParse(layout);
     expect(result.success).toBe(true);
+  });
+
+  it("rejects invalid component width", () => {
+    const bad = {
+      ...VALID_LAYOUT,
+      regions: { main: { components: [{ n: 1, type: "button", label: "OK", width: "xlarge" }] } },
+    };
+    expect(ScreenLayoutSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("accepts valid component widths", () => {
+    for (const width of ["sm", "md", "lg", "full"]) {
+      const layout = {
+        ...VALID_LAYOUT,
+        regions: { main: { components: [{ n: 1, type: "button", label: "OK", width }] } },
+      };
+      expect(ScreenLayoutSchema.safeParse(layout).success).toBe(true);
+    }
+  });
+
+  it("rejects invalid region style", () => {
+    const bad = {
+      ...VALID_LAYOUT,
+      regions: { main: { style: "centered-form", components: [{ n: 1, type: "text", label: "X" }] } },
+    };
+    expect(ScreenLayoutSchema.safeParse(bad).success).toBe(false);
+  });
+
+  it("accepts valid region styles", () => {
+    for (const style of ["row", "grid"]) {
+      const layout = {
+        ...VALID_LAYOUT,
+        regions: { main: { style, components: [{ n: 1, type: "text", label: "X" }] } },
+      };
+      expect(ScreenLayoutSchema.safeParse(layout).success).toBe(true);
+    }
   });
 });
 

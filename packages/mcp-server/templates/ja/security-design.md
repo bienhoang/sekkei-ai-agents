@@ -14,6 +14,9 @@ sections:
   - vulnerability-countermeasures
   - audit-log
   - incident-response
+  - api-security
+  - key-management
+  - supply-chain-security
 status: draft
 author: ""
 reviewer: ""
@@ -92,6 +95,24 @@ approver: ""
 
 <!-- AI: Detail incident response procedures. Include: インシデント検知方法, 重大度分類 (高/中/低), 対応手順フロー, エスカレーション先, 事後対応 (原因分析・再発防止). -->
 
-## 9. 参考資料
+## 9. APIセキュリティ
+
+<!-- AI: Include this section ONLY if the system exposes APIs (REST, GraphQL, WebSocket). If no API exists, omit this section entirely. -->
+
+<!-- AI: Detail API security design. Include: レート制限方針 (per-user, per-IP, per-tenant), CORS設定 (allowed origins, headers, methods), API認証方式 (API key, OAuth2 Bearer, JWT), APIキー管理 (rotation, revocation, scoping), 入力バリデーション (request size limits, content-type validation). If GraphQL: query depth limit, introspection disabled in production. -->
+
+## 10. 鍵管理
+
+<!-- AI: Include this section ONLY if the system handles encryption keys, certificates, or API tokens beyond basic password hashing. If only basic password hashing is used, omit this section. -->
+
+<!-- AI: Detail key management design. Include: 鍵のライフサイクル (generation, distribution, rotation, revocation, destruction), 鍵保管方式 (HSM, KMS, Vault), 鍵階層設計 (master key, key encryption key, data encryption key), 証明書管理 (issuance, renewal, monitoring, revocation), トークン管理 (JWT expiry, refresh token rotation policy). -->
+
+## 11. サプライチェーンセキュリティ
+
+<!-- AI: Include this section ONLY for systems with significant third-party dependencies. If a simple standalone system with few dependencies, omit this section. -->
+
+<!-- AI: Detail supply chain security. Include: 依存ライブラリ管理方針 (SCA tool, update policy), 脆弱性スキャン (Dependabot/Snyk/Renovate integration), コンテナベースイメージ管理 (trusted registry, image scanning), SBOM (Software Bill of Materials) generation if applicable. -->
+
+## 12. 参考資料
 
 <!-- AI: List referenced documents: OWASP Top 10, IPA セキュアプログラミングガイド, REQ-xxx, NFR-xxx. -->
