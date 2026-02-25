@@ -90,12 +90,39 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => (c.match(/NFR-\d{3}/g) || []).length >= 3,
       message: "非機能要件定義書: NFR-xxxが3つ以上必要です",
     },
+    {
+      check: "NFR vague terms",
+      test: (c: string) => {
+        const rows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
+        return !rows.some((r) => /高速|十分|適切|高い|良好/.test(r));
+      },
+      message: "非機能要件定義書: 目標値に曖昧な表現があります（数値に置換してください）",
+    },
+    {
+      check: "NFR numeric targets",
+      test: (c: string) => {
+        const rows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
+        if (rows.length === 0) return true;
+        return rows.filter((r) => /\d+(\.\d+)?[%秒ms時間件人日回]/.test(r)).length >= rows.length * 0.8;
+      },
+      message: "非機能要件定義書: 目標値に数値が不足しています（例: 99.9%, 2秒以内, 1000件）",
+    },
   ],
   "security-design": [
     {
       check: "security entries",
       test: (c: string) => /\|\s*SEC-\d+/.test(c),
       message: "セキュリティ設計書: SEC-xxxが必要です",
+    },
+    {
+      check: "auth mechanism",
+      test: (c: string) => /認証|OAuth|JWT|SAML|SSO|多要素認証|MFA/.test(c),
+      message: "セキュリティ設計書: 認証方式の記載が必要です（OAuth, JWT, SAML等）",
+    },
+    {
+      check: "vulnerability categories",
+      test: (c: string) => /OWASP|XSS|CSRF|SQLインジェクション|SQL\s*Injection/.test(c),
+      message: "セキュリティ設計書: 脆弱性対策カテゴリの記載が必要です（OWASP Top 10等）",
     },
   ],
   "detail-design": [
@@ -126,12 +153,32 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => (c.match(/UT-\d{3}/g) || []).length >= 3,
       message: "単体テスト仕様書: UTケースが3つ以上必要です",
     },
+    {
+      check: "test method presence",
+      test: (c: string) => /正常系|異常系|境界値|同値分割/.test(c),
+      message: "単体テスト仕様書: テスト技法の記載が必要です（正常系/異常系/境界値等）",
+    },
+    {
+      check: "expected result",
+      test: (c: string) => /期待結果|期待値|expected|想定結果/.test(c),
+      message: "単体テスト仕様書: 期待結果の記載が必要です",
+    },
   ],
   "it-spec": [
     {
       check: "IT cases",
       test: (c: string) => (c.match(/IT-\d{3}/g) || []).length >= 3,
       message: "結合テスト仕様書: ITケースが3つ以上必要です",
+    },
+    {
+      check: "interface scope",
+      test: (c: string) => /API-|インターフェース|連携|外部接続|内部連携/.test(c),
+      message: "結合テスト仕様書: テスト対象のインターフェースの記載が必要です",
+    },
+    {
+      check: "integration pattern",
+      test: (c: string) => /正常系|異常系|タイムアウト|リトライ/.test(c),
+      message: "結合テスト仕様書: 結合テストパターンの記載が必要です（正常系/異常系/タイムアウト等）",
     },
   ],
   "st-spec": [
@@ -140,12 +187,32 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => (c.match(/ST-\d{3}/g) || []).length >= 3,
       message: "システムテスト仕様書: STケースが3つ以上必要です",
     },
+    {
+      check: "scenario coverage",
+      test: (c: string) => /シナリオ|業務フロー|ユースケース|利用者/.test(c),
+      message: "システムテスト仕様書: テストシナリオの記載が必要です",
+    },
+    {
+      check: "system-level scope",
+      test: (c: string) => /性能|セキュリティ|可用性|負荷|regression/.test(c),
+      message: "システムテスト仕様書: システムレベルのテスト観点が必要です（性能/セキュリティ/可用性等）",
+    },
   ],
   "uat-spec": [
     {
       check: "UAT cases",
       test: (c: string) => (c.match(/UAT-\d{3}/g) || []).length >= 3,
       message: "受入テスト仕様書: UATケースが3つ以上必要です",
+    },
+    {
+      check: "acceptance criteria linkage",
+      test: (c: string) => /REQ-|受入基準|acceptance|要件/.test(c),
+      message: "受入テスト仕様書: 受入基準と要件への紐づけが必要です",
+    },
+    {
+      check: "user scenario",
+      test: (c: string) => /利用者|エンドユーザー|業務シナリオ|操作手順/.test(c),
+      message: "受入テスト仕様書: 利用者視点のテストシナリオが必要です",
     },
   ],
   "functions-list": [
@@ -198,12 +265,32 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => (c.match(/PP-\d{3}/g) || []).length >= 3,
       message: "プロジェクト計画書: WBSにPP-xxxが3つ以上必要です",
     },
+    {
+      check: "milestone dates",
+      test: (c: string) => /\d{4}[年/\-]\d{1,2}[月/\-]/.test(c),
+      message: "プロジェクト計画書: マイルストーンの日付が必要です（例: 2026年4月）",
+    },
+    {
+      check: "phase structure",
+      test: (c: string) => /要件定義|基本設計|詳細設計|テスト|移行|運用/.test(c),
+      message: "プロジェクト計画書: 開発フェーズの記載が必要です",
+    },
   ],
   "test-plan": [
     {
       check: "TP entries",
       test: (c: string) => (c.match(/TP-\d{3}/g) || []).length >= 3,
       message: "テスト計画書: テスト戦略にTP-xxxが3つ以上必要です",
+    },
+    {
+      check: "scope document reference",
+      test: (c: string) => /要件定義書|基本設計書|機能一覧|REQ-|F-/.test(c),
+      message: "テスト計画書: テスト対象の仕様書への参照が必要です",
+    },
+    {
+      check: "coverage metric",
+      test: (c: string) => /カバレッジ|網羅率|網羅|coverage|\d+%/.test(c),
+      message: "テスト計画書: テストカバレッジの目標値が必要です",
     },
   ],
   "test-evidence": [
@@ -274,6 +361,16 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       check: "MIG entries",
       test: (c: string) => (c.match(/MIG-\d{3}/g) || []).length >= 3,
       message: "移行設計書: データ移行計画にMIG-xxxが3つ以上必要です",
+    },
+    {
+      check: "source system reference",
+      test: (c: string) => /移行元|既存システム|旧システム|現行システム/.test(c),
+      message: "移行設計書: 移行元システムの記載が必要です",
+    },
+    {
+      check: "data volume estimate",
+      test: (c: string) => /\d+[万千百]?件|\d+[KMGT]B/.test(c),
+      message: "移行設計書: データ量の見積もりが必要です（件数またはサイズ）",
     },
   ],
   "crud-matrix": [

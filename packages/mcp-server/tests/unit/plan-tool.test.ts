@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
+import { mkdtemp, rm, mkdir, writeFile, readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { handlePlan } from "../../src/tools/plan.js";
@@ -1211,6 +1211,60 @@ describe("manage_plan tool", () => {
       } as PlanArgs);
       expect(result.isError).toBe(true);
       expect(result.content[0].text).toContain("new_features");
+    });
+
+    it("writes phase files to disk and updates plan.md frontmatter", async () => {
+      const dir = await mkdtemp(join(tmpdir(), "sekkei-af-e2e-"));
+      const cfg = join(dir, "sekkei.config.yaml");
+      await writeFile(cfg, CONFIG_YAML, "utf-8");
+      try {
+        // 1. Create plan with 1 feature
+        const cr = await call({
+          action: "create",
+          workspace_path: dir,
+          config_path: cfg,
+          doc_type: "basic-design",
+          features: [{ id: "core", name: "Core", complexity: "medium", priority: 1 }],
+        });
+        const pid = parseResult(cr).plan_id;
+        const planDir = join(dir, "workspace-docs", "plans", pid);
+
+        // 2. Add 2 new features
+        const result = await call({
+          action: "add_feature",
+          workspace_path: dir,
+          plan_id: pid,
+          new_features: [
+            { id: "dash", name: "Dashboard", complexity: "simple", priority: 2 },
+            { id: "rpt", name: "Reports", complexity: "complex", priority: 3 },
+          ],
+        } as PlanArgs);
+        expect(result.isError).toBeUndefined();
+
+        // 3. Assert phase files exist on disk
+        const files = await readdir(planDir);
+        const phaseFiles = files.filter((f) => f.startsWith("phase-") && f.endsWith(".md"));
+        // shared(1) + core(2) + dash(3) + rpt(4) + validation(5) = 5 phases
+        expect(phaseFiles.length).toBeGreaterThanOrEqual(5);
+
+        // Verify new feature phase files specifically
+        expect(files.some((f) => f.includes("dash"))).toBe(true);
+        expect(files.some((f) => f.includes("rpt"))).toBe(true);
+
+        // 4. Assert plan.md frontmatter updated
+        const planMd = await readFile(join(planDir, "plan.md"), "utf-8");
+        expect(planMd).toContain("feature_count: 3");
+        expect(planMd).toContain("dash");
+        expect(planMd).toContain("rpt");
+
+        // 5. Verify phase numbering via status action
+        const st = await call({ action: "status", workspace_path: dir, plan_id: pid });
+        const data = parseResult(st);
+        const valPhase = data.phases.find((p: { type: string }) => p.type === "validation");
+        expect(valPhase.number).toBe(data.phases.length);
+      } finally {
+        await rm(dir, { recursive: true, force: true });
+      }
     });
   });
 

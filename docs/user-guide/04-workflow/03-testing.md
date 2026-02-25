@@ -28,7 +28,14 @@ Giai đoạn Kiểm thử (Testing Phase) sẽ khởi tạo 5 tài liệu quan t
 | **PM** | Chịu trách nhiệm giải trình (Accountable) | Phê duyệt Kế hoạch kiểm thử tổng thể. |
 | **Khách hàng Nhật** | Nhận thông tin (Informed) | Trực tiếp tham gia kiểm thử nghiệm thu (UAT) và ký biên bản. |
 
-**Điều kiện hoàn thiện (Exit criteria):** Cả 5 tài liệu vượt qua bước xác thực, ma trận truy xuất nguồn gốc (Traceability Matrix) không có sai sót và Kế hoạch kiểm thử được PM phê duyệt.
+**Điều kiện hoàn thiện (Exit criteria):**
+
+| Tiêu chí | Mô tả |
+|---------|-------|
+| Xác thực đạt | Cả 5 tài liệu vượt qua `/sekkei:validate` |
+| Ma trận hoàn chỉnh | Traceability Matrix không có lỗ hổng |
+| PM phê duyệt | Kế hoạch kiểm thử được PM ký duyệt |
+| Khách hàng xác nhận | Phạm vi UAT được khách hàng đồng ý |
 
 ---
 
@@ -176,6 +183,9 @@ Sau khi hoàn thiện các đặc tả, hãy khởi tạo ma trận truy xuất 
 ```
 
 Ma trận này sẽ hiển thị mối quan hệ chặt chẽ giữa: **Yêu cầu (REQ) ↔ Chức năng (F) ↔ Thiết kế (SCR) ↔ Các cấp độ kiểm thử (UT, IT, ST, UAT)**. Nếu có bất kỳ yêu cầu nào chưa có kịch bản kiểm thử tương ứng, hệ thống sẽ đưa ra cảnh báo để bạn bổ sung kịp thời.
+
+> [!TIP]
+> Khi khởi tạo kịch bản kiểm thử, hãy đảm bảo mỗi yêu cầu (REQ-xxx) có ít nhất một kịch bản kiểm thử tương ứng. Sử dụng lệnh `/sekkei:matrix` để kiểm tra độ bao phủ trước khi bàn giao.
 
 ---
 

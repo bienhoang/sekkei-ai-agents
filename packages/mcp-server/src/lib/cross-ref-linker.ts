@@ -52,6 +52,8 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["basic-design", "migration-design"],
   ["requirements", "migration-design"],
   ["operation-design", "migration-design"],
+  ["nfr", "migration-design"],
+  ["security-design", "migration-design"],
   ["functions-list", "crud-matrix"],
   ["basic-design", "crud-matrix"],
   ["requirements", "traceability-matrix"],

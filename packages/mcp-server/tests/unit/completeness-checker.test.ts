@@ -59,8 +59,8 @@ describe("validateContentDepth — ut-spec", () => {
     expect(issues.some((i) => i.message.includes("UT"))).toBe(true);
   });
 
-  it("returns no issues with 3+ UT case IDs", () => {
-    const content = "UT-001 ログイン\nUT-002 検索\nUT-003 レポート";
+  it("returns no issues with 3+ UT case IDs and complete content", () => {
+    const content = "UT-001 ログイン 正常系 期待結果: 成功\nUT-002 検索 異常系 期待結果: エラー\nUT-003 レポート 境界値 期待結果: 表示";
     const issues = validateContentDepth(content, "ut-spec");
     expect(issues).toHaveLength(0);
   });
@@ -197,8 +197,8 @@ describe("validateContentDepth — test-plan", () => {
     expect(issues.some((i) => i.message.includes("TP-xxx"))).toBe(true);
   });
 
-  it("returns no issues with 3+ TP-xxx IDs", () => {
-    const content = "TP-001 単体テスト\nTP-002 結合テスト\nTP-003 システムテスト";
+  it("returns no issues with 3+ TP-xxx IDs and complete content", () => {
+    const content = "TP-001 単体テスト\nTP-002 結合テスト\nTP-003 システムテスト\n要件定義書に基づくテスト対象\nカバレッジ目標: 80%";
     const issues = validateContentDepth(content, "test-plan");
     expect(issues).toHaveLength(0);
   });
@@ -282,8 +282,8 @@ describe("validateContentDepth — migration-design", () => {
     expect(issues.some((i) => i.message.includes("MIG-xxx"))).toBe(true);
   });
 
-  it("returns no issues with 3+ MIG-xxx IDs", () => {
-    const content = "MIG-001 ユーザー\nMIG-002 商品\nMIG-003 注文";
+  it("returns no issues with 3+ MIG-xxx IDs and complete content", () => {
+    const content = "MIG-001 ユーザー\nMIG-002 商品\nMIG-003 注文\n移行元: 旧システム\nデータ量: 10万件";
     const issues = validateContentDepth(content, "migration-design");
     expect(issues).toHaveLength(0);
   });
