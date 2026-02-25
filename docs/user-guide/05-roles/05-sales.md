@@ -1,148 +1,112 @@
-# Role Guide: Sales / Presales
+# Hướng dẫn theo Vai trò: Kinh doanh & Tư vấn Giải pháp — Sales / Presales
 
-Xem thêm: [Giới thiệu](../01-introduction.md) | [Quick Start](../03-quick-start.md) | [Workflow Supplementary](../04-workflow/04-supplementary.md) | [Team Playbook](../06-team-playbook/index.md)
-
----
-
-## 1. Sales/Presales làm gì trong dự án Sekkei?
-
-Sales/Presales dùng Sekkei chủ yếu ở **giai đoạn trước ký hợp đồng** — phân tích RFP từ khách hàng Nhật, làm rõ yêu cầu qua Q&A, đóng băng scope, và demo bộ tài liệu chất lượng cho khách hàng. Khi scope đã freeze, bạn handoff cho BA để bắt đầu phase Requirements chính thức.
-
-Công việc chính của Sales/Presales:
-
-- Chạy **RFP Workspace** để phân tích RFP và sinh Q&A tự động
-- Giao tiếp với khách hàng để làm rõ yêu cầu
-- Đóng băng scope trước khi ký hợp đồng
-- Demo tài liệu qua preview server và export PDF
-- Handoff sang BA với proposal đã confirmed
+Xem thêm: [Giới thiệu](../01-introduction.md) | [Bắt đầu nhanh (Quick Start)](../03-quick-start.md) | [Tài liệu bổ trợ](../04-workflow/04-supplementary.md) | [Team Playbook](../06-team-playbook/index.md)
 
 ---
 
-## 2. Lệnh thường dùng
+## 1. Vai trò của Sales/Presales trong dự án sử dụng Sekkei
 
-| Lệnh | Dùng khi nào |
+Đội ngũ Sales/Presales sử dụng Sekkei chủ yếu ở **giai đoạn trước khi ký kết hợp đồng**. Công việc của bạn tập trung vào việc phân tích các hồ sơ yêu cầu (RFP) từ phía Nhật Bản, thực hiện Q&A để làm rõ các điểm chưa tường minh, chốt phạm vi dự án (scope freeze) và trực tiếp trình diễn (demo) bộ tài liệu đặc tả chất lượng cao để thuyết phục khách hàng. Sau khi phạm vi đã được thống nhất, bạn sẽ thực hiện bàn giao lại cho BA để bắt đầu giai đoạn Định nghĩa yêu cầu chính thức.
+
+**Các nhiệm vụ trọng tâm của Sales/Presales:**
+- Sử dụng **RFP Workspace** để phân tích hồ sơ thầu và tự động khởi tạo danh sách Q&A.
+- Trao đổi trực tiếp với khách hàng để làm rõ các yêu cầu nghiệp vụ còn thiếu sót.
+- Chốt và đóng băng phạm vi (scope) trước khi ký hợp đồng chính thức.
+- Trình diễn tài liệu thông qua preview server và xuất bản file PDF chuyên nghiệp.
+- Bàn giao hồ sơ đề xuất (proposal) đã được khách hàng xác nhận cho đội ngũ BA.
+
+---
+
+## 2. Các câu lệnh thường dùng
+
+| Câu lệnh | Tình huống sử dụng |
 |------|--------------|
-| `/sekkei:rfp` | Bắt đầu RFP Workspace — paste text RFP hoặc attach file |
-| `/sekkei:export @doc --format=pdf` | Export PDF để gửi khách hàng review hoặc demo |
-| `/sekkei:translate @doc --lang=en` | Dịch sang tiếng Anh cho stakeholder nội bộ |
-| `/sekkei:preview` | Khởi động preview server tại localhost:5173 |
-| `sekkei doctor` | Health check trước khi demo |
+| `/sekkei:rfp` | Khởi động không gian làm việc RFP — xử lý file hoặc nội dung text của hồ sơ thầu. |
+| `/sekkei:export @doc --format=pdf` | Xuất bản file PDF phục vụ việc trình bày hoặc gửi khách hàng xem xét. |
+| `/sekkei:translate` | Dịch thuật tài liệu sang tiếng Anh cho các bên liên quan nội bộ. |
+| `/sekkei:preview` | Khởi động máy chủ xem trước (preview) để trình diễn giao diện tài liệu trực quan. |
+| `sekkei doctor` | Kiểm tra trạng thái hệ thống và độ ổn định trước khi trình diễn khách hàng. |
 
 ---
 
-## 3. RFP Workflow — Luồng chi tiết
+## 3. Quy trình làm việc với RFP (RFP Workflow)
 
-Đây là luồng quan trọng nhất với Sales/Presales. RFP Workspace đi qua các phase tự động:
+Đây là quy trình quan trọng nhất dành riêng cho Sales/Presales, giúp rút ngắn thời gian phản hồi khách hàng:
 
-### Bước 1: Nhận RFP và khởi động
+### Bước 1: Tiếp nhận và Phân tích RFP
+Bạn có thể đưa toàn bộ nội dung RFP vào hệ thống bằng cách đính kèm file hoặc dán trực tiếp đoạn văn bản. Sekkei sẽ bắt đầu phân tích cấu trúc và logic của yêu cầu.
 
-Paste text RFP trực tiếp hoặc attach file:
+### Bước 2: Tự động khởi tạo Q&A
+Hệ thống sẽ chuyển sang giai đoạn `QNA_GENERATION`, tự động liệt kê các câu hỏi nghiệp vụ cần làm rõ (Ví dụ: "Hệ thống có cần tích hợp phần mềm hiện có không?", "Số lượng người dùng đồng thời kỳ vọng là bao nhiêu?"). Bạn cần rà soát lại danh sách này, loại bỏ các câu hỏi thừa và bổ sung các câu hỏi chuyên sâu trước khi gửi cho khách hàng.
 
-```
-/sekkei:rfp @rfp-client-abc.pdf
-```
+### Bước 3: Phản hồi từ Khách hàng
+Khi khách hàng trả lời các câu hỏi, bạn dán nội dung đó vào hệ thống để Sekkei cập nhật lại cơ sở dữ liệu yêu cầu.
 
-Hoặc paste text:
-
-```
-/sekkei:rfp @[Nội dung RFP từ khách hàng...]
-```
-
-### Bước 2: ANALYZING → QNA_GENERATION
-
-Sekkei tự động phân tích RFP và sinh danh sách câu hỏi làm rõ (Q&A). Bạn sẽ thấy output:
-
-```
-Phase: QNA_GENERATION
-Đã sinh 12 câu hỏi làm rõ yêu cầu.
-[Q1] Hệ thống cần tích hợp với phần mềm kế toán hiện tại không?
-[Q2] Số lượng người dùng đồng thời tối đa là bao nhiêu?
-...
-```
-
-**Review Q&A trước khi gửi khách hàng** — xóa câu hỏi thừa, thêm câu hỏi domain-specific nếu cần.
-
-### Bước 3: WAITING_CLIENT → CLIENT_ANSWERED
-
-Gửi Q&A cho khách hàng. Khi họ trả lời, paste câu trả lời vào:
-
-```
-CLIENT_ANSWERED: [Paste toàn bộ câu trả lời của khách hàng vào đây]
-```
-
-### Bước 4: DRAFTING → SCOPE_FREEZE
-
-Sekkei draft proposal và đề xuất scope. Bạn xem và confirm với khách hàng. Khi đồng ý:
-
-```
-SCOPE_FREEZE
-```
-
-Sekkei báo confidence level (HIGH / MEDIUM / LOW) và tạo `06_scope_freeze.md`.
+### Bước 4: Soạn thảo đề xuất và Chốt phạm vi (Scope Freeze)
+Hệ thống sẽ dự thảo bản đề xuất kỹ thuật (Proposal) và xác định phạm vi công việc. Sau khi khách hàng đồng ý, bạn thực hiện lệnh `SCOPE_FREEZE`. Sekkei sẽ đánh giá mức độ tin cậy (Confidence Level) của giải pháp và khởi tạo file chốt phạm vi chính thức.
 
 ### Navigation Keywords
 
-Trong suốt RFP Workspace, bạn có thể dùng các keyword sau:
+Trong suốt quá trình làm việc với RFP Workspace, bạn có thể sử dụng các từ khóa sau:
 
 | Keyword | Tác dụng |
 |---------|----------|
-| `SHOW` | Hiện trạng thái phase hiện tại và nội dung |
-| `BUILD_NOW` | Bỏ qua Q&A, tạo proposal ngay từ RFP gốc |
-| `SKIP_QNA` | Bỏ qua bước Q&A, chuyển thẳng sang DRAFTING |
-| `BACK` | Quay lại phase trước |
+| `SHOW` | Hiển thị trạng thái hiện tại của giai đoạn và nội dung liên quan. |
+| `BUILD_NOW` | Bỏ qua bước Q&A, tạo đề xuất ngay lập tức từ RFP gốc. |
+| `SKIP_QNA` | Bỏ qua giai đoạn Q&A, chuyển thẳng sang giai đoạn soạn thảo đề xuất (DRAFTING). |
+| `BACK` | Quay lại giai đoạn trước đó. |
 
 ### Output Files
 
-Tất cả output lưu tại `workspace-docs/01-rfp/<project-name>/`:
+Tất cả các tài liệu đầu ra được lưu trữ tại thư mục `workspace-docs/01-rfp/<project-name>/`:
 
 ```
-01_raw_rfp.md          — RFP gốc đã được parse
-02_analysis.md         — Phân tích requirements từ RFP
-03_qna.md              — Danh sách Q&A đã sinh
-04_client_answers.md   — Câu trả lời của khách hàng
-05_proposal.md         — Draft proposal kỹ thuật
-06_scope_freeze.md     — Scope đã đóng băng, sẵn sàng handoff
+01_raw_rfp.md          — Hồ sơ RFP gốc đã được phân tích.
+02_analysis.md         — Phân tích các yêu cầu từ RFP.
+03_qna.md              — Danh sách các câu hỏi Q&A đã được tạo.
+04_client_answers.md   — Các câu trả lời từ phía khách hàng.
+05_proposal.md         — Bản dự thảo đề xuất kỹ thuật.
+06_scope_freeze.md     — Phạm vi công việc đã được chốt, sẵn sàng bàn giao.
 ```
 
 ---
 
-## 4. Demo Guide — Trình bày cho khách hàng
+## 4. Trình diễn và Thuyết phục Khách hàng (Demo Guide)
 
-**Trước demo:** Chạy `/sekkei:version` để đảm bảo mọi thứ hoạt động.
+**Trước buổi trình diễn:** Chạy lệnh `/sekkei:version` để đảm bảo mọi thứ hoạt động ổn định.
 
-**Trong demo:**
+**Trong buổi trình diễn:**
 
-1. Khởi động preview: `/sekkei:preview` → mở `http://localhost:5173`
-2. Cho khách hàng thấy sidebar navigation, Mermaid diagrams render trực tiếp
-3. Export PDF ngay tại chỗ: `/sekkei:export @requirements --format=pdf`
-4. Nhấn mạnh các điểm sau khi demo:
+1. Khởi động máy chủ xem trước: `/sekkei:preview` → mở trình duyệt tại `http://localhost:5173`.
+2. Cho khách hàng thấy thanh điều hướng (sidebar navigation) và cách các biểu đồ Mermaid được hiển thị trực tiếp.
+3. Xuất file PDF ngay tại chỗ: `/sekkei:export @requirements --format=pdf`.
+4. Nhấn mạnh các điểm sau khi trình diễn:
 
-**Key talking points:**
-
-- **Chuẩn IPA** — format 表紙/更新履歴/目次/本文 mà các công ty Nhật quen dùng
-- **Cross-reference IDs** — REQ-001 → F-001 → SCR-001 → UT-001 tự động linked, dễ trace impact khi có thay đổi
-- **Auto version history** — mỗi lần regenerate tự động cập nhật 改訂履歴 (revision history)
-- **Thời gian** — 要件定義書 đầy đủ trong 30–60 phút thay vì 2–3 ngày
-
----
-
-## 5. Tips
-
-- Dùng `BUILD_NOW` hoặc `SKIP_QNA` khi RFP đã rất chi tiết và không cần Q&A thêm
-- Confidence level **LOW** ở scope freeze = cần thêm thông tin từ khách hàng trước khi handoff BA
-- Export PDF ngay sau scope freeze để khách hàng ký xác nhận scope — tránh scope creep
-- Dịch proposal sang tiếng Anh bằng `/sekkei:translate` nếu có stakeholder nội bộ không đọc được tiếng Nhật
+**Các điểm nhấn quan trọng khi Demo:**
+- **Tuân thủ chuẩn IPA**: Cho khách hàng thấy cấu trúc tài liệu chuyên nghiệp gồm: **Trang bìa (表紙)**, **Lịch sử cập nhật (更新履歴)**, **Mục lục (目次)** và **Nội dung chính (本文)** — đây là những gì mà các doanh nghiệp Nhật Bản kỳ vọng.
+- **Liên kết mã ID thông minh**: Trình diễn cách các yêu cầu (REQ-001), chức năng (F-001), và màn hình (SCR-001) được kết nối chặt chẽ với nhau, giúp dễ dàng truy vết ảnh hưởng nếu có thay đổi.
+- **Tự động ghi nhận lịch sử**: Cho khách hàng thấy phần **改訂履歴 (Lịch sử sửa đổi)** được cập nhật tự động một cách minh bạch sau mỗi lần thay đổi.
+- **Tốc độ thực hiện**: Thay vì mất hàng tuần, bạn có thể tạo ra bản **要件定義書 (Định nghĩa yêu cầu)** đầy đủ chỉ trong thời gian ngắn, giúp rút ngắn thời gian phản hồi đề xuất.
 
 ---
 
-## 6. Checklist
+## 5. Lời khuyên cho Sales/Presales
 
-- [ ] Text RFP đầy đủ (không bị cắt xén) trước khi paste vào `/sekkei:rfp`
-- [ ] Q&A đã được review — xóa câu hỏi thừa, thêm câu hỏi domain-specific
-- [ ] Câu trả lời khách hàng đã được paste đầy đủ
-- [ ] Scope freeze đã được confirm với khách hàng (confidence HIGH hoặc MEDIUM)
-- [ ] `06_scope_freeze.md` đã được export PDF và lưu trữ
-- [ ] Handoff cho BA: giao `05_proposal.md` + `06_scope_freeze.md` làm input cho requirements
+- Nếu hồ sơ RFP của khách hàng đã cực kỳ chi tiết, bạn có thể sử dụng lệnh `BUILD_NOW` hoặc `SKIP_QNA` để chuyển thẳng sang bước tạo đề xuất mà không cần qua giai đoạn Q&A.
+- Chú ý đến chỉ số Confidence Level: Nếu mức độ tin cậy ở mức **LOW** (Thấp) khi chốt phạm vi, bạn cần tiếp tục trao đổi thêm để làm rõ thông tin trước khi bàn giao cho đội ngũ BA.
+- Luôn xuất bản PDF ngay sau khi chốt phạm vi để khách hàng ký xác nhận, giúp phòng tránh tình trạng phát sinh yêu cầu ngoài hợp đồng (scope creep).
+- Dịch bản đề xuất sang tiếng Anh bằng lệnh `/sekkei:translate` nếu có các bên liên quan nội bộ không đọc được tiếng Nhật.
+
+---
+
+## 6. Danh sách kiểm tra (Checklist) dành cho Sales
+
+- [ ] Nội dung RFP đầu vào đầy đủ, không bị thiếu sót thông tin quan trọng.
+- [ ] Danh sách Q&A đã được rà soát và điều chỉnh phù hợp với thực tế.
+- [ ] Phản hồi của khách hàng đã được nạp đầy đủ vào hệ thống.
+- [ ] Phạm vi công việc đã được khách hàng xác nhận và trạng thái `SCOPE_FREEZE` đã được thiết lập (với mức độ tin cậy HIGH hoặc MEDIUM).
+- [ ] File chốt phạm vi (`06_scope_freeze.md`) đã được lưu trữ và export PDF.
+- [ ] Hoàn tất bàn giao hồ sơ đề xuất (`05_proposal.md`) và phạm vi chốt (`06_scope_freeze.md`) cho đội ngũ BA để thực hiện bước tiếp theo.
 
 ---
 

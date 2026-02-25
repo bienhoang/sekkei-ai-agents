@@ -1,88 +1,69 @@
 ![Sekkei](./images/logo-mark.svg)
 
-# Giới thiệu Sekkei
+# Giới thiệu về Sekkei
 
 ## Sekkei là gì?
 
-**Sekkei** (設計, phát âm: "sek-kei") là một AI agent chạy trong **Claude Code** giúp bạn tạo tài liệu đặc tả phần mềm (specification documents) bằng tiếng Nhật theo chuẩn **IPA** (Information-technology Promotion Agency).
+**Sekkei** (設計 - Thiết kế, phát âm: "sek-kei") là một AI agent chuyên sâu hoạt động trong môi trường **Claude Code**. Nhiệm vụ chính của Sekkei là hỗ trợ bạn khởi tạo bộ hồ sơ đặc tả phần mềm bằng tiếng Nhật, tuân thủ tuyệt đối các tiêu chuẩn của **IPA** (Cục Xúc tiến Công nghệ Thông tin Nhật Bản - Information-technology Promotion Agency).
 
-Thay vì viết tay từng trang tài liệu tiếng Nhật — vốn tốn nhiều thời gian và dễ sai chuyên ngành — bạn chỉ cần mô tả yêu cầu bằng tiếng Việt hay tiếng Anh, Sekkei sẽ sinh ra bộ tài liệu hoàn chỉnh theo đúng định dạng mà khách hàng Nhật yêu cầu.
+Thay vì phải tiêu tốn hàng tuần để soạn thảo thủ công hàng trăm trang tài liệu tiếng Nhật — một công việc đòi hỏi sự tỉ mỉ và am hiểu sâu sắc về thuật ngữ chuyên ngành — bạn chỉ cần cung cấp yêu cầu bằng tiếng Việt hoặc tiếng Anh. Sekkei sẽ tự động chuyển hóa các ý tưởng đó thành bộ tài liệu chuyên nghiệp, đúng định dạng và văn hóa làm việc của khách hàng Nhật Bản.
 
-**Output gồm 13 loại tài liệu chính:**
+**Bộ hồ sơ đầu ra bao gồm 13 loại tài liệu cốt lõi:**
 
-| Nhóm | Tài liệu |
+| Nhóm | Danh sách tài liệu |
 |------|----------|
-| Yêu cầu | 要件定義書, 機能一覧, 非機能要件定義書, プロジェクト計画書 |
-| Thiết kế | 基本設計書, セキュリティ設計書, 詳細設計書 |
-| Test | テスト計画書, 単体テスト仕様書, 結合テスト仕様書, システムテスト仕様書, 受入テスト仕様書 |
-| Thay đổi | 変更要求書 |
+| **Yêu cầu (Requirements)** | 要件定義書 (Định nghĩa yêu cầu), 機能一覧 (Danh sách chức năng), 非機能要件定義書 (Định nghĩa yêu cầu phi chức năng), プロジェクト計画書 (Kế hoạch dự án) |
+| **Thiết kế (Design)** | 基本設計書 (Thiết kế cơ bản), セキュリティ設計書 (Thiết kế bảo mật), 詳細設計書 (Thiết kế chi tiết) |
+| **Kiểm thử (Test)** | テスト計画書 (Kế hoạch kiểm thử), 単体テスト仕様書 (Đặc tả kiểm thử đơn vị), 結合テスト仕様書 (Đặc tả kiểm thử tích hợp), システムテスト仕様書 (Đặc tả kiểm thử hệ thống), 受入テスト仕様書 (Đặc tả kiểm thử nghiệm thu) |
+| **Thay đổi (Change)** | 変更要求書 (Yêu cầu thay đổi) |
 
-## Tại sao output tiếng Nhật?
+## Tại sao kết quả đầu ra lại là tiếng Nhật chuẩn IPA?
 
-Khách hàng Nhật yêu cầu tài liệu theo **chuẩn IPA** — một bộ quy chuẩn về định dạng, cấu trúc, và thuật ngữ mà các công ty IT Nhật đã quen dùng từ thập niên 1990. Khi bạn nộp tài liệu theo chuẩn này, khách hàng đọc nhanh hơn, duyệt nhanh hơn, và ít yêu cầu sửa đổi hơn.
+Tiêu chuẩn IPA là "ngôn ngữ chung" trong ngành IT tại Nhật Bản từ nhiều thập kỷ qua. Việc cung cấp bộ tài liệu đúng chuẩn này không chỉ giúp khách hàng nắm bắt thông tin cực nhanh mà còn khẳng định sự chuyên nghiệp và cam kết chất lượng của đội ngũ phát triển. Điều này giúp rút ngắn đáng kể quá trình phê duyệt và giảm thiểu các yêu cầu sửa đổi do hiểu lầm về nghiệp vụ.
 
-Sekkei giúp team Việt **viết spec bằng tiếng Nhật đúng chuẩn** mà không cần tự dịch thủ công hay thuê thêm BA biết tiếng Nhật.
+Sekkei giúp các đội ngũ tại Việt Nam **tự tin soạn thảo hồ sơ chuẩn Nhật** mà không còn bị rào cản ngôn ngữ cản trở, đồng thời giảm bớt gánh nặng biên dịch cho các vị trí BA tiếng Nhật.
 
-## Luồng hoạt động
+## Quy trình vận hành
 
 ```mermaid
 flowchart TD
-    A["Team Việt\n(BA / Dev / PM)"] --> B["Sekkei\n(AI Agent)"]
-    B --> C["Tài liệu spec\ntiếng Nhật"]
-    C --> D["Khách hàng Nhật\n(Review & Approve)"]
+    A["Đội ngũ dự án\n(BA / Dev / PM)"] --> B["Sekkei\n(AI Agent)"]
+    B --> C["Hồ sơ đặc tả chuẩn Nhật\n(File Excel/PDF)"]
+    C --> D["Khách hàng Nhật Bản\n(Thẩm định & Phê duyệt)"]
 ```
 
-## Ai dùng được?
+## Đối tượng sử dụng chính
 
-| Role | Dùng Sekkei để làm gì |
+| Vai trò | Cách Sekkei hỗ trợ bạn |
 |------|----------------------|
-| **BA** | Tạo 要件定義書, 機能一覧, 非機能要件定義書 từ meeting notes hoặc RFP |
-| **Sales / Pre-sales** | Chạy `/sekkei:rfp` để phân tích RFP, tạo proposal, đóng băng scope trước khi ký hợp đồng |
-| **PM** | Tạo プロジェクト計画書, theo dõi tiến độ chain với `/sekkei:status` |
-| **Dev Lead** | Tạo 基本設計書, 詳細設計書, セキュリティ設計書 từ requirements |
-| **QA** | Tạo テスト計画書 và 4 loại test spec (UT/IT/ST/UAT) |
+| **Phân tích nghiệp vụ (BA)** | Khởi tạo **Định nghĩa yêu cầu**, **Danh sách chức năng** và các yêu cầu phi chức năng từ ghi chú họp hoặc hồ sơ thầu (RFP). |
+| **Sales / Pre-sales** | Phân tích nhanh hồ sơ thầu, tạo đề xuất (Proposal) và chốt phạm vi công việc nhanh chóng với lệnh `/sekkei:rfp`. |
+| **Quản trị dự án (PM)** | Lập **Kế hoạch dự án** chuẩn xác và theo dõi trạng thái hoàn thiện hồ sơ thông qua lệnh `/sekkei:status`. |
+| **Trưởng nhóm kỹ thuật (Dev Lead)** | Xây dựng các bản **Thiết kế cơ bản**, **Thiết kế chi tiết** và **Thiết kế bảo mật** một cách hệ thống. |
+| **Kiểm thử (QA)** | Tự động sinh **Kế hoạch kiểm thử** và các bộ đặc tả kiểm thử tương ứng cho từng cấp độ (UT/IT/ST/UAT). |
 
-## Value proposition
+## Những giá trị vượt trội
 
-- **Tiết kiệm 60–80% thời gian** viết spec — thay vì mất 2–3 ngày cho 要件定義書, bạn chỉ cần 30–60 phút
-- **Cross-reference IDs tự động** — REQ-001 → F-001 → SCR-001 → UT-001 được liên kết nhất quán xuyên suốt bộ tài liệu
-- **Chain validation** — phát hiện ID bị broken hoặc thiếu section trước khi gửi khách hàng
-- **IPA 4-sheet Excel** — export đúng format 表紙 / 更新履歴 / 目次 / 本文 mà không cần format tay
+- **Tiết kiệm 60–80% thời gian**: Hoàn tất bộ hồ sơ đặc tả phức tạp chỉ trong vài giờ thay vì vài tuần.
+- **Tính nhất quán tuyệt đối (Cross-reference)**: Mọi mã định danh (ID) từ Yêu cầu đến Chức năng, Giao diện và Kiểm thử đều được liên kết chặt chẽ và nhất quán.
+- **Xác thực thông minh (Validation)**: Tự động rà soát sai sót, thiếu hụt hoặc mâu thuẫn giữa các tài liệu trước khi bàn giao.
+- **Xuất bản chuẩn IPA**: Tự động tạo file Excel với đầy đủ 4 sheet tiêu chuẩn: **Trang bìa (表紙)**, **Lịch sử sửa đổi (更新履歴)**, **Mục lục (目次)** và **Nội dung chính (本文)**.
 
 ## Môi trường hỗ trợ
 
-| Môi trường | Trạng thái |
-|-----------|-----------|
-| **Claude Code** | Chính thức (primary) |
-| Cursor | Hỗ trợ (via `mcp.json`) |
-| GitHub Copilot | Hỗ trợ (via `copilot-instructions.md`) |
+Sekkei hiện đã sẵn sàng tích hợp trên các nền tảng lập trình phổ biến: **Claude Code** (Hỗ trợ chính thức), **Cursor** và **GitHub Copilot**.
 
-## Giới hạn cần biết
+## Lưu ý quan trọng
 
 > [!WARNING]
-> Sekkei **không thay thế domain knowledge**. Output AI cần được review kỹ bởi người có hiểu biết về nghiệp vụ (BA hoặc domain expert) trước khi gửi khách hàng.
+> Sekkei đóng vai trò là "công cụ hỗ trợ đắc lực", không thay thế hoàn toàn năng lực nghiệp vụ của con người. Mọi kết quả do AI tạo ra **cần được rà soát kỹ lưỡng** bởi các chuyên gia trong nhóm trước khi chính thức gửi tới đối tác.
 
-- AI có thể tạo ID không nhất quán nếu input không đầy đủ — dùng `/sekkei:validate` để kiểm tra
-- Sekkei không tự động điền số liệu nghiệp vụ cụ thể (VD: mức SLA, ngân sách) — bạn phải cung cấp
-- Output tiếng Nhật có thể cần chỉnh sửa keigo (敬語) cho phù hợp phong cách khách hàng
-
-## 3 Thuật ngữ cần biết trước
-
-### V-model
-![alt text](images/introduction/v-model.png)
-
-Mô hình phát triển phần mềm phổ biến tại Nhật, trong đó mỗi tài liệu thiết kế (bên trái) đối ứng với một loại test (bên phải). Sekkei sinh tài liệu theo đúng thứ tự V-model này.
-
-Chi tiết xem: [V-model và 13 loại tài liệu](./02-v-model-and-documents.md)
-
-### IPA標準 (IPA chuẩn)
-
-Bộ quy chuẩn tài liệu do **Information-technology Promotion Agency** của Nhật ban hành. Quy định cấu trúc, tên section, định dạng bảng, và cách đánh số ID. Sekkei tuân theo chuẩn này cho toàn bộ output.
-
-### Chain (Chuỗi tài liệu phụ thuộc)
-
-Các tài liệu trong Sekkei **phụ thuộc lẫn nhau theo thứ tự**. Ví dụ: 基本設計書 cần 要件定義書 làm input; 詳細設計書 cần 基本設計書. Nếu bỏ qua bước giữa, tài liệu sau sẽ thiếu cross-reference IDs.
+- Luôn sử dụng lệnh `/sekkei:validate` để đảm bảo tính nhất quán của hệ thống mã ID.
+- Hãy chủ động cung cấp các thông số đặc thù của dự án (như cam kết SLA, hạ tầng cụ thể) để AI đưa ra kết quả sát thực tế nhất.
+- Bạn có thể tùy chỉnh mức độ kính ngữ (**敬語 - Keigo**) trong file cấu hình để phù hợp với văn hóa riêng biệt của từng khách hàng.
 
 ---
 
-**Bước tiếp theo:** Đọc [Quick Start](./03-quick-start.md) để tạo tài liệu đầu tiên trong 15 phút.
+**Bước tiếp theo:** Hãy tham khảo hướng dẫn [Bắt đầu nhanh (Quick Start)](./03-quick-start.md) để khởi tạo tài liệu chuẩn Nhật đầu tiên chỉ trong 15 phút.
+ Proudly presented by Antigravity.
+ Proudly presented by Antigravity.

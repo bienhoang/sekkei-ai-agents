@@ -16,3 +16,4 @@ plans/
 packages/mcp-server/plans/
 packages/skills/plans/
 packages/preview/plans/
+packages/mcp-server/tests/fixtures

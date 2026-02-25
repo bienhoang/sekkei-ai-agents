@@ -1,135 +1,116 @@
-# Checklists — Danh Sách Kiểm Tra Theo Phase
+# Danh sách kiểm tra (Checklists) theo từng giai đoạn
 
-Xem thêm: [Team Playbook](./index.md) | [Scenarios](./01-scenarios.md) | [Review & Approval](./03-review-and-approval.md)
-
----
-
-Copy-paste từng checklist vào task tracker hoặc comment của PR khi bắt đầu phase tương ứng.
+Xem thêm: [Team Playbook](./index.md) | [Kịch bản phối hợp](./01-scenarios.md) | [Review & Phê duyệt](./03-review-and-approval.md)
 
 ---
 
-## Checklist 0: Project Setup (PM)
-
-Chạy trước khi bất kỳ ai trong team bắt đầu làm việc.
-
-- [ ] `sekkei init` đã chạy thành công — `sekkei.config.yaml` được tạo
-- [ ] `sekkei.config.yaml` có `project.name`, `type`, `keigo` level phù hợp với khách hàng
-- [ ] Approval chain đã được cấu hình trong config (xem [review-and-approval.md](./03-review-and-approval.md))
-- [ ] `/sekkei:version` chạy OK — MCP server connected, Python bridge OK
-- [ ] Tất cả thành viên team đã cài Sekkei skill (`~/.claude/skills/sekkei/SKILL.md`)
-- [ ] Output directory (`workspace-docs/`) đã được tạo và thêm vào `.gitignore` nếu cần
-- [ ] Git repo đã init, commit đầu tiên với config file đã được tạo
+Bạn hãy copy-paste danh sách kiểm tra tương ứng vào công cụ quản lý công việc (Task Tracker) hoặc phần bình luận của Pull Request (PR) khi bắt đầu mỗi giai đoạn của dự án.
 
 ---
 
-## Checklist 1: RFP Phase (Sales + PM)
+## Danh sách 0: Thiết lập dự án (Dành cho PM)
 
-Bắt đầu khi nhận được RFP từ khách hàng Nhật.
+*Thực hiện trước khi đội ngũ bắt đầu triển khai các công việc chuyên môn.*
 
-- [ ] Text RFP đầy đủ — không bị cắt xén khi paste vào `/sekkei:rfp`
-- [ ] `/sekkei:rfp` đã chạy và sinh danh sách Q&A tự động
-- [ ] Q&A đã được Sales review — xóa câu thừa, thêm câu domain-specific (HR system: quy tắc lương, chấm công, cơ cấu tổ chức...)
-- [ ] Q&A đã gửi cho khách hàng và nhận được câu trả lời đầy đủ
-- [ ] Câu trả lời khách hàng đã paste vào `CLIENT_ANSWERED`
-- [ ] `SCOPE_FREEZE` đã được confirm — confidence level HIGH hoặc MEDIUM
-- [ ] `06_scope_freeze.md` đã export PDF và khách hàng đã ký xác nhận
-- [ ] PM đã được thông báo về scope freeze
-- [ ] **Handoff cho BA:** `05_proposal.md` + `06_scope_freeze.md` đã bàn giao
+- [ ] Lệnh `sekkei init` đã chạy thành công — File cấu hình `sekkei.config.yaml` đã được khởi tạo.
+- [ ] Cấu hình dự án (Tên dự án, loại hình, mức độ kính ngữ **Keigo**) đã phù hợp với đối tượng khách hàng Nhật Bản.
+- [ ] Chuỗi phê duyệt (Approval Chain) đã được thiết lập đúng quy trình.
+- [ ] Kiểm tra hệ thống bằng lệnh `/sekkei:version` đảm bảo mọi kết nối đều ổn định.
+- [ ] Tất cả thành viên trong nhóm đã cài đặt đầy đủ Sekkei skill.
+- [ ] Thư mục đầu ra (`workspace-docs/`) đã sẵn sàng.
+- [ ] Kho lưu trữ Git đã được khởi tạo và thực hiện bản commit đầu tiên với file cấu hình.
 
 ---
 
-## Checklist 2: Requirements Phase (BA + PM)
+## Danh sách 1: Giai đoạn Phân tích hồ sơ thầu (Dành cho Sales + PM)
 
-Bắt đầu sau khi nhận handoff từ Sales.
+*Thực hiện ngay khi nhận được hồ sơ RFP từ khách hàng Nhật.*
 
-- [ ] `/sekkei:requirements @06_scope_freeze.md` đã chạy và sinh 要件定義書
-- [ ] REQ-xxx IDs đã review — không có ID trùng, không có logic gap
-- [ ] Business rules trong 要件定義書 khớp với meeting notes / RFP gốc của hệ thống quản lý nhân sự
-- [ ] `/sekkei:functions-list @requirements` đã chạy — F-xxx hierarchy có cấu trúc logic
-- [ ] `/sekkei:nfr @requirements` đã chạy — tất cả targets có số cụ thể (response time ms/s, uptime %, concurrent users)
-- [ ] PM đã chạy `/sekkei:project-plan @requirements`
-- [ ] Glossary đã được thêm: tên modules (人事管理モジュール, 給与計算エンジン, 勤怠管理...) và domain terms quan trọng
-- [ ] `/sekkei:validate @requirements` pass — không có orphaned IDs
-- [ ] `/sekkei:validate @functions-list` pass
-- [ ] `/sekkei:validate @nfr` pass
-- [ ] PM đã review và approve (Gate 1)
-- [ ] `/sekkei:export @requirements --format=pdf` đã gửi stakeholder review
-- [ ] **Handoff cho Dev Lead:** 要件定義書 + 機能一覧 + 非機能要件定義書 đã bàn giao
+- [ ] Nội dung đoạn text RFP đảm bảo đầy đủ, không bị thiếu sót thông tin khi đưa vào lệnh `/sekkei:rfp`.
+- [ ] Hệ thống đã tự động phân tích và đưa ra danh sách Q&A ban đầu.
+- [ ] Sales đã rà soát Q&A: Loại bỏ câu hỏi thừa, bổ sung câu hỏi chuyên môn sâu về nghiệp vụ khách hàng.
+- [ ] Danh sách Q&A đã được gửi đi và nhận được phản hồi xác đáng từ phía khách hàng.
+- [ ] Toàn bộ câu trả lời của khách hàng đã được nạp vào hệ thống để ghi nhận yêu cầu.
+- [ ] Đã thực hiện lệnh `SCOPE_FREEZE` với mức độ tin cậy đạt HIGH hoặc MEDIUM.
+- [ ] File chốt phạm vi (`06_scope_freeze.md`) đã được khách hàng ký xác nhận bản PDF.
+- [ ] **Bàn giao cho BA:** Đã chuyển giao hồ sơ đề xuất và file chốt phạm vi làm đầu vào.
 
 ---
 
-## Checklist 3: Design Phase (Dev Lead + PM)
+## Danh sách 2: Giai đoạn Xác định yêu cầu (Dành cho BA + PM)
 
-Bắt đầu sau khi nhận handoff từ BA, xác nhận Gate 1 đã pass.
+*Bắt đầu triển khai sau khi nhận bàn giao từ đội ngũ Sales.*
 
-- [ ] Đã confirm BA đã validate requirements (`/sekkei:status` hoặc hỏi trực tiếp)
-- [ ] `/sekkei:basic-design @requirements @functions-list` đã chạy
-- [ ] SCR-xxx review: đủ screens cho hệ thống quản lý nhân sự (quản lý nhân viên, chấm công, bảng lương, báo cáo HR...)
-- [ ] TBL-xxx review: schema hợp lý, primary/foreign keys rõ ràng, quan hệ bảng đúng
-- [ ] API-xxx review: RESTful chuẩn, đủ CRUD cho các entity chính (Employee, Attendance, Payroll...)
-- [ ] Split mode đã cấu hình nếu dự án > 20 tính năng (`split: true` trong config)
-- [ ] `/sekkei:security-design @basic-design` đã chạy (chạy song song với detail design)
-- [ ] `/sekkei:detail-design @basic-design` đã chạy (chạy song song với security design)
-- [ ] CLS-xxx trong detail design reference đúng API-xxx và TBL-xxx IDs đã có
-- [ ] Threat model trong security design đã map vào OWASP Top 10
-- [ ] `/sekkei:validate @basic-design` pass
-- [ ] `/sekkei:validate @detail-design` pass
-- [ ] PM đã review và approve (Gate 2)
-- [ ] **Handoff cho QA:** 基本設計書 + セキュリティ設計書 + 詳細設計書 đã bàn giao
+- [ ] Khởi tạo thành công **要件定義書 (Định nghĩa yêu cầu)** dựa trên phạm vi đã chốt.
+- [ ] Rà soát các mã REQ-xxx: Đảm bảo tính duy nhất, logic mạch lạc và bao phủ toàn bộ yêu cầu khách hàng.
+- [ ] Nội dung Định nghĩa yêu cầu khớp hoàn toàn với các biên bản họp và hồ sơ RFP gốc.
+- [ ] Đã xây dựng **機能一覧 (Danh sách chức năng)** với cấu trúc phân cấp (Hierarchy) hợp lý.
+- [ ] Các mục tiêu trong **非機能要件定義書 (Định nghĩa yêu cầu phi chức năng)** đã có số liệu định lượng cụ thể.
+- [ ] PM đã hoàn thiện **プロジェクト計画書 (Kế hoạch dự án)**.
+- [ ] Bảng thuật ngữ (Glossary) đã được bổ sung đầy đủ các thuật ngữ nghiệp vụ đặc thù của dự án.
+- [ ] Lệnh `/sekkei:validate` chạy thành công cho toàn bộ bộ tài liệu yêu cầu.
+- [ ] PM đã rà soát và phê duyệt chốt chặn giai đoạn 1 (Gate 1).
+- [ ] **Bàn giao cho Dev Lead:** Toàn bộ bộ tài liệu yêu cầu đã xác thực được chuyển giao chính thức.
 
 ---
 
-## Checklist 4: Test Phase (QA + PM)
+## Danh sách 3: Giai đoạn Thiết kế hệ thống (Dành cho Dev Lead + PM)
 
-Bắt đầu sau khi nhận handoff từ Dev Lead, xác nhận Gate 2 đã pass.
+*Bắt đầu sau khi hoàn tất bàn giao từ BA và vượt qua Gate 1.*
 
-- [ ] `/sekkei:test-plan @requirements @nfr @basic-design` đã chạy
-- [ ] Test strategy trong テスト計画書 có đủ: scope, approach, entry/exit criteria
-- [ ] `/sekkei:ut-spec @detail-design @test-plan` đã chạy
-- [ ] `/sekkei:it-spec @basic-design @test-plan` đã chạy
-- [ ] `/sekkei:st-spec @basic-design @functions-list @test-plan` đã chạy
-- [ ] `/sekkei:uat-spec @requirements @nfr @test-plan` đã chạy — BA đã review UAT scenarios
-- [ ] UAT scenarios map đúng về REQ-xxx của hệ thống quản lý nhân sự
-- [ ] `/sekkei:matrix` đã chạy — traceability matrix đã được tạo
-- [ ] Matrix coverage: mỗi REQ-xxx có ít nhất 1 test case (UT/IT/ST/UAT)
-- [ ] `/sekkei:validate` full chain pass — zero warnings, zero errors
-- [ ] PM đã review và approve (Gate 3 — final)
-
----
-
-## Checklist 5: Delivery
-
-Chạy sau khi Gate 3 đã pass.
-
-- [ ] Export toàn bộ tài liệu ra Excel: requirements, nfr, project-plan, basic-design, security-design, detail-design, test-plan, ut-spec, it-spec, st-spec, uat-spec
-- [ ] Mỗi file Excel đã kiểm tra đủ 4 sheet: 表紙, 改訂履歴, 目次, 本文
-- [ ] 改訂履歴 đầy đủ — mọi version đều có entry, không có khoảng trống
-- [ ] Tên tài liệu, version, ngày trên 表紙 nhất quán
-- [ ] PDF bundle đã export cho tài liệu dùng trong buổi presentation (requirements + basic-design + uat-spec)
-- [ ] Diff-visual đã lưu nếu có Change Request đã được xử lý trong dự án
-- [ ] ZIP bundle đã đặt tên rõ ràng: `hr-system-docs-v1.0-YYYYMMDD.zip`
-- [ ] PM final approve trước khi gửi
-- [ ] Bộ tài liệu đã gửi cho khách hàng Nhật
+- [ ] Đã chạy lệnh khởi tạo **基本設計書 (Thiết kế cơ bản)** làm nền tảng cho hệ thống.
+- [ ] Rà soát màn hình (SCR): Đảm bảo đầy đủ các giao diện cần thiết theo luồng nghiệp vụ.
+- [ ] Rà soát dữ liệu (TBL): Cấu trúc bảng, khóa chính/ngoại và quan hệ giữa các bảng được thiết kế tối ưu.
+- [ ] Rà soát cổng giao tiếp (API): Đạt chuẩn RESTful và hỗ trợ đầy đủ các thao tác nghiệp vụ.
+- [ ] Kích hoạt chế độ tách file (Split mode) nếu dự án có quy mô lớn.
+- [ ] Triển khai song song **セキュリティ設計書 (Thiết kế bảo mật)** và **詳細設計書 (Thiết kế chi tiết)**.
+- [ ] Các sơ đồ lớp (CLS) trong Thiết kế chi tiết tham chiếu chính xác đến mã ID của bảng và API.
+- [ ] Các mối đe dọa bảo mật đã được đối soát và ánh xạ vào danh sách OWASP Top 10.
+- [ ] Toàn bộ bộ hồ sơ thiết kế đã vượt qua lệnh xác thực hệ thống `/sekkei:validate`.
+- [ ] PM đã rà soát và phê duyệt chốt chặn giai đoạn 2 (Gate 2).
+- [ ] **Bàn giao cho QA:** Chuyển giao đầy đủ bộ hồ sơ Thiết kế cơ bản, Bảo mật và Chi tiết.
 
 ---
 
-## Checklist 6: Change Request
+## Danh sách 4: Giai đoạn Kiểm thử (Dành cho QA + PM)
 
-Chạy mỗi khi có thay đổi yêu cầu sau khi spec freeze.
+*Bắt đầu sau khi nhận bàn giao thiết kế và xác nhận vượt qua Gate 2.*
 
-- [ ] Thay đổi đã được mô tả rõ ràng — có affected IDs cụ thể (REQ-xxx, SCR-xxx, API-xxx...)
-- [ ] Git checkpoint đã tạo trước khi bắt đầu: `git commit -m "checkpoint: before CR-xxx"`
-- [ ] `/sekkei:change` đã chạy và sinh impact graph
-- [ ] Impact graph đã được PM review — scope hợp lý, không có items bị miss
-- [ ] PM đã approve propagation (chọn Proceed)
-- [ ] Tất cả tài liệu bị ảnh hưởng đã được propagate — không có Skip còn mở
-- [ ] 改訂履歴 đã được tự động thêm vào mỗi tài liệu đã cập nhật
-- [ ] `/sekkei:validate` chạy clean sau khi propagate xong
-- [ ] `/sekkei:matrix` cập nhật — không có coverage gap mới
-- [ ] Diff-visual đã tạo nếu cần trình bày thay đổi cho khách hàng: `/sekkei:diff-visual @before @after`
-- [ ] Export lại các tài liệu đã thay đổi
-- [ ] Email gửi khách hàng ghi rõ CR-xxx đã được áp dụng
+- [ ] Đã khởi tạo **テスト計画書 (Kế hoạch kiểm thử)** với đầy đủ phạm vi, chiến lược và tiêu chuẩn đầu ra.
+- [ ] Đã triển khai đầy đủ các đặc tả kiểm thử: Đơn vị (UT), Tích hợp (IT), Hệ thống (ST) và Nghiệm thu (UAT).
+- [ ] BA đã tham gia rà soát các kịch bản kiểm thử nghiệm thu (UAT scenarios) để đảm bảo bám sát yêu cầu khách hàng.
+- [ ] Ma trận truy xuất nguồn gốc (Traceability Matrix) đã được khởi tạo thành công.
+- [ ] Đảm bảo 100% yêu cầu nghiệp vụ (REQ-xxx) đều có ít nhất một kịch bản kiểm thử tương ứng.
+- [ ] Hệ thống báo cáo trạng thái hoàn toàn nhất quán trên toàn chuỗi (Gate 3 - Final Gate).
 
 ---
 
-**Xem thêm:** [Scenarios](./01-scenarios.md) | [Review & Approval](./03-review-and-approval.md)
+## Danh sách 5: Bàn giao sản phẩm (Delivery)
+
+*Thực hiện sau khi vượt qua tất cả các chốt chặn chất lượng.*
+
+- [ ] Xuất bản toàn bộ bộ hồ sơ đặc tả ra định dạng Excel: Từ Yêu cầu, Thiết kế đến Kiểm thử.
+- [ ] Kiểm tra mỗi file Excel đảm bảo có đủ 4 sheet tiêu chuẩn: **Trang bìa (表紙)**, **Lịch sử sửa đổi (改訂履歴)**, **Mục lục (目次)** và **Nội dung chính (本文)**.
+- [ ] Thông tin trên Trang bìa (phiên bản, ngày tháng, tên tài liệu) hoàn toàn nhất quán.
+- [ ] Đóng gói toàn bộ hồ sơ bản Excel và PDF vào file ZIP với quy tắc đặt tên rõ ràng.
+- [ ] PM thực hiện phê duyệt cuối cùng và chính thức gửi hồ sơ cho khách hàng Nhật Bản.
+
+---
+
+## Danh sách 6: Quản lý thay đổi (Change Request)
+
+*Thực hiện mỗi khi phát sinh thay đổi yêu cầu sau khi đã chốt phạm vi.*
+
+- [ ] Nội dung thay đổi được mô tả chi tiết, xác định rõ các mã ID bị ảnh hưởng.
+- [ ] Đã thực hiện sao lưu trạng thái dự án (Git checkpoint) trước khi bắt đầu thay đổi.
+- [ ] Sơ đồ ảnh hưởng (Impact Graph) đã được tạo và PM đã rà soát tính hợp lý của phạm vi thay đổi.
+- [ ] Thực hiện cập nhật lan truyền (Propagation) đầy đủ trên tất cả các tài liệu liên quan.
+- [ ] Thông tin thay đổi đã được tự động ghi nhận vào Lịch sử sửa đổi của từng tài liệu.
+- [ ] Lệnh xác thực toàn chuỗi chạy thành công sau khi hoàn tất cập nhật.
+- [ ] Cập nhật lại Ma trận truy xuất nguồn gốc và xuất bản lại các tài liệu có thay đổi để gửi khách hàng.
+
+---
+
+**Xem thêm:** [Kịch bản phối hợp](./01-scenarios.md) | [Review & Phê duyệt](./03-review-and-approval.md)
+ Proudly presented by Antigravity.
+ Proudly presented by Antigravity.

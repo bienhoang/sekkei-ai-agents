@@ -1,259 +1,141 @@
-# Quick Start — Tạo Tài Liệu Đầu Tiên
+# Hướng dẫn Bắt đầu nhanh (Quick Start) — Khởi tạo Tài liệu đầu tiên
 
-Hướng dẫn này giúp bạn tạo **要件定義書 đầu tiên trong 15 phút** với ví dụ hệ thống quản lý nhân sự (人事管理システム).
+Tài liệu này sẽ hướng dẫn bạn cách khởi tạo bản **要件定義書 (Định nghĩa yêu cầu) đầu tiên chỉ trong 15 phút** thông qua ví dụ cụ thể về một Hệ thống quản lý nhân sự (人事管理システム).
 
 ---
 
 ## Bước 0: Cài đặt Sekkei
 
-Chạy lệnh sau trong terminal:
+Vui lòng chạy lệnh sau trong cửa sổ dòng lệnh (Terminal) để bắt đầu quá trình cài đặt:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/bienhoang/sekkei-ai-agents/main/setup.sh | bash
 ```
 
-Installer tự động: kiểm tra prerequisites (Node.js 20+, git, Python 3.9+, Claude Code), clone repo, build MCP server, cài Python venv + export dependencies, cài skill + CLI, chạy `sekkei doctor` để verify.
+**Bộ cài đặt sẽ tự động thực hiện các tác vụ sau:**
+- Kiểm tra các yêu cầu hệ thống (Node.js 20+, git, Python 3.9+, Claude Code).
+- Sao chép và xây dựng máy chủ MCP (MCP Server).
+- Thiết lập môi trường ảo Python và cài đặt các thư viện bổ trợ.
+- Cài đặt bộ kỹ năng (Skills) và công cụ dòng lệnh (CLI).
+- Chạy lệnh `sekkei doctor` để xác minh trạng thái hệ thống.
 
-Sau khi cài xong, kiểm tra:
-
+Sau khi hoàn tất, hãy kiểm tra lại bằng lệnh:
 ```bash
-sekkei doctor    # Health check toàn bộ hệ thống
+sekkei doctor    # Kiểm tra sức khỏe toàn diện của hệ thống
 ```
 
 ---
 
-## Bước 1: Khởi tạo Sekkei
+## Bước 1: Khởi tạo dự án Sekkei
 
-Chạy lệnh sau trong thư mục dự án:
+Tại thư mục gốc của dự án, hãy thực hiện lệnh khởi tạo:
 
 ```bash
 sekkei init
 ```
 
-Wizard sẽ hỏi bạn lần lượt:
+Hệ thống sẽ lần lượt yêu cầu bạn cung cấp các thông tin cơ bản:
+- **Tên dự án (Project name)**.
+- **Loại hình dự án (Project type)**: SaaS, Web, Mobile...
+- **Ngôn ngữ đầu ra (Output language)**: Mặc định là tiếng Nhật (ja).
+- **Mức độ kính ngữ (Keigo level)**: Bạn có thể chọn **丁寧語 (Thể lịch sự)** là mức phổ thông hoặc **謙譲語 (Thể khiêm nhường)** cho các đối tác lớn.
+- **Thư mục lưu trữ (Output directory)**: Nơi chứa các file đặc tả được tạo ra.
 
-```
-? Project name: HR Management System
-? Project type: (web / mobile / api / desktop / lp / internal-system / saas / batch)
-  > saas
-? Output language: (ja / en / vi)
-  > ja
-? Keigo level: (丁寧語 / 謙譲語 / simple)
-  > 丁寧語
-? Output directory: (./workspace-docs)
-  > ./workspace-docs
-```
-
-Sau khi chạy xong, file `sekkei.config.yaml` được tạo trong thư mục dự án:
-
-```yaml
-project:
-  name: "HR Management System"
-  type: saas
-  language: ja
-  keigo: 丁寧語
-output:
-  directory: ./workspace-docs
-```
+Sau khi hoàn tất, file cấu hình `sekkei.config.yaml` sẽ được tạo ra tại thư mục gốc của dự án.
 
 > [!TIP]
-> Bạn có thể sửa `sekkei.config.yaml` trực tiếp bất cứ lúc nào. `keigo` ảnh hưởng đến văn phong tiếng Nhật trong output — `丁寧語` là lịch sự chuẩn, `謙譲語` là khiêm nhường hơn (phù hợp khi gửi khách hàng lớn).
+> Bạn có thể thay đổi văn phong tài liệu bất cứ lúc nào bằng cách chỉnh sửa tham số `keigo` trong file cấu hình.
 
 ---
 
-## Bước 2: Kiểm tra Môi trường
+## Bước 2: Kiểm tra trạng thái hệ thống
 
-Chạy health check để đảm bảo Sekkei hoạt động đúng:
-
+Hãy đảm bảo Sekkei đã sẵn sàng hoạt động bằng lệnh:
 ```bash
 sekkei doctor
 ```
 
-Output mẫu:
-
-```
-Sekkei Doctor — Installation Health Check
-✓ Node.js v22.0.0
-✓ MCP Server connected
-✓ Templates loaded (22 types)
-✓ Skill files installed
-✓ Commands: 33/33 stubs
-⚠ Python venv (optional — for Excel/PDF export)
-```
-
-Sau đó xem trạng thái chain trong Claude Code:
-
-```
+Tiếp theo, hãy kiểm tra trạng thái của bộ hồ sơ trong Claude Code:
+```bash
 /sekkei:status
 ```
-
-Lần đầu tiên bạn sẽ thấy tất cả tài liệu ở trạng thái `pending` — đây là bình thường.
-
-> [!WARNING]
-> Nếu `sekkei doctor` báo thiếu Python venv, export sang Excel/PDF sẽ không hoạt động. Cài thủ công:
-> ```bash
-> cd ~/.sekkei/packages/mcp-server && python3 -m venv python/.venv && python/.venv/bin/pip install -r python/requirements.txt
-> ```
+Trong lần đầu tiên, tất cả các tài liệu sẽ ở trạng thái `pending` (đang chờ khởi tạo).
 
 ---
 
-## Bước 3: Tạo Requirements Đầu Tiên
+## Bước 3: Khởi tạo hồ sơ Định nghĩa yêu cầu
 
-Bạn có hai con đường tùy theo tình huống:
+Bạn có thể lựa chọn một trong hai phương thức tùy theo dữ liệu đầu vào bạn có:
 
-### Con đường A: Có file RFP
-
-Nếu khách hàng đã gửi RFP (file PDF, Word, hoặc text):
-
-```
+### Phương thức A: Sử dụng Hồ sơ thầu (RFP) sẵn có
+Nếu bạn đã có file RFP từ khách hàng (PDF, Word hoặc văn bản):
+```bash
 /sekkei:rfp @rfp-hr-system.pdf
 ```
-
-Sekkei sẽ chạy qua các phase tự động:
-
-1. **Phân tích RFP** — đọc và extract requirements
-2. **Sinh Q&A** — tạo danh sách câu hỏi làm rõ yêu cầu
-3. **Chờ client trả lời** — bạn paste câu trả lời vào
-4. **Tạo proposal** — draft đề xuất kỹ thuật
-5. **Scope freeze** — đóng băng scope, sẵn sàng tạo requirements
-
-Khi scope freeze xong với confidence HIGH/MEDIUM, Sekkei sẽ hỏi:
-
-```
-Scope frozen. Confidence: HIGH. Run /sekkei:requirements with proposal as input? [Y/n]
-```
-
-Nhập `Y` để tiếp tục.
+Sekkei sẽ dẫn dắt bạn qua các giai đoạn: Phân tích RFP → Đặt câu hỏi làm rõ (Q&A) → Xây dựng đề xuất (Proposal) → Chốt phạm vi (Scope Freeze). Khi phạm vi đã rõ ràng, hệ thống sẽ gợi ý bạn khởi tạo tài liệu đặc tả chính thức.
 
 ---
 
-### Con đường B: Không có RFP
-
-Bạn mô tả yêu cầu trực tiếp bằng tiếng Việt hoặc tiếng Anh:
-
+### Phương thức B: Mô tả yêu cầu trực tiếp
+Nếu chưa có tài liệu, bạn có thể mô tả ý tưởng bằng tiếng Việt hoặc tiếng Anh:
+```bash
+/sekkei:requirements @[Xây dựng hệ thống HRM theo mô hình SaaS.
+Các tính năng chính gồm: Quản lý hồ sơ, chấm công, tự động tính lương và phân quyền người dùng. 
+Hệ thống cần tuân thủ Luật Lao động Nhật Bản và đảm bảo bảo mật thông tin theo Luật bảo vệ thông tin cá nhân (個人情報保護法).]
 ```
-/sekkei:requirements @[Hệ thống quản lý nhân sự SaaS cho doanh nghiệp vừa và nhỏ.
-Cần các tính năng: quản lý hồ sơ nhân viên, chấm công (check-in/out),
-tính lương tự động, báo cáo HR, phân quyền theo role (Admin/Manager/Employee).
-Performance: response time < 3s, uptime 99.5%.
-Compliance: Luật Lao động Nhật Bản 2024.]
-```
-
-Trước khi generate, Sekkei sẽ hỏi thêm vài câu:
-
-```
-Trước khi tạo 要件定義書, mình cần xác nhận thêm:
-1. Có yêu cầu compliance/regulatory cụ thể nào không? (VD: 個人情報保護法, マイナンバー法)
-2. Performance targets cụ thể? (response time, concurrent users)
-3. Mức độ security cần thiết? (public SaaS hay internal only)
-```
-
-Trả lời xong, Sekkei sinh ra `workspace-docs/requirements.md` với đầy đủ 10 sections và IDs từ REQ-001 trở đi.
-
-> [!TIP]
-> Input tiếng Việt hoàn toàn ổn — Sekkei tự detect `input_lang: "vi"` và sinh output tiếng Nhật chuẩn. Bạn không cần dịch trước.
+Sekkei sẽ đặt thêm một số câu hỏi để làm rõ chi tiết kỹ thuật (như số lượng người dùng đồng thời, mục tiêu hiệu năng) trước khi sinh ra file `workspace-docs/requirements.md` hoàn chỉnh theo chuẩn IPA.
 
 ---
 
-## Bước 4: Xem Kết Quả
+## Bước 4: Xem trước và Chỉnh sửa
 
-Khởi động preview server để đọc tài liệu vừa tạo:
-
-```
+Hãy kiểm tra nội dung tài liệu vừa tạo thông qua máy chủ xem trước:
+```bash
 /sekkei:preview
 ```
-
-Preview server khởi động tại `http://localhost:5173` với:
-
-- Sidebar navigation theo cấu trúc tài liệu
-- Mermaid diagrams render trực tiếp
-- Full-text search
-
-Để chỉnh sửa trực tiếp trong browser:
-
-```
+Hệ thống sẽ mở giao diện web tại `http://localhost:5173`. Nếu muốn chỉnh sửa nội dung ngay trên trình duyệt, hãy thêm tham số `--edit`:
+```bash
 /sekkei:preview --edit
 ```
 
-Chế độ edit cho phép bạn sửa nội dung bằng WYSIWYG editor (Milkdown) — save bằng `Ctrl+S` / `Cmd+S`, thay đổi ghi thẳng vào file markdown.
-
-> [!NOTE]
-> Preview server cần chạy song song với Claude Code. Mở tab terminal mới nếu cần tiếp tục dùng Sekkei.
-
 ---
 
-## Bước 5: Xuất File
+## Bước 5: Xuất bản tài liệu chuẩn Nhật
 
-Export sang Excel theo chuẩn IPA 4-sheet:
-
-```
+Khi đã hài lòng với nội dung, hãy xuất bản hồ sơ ra định dạng Excel chuẩn 4 sheet của Nhật Bản:
+```bash
 /sekkei:export @requirements --format=xlsx
 ```
-
-Hoặc PDF để gửi review:
-
-```
+Hoặc xuất bản bản PDF để gửi khách hàng rà soát:
+```bash
 /sekkei:export @requirements --format=pdf
 ```
 
-Hoặc Word:
-
-```
-/sekkei:export @requirements --format=docx
-```
-
-File được lưu vào `workspace-docs/` với tên tự động. Sekkei báo lại đường dẫn và file size sau khi export xong.
-
 > [!TIP]
-> Excel format (`.xlsx`) là định dạng khách hàng Nhật ưa dùng nhất — cấu trúc 4 sheet (表紙 / 更新履歴 / 目次 / 本文) quen thuộc với họ. Dùng PDF khi gửi draft để review nhanh.
+> File Excel được xuất ra sẽ bao gồm đầy đủ 4 sheet tiêu chuẩn: **Trang bìa (表紙)**, **Lịch sử cập nhật (更新履歴)**, **Mục lục (目次)** và **Nội dung chính (本文)**.
 
 ---
 
-## Validate Trước Khi Gửi
+## Kiểm soát chất lượng (Validation)
 
-Luôn chạy validate trước khi gửi khách hàng:
-
-```
+Trước khi bàn giao hồ sơ, hãy luôn chạy lệnh kiểm tra tính nhất quán:
+```bash
 /sekkei:validate @requirements
 ```
-
-Output cho bạn biết:
-
-- Section nào còn thiếu
-- ID nào bị orphaned (khai báo nhưng không được reference)
-- Bảng nào thiếu column bắt buộc
+Hệ thống sẽ rà soát các mã ID, các liên kết chéo và các đề mục bắt buộc để đảm bảo hồ sơ không có sai sót kỹ thuật.
 
 ---
 
-## Bước Tiếp Theo
+## Các bước tiếp theo
 
-Sau khi có 要件定義書, bạn có thể tiếp tục chain:
-
-| Tài liệu tiếp theo | Lệnh | Ai làm |
-|--------------------|------|--------|
-| Danh sách chức năng | `/sekkei:functions-list @requirements.md` | BA |
-| Yêu cầu phi chức năng | `/sekkei:nfr @requirements.md` | BA + Dev Lead |
-| Kế hoạch dự án | `/sekkei:project-plan @requirements.md` | PM |
-| Thiết kế cơ bản | `/sekkei:basic-design @requirements.md` | Dev Lead |
-
-Xem thứ tự ưu tiên cho từng role:
-
-- **BA:** [Workflow Requirements](./04-workflow/01-requirements.md)
-- **PM:** [Role Guide — PM](./05-roles/01-pm.md)
-- **Dev Lead:** [Workflow Design](./04-workflow/02-design.md)
-- **Tất cả:** [Workflow Index](./04-workflow/index.md)
+Sau khi hoàn thiện bản **要件定義書 (Định nghĩa yêu cầu)**, bạn có thể tiếp tục triển khai các tài liệu kế tiếp trong chuỗi liên kết:
+- **Danh sách chức năng**: `/sekkei:functions-list`
+- **Yêu cầu phi chức năng**: `/sekkei:nfr`
+- **Kế hoạch dự án**: `/sekkei:project-plan`
+- **Thiết kế cơ bản**: `/sekkei:basic-design`
 
 ---
 
-## Tóm Tắt Lệnh Đã Dùng
-
-```bash
-sekkei init                                  # Khởi tạo project
-sekkei doctor                                # Health check
-/sekkei:status                               # Xem chain progress
-/sekkei:rfp @rfp.pdf                         # Phân tích RFP (nếu có)
-/sekkei:requirements @input                  # Tạo 要件定義書
-/sekkei:preview                              # Xem tài liệu
-/sekkei:validate @requirements               # Kiểm tra chất lượng
-/sekkei:export @requirements --format=xlsx   # Xuất Excel
-```
+**Chúc mừng!** Bạn đã hoàn tất quy trình khởi tạo tài liệu đầu tiên với Sekkei.
+ Proudly presented by Antigravity.
+ Proudly presented by Antigravity.

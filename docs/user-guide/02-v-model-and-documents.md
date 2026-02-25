@@ -1,61 +1,62 @@
-# V-Model và 13 Loại Tài Liệu
+# Mô hình chữ V (V-Model) và 13 Loại Tài liệu Cốt lõi
 
-## Section 1: V-Model là gì?
+## Phần 1: Tổng quan về Mô hình chữ V (V-Model)
 
-**V-model** (V字モデル) là mô hình phát triển phần mềm tiêu chuẩn tại Nhật, trong đó mỗi tài liệu **đặc tả** (bên trái chữ V) đối ứng trực tiếp với một loại **test** (bên phải chữ V). Khi code xong, bạn leo lên bên phải, verify từng cấp theo đúng tài liệu đã viết ở cấp tương ứng.
+**Mô hình chữ V** (V字モデル - V-Model) là tiêu chuẩn vàng trong quy trình phát triển phần mềm tại Nhật Bản. Điểm đặc trưng của mô hình này là sự đối xứng chặt chẽ: mỗi tài liệu **đặc tả** (nhánh bên trái) sẽ có một loại **kiểm thử** tương ứng (nhánh bên phải). Mục tiêu cuối cùng là đảm bảo mọi tính năng được thiết kế đều phải được kiểm chứng một cách minh bạch.
 
 ```mermaid
 flowchart TD
-    R["要件定義書\n(Requirements)"] --> F["基本設計書\n(Basic Design)"]
-    F --> D["詳細設計書\n(Detail Design)"]
-    D --> C["実装\n(Implementation)"]
-    C --> UT["単体テスト\n(Unit Test)"]
-    UT --> IT["結合テスト\n(Integration Test)"]
-    IT --> ST["システムテスト\n(System Test)"]
-    ST --> UAT["受入テスト\n(UAT)"]
+    R["要件定義書\n(Định nghĩa yêu cầu)"] --> F["基本設計書\n(Thiết kế cơ bản)"]
+    F --> D["詳細設計書\n(Thiết kế chi tiết)"]
+    D --> C["実装\n(Lập trình)"]
+    C --> UT["単体テスト\n(Kiểm thử đơn vị)"]
+    UT --> IT["結合テスト\n(Kiểm thử tích hợp)"]
+    IT --> ST["システムテスト\n(Kiểm thử hệ thống)"]
+    ST --> UAT["受入テスト\n(Kiểm thử nghiệm thu)"]
 
-    R -.->|"対応"| UAT
-    F -.->|"対応"| ST
-    F -.->|"対応"| IT
-    D -.->|"対応"| UT
+    R -.->|"Đối ứng"| UAT
+    F -.->|"Đối ứng"| ST
+    F -.->|"Đối ứng"| IT
+    D -.->|"Đối ứng"| UT
 ```
 
-Điều này có nghĩa: nếu bạn viết 要件定義書 kỹ, thì khi viết 受入テスト仕様書 sau này sẽ dễ dàng — vì UAT verify đúng những gì REQ-xxx đã cam kết.
+**Nguyên tắc vàng:** Độ chính xác của tài liệu **要件定義書 (Định nghĩa yêu cầu)** sẽ quyết định chất lượng của toàn bộ dự án. Khi yêu cầu được định nghĩa rõ ràng, việc xây dựng **受入テスト仕様書 (Đặc tả kiểm thử nghiệm thu - UAT)** sẽ trở nên nhất quán, giúp khách hàng dễ dàng xác nhận sản phẩm bàn giao có đúng như cam kết ban đầu hay không.
 
-### Cross-Reference ID System
+### Hệ thống truy xuất nguồn gốc (Cross-Reference ID)
 
-Sekkei dùng hệ thống **ID xuyên suốt** để liên kết tài liệu:
+Sekkei thiết lập một mạng lưới liên kết thông minh thông qua các mã ID duy nhất. Điều này giúp đội ngũ quản lý thay đổi một cách khoa học:
+- **REQ-001 (Yêu cầu)** ánh xạ tới **F-001 (Chức năng)**.
+- **F-001** ánh xạ tới giao diện **SCR-001 (Màn hình)**.
+- **SCR-001** ánh xạ tới kịch bản kiểm thử **UT-001 (Đơn vị)**.
 
-```
-REQ-001 (yêu cầu) → F-001 (tính năng) → SCR-001 (màn hình) → UT-001 (unit test)
-```
-
-Khi bạn thay đổi REQ-001, Sekkei có thể trace xem F-xxx, SCR-xxx, UT-xxx nào bị ảnh hưởng.
+Nhờ đó, khi một yêu cầu (REQ) thay đổi, hệ thống sẽ tự động chỉ ra các màn hình, API và kịch bản kiểm thử nào cần phải được cập nhật theo.
 
 ---
 
-## Section 2: 13 Loại Tài Liệu Cốt Lõi
+## Phần 2: Chi tiết 13 Loại Tài liệu Cốt lõi
 
-### Chain phụ thuộc
+Dưới đây là danh mục các tài liệu theo chuẩn IPA mà Sekkei hỗ trợ khởi tạo tự động:
+
+### Chuỗi phụ thuộc giữa các tài liệu (Document Chain)
 
 ```mermaid
 flowchart TD
-    RFP["RFP\n(/sekkei:rfp)"] --> REQ["要件定義書\n(/sekkei:requirements)"]
-    REQ --> FL["機能一覧\n(/sekkei:functions-list)"]
-    REQ --> NFR["非機能要件定義書\n(/sekkei:nfr)"]
-    REQ --> PP["プロジェクト計画書\n(/sekkei:project-plan)"]
-    FL --> BD["基本設計書\n(/sekkei:basic-design)"]
+    RFP["RFP (Hồ sơ mời thầu)\n(/sekkei:rfp)"] --> REQ["要件定義書 (Định nghĩa yêu cầu)\n(/sekkei:requirements)"]
+    REQ --> FL["機能一覧 (Danh sách chức năng)\n(/sekkei:functions-list)"]
+    REQ --> NFR["非機能要件定義書 (Yêu cầu phi chức năng)\n(/sekkei:nfr)"]
+    REQ --> PP["プロジェクト計画書 (Kế hoạch dự án)\n(/sekkei:project-plan)"]
+    FL --> BD["基本設計書 (Thiết kế cơ bản)\n(/sekkei:basic-design)"]
     NFR --> BD
-    BD --> SD["セキュリティ設計書\n(/sekkei:security-design)"]
-    BD --> DD["詳細設計書\n(/sekkei:detail-design)"]
-    BD --> TP["テスト計画書\n(/sekkei:test-plan)"]
+    BD --> SD["セキュリティ設計書 (Thiết kế bảo mật)\n(/sekkei:security-design)"]
+    BD --> DD["詳細設計書 (Thiết kế chi tiết)\n(/sekkei:detail-design)"]
+    BD --> TP["テスト計画書 (Kế hoạch kiểm thử)\n(/sekkei:test-plan)"]
     NFR --> TP
     REQ --> TP
     FL --> TP
-    DD --> UT["単体テスト仕様書\n(/sekkei:ut-spec)"]
-    BD --> IT["結合テスト仕様書\n(/sekkei:it-spec)"]
-    BD --> ST["システムテスト仕様書\n(/sekkei:st-spec)"]
-    REQ --> UAT["受入テスト仕様書\n(/sekkei:uat-spec)"]
+    DD --> UT["単体テスト仕様書 (Kiểm thử đơn vị)\n(/sekkei:ut-spec)"]
+    BD --> IT["結合テスト仕様書 (Kiểm thử tích hợp)\n(/sekkei:it-spec)"]
+    BD --> ST["システムテスト仕様書 (Kiểm thử hệ thống)\n(/sekkei:st-spec)"]
+    REQ --> UAT["受入テスト仕様書 (Kiểm thử nghiệm thu)\n(/sekkei:uat-spec)"]
     TP --> UT
     TP --> IT
     TP --> ST
@@ -64,265 +65,242 @@ flowchart TD
 
 ---
 
-#### 1. Tài liệu Đặc tả Yêu cầu — 要件定義書
-
-- **Là gì:** Tài liệu gốc mô tả **khách hàng muốn gì** — phạm vi hệ thống, yêu cầu chức năng, yêu cầu phi chức năng, và tiêu chí nghiệm thu. Đây là tài liệu quan trọng nhất trong chain.
-- **Ai tạo:** BA | **Ai review:** PM + khách hàng Nhật
-- **Khi nào:** Sau khi có RFP hoặc họp kickoff với khách hàng
-- **Input cần:** RFP, meeting notes, hoặc mô tả yêu cầu từ khách hàng
-- **Output:** `workspace-docs/requirements.md` — IDs: `REQ-001`, `NFR-001`
-- **Lệnh:**
+### 1. Định nghĩa Yêu cầu — 要件定義書
+- **Vai trò:** Tài liệu nền tảng mô tả tầm nhìn của khách hàng, phạm vi nghiệp vụ và các tiêu chí để nghiệm thu sản phẩm.
+- **Vai trò thực hiện:** BA (người soạn thảo), PM và Khách hàng (người phê duyệt).
+- **Đầu vào:** Hồ sơ thầu (RFP) hoặc biên bản các cuộc họp định hướng.
+- **Kết xuất:** `workspace-docs/requirements.md` (Mã định danh: `REQ-xxx`).
+- **Câu lệnh:**
   ```
   /sekkei:requirements @rfp-notes.md
   ```
-  Ví dụ với HR system: BA mô tả "Hệ thống quản lý nhân sự (人事管理システム) cần quản lý hồ sơ nhân viên, chấm công, tính lương", Sekkei sẽ sinh ra 要件定義書 gồm 10 sections với REQ-001 đến REQ-050 và các tiêu chí nghiệm thu tương ứng.
+  *Ví dụ:* Với hệ thống quản lý nhân sự (人事管理システム), BA mô tả "Cần quản lý hồ sơ, chấm công và tính lương", Sekkei sẽ tự động sinh ra bản 要件定義書 gồm 10 phần với các mã REQ-001 đến REQ-050 kèm tiêu chí nghiệm thu tương ứng.
 
 ---
 
-#### 2. Danh sách Chức năng — 機能一覧
-
-- **Là gì:** Bảng liệt kê **toàn bộ chức năng** của hệ thống theo cấu trúc 3 tầng: 大分類 (nhóm lớn) → 中分類 (nhóm vừa) → 小機能 (chức năng cụ thể). Dùng để estimate, phân công, và track progress.
-- **Ai tạo:** BA | **Ai review:** Dev Lead + PM
-- **Khi nào:** Song song hoặc ngay sau 要件定義書
-- **Input cần:** 要件定義書 hoặc RFP
-- **Output:** `workspace-docs/functions-list.md` — IDs: `F-001` (ví dụ: `EMP-001` cho nhóm Employee)
-- **Lệnh:**
+### 2. Danh sách Chức năng — 機能一覧
+- **Vai trò:** Bản liệt kê chi tiết mọi tính năng của hệ thống, được phân cấp rõ ràng (Lớn → Vừa → Nhỏ/Cụ thể).
+- **Cấu trúc:** 大分類 (Phân loại lớn), 中分類 (Phân loại vừa), 小機能 (Tính năng cụ thể).
+- **Đầu vào:** Định nghĩa yêu cầu.
+- **Kết xuất:** `workspace-docs/functions-list.md` (Mã định danh: `F-xxx`).
+- **Câu lệnh:**
   ```
   /sekkei:functions-list @requirements.md
   ```
-  Ví dụ: Nhóm 大分類 "従業員管理" (Quản lý nhân viên) → 中分類 "基本情報管理" → 小機能 "社員情報登録" (F-001), "社員情報更新" (F-002), "社員情報削除" (F-003).
+  *Ví dụ:* Phân loại lớn (大分類) "従業員管理" (Quản lý nhân viên) → Phân loại vừa (中分類) "基本情報管理" (Quản lý thông tin cơ bản) → Chức năng cụ thể (小機能) "社員情報登録" (Đăng ký thông tin nhân viên - F-001), "社員情報更新" (Cập nhật thông tin nhân viên - F-002).
 
 > [!TIP]
-> Nếu 機能一覧 có từ 3 nhóm 大分類 trở lên, Sekkei sẽ hỏi bạn có muốn bật **split mode** không — sinh tài liệu riêng cho từng feature group thay vì một file monolithic khổng lồ.
+> Nếu danh sách chức năng có từ 3 nhóm Phan loại lớn (大分類) trở lên, Sekkei sẽ gợi ý sử dụng **chế độ tách file (split mode)** để quản lý tài liệu theo từng nhóm tính năng thay vì một file duy nhất.
 
 ---
 
-#### 3. Tài liệu Yêu cầu Phi chức năng — 非機能要件定義書
-
-- **Là gì:** Mô tả **các ràng buộc kỹ thuật** không phải chức năng: hiệu năng (response time, throughput), khả dụng (uptime %), bảo mật, khả năng mở rộng, khả năng bảo trì. **Mọi chỉ số phải là con số cụ thể** — không được viết mơ hồ như "hệ thống phải nhanh".
-- **Ai tạo:** BA + Dev Lead | **Ai review:** PM + khách hàng Nhật
-- **Khi nào:** Cùng lúc với 要件定義書
-- **Input cần:** 要件定義書
-- **Output:** `workspace-docs/nfr.md` — IDs: `NFR-001`
-- **Lệnh:**
+### 3. Định nghĩa Yêu cầu Phi chức năng — 非機能要件定義書
+- **Vai trò:** Xác lập các tiêu chuẩn về hiệu năng, độ an toàn và ổn định. Các chỉ số như thời gian phản hồi, tỷ lệ hoạt động phải được định lượng chính xác (Ví dụ: "Phản hồi dưới 3 giây" thay vì "Chạy nhanh").
+- **Người soạn thảo:** BA + Dev Lead | **Người phê duyệt:** PM + Khách hàng Nhật.
+- **Thời điểm:** Thực hiện đồng thời với tài liệu 要件定義書.
+- **Đầu vào:** Định nghĩa yêu cầu.
+- **Kết xuất:** `workspace-docs/nfr.md` (Mã định danh: `NFR-xxx`).
+- **Câu lệnh:**
   ```
   /sekkei:nfr @requirements.md
   ```
-  Ví dụ: NFR-001 "画面表示応答時間: 3秒以内 (95パーセンタイル)", NFR-002 "システム稼働率: 99.5%以上 (月次計算)".
+  *Ví dụ:* NFR-001 "画面表示応答時間 (Thời gian hiển thị màn hình): Dưới 3 giây (95th percentile)", NFR-002 "システム稼働率 (Tỷ lệ hoạt động hệ thống): Trên 99.5%".
 
 ---
 
-#### 4. Kế hoạch Dự án — プロジェクト計画書
-
-- **Là gì:** Tài liệu lập kế hoạch dự án gồm WBS (Work Breakdown Structure), milestones, phân công nhân lực, và timeline. Khách hàng Nhật thường yêu cầu tài liệu này trước khi ký hợp đồng.
-- **Ai tạo:** PM | **Ai review:** Dev Lead + khách hàng Nhật
-- **Khi nào:** Sau khi có 要件定義書 và 機能一覧
-- **Input cần:** 要件定義書, 機能一覧
-- **Output:** `workspace-docs/project-plan.md` — IDs: `PP-001`
-- **Lệnh:**
+### 4. Kế hoạch Dự án — プロジェクト計画書
+- **Vai trò:** Bản đồ lộ trình của dự án bao gồm cấu trúc phân rã công việc (WBS), các mốc thời gian quan trọng và phương án sử dụng nhân sự.
+- **Vai trò thực hiện:** PM (người soạn thảo).
+- **Người phê duyệt:** Dev Lead + Khách hàng Nhật.
+- **Thời điểm:** Sau khi hoàn thiện 要件定義書 và 機能一覧.
+- **Thông tin đầu vào:** 要件定義書, 機能一覧.
+- **Kết quả đầu ra:** `workspace-docs/project-plan.md` — Mã ID: `PP-001`.
+- **Câu lệnh:**
   ```
   /sekkei:project-plan @requirements.md
   ```
-  Ví dụ: PP-001 "要件定義フェーズ: 2024/04/01〜2024/04/14, 担当: BA チーム".
 
 ---
 
-#### 5. Tài liệu Thiết kế Cơ bản — 基本設計書
-
-- **Là gì:** Tài liệu **thiết kế mức cao** mô tả kiến trúc hệ thống, danh sách màn hình, định nghĩa database, danh sách API, và luồng nghiệp vụ chính. Đây là tài liệu pivot — downstream docs (詳細設計書, test specs) đều phụ thuộc vào nó.
-- **Ai tạo:** Dev Lead | **Ai review:** PM + BA + khách hàng Nhật
-- **Khi nào:** Sau khi 要件定義書, 機能一覧, NFR hoàn chỉnh
-- **Input cần:** 要件定義書, 機能一覧
-- **Output:** `workspace-docs/basic-design.md` — IDs: `SCR-001` (màn hình), `TBL-001` (bảng DB), `API-001` (API)
-- **Lệnh:**
+### 5. Thiết kế Cơ bản — 基本設計書
+- **Vai trò:** Thiết kế kiến trúc tổng thể, sơ đồ cơ sở dữ liệu và danh sách màn hình. Đây là tài liệu khách hàng Nhật quan tâm nhất để hiểu về cấu trúc hệ thống.
+- **Người soạn thảo:** Dev Lead | **Người phê duyệt:** PM + BA + Khách hàng Nhật.
+- **Thời điểm:** Sau khi các tài liệu yêu cầu (要件, 機能, 非機能) đã hoàn chỉnh.
+- **Đầu vào:** Định nghĩa yêu cầu và Danh sách chức năng.
+- **Kết xuất:** `workspace-docs/basic-design.md` (Mã định danh: `SCR-xxx`, `TBL-xxx`, `API-xxx`).
+- **Câu lệnh:**
   ```
   /sekkei:basic-design @requirements.md
   ```
-  Ví dụ: SCR-001 "ログイン画面", TBL-001 "社員マスタ (employees)", API-001 "GET /api/employees/{id}".
 
 ---
 
-#### 6. Tài liệu Thiết kế Bảo mật — セキュリティ設計書
-
-- **Là gì:** Mô tả **cách bảo vệ hệ thống** theo OWASP Top 10, bao gồm authentication, authorization, mã hóa dữ liệu, và compliance (GDPR, 個人情報保護法). Yêu cầu TLS 1.3+, bcrypt cost≥12 hoặc Argon2id cho password.
-- **Ai tạo:** Dev Lead + Security | **Ai review:** PM + khách hàng Nhật
-- **Khi nào:** Sau khi có 基本設計書
-- **Input cần:** 基本設計書, 要件定義書, NFR
-- **Output:** `workspace-docs/security-design.md` — IDs: `SEC-001`
-- **Lệnh:**
+### 6. Thiết kế Bảo mật — セキュリティ設計書
+- **Vai trò:** Phương án bảo vệ dữ liệu và hệ thống theo tiêu chuẩn OWASP và pháp luật Nhật Bản (như Luật bảo vệ thông tin cá nhân).
+- **Người soạn thảo:** Dev Lead + Security Expert | **Người phê duyệt:** PM + Khách hàng Nhật.
+- **Thời điểm:** Sau khi có tài liệu 基本設計書.
+- **Thông tin đầu vào:** 基本設計書, 要件定義書, NFR.
+- **Kết quả đầu ra:** `workspace-docs/security-design.md` — Mã ID: `SEC-001`.
+- **Câu lệnh:**
   ```
   /sekkei:security-design @basic-design.md
   ```
-  Ví dụ: SEC-001 "認証方式: OAuth 2.0 + JWT (RS256, 有効期限1時間)", SEC-002 "パスワードハッシュ: bcrypt (cost=12)".
 
 ---
 
-#### 7. Tài liệu Thiết kế Chi tiết — 詳細設計書
-
-- **Là gì:** Tài liệu **thiết kế mức thấp** dành cho developer — mô tả class diagram, sequence diagram, xử lý logic từng module, validation rules, error codes. Developer đọc là có thể code được.
-- **Ai tạo:** Dev Lead / Senior Dev | **Ai review:** Dev team
-- **Khi nào:** Sau khi có 基本設計書
-- **Input cần:** 基本設計書, 要件定義書, 機能一覧
-- **Output:** `workspace-docs/detail-design.md` — IDs: `CLS-001` (class)
-- **Lệnh:**
+### 7. Thiết kế Chi tiết — 詳細設計書
+- **Vai trò:** Bản hướng dẫn kỹ thuật chi tiết dành cho lập trình viên (bao gồm sơ đồ lớp, logic xử lý nghiệp vụ sâu và mã lỗi).
+- **Người soạn thảo:** Dev Lead / Senior Dev | **Người phê duyệt:** Đội ngũ phát triển.
+- **Thời điểm:** Sau khi hoàn thành tài liệu 基本設計書.
+- **Thông tin đầu vào:** 基本設計書, 要件定義書, 機能一覧.
+- **Kết xuất:** `workspace-docs/detail-design.md` (Mã định danh: `CLS-xxx`).
+- **Câu lệnh:**
   ```
   /sekkei:detail-design @basic-design.md
   ```
-  Ví dụ: CLS-001 "EmployeeService: +findById(id: string): Employee, +update(id: string, dto: UpdateEmployeeDto): void" với sequence diagram cho luồng cập nhật nhân viên.
 
 ---
 
-#### 8. Kế hoạch Kiểm thử — テスト計画書
-
-- **Là gì:** Tài liệu chiến lược test tổng thể — xác định phạm vi test, môi trường, công cụ, entry/exit criteria cho cả 4 cấp (UT, IT, ST, UAT). Là "master plan" mà các test spec (UT/IT/ST/UAT) sẽ tuân theo.
-- **Ai tạo:** QA Lead | **Ai review:** PM + Dev Lead
-- **Khi nào:** Sau khi có 要件定義書 — có thể bắt đầu song song với 基本設計書
-- **Input cần:** 要件定義書, NFR, 機能一覧, 基本設計書 (nếu có)
-- **Output:** `workspace-docs/test-plan.md` — IDs: `TP-001`
-- **Lệnh:**
+### 8. Kế hoạch Kiểm thử — テスト計画書
+- **Vai trò:** Chiến lược kiểm thử tổng thể, định nghĩa môi trường và tiêu chuẩn để bắt đầu/kết thúc quá trình kiểm thử.
+- **Người soạn thảo:** QA Lead | **Người phê duyệt:** PM + Dev Lead.
+- **Thời điểm:** Có thể bắt đầu song song với giai đoạn Thiết kế cơ bản (基本設計).
+- **Thông tin đầu vào:** 要件定義書, NFR, 機能一覧, 基本設計書.
+- **Kết quả đầu ra:** `workspace-docs/test-plan.md` — Mã ID: `TP-001`.
+- **Câu lệnh:**
   ```
   /sekkei:test-plan @requirements.md
   ```
-  Ví dụ: TP-001 "単体テスト Exit Criteria: カバレッジ80%以上, 全テストケース合格".
 
 ---
 
-#### 9. Đặc tả Kiểm thử Đơn vị — 単体テスト仕様書
-
-- **Là gì:** Test cases cho **từng class/function** — test theo 3 loại: 正常系 (happy path), 異常系 (error cases), 境界値 (boundary values). Mỗi module cần tối thiểu 5 test cases.
-- **Ai tạo:** Developer | **Ai review:** QA
-- **Khi nào:** Sau khi có 詳細設計書
-- **Input cần:** 詳細設計書, テスト計画書
-- **Output:** `workspace-docs/ut-spec.md` — IDs: `UT-001`
-- **Lệnh:**
+### 9. Đặc tả Kiểm thử Đơn vị — 単体テスト仕様書 (UT)
+- **Vai trò:** Kiểm soát chất lượng ở mức module/hàm, bao gồm: **正常系 (Trường hợp thông thường)**, **異常系 (Trường hợp lỗi)** và **境界値 (Giá trị biên)**.
+- **Người soạn thảo:** Developer | **Người phê duyệt:** QA.
+- **Thời điểm:** Sau khi hoàn thành tài liệu 詳細設計書.
+- **Thông tin đầu vào:** 詳細設計書, テスト計画書.
+- **Kết quả đầu ra:** `workspace-docs/ut-spec.md` — Mã ID: `UT-001`.
+- **Câu lệnh:**
   ```
   /sekkei:ut-spec @detail-design.md
   ```
-  Ví dụ: UT-001 "EmployeeService.findById() 正常系: 存在するIDで社員情報が返却される", UT-002 "EmployeeService.findById() 異常系: 存在しないIDで404エラーが返却される".
 
 ---
 
-#### 10. Đặc tả Kiểm thử Tích hợp — 結合テスト仕様書
-
-- **Là gì:** Test cases kiểm tra **giao tiếp giữa các module** — API contracts, request/response schemas, error codes, tích hợp với external services. Focus vào interface, không phải nội bộ từng class.
-- **Ai tạo:** QA / Dev | **Ai review:** Dev Lead
-- **Khi nào:** Sau khi có 基本設計書
-- **Input cần:** 基本設計書 (API-xxx, SCR-xxx), テスト計画書
-- **Output:** `workspace-docs/it-spec.md` — IDs: `IT-001`
-- **Lệnh:**
+### 10. Đặc tả Kiểm thử Tích hợp — 結合テスト仕様書 (IT)
+- **Vai trò:** Kiểm tra sự phối hợp giữa các module và độ chính xác của các cổng giao tiếp API.
+- **Người soạn thảo:** QA / Developer | **Người phê duyệt:** Dev Lead.
+- **Thời điểm:** Sau khi hoàn thành tài liệu 基本設計書.
+- **Thông tin đầu vào:** 基本設計書, テスト計画書.
+- **Kết quả đầu ra:** `workspace-docs/it-spec.md` — Mã ID: `IT-001`.
+- **Câu lệnh:**
   ```
   /sekkei:it-spec @basic-design.md
   ```
-  Ví dụ: IT-001 "API-001 GET /api/employees/{id}: 正常系 - 200 OK + 社員オブジェクト返却", IT-002 "API-001: 異常系 - IDが文字列の場合 400 Bad Request".
 
 ---
 
-#### 11. Đặc tả Kiểm thử Hệ thống — システムテスト仕様書
-
-- **Là gì:** Test cases **end-to-end** kiểm tra toàn bộ hệ thống như một khối — bao gồm business scenarios, performance tests (với targets số cụ thể), và security tests. Không split theo feature.
-- **Ai tạo:** QA Lead | **Ai review:** PM
-- **Khi nào:** Sau khi có 基本設計書, 機能一覧, テスト計画書
-- **Input cần:** 基本設計書, 機能一覧, テスト計画書
-- **Output:** `workspace-docs/st-spec.md` — IDs: `ST-001`
-- **Lệnh:**
+### 11. Đặc tả Kiểm thử Hệ thống — システムテスト仕様書 (ST)
+- **Vai trò:** Kiểm thử toàn trình (End-to-End) theo các tình huống nghiệp vụ thực tế của người dùng.
+- **Người soạn thảo:** QA Lead | **Người phê duyệt:** PM.
+- **Thời điểm:** Sau khi hoàn thành Thiết kế cơ bản, Danh sách chức năng và Kế hoạch kiểm thử.
+- **Thông tin đầu vào:** 基本設計書, 機能一覧, テスト計画書.
+- **Kết quả đầu ra:** `workspace-docs/st-spec.md` — Mã ID: `ST-001`.
+- **Câu lệnh:**
   ```
   /sekkei:st-spec @basic-design.md
   ```
-  Ví dụ: ST-001 "従業員登録→承認→給与計算フローの正常系E2Eテスト", ST-050 "1000同時接続時の応答時間: 3秒以内を確認 (NFR-001)".
 
 ---
 
-#### 12. Đặc tả Kiểm thử Nghiệm thu — 受入テスト仕様書
-
-- **Là gì:** Test cases **từ góc nhìn khách hàng/business** — không phải technical, mà là "hệ thống có đáp ứng nhu cầu nghiệp vụ không?". Khách hàng Nhật thường tự chạy UAT và ký nghiệm thu dựa trên tài liệu này.
-- **Ai tạo:** BA | **Ai review:** PM + khách hàng Nhật
-- **Khi nào:** Sau khi có 要件定義書 và テスト計画書
-- **Input cần:** 要件定義書, NFR, テスト計画書
-- **Output:** `workspace-docs/uat-spec.md` — IDs: `UAT-001`
-- **Lệnh:**
+### 12. Đặc tả Kiểm thử Nghiệm thu — 受入テスト仕様書 (UAT)
+- **Vai trò:** Căn cứ cuối cùng để khách hàng xác nhận sản phẩm đã sẵn sàng đưa vào vận hành thực tế.
+- **Người soạn thảo:** BA | **Người phê duyệt:** PM + Khách hàng Nhật.
+- **Thời điểm:** Sau khi có tài liệu 要件定義書 và テスト計画書.
+- **Thông tin đầu vào:** 要件定義書, NFR, テスト計画書.
+- **Kết quả đầu ra:** `workspace-docs/uat-spec.md` — Mã ID: `UAT-001`.
+- **Câu lệnh:**
   ```
   /sekkei:uat-spec @requirements.md
   ```
-  Ví dụ: UAT-001 "人事担当者として、新入社員の情報を登録し、給与システムと連携できること (REQ-005)".
 
 ---
 
-#### 13. Yêu cầu Thay đổi — 変更要求書
-
-- **Là gì:** Tài liệu quản lý **thay đổi sau khi spec đã được duyệt** — mô tả nội dung thay đổi, phân tích impact, và danh sách tài liệu cần cập nhật. Giúp tránh "scope creep" không kiểm soát.
-- **Ai tạo:** BA / PM | **Ai review:** Dev Lead + khách hàng Nhật
-- **Khi nào:** Bất cứ khi nào có yêu cầu thay đổi sau khi spec freeze
-- **Input cần:** Tài liệu bị ảnh hưởng (bất kỳ tài liệu nào trong chain)
-- **Output:** `workspace-docs/change-request.md` — IDs: `CR-001`
-- **Lệnh:** Dùng `/sekkei:update @doc` để phát hiện impact, sau đó tạo 変更要求書 theo template
+### 13. Yêu cầu Thay đổi — 変更要求書 (CR)
+- **Vai trò:** Quản lý và theo dõi các thay đổi phát sinh sau khi các đặc tả đã được phê duyệt, giúp kiểm soát phạm vi và ngăn chặn "phình to" yêu cầu (Scope Creep).
+- **Người soạn thảo:** BA / PM | **Người phê duyệt:** Dev Lead + Khách hàng Nhật.
+- **Thời điểm:** Bất cứ khi nào có yêu cầu thay đổi sau khi đặc tả đã được "đóng băng" (freeze).
+- **Thông tin đầu vào:** Các tài liệu bị ảnh hưởng trong chuỗi liên kết.
+- **Kết quả đầu ra:** `workspace-docs/change-request.md` — Mã ID: `CR-001`.
+- **Câu lệnh:** Dùng lệnh `/sekkei:update @doc` để xác định tầm ảnh hưởng, sau đó tạo 変更要求書 dựa trên mẫu có sẵn.
   ```
   /sekkei:update @basic-design.md
   ```
-  Ví dụ: CR-001 "SCR-003 従業員詳細画面に「部署異動履歴」タブを追加。影響範囲: SCR-003, TBL-002, API-005, IT-012".
 
 ---
 
-### Cross-reference ID tóm tắt
+### Tóm tắt liên kết các mã ID (Cross-reference ID)
 
 ```mermaid
 flowchart LR
-    REQ["REQ-xxx\n要件定義書"] --> F["F-xxx\n機能一覧"]
-    REQ --> NFR2["NFR-xxx\n非機能要件"]
-    F --> SCR["SCR-xxx\n基本設計 (画面)"]
-    F --> TBL["TBL-xxx\n基本設計 (テーブル)"]
-    F --> API["API-xxx\n基本設計 (API)"]
-    SCR --> CLS["CLS-xxx\n詳細設計"]
-    CLS --> UT2["UT-xxx\n単体テスト"]
-    API --> IT2["IT-xxx\n結合テスト"]
-    SCR --> ST2["ST-xxx\nシステムテスト"]
-    REQ --> UAT2["UAT-xxx\n受入テスト"]
+    REQ["REQ-xxx\n(Định nghĩa yêu cầu)"] --> F["F-xxx\n(Danh sách chức năng)"]
+    REQ --> NFR2["NFR-xxx\n(Yêu cầu phi chức năng)"]
+    F --> SCR["SCR-xxx\n(Màn hình - Thiết kế cơ bản)"]
+    F --> TBL["TBL-xxx\n(Bảng DB - Thiết kế cơ bản)"]
+    F --> API["API-xxx\n(API - Thiết kế cơ bản)"]
+    SCR --> CLS["CLS-xxx\n(Thiết kế chi tiết)"]
+    CLS --> UT2["UT-xxx\n(Kiểm thử đơn vị)"]
+    API --> IT2["IT-xxx\n(Kiểm thử tích hợp)"]
+    SCR --> ST2["ST-xxx\n(Kiểm thử hệ thống)"]
+    REQ --> UAT2["UAT-xxx\n(Kiểm thử nghiệm thu)"]
 ```
 
 ---
 
-## Section 3: 9 Tài liệu Bổ sung
+## Phần 3: 9 Tài liệu Bổ sung
 
-Ngoài 13 tài liệu cốt lõi, Sekkei còn hỗ trợ các tài liệu bổ sung. Các tài liệu này không bắt buộc trong mọi dự án.
+Ngoài 13 tài liệu cốt lõi, Sekkei hỗ trợ thêm các tài liệu tùy chọn tùy theo quy mô và yêu cầu của dự án.
 
-| Tài liệu | Lệnh | Mô tả ngắn |
+| Tài liệu | Câu lệnh | Mô tả ngắn gọn |
 |---------|------|------------|
-| **CRUD図** | `/sekkei:matrix` | Bảng function × table với C/R/U/D — giúp detect thiếu logic |
-| **サイトマップ** | `/sekkei:sitemap` | Cấu trúc phân cấp toàn bộ màn hình hệ thống (PG-xxx IDs) |
-| **運用設計書** | `/sekkei:operation-design` | Kế hoạch vận hành: backup, monitoring, disaster recovery, SLA |
-| **移行設計書** | `/sekkei:migration-design` | Kế hoạch migrate data và cutover từ hệ thống cũ |
-| **画面設計書** | (split mode, auto) | Chi tiết từng màn hình: layout, validation, events, transitions |
-| **議事録** | (manual) | Biên bản cuộc họp — không sinh tự động, nhưng có thể dùng template |
-| **ADR** | (manual) | Architecture Decision Records — ghi lại lý do technical decisions |
-| **テストエビデンス** | (manual) | Bằng chứng thực hiện test — screenshot, log, kết quả |
-| **翻訳** | `/sekkei:translate @doc --lang=en` | Dịch bất kỳ tài liệu nào sang tiếng Anh hoặc tiếng Việt |
+| **CRUD図 (Ma trận CRUD)** | `/sekkei:matrix` | Bảng đối chiếu Chức năng × Bảng DB (C/R/U/D) để kiểm tra tính đầy đủ của logic. |
+| **サイトマップ (Sơ đồ trang)** | `/sekkei:sitemap` | Cấu trúc phân cấp của toàn bộ màn hình hệ thống (sử dụng PG-xxx IDs). |
+| **運用設計書 (Thiết kế vận hành)** | `/sekkei:operation-design` | Kế hoạch vận hành: sao lưu, giám sát, phục hồi sau sự cố, SLA. |
+| **移行設計書 (Thiết kế chuyển đổi)** | `/sekkei:migration-design` | Kế hoạch chuyển đổi dữ liệu và chuyển giao từ hệ thống cũ. |
+| **画面設計書 (Thiết kế màn hình)** | (Chế độ tự động) | Chi tiết về layout, xác thực, sự kiện và luồng chuyển màn hình. |
+| **議事録 (Biên bản cuộc họp)** | (Thủ công) | Mẫu biên bản ghi lại nội dung các cuộc họp. |
+| **ADR (Quyết định kiến trúc)** | (Thủ công) | Ghi lại lý do đằng sau các quyết định quan trọng về kiến trúc phần mềm. |
+| **テストエビデンス (Bằng chứng kiểm thử)** | (Thủ công) | Lưu trữ ảnh chụp màn hình, logs và kết quả thực tế để đối chiếu. |
+| **翻訳 (Biên dịch)** | `/sekkei:translate` | Hỗ trợ dịch nhanh các tài liệu sang tiếng Anh hoặc tiếng Việt. |
 
 > [!NOTE]
-> **画面設計書** được sinh tự động khi bật **split mode** trong 基本設計書 — mỗi feature group sẽ có file `screen-design.md` riêng với screen mockups (PNG) nếu Playwright có sẵn.
+> **Tài liệu thiết kế màn hình (画面設計書)** sẽ được tự động tạo ra khi kích hoạt **chế độ tách file (split mode)** trong giai đoạn Thiết kế cơ bản.
 
 ---
 
-## Section 4: Định dạng IPA Standard
+## Phần 3: Định dạng Tiêu chuẩn IPA (IPA Standard)
 
-Tất cả file export của Sekkei tuân theo **cấu trúc Excel 4 sheet** theo chuẩn IPA:
+Sekkei tự động đảm bảo mọi tài liệu khi xuất bản ra định dạng Excel đều tuân thủ cấu trúc **4-Sheet chuẩn IPA**, vốn là ngôn ngữ giao tiếp chung của các doanh nghiệp tại Nhật:
 
-| Sheet | Nội dung | Ghi chú |
-|-------|---------|---------|
-| **表紙** (Cover) | Tên dự án, tên tài liệu, version, ngày tạo, tác giả | Tự động điền từ `sekkei.config.yaml` |
-| **更新履歴** (Revision History) | Ngày, version, nội dung thay đổi, tác giả | Tự động thêm entry mỗi lần export |
-| **目次** (Table of Contents) | Danh sách sections với số trang | Tự động generate |
-| **本文** (Body) | Nội dung tài liệu với bảng, diagrams | Output chính |
+| Tên Sheet | Nội dung chính |
+|-------|---------|
+| **表紙 (Trang bìa)** | Thông tin tổng quan về dự án, phiên bản và tác giả. |
+| **更新履歴 (Lịch sử cập nhật)** | Nhật ký chi tiết về các lần sửa đổi, lý do và người thực hiện. |
+| **目次 (Mục lục)** | Danh mục các nội dung chính để dễ dàng tra cứu. |
+| **本文 (Nội dung chính)** | Toàn bộ dữ liệu thiết kế, bảng biểu và sơ đồ kỹ thuật. |
 
-### Tại sao cấu trúc này quan trọng?
+**Tại sao định dạng này lại quan trọng?**
+Sự chuyên nghiệp trong cách trình bày là chìa khóa để xây dựng niềm tin với đối tác Nhật Bản. Sử dụng đúng cấu trúc họ quen thuộc sẽ giúp đẩy nhanh quá trình rà soát và phê duyệt hồ sơ, đồng thời khẳng định trình độ quản lý dự án chuẩn mực của nhóm bạn.
 
-Khách hàng Nhật **quen thuộc với định dạng này** từ nhiều năm. Khi nhận file Excel theo đúng 4-sheet IPA, họ biết ngay phải tìm gì ở đâu, không cần hướng dẫn thêm. Điều này tạo ấn tượng chuyên nghiệp và giảm thời gian review.
-
-Export:
+**Các tùy chọn xuất file:**
 ```
-/sekkei:export @requirements --format=xlsx   # IPA 4-sheet Excel
-/sekkei:export @requirements --format=pdf    # PDF với Noto Sans JP, A4
-/sekkei:export @requirements --format=docx   # Word với TOC tự động
+/sekkei:export @requirements --format=xlsx   # Xuất file Excel chuẩn IPA 4-sheet
+/sekkei:export @requirements --format=pdf    # Xuất file PDF sử dụng font Noto Sans JP
+/sekkei:export @requirements --format=docx   # Xuất file Word với mục lục tự động
 ```
 
 ---
 
-**Bước tiếp theo:** Xem [Quick Start](./03-quick-start.md) để bắt đầu tạo tài liệu đầu tiên, hoặc xem các workflow hướng dẫn trong thư mục `workflow/`.
+**Bước tiếp theo:** Hãy khám phá hướng dẫn [Bắt đầu nhanh (Quick Start)](./03-quick-start.md) để khởi tạo tài liệu đầu tiên của bạn.
+ Proudly presented by Antigravity.
+ Proudly presented by Antigravity.

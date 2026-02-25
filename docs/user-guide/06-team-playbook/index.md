@@ -1,45 +1,45 @@
-# Team Playbook — Phối Hợp Nhóm với Sekkei
+# Team Playbook — Phối hợp Nhóm Hiệu quả với Sekkei
 
-Xem thêm: [Giới thiệu](../01-introduction.md) | [Workflow Overview](../04-workflow/index.md) | [Quick Start](../03-quick-start.md)
+Xem thêm: [Giới thiệu](../01-introduction.md) | [Tổng quan quy trình](../04-workflow/index.md) | [Bắt đầu nhanh (Quick Start)](../03-quick-start.md)
 
 ---
 
 ## Giới thiệu Team Playbook
 
-Sekkei là công cụ dành cho cả team — không phải một người làm hết. Sales khởi động từ RFP, BA xây dựng requirements, Dev Lead thiết kế, QA viết specs, PM giám sát và gate mỗi phase. Mỗi vai trò can thiệp đúng lúc, đúng chỗ, và handoff rõ ràng sang người tiếp theo.
+Sekkei không chỉ là công cụ cá nhân, nó được thiết kế để kết nối toàn bộ đội ngũ. Sales khởi động từ RFP, BA xây dựng đặc tả yêu cầu, Dev Lead phụ trách thiết kế hệ thống, QA hoàn thiện bộ kịch bản kiểm thử, trong khi PM đóng vai trò điều phối và kiểm soát chất lượng tại mỗi giai đoạn. Mỗi thành viên sẽ can thiệp vào đúng thời điểm, thực hiện đúng vai trò và bàn giao kết quả rõ ràng cho người tiếp theo.
 
-Playbook này cho bạn biết: ai làm gì, khi nào, và bàn giao cái gì.
+Playbook này sẽ hướng dẫn chi tiết: **Ai làm gì, Khi nào thực hiện và Bàn giao những gì?**
 
 ---
 
-## Cấu trúc team và phân công theo phase
+## Cấu trúc đội ngũ và Phân công theo giai đoạn
 
 ```mermaid
 flowchart TD
-    subgraph "Sales"
-        S1["RFP Workspace\n/sekkei:rfp\n→ 06_scope_freeze.md"]
+    subgraph "Sales (Kinh doanh)"
+        S1["RFP Workspace\n/sekkei:rfp\n→ Chốt phạm vi dự án"]
     end
 
-    subgraph "PM"
-        P1["Init & Config\nsekkei init"]
-        P2["Gate 1\nValidate Requirements"]
-        P3["Gate 2\nValidate Design"]
-        P4["Gate 3\nValidate Full Chain"]
-        P5["Export & Delivery\n/sekkei:export"]
+    subgraph "PM (Quản trị dự án)"
+        P1["Khởi tạo & Cấu hình\nsekkei init"]
+        P2["Kiểm soát Gđ 1\nXác nhận Yêu cầu"]
+        P3["Kiểm soát Gđ 2\nXác nhận Thiết kế"]
+        P4["Kiểm soát Gđ 3\nXác nhận toàn chuỗi"]
+        P5["Bàn giao sản phẩm\n/sekkei:export"]
     end
 
-    subgraph "BA"
-        B1["Requirements Phase\n要件定義書 + 機能一覧\n+ 非機能要件 + Glossary"]
-        B2["UAT Spec\n受入テスト仕様書"]
+    subgraph "BA (Phân tích nghiệp vụ)"
+        B1["Giai đoạn Yêu cầu\n要件定義書 + 機能一覧\n+ 非機能 yêu cầu + Glossary"]
+        B2["Kiểm thử nghiệm thu\n受入テスト仕様書"]
     end
 
-    subgraph "Dev Lead"
-        D1["Design Phase\n基本設計書 + セキュリティ設計書\n+ 詳細設計書"]
+    subgraph "Dev Lead (Trưởng nhóm phát triển)"
+        D1["Giai đoạn Thiết kế\n基本設計書 + セキュリティ設計書\n+ 詳細設計書"]
     end
 
-    subgraph "QA"
-        Q1["Test Phase\nテスト計画書 + UT/IT/ST Spec"]
-        Q2["Traceability Matrix\n/sekkei:matrix"]
+    subgraph "QA (Đảm bảo chất lượng)"
+        Q1["Giai đoạn Kiểm thử\nテスト計画書 + UT/IT/ST Spec"]
+        Q2["Ma trận truy xuất\n/sekkei:matrix"]
     end
 
     S1 --> P1
@@ -56,64 +56,52 @@ flowchart TD
 
 ---
 
-## RACI Matrix
+## Ma trận Trách nhiệm (RACI Matrix)
 
-R = Responsible (người thực hiện) | A = Accountable (người chịu trách nhiệm) | C = Consulted (người được hỏi ý kiến) | I = Informed (người được thông báo)
+*R = Chịu trách nhiệm thực hiện (Responsible) | A = Chịu trách nhiệm giải trình (Accountable) | C = Tham vấn (Consulted) | I = Nhận thông tin (Informed)*
 
-| Phase / Tài liệu | PM | BA | Dev Lead | QA | Sales |
+| Giai đoạn / Tài liệu | PM | BA | Dev Lead | QA | Sales |
 |-----------------|----|----|----------|----|-------|
-| RFP | A | R | C | — | R |
-| 要件定義書 | A | R | C | I | — |
-| 機能一覧 | I | R | C | I | — |
-| 非機能要件定義書 | A | R | C | I | — |
-| プロジェクト計画書 | R | C | C | — | — |
-| 基本設計書 | A | C | R | I | — |
-| セキュリティ設計書 | I | — | R | C | — |
-| 詳細設計書 | I | — | R | C | — |
-| テスト計画書 | A | C | C | R | — |
-| UT/IT/ST仕様書 | I | — | C | R | — |
-| 受入テスト仕様書 | A | C | — | R | — |
-| Review / Approve | R | C | C | C | — |
-| Export / Delivery | R | — | — | C | C |
+| Phân tích RFP | A | R | C | — | R |
+| **要件定義書** (Yêu cầu) | A | R | C | I | — |
+| **機能一覧** (Chức năng) | I | R | C | I | — |
+| **非機能要件定義書** (Phi chức năng) | A | R | C | I | — |
+| **プロジェクト計画書** (Kế hoạch dự án) | R | C | C | — | — |
+| **基本設計書** (Thiết kế cơ bản) | A | C | R | I | — |
+| **セキュリティ設計書** (Bảo mật) | I | — | R | C | — |
+| **詳細設計書** (Thiết kế chi tiết) | I | — | R | C | — |
+| **テスト計画書** (Kế hoạch kiểm thử) | A | C | C | R | — |
+| UT/IT/ST Especifics | I | — | C | R | — |
+| **受入テスト仕様書** (UAT) | A | C | — | R | — |
+| Phê duyệt giai đoạn | R | C | C | C | — |
+| Xuất bản & Bàn giao | R | — | — | C | C |
 
 ---
 
-## Tool Setup theo vai trò
+## Các điểm bàn giao chính (Handoff Points)
 
-| Vai trò | Cần thiết | Optional |
-|---------|-----------|----------|
-| PM | `sekkei init`, Claude Code | Preview server |
-| BA | Claude Code + Sekkei skill | Preview `--edit` |
-| Dev Lead | Claude Code + Sekkei skill | Preview `--edit` |
-| QA | Claude Code + Sekkei skill | Preview |
-| Sales | Claude Code + Sekkei skill | Preview |
+**1. Bàn giao từ Sales sang BA:** Đã đóng băng phạm vi công việc.
+- Nội dung: Hồ sơ đề xuất và file Scope Freeze để làm đầu vào cho giai đoạn Định nghĩa yêu cầu.
 
-Cài Sekkei skill một lần: copy `sekkei/skills/sekkei/SKILL.md` vào `~/.claude/skills/sekkei/SKILL.md`.
+**2. Bàn giao từ BA sang Dev Lead:** Yêu cầu đã được xác thực, PM đã phê duyệt giai đoạn 1.
+- Nội dung: **要件定義書**, **機能一覧** và **非機能要件定義書** (Tất cả đã vượt qua lệnh `/sekkei:validate`).
 
----
+**3. Bàn giao từ Dev Lead sang QA:** Thiết kế đã được xác thực, PM đã phê duyệt giai đoạn 2.
+- Nội dung: **基本設計書**, **セキュリティ設計書** và **詳細設計書** (Mã ID nhất quán, CLS-xxx đầy đủ).
 
-## Handoff Points — 4 điểm bàn giao chính
-
-**Handoff 1 — Sales → BA:** Scope freeze hoàn tất.
-Bàn giao: `05_proposal.md` + `06_scope_freeze.md` làm input cho requirements phase.
-
-**Handoff 2 — BA → Dev Lead:** Requirements validated, PM đã approve Gate 1.
-Bàn giao: 要件定義書 + 機能一覧 + 非機能要件定義書 (tất cả đã pass `/sekkei:validate`).
-
-**Handoff 3 — Dev Lead → QA:** Design validated, PM đã approve Gate 2.
-Bàn giao: 基本設計書 + セキュリティ設計書 + 詳細設計書 (pass validate, CLS-xxx đầy đủ).
-
-**Handoff 4 — QA → PM:** Full chain validated, matrix 100% coverage.
-Bàn giao: Toàn bộ test specs + traceability matrix → PM export để giao khách hàng.
+**4. Bàn giao từ QA sang PM:** Toàn bộ chuỗi tài liệu đã xác thực, ma trận đạt độ bao phủ 100%.
+- Nội dung: Toàn bộ Đặc tả kiểm thử và Ma trận truy xuất nguồn gốc để PM thực hiện xuất bản bàn giao.
 
 ---
 
-## Điều hướng Team Playbook
+## Tài liệu trong Team Playbook
 
 | Tài liệu | Nội dung |
 |----------|----------|
-| [scenarios.md](./01-scenarios.md) | 3 tình huống thực tế với toàn bộ chuỗi lệnh |
-| [checklists.md](./02-checklists.md) | Checklist từng phase — copy-paste sẵn |
-| [review-and-approval.md](./03-review-and-approval.md) | Quy tắc review, approval chain, quality gates |
+| [Kịch bản phối hợp thực tế](./01-scenarios.md) | 3 tình huống điển hình với chuỗi câu lệnh mẫu. |
+| [Danh sách kiểm tra (Checklists)](./02-checklists.md) | Checklist cho từng giai đoạn, sẵn sàng để copy-paste. |
+| [Quy tắc Review & Phê duyệt](./03-review-and-approval.md) | Quy định về phê duyệt, kiểm soát chất lượng. |
 
-Muốn xem hướng dẫn theo vai trò: [roles/](../05-roles/)
+---
+
+Hướng dẫn chi tiết theo vai trò: [roles/](../05-roles/)

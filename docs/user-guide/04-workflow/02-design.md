@@ -1,41 +1,41 @@
-# Design Phase — 3 Tài Liệu Thiết Kế
+# Giai đoạn Design — 3 Tài liệu Thiết kế Kỹ thuật
 
-Xem thêm: [Workflow Index](./index.md) | [Requirements Phase](./01-requirements.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md)
+Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Requirements](./01-requirements.md) | [V-Model và Tài liệu](../02-v-model-and-documents.md)
 
 ---
 
-## Tổng quan
+## Tổng quan giai đoạn
 
-Design phase biến requirements thành bản thiết kế kỹ thuật mà team dev có thể implement. Ba tài liệu ở phase này là pivot của toàn bộ chain — 基本設計書 là tài liệu trung tâm mà tất cả test specs đều phụ thuộc vào.
+Giai đoạn thiết kế (Design Phase) có nhiệm vụ chuyển hóa các yêu cầu nghiệp vụ thành những bản thiết kế kỹ thuật chi tiết để đội ngũ phát triển có thể triển khai thực tế. Ba tài liệu trong giai đoạn này đóng vai trò là "trục xoay" của toàn bộ chuỗi tài liệu — trong đó, 基本設計書 (Thiết kế cơ bản) là tài liệu trung tâm mà tất cả các đặc tả kiểm thử sau này đều phải dựa vào.
 
-**Entry criteria:**
-- `requirements.md` đã validate ✓
-- `functions-list.md` đã validate ✓
-- `nfr.md` đã validate ✓ (cần cho 基本設計書 và セキュリティ設計書)
+**Điều kiện bắt đầu (Entry criteria):**
+- Tài liệu `requirements.md` đã được xác thực ✓
+- Tài liệu `functions-list.md` đã được xác thực ✓
+- Tài liệu `nfr.md` đã được xác thực ✓ (thông tin cần thiết cho thiết kế cơ bản và bảo mật)
 
-**Ai tham gia:**
+**Các vai trò tham gia:**
 
-| Role | RACI | Ghi chú |
+| Vai trò | Trách nhiệm (RACI) | Ghi chú |
 |------|------|---------|
-| **Dev Lead** | Responsible | Người tạo và sở hữu toàn bộ design |
-| **PM** | Accountable | Duyệt trước khi gửi khách hàng |
-| **BA** | Consulted | Clarify nghiệp vụ khi cần |
-| **Khách hàng Nhật** | Informed | Review 基本設計書, ký duyệt |
+| **Dev Lead** | Chịu trách nhiệm thực hiện (Responsible) | Người trực tiếp khởi tạo và chịu trách nhiệm cho toàn bộ nội dung thiết kế. |
+| **PM** | Chịu trách nhiệm giải trình (Accountable) | Phê duyệt bản thiết kế trước khi gửi đối tác Nhật. |
+| **BA** | Tham vấn (Consulted) | Hỗ trợ làm rõ các yêu cầu nghiệp vụ khi cần thiết. |
+| **Khách hàng Nhật** | Nhận thông tin (Informed) | Tiếp nhận, xem xét và ký duyệt bản Thiết kế cơ bản. |
 
-**Exit criteria:** Cả 3 tài liệu validate sạch, Dev Lead đã review, 基本設計書 được khách hàng ký duyệt.
+**Điều kiện hoàn thiện (Exit criteria):** Cả 3 tài liệu vượt qua bước xác thực, được Dev Lead phê duyệt nội dung và khách hàng Nhật ký duyệt bản Thiết kế cơ bản.
 
 ---
 
-## Luồng Design Phase
+## Luồng công việc giai đoạn Design
 
 ```mermaid
 flowchart TD
-    REQ["要件定義書\n+ 機能一覧\n+ 非機能要件"]
-    BD["基本設計書\n(SCR-xxx, TBL-xxx, API-xxx)"]
-    SD["セキュリティ設計書\n(SEC-xxx)"]
-    DD["詳細設計書\n(CLS-xxx)"]
-    VAL["Validate\n(/sekkei:validate)"]
-    NEXT["→ Test Phase\n(test-plan)"]
+    REQ["Định nghĩa yêu cầu\n+ Danh sách chức năng\n+ Yêu cầu phi chức năng"]
+    BD["基本設計書 (Thiết kế cơ bản)\n(SCR-xxx, TBL-xxx, API-xxx)"]
+    SD["セキュリティ設計書 (Thiết kế bảo mật)\n(SEC-xxx)"]
+    DD["詳細設計書 (Thiết kế chi tiết)\n(CLS-xxx)"]
+    VAL["Xác thực\n(/sekkei:validate)"]
+    NEXT["→ Giai đoạn Kiểm thử\n(test-plan)"]
 
     REQ --> BD
     BD --> SD
@@ -45,188 +45,105 @@ flowchart TD
     VAL --> NEXT
 ```
 
-> セキュリティ設計書 và 詳細設計書 có thể chạy song song sau khi 基本設計書 hoàn chỉnh.
+> Sau khi hoàn thiện Thiết kế cơ bản (基本設計書), tài liệu Thiết kế bảo mật và Thiết kế chi tiết có thể được thực hiện đồng thời.
 
 ---
 
-## Tài liệu 5: 基本設計書 (Tài liệu Thiết kế Cơ bản)
+## 5. Tài liệu Thiết kế Cơ bản — 基本設計書
 
-**Mô tả:** Tài liệu thiết kế mức cao — kiến trúc hệ thống, danh sách màn hình, định nghĩa database, danh sách API, và luồng nghiệp vụ chính. Đây là tài liệu pivot: 詳細設計書, テスト計画書, IT-spec, ST-spec đều phụ thuộc vào nó.
+**Định nghĩa:** Tài liệu thiết kế mức cao mô tả kiến trúc hệ thống, danh sách màn hình, định nghĩa cơ sở dữ liệu, danh sách API và các luồng nghiệp vụ cốt lõi. Đây là tài liệu hạt nhân (pivot): chi tiết thiết kế, kế hoạch kiểm thử và các đặc tả kiểm thử (IT/ST) đều phụ thuộc trực tiếp vào nó.
 
-**IDs sinh ra:** `SCR-xxx` (màn hình), `TBL-xxx` (bảng DB), `API-xxx` (API endpoint)
+**Mã ID được sinh ra:** `SCR-xxx` (Màn hình), `TBL-xxx` (Bảng DB), `API-xxx` (API endpoint).
 
-**Lệnh:**
+**Câu lệnh thực hiện:**
 
 ```
 /sekkei:basic-design @requirements.md @functions-list.md
 ```
 
-**Ví dụ output (HR system):**
+**Ví dụ kết quả (Hệ thống nhân sự):**
 
-```
-SCR-001  ログイン画面
-SCR-002  ダッシュボード
-SCR-003  従業員一覧画面
-SCR-004  従業員詳細・編集画面
-TBL-001  employees (社員マスタ)
-TBL-002  departments (部署マスタ)
-TBL-003  attendance_records (勤怠記録)
-API-001  GET  /api/employees/{id}
-API-002  POST /api/employees
-API-003  PUT  /api/employees/{id}
-API-004  POST /api/attendance/checkin
-```
+- `SCR-001`  ログイン画面 (Màn hình đăng nhập)
+- `SCR-002`  ダッシュボード (Bảng điều khiển - Dashboard)
+- `SCR-003`  従業員一覧画面 (Màn hình danh sách nhân viên)
+- `TBL-001`  employees (社員マスタ - Danh mục nhân viên)
+- `API-001`  GET  /api/employees/{id}
 
-### Split mode
+### Chế độ tách file (Split mode)
 
-Với dự án có 3 nhóm 大分類 trở lên trong 機能一覧, nên bật split mode để tránh một file monolithic quá dài:
+Với các dự án có quy mô từ 15 chức năng trở lên, khuyến khích sử dụng chế độ tách file để tránh tạo ra một tài liệu duy nhất quá dài và khó kiểm duyệt:
 
 ```yaml
-# sekkei.config.yaml
+# Cấu hình trong file sekkei.config.yaml
 split:
   basic-design: true
-  detail-design: true   # optional
+  detail-design: true
 ```
 
-Khi split mode bật, Sekkei sinh file riêng cho từng feature group:
-
-```
-workspace-docs/
-├── basic-design/
-│   ├── employee-management.md     # SCR-001~010, TBL-001~003
-│   ├── attendance-management.md   # SCR-011~020, TBL-004~005
-│   ├── salary-management.md       # SCR-021~030, TBL-006~008
-│   └── screen-design/             # 画面設計書 (auto-generated)
-│       ├── scr-001-login.md
-│       └── ...
-```
+Khi kích hoạt chế độ này, Sekkei sẽ tự động phân tách tài liệu theo từng nhóm tính năng (ví dụ: quản lý nhân viên, chấm công, tính lương).
 
 > [!NOTE]
-> Split mode cũng tự động sinh **画面設計書** cho từng màn hình — chi tiết layout, validation rules, event handlers, screen transitions. Xem thêm: [Tài liệu bổ sung](./04-supplementary.md).
-
-### Plan/Implement flow
-
-Với dự án lớn (> 15 tính năng), nên dùng plan/implement flow thay vì generate trực tiếp:
-
-```
-# Bước 1: Sekkei tạo implementation plan, chờ bạn review
-/sekkei:plan @basic-design
-
-# Sekkei output plan dạng:
-# Phase 1: Screen architecture (SCR-001~010)
-# Phase 2: Database schema (TBL-001~008)
-# Phase 3: API contracts (API-001~020)
-# Phase 4: Business flow diagrams
-# Proceed? [Y/n/edit]
-
-# Bước 2: Sau khi bạn confirm plan, Sekkei implement
-/sekkei:implement
-```
-
-Plan/implement flow cho bạn cơ hội điều chỉnh cấu trúc trước khi Sekkei viết toàn bộ nội dung — tiết kiệm thời gian sửa đổi lớn sau này.
+> Chế độ tách file cũng sẽ tự động khởi tạo **画面設計書 (Tài liệu thiết kế màn hình)** cho từng màn hình cụ thể — bao gồm chi tiết layout, quy tắc xác thực, xử lý sự kiện và luồng chuyển đổi màn hình.
 
 ---
 
-## Tài liệu 6: セキュリティ設計書 (Tài liệu Thiết kế Bảo mật)
+## 6. Tài liệu Thiết kế Bảo mật — セキュリティ設計書
 
-**Mô tả:** Mô tả cách bảo vệ hệ thống theo OWASP Top 10 — authentication, authorization, mã hóa dữ liệu, audit logging, và compliance. Bắt buộc với hệ thống xử lý dữ liệu cá nhân (個人情報) theo luật Nhật.
+**Định nghĩa:** Mô tả chi tiết phương án bảo vệ hệ thống theo tiêu chuẩn OWASP Top 10, bao gồm: xác thực, phân quyền, mã hóa dữ liệu và tuân thủ pháp lý. Bước này là bắt buộc đối với các hệ thống xử lý thông tin cá nhân (個人情報) của khách hàng Nhật.
 
-**IDs sinh ra:** `SEC-xxx`
+**Mã ID được sinh ra:** `SEC-xxx`.
 
-**Lệnh:**
+**Câu lệnh thực hiện:**
 
 ```
 /sekkei:security-design @basic-design.md
 ```
 
-Sekkei tự động tham chiếu NFR-xxx liên quan đến bảo mật từ `nfr.md` khi sinh tài liệu này.
+Sekkei sẽ tự động trích xuất các yêu cầu phi chức năng (NFR-xxx) liên quan đến bảo mật từ tài liệu `nfr.md` để đưa vào bản thiết kế này.
 
-**Ví dụ output (HR system):**
+**Ví dụ nội dung bảo mật:**
 
-```
-SEC-001  認証方式: OAuth 2.0 + JWT (RS256, アクセストークン有効期限: 1時間)
-SEC-002  パスワードハッシュ: bcrypt (cost=12) または Argon2id
-SEC-003  通信暗号化: TLS 1.3以上 (TLS 1.2は廃止)
-SEC-004  個人情報暗号化: AES-256-GCM (社員番号・マイナンバー・給与情報)
-SEC-005  監査ログ: 全CRUD操作を記録、90日間保存
-SEC-006  SQLインジェクション対策: プリペアドステートメント必須
-SEC-007  XSS対策: CSP ヘッダー設定、入力値サニタイズ
-```
+- `SEC-001` Xác thực: OAuth 2.0 + JWT.
+- `SEC-004` Mã hóa thông tin cá nhân: AES-256-GCM áp dụng cho 社員番号 (Mã nhân viên) và マイナンバー (Số định danh cá nhân).
 
 > [!TIP]
-> Nếu hệ thống xử lý **マイナンバー** (số định danh cá nhân Nhật), Sekkei sẽ tự động thêm section tuân thủ **マイナンバー法** với các yêu cầu bảo mật bổ sung.
+> Nếu hệ thống có xử lý số **My Number (マイナンバー)**, Sekkei sẽ tự động thêm phần nội dung tuân thủ **マイナンバー法 (Luật My Number)** với các tiêu chuẩn bảo mật khắt khe hơn.
 
 ---
 
-## Tài liệu 7: 詳細設計書 (Tài liệu Thiết kế Chi tiết)
+## 7. Tài liệu Thiết kế Chi tiết — 詳細設計書
 
-**Mô tả:** Tài liệu thiết kế mức thấp dành cho developer — class diagram, sequence diagram, xử lý logic từng module, validation rules, error codes. Developer đọc là có thể code được.
+**Định nghĩa:** Tài liệu thiết kế mức thấp phục vụ trực tiếp cho lập trình viên, bao gồm: sơ đồ lớp, sơ đồ tuần tự, logic xử lý chi tiết từng module, quy tắc xác thực và bảng danh mục mã lỗi.
 
-**IDs sinh ra:** `CLS-xxx` (class/service)
+**Mã ID được sinh ra:** `CLS-xxx` (Lớp xử lý/Dịch vụ).
 
-**Lệnh:**
+**Câu lệnh thực hiện:**
 
 ```
 /sekkei:detail-design @basic-design.md
 ```
 
-**Ví dụ output (HR system):**
+**Ví dụ thiết kế lớp (Hệ thống nhân sự):**
 
-```
-CLS-001  EmployeeService
-         + findById(id: string): Employee
-         + findAll(filter: EmployeeFilter): Employee[]
-         + create(dto: CreateEmployeeDto): Employee
-         + update(id: string, dto: UpdateEmployeeDto): void
-         + delete(id: string): void
-
-CLS-002  AttendanceService
-         + checkIn(employeeId: string, timestamp: Date): AttendanceRecord
-         + checkOut(employeeId: string, timestamp: Date): AttendanceRecord
-         + getMonthlyReport(employeeId: string, month: string): MonthlyReport
-```
-
-Kèm theo sequence diagram cho các luồng nghiệp vụ chính (VD: luồng cập nhật nhân viên, luồng tính lương tháng), validation rules cho từng field, và error code catalog.
-
-### Khuyến nghị plan/implement
-
-Với dự án có > 20 tính năng, **nên dùng plan/implement flow** để tránh Sekkei sinh quá nhiều class cùng lúc mà bạn không kịp review:
-
-```
-/sekkei:plan @detail-design
-/sekkei:implement
-```
-
-Plan sẽ chia nhỏ theo feature group — bạn có thể approve từng phần hoặc điều chỉnh scope trước khi implement.
+- `CLS-001`  EmployeeService: Xử lý các phép toán CRUD cho nhân viên.
+- `CLS-002`  AttendanceService: Xử lý logic quẹt thẻ vào/ra và báo cáo tháng.
 
 ---
 
-## Validation & Bước tiếp theo
+## Xác thực & Hoàn tất giai đoạn
 
-```
+```bash
 /sekkei:validate @basic-design
 /sekkei:validate @security-design
 /sekkei:validate @detail-design
 ```
 
-Kiểm tra cross-reference: mọi `API-xxx` trong 基本設計書 phải có ít nhất một `CLS-xxx` tương ứng trong 詳細設計書. Nếu bị orphaned, validate sẽ báo lỗi.
+Hệ thống sẽ thực hiện kiểm tra tham chiếu chéo: đảm bảo mọi API định nghĩa trong Thiết kế cơ bản đều có lớp xử lý tương ứng trong Thiết kế chi tiết.
 
-```
-/sekkei:status
-```
-
-Output mong đợi:
-
-```
-✓ basic-design.md      — SCR-018, TBL-012, API-024 — validated
-✓ security-design.md   — SEC-015 — validated
-✓ detail-design.md     — CLS-022 — validated
-→ test-plan: READY (all dependencies satisfied)
-→ ut-spec: waiting for detail-design ✓ (satisfied)
-```
+Sử dụng lệnh `/sekkei:status` để kiểm tra tiến độ. Khi hệ thống báo `test-plan: READY`, bạn có thể chính thức bước sang giai đoạn Kiểm thử.
 
 ---
 
-**Phase tiếp theo:** [Testing Phase](./03-testing.md) — Tạo テスト計画書 và 4 test specs
+**Giai đoạn tiếp theo:** [Giai đoạn Kiểm thử (Testing Phase)](./03-testing.md) — Khởi tạo テスト計画書 và 4 tài liệu đặc tả kiểm thử cụ thể.
 
-**Phase trước:** [Requirements Phase](./01-requirements.md)
+**Giai đoạn trước đó:** [Giai đoạn Requirements](./01-requirements.md)

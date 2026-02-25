@@ -1,36 +1,36 @@
-# Change Request — Quản Lý Thay Đổi
+# Quy trình Change Request — Quản lý Thay đổi Đặc tả
 
-Xem thêm: [Workflow Index](./index.md) | [Testing Phase](./03-testing.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md)
-
----
-
-## Tại sao cần Change Request?
-
-Khi spec đã được duyệt (spec freeze) mà có yêu cầu thay đổi — dù nhỏ như thêm một field vào màn hình — thay đổi đó có thể lan ra nhiều tài liệu theo chuỗi dependency. Ví dụ: thêm trường "部署異動履歴" vào màn hình nhân viên ảnh hưởng đến:
-
-- **SCR-004** trong 基本設計書 (màn hình thay đổi)
-- **TBL-001** trong 基本設計書 (thêm bảng hoặc column)
-- **API-003** trong 基本設計書 (response schema thay đổi)
-- **CLS-001** trong 詳細設計書 (logic mới)
-- **IT-003** trong 結合テスト仕様書 (test case cũ invalid)
-- **ST-001** trong システムテスト仕様書 (E2E scenario cập nhật)
-
-Nếu không track đầy đủ, bạn sẽ giao bộ tài liệu với nội dung không nhất quán — khách hàng Nhật sẽ phát hiện và yêu cầu làm lại.
-
-Change Request (変更要求書) trong Sekkei là luồng **mô tả thay đổi → phân tích impact → duyệt → propagate → validate** có kiểm soát.
+Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Testing](./03-testing.md) | [V-Model và Tài liệu](../02-v-model-and-documents.md)
 
 ---
 
-## Vòng đời Change Request
+## Tại sao cần quy trình Change Request?
+
+Khi bộ đặc tả đã được khách hàng phê duyệt (giai đoạn chốt phạm vi - spec freeze), bất kỳ một thay đổi nào — dù là nhỏ nhất như thêm một trường thông tin vào màn hình — cũng có thể tạo ra "hiệu ứng dây chuyền" ảnh hưởng đến nhiều tài liệu khác trong chuỗi liên kết.
+
+Ví dụ: Việc bổ sung trường **"部署異動履歴" (Lịch sử thuyên chuyển bộ phận)** vào màn hình chi tiết nhân viên sẽ gây ảnh hưởng đến:
+- **SCR-004** (Thiết kế màn hình).
+- **TBL-001** (Định nghĩa bảng cơ sở dữ liệu).
+- **API-003** (Cấu trúc dữ liệu API).
+- **CLS-001** (Logic xử lý trong Thiết kế chi tiết).
+- **IT-003** và **ST-001** (Kịch bản kiểm thử tích hợp và hệ thống).
+
+Nếu không được truy vết đầy đủ, bộ tài liệu bàn giao sẽ mất tính nhất quán. Đối tác Nhật Bản với sự kỹ tính đặc trưng sẽ dễ dàng phát hiện ra những sai sót này và yêu cầu thực hiện lại từ đầu.
+
+Quy trình **Change Request (変更要求書 - Yêu cầu thay đổi)** trong Sekkei giúp bạn kiểm soát chặt chẽ luồng thay đổi: **Mô tả → Phân tích ảnh hưởng → Phê duyệt → Lan truyền thay đổi (Propagate) → Xác thực**.
+
+---
+
+## Vòng đời của một Change Request
 
 ```mermaid
 flowchart TD
     DESCRIBE["Mô tả thay đổi\n/sekkei:change"]
-    IMPACT["Phân tích impact\n(Mermaid impact graph)"]
-    APPROVE["Duyệt\n(Bạn confirm hoặc điều chỉnh scope)"]
-    PROPAGATE["Propagate\n(Sekkei cập nhật từng tài liệu\nbị ảnh hưởng)"]
-    VALIDATE["Validate\n/sekkei:validate"]
-    COMPLETE["Hoàn thành\n(CR-xxx CLOSED)"]
+    IMPACT["Phân tích ảnh hưởng (Impact)\n(Sơ đồ Mermaid)"]
+    APPROVE["Phê duyệt\n(Xác nhận hoặc điều chỉnh phạm vi)"]
+    PROPAGATE["Lan truyền (Propagate)\n(Cập nhật tự động các tài liệu liên quan)"]
+    VALIDATE["Xác thực tính nhất quán\n/sekkei:validate"]
+    COMPLETE["Hoàn thành\n(Đóng Change Request)"]
 
     DESCRIBE --> IMPACT
     IMPACT --> APPROVE
@@ -41,177 +41,92 @@ flowchart TD
 
 ---
 
-## Tạo Change Request
+## Khởi tạo Yêu cầu thay đổi
 
-```
+Sử dụng câu lệnh:
+```bash
 /sekkei:change
 ```
 
-Sekkei sẽ hỏi bạn mô tả thay đổi. Ví dụ với HR system:
+Sekkei sẽ yêu cầu bạn mô tả nội dung thay đổi. 
 
-```
-Mô tả thay đổi: Thêm tab "部署異動履歴" vào SCR-004 従業員詳細画面.
-Tab này hiển thị lịch sử chuyển bộ phận của nhân viên.
-Affected IDs: SCR-004, TBL-001
-```
+**Ví dụ:**
+- **Nội dung:** Bổ sung tab "部署異動履歴" (Lịch sử thuyên chuyển bộ phận) vào màn hình chi tiết nhân viên (SCR-004).
+- **Mục tiêu:** Hiển thị toàn bộ quá trình luân chuyển bộ phận của nhân viên trong công ty.
 
-Sekkei phân tích và sinh impact graph:
-
-```mermaid
-flowchart TD
-    CR["CR-001\n部署異動履歴タブ追加"]
-    SCR004["SCR-004\n従業員詳細画面\n(REQUIRED)"]
-    TBL001["TBL-001\n社員マスタ\n(REQUIRED)"]
-    TBL_NEW["TBL-009\n部署異動履歴テーブル\n(NEW — REQUIRED)"]
-    API003["API-003\nPUT /api/employees\n(REQUIRED)"]
-    API_NEW["API-025\nGET /api/employees/transfers\n(NEW — REQUIRED)"]
-    CLS001["CLS-001\nEmployeeService\n(REQUIRED)"]
-    IT003["IT-003\nAPI-003テストケース\n(UPDATE REQUIRED)"]
-    ST001["ST-001\nE2Eシナリオ\n(UPDATE REQUIRED)"]
-
-    CR --> SCR004
-    CR --> TBL001
-    CR --> TBL_NEW
-    CR --> API003
-    CR --> API_NEW
-    CR --> CLS001
-    CR --> IT003
-    CR --> ST001
-```
-
-```
-Impact phát hiện: 8 tài liệu/items bị ảnh hưởng
-Proceed with CR-001? [Proceed / Edit scope / Stop]
-```
+Sekkei sẽ tự động phân tích và đưa ra sơ đồ ảnh hưởng (Impact Graph), liệt kê chính xác những mã ID và tài liệu nào cần phải được cập nhật tương ứng.
 
 ---
 
-## Resume, Status, List
+## Các lệnh hỗ trợ quản lý
 
-Nếu dừng giữa chừng, tiếp tục từ nơi dừng:
-
-```
+Nếu bạn cần tạm dừng và tiếp tục sau đó:
+```bash
 /sekkei:change --resume CR-001
 ```
 
-Xem trạng thái CR hiện tại:
-
-```
+Kiểm tra trạng thái hiện tại của yêu cầu thay đổi:
+```bash
 /sekkei:change --status
 ```
 
-Output:
-
-```
-CR-001  部署異動履歴タブ追加  IN PROGRESS
-        Propagated: SCR-004 ✓, TBL-001 ✓, TBL-009 ✓
-        Pending:    API-003, API-025, CLS-001, IT-003, ST-001
-```
-
-Xem danh sách tất cả CRs trong dự án:
-
-```
+Xem danh sách toàn bộ các yêu cầu thay đổi trong dự án:
+```bash
 /sekkei:change --list
 ```
 
----
-
-## Cancel và Rollback
-
-Hủy CR đang mở (chưa propagate hoàn toàn):
-
-```
-/sekkei:change --cancel CR-001
-```
-
-Sekkei đặt CR-001 về trạng thái CANCELLED và không propagate thêm. Các tài liệu đã được cập nhật một phần sẽ được giữ nguyên — bạn cần review thủ công.
-
-Rollback thay đổi (chỉ hoạt động trong cùng git session):
-
-```
-/sekkei:change --rollback CR-001
-```
-
-> [!WARNING]
-> `--rollback` chỉ hoạt động nếu bạn chưa thoát session git hiện tại. Sekkei dùng git stash/restore để revert — nếu đã commit thì rollback sẽ thất bại. Trong trường hợp đó, dùng `git revert` thủ công.
+**Lưu ý về việc Hủy (Cancel) và Hoàn tác (Rollback):**
+- Lệnh `--cancel` sẽ dừng quá trình cập nhật và giữ nguyên trạng thái hiện tại của các tài liệu.
+- Lệnh `--rollback` chỉ hoạt động hiệu quả nếu bạn chưa thực hiện `git commit` cho các thay đổi đó. Sekkei sử dụng cơ chế của Git để khôi phục trạng thái tài liệu trước khi thực hiện thay đổi.
 
 ---
 
-## Quá trình Propagation
+## Quá trình Lan truyền thay đổi (Propagation)
 
-Khi bạn chọn **Proceed**, Sekkei cập nhật từng tài liệu theo thứ tự dependency. Với mỗi tài liệu, Sekkei hiển thị diff và chờ confirm:
+Khi bạn xác nhận thực hiện (`Proceed`), Sekkei sẽ bắt đầu cập nhật từng tài liệu theo đúng thứ tự ưu tiên của chuỗi liên kết. Tại mỗi bước, hệ thống sẽ hiển thị các thay đổi dự kiến (diff) và chờ bạn xác nhận:
 
-```
-[1/8] Cập nhật SCR-004 従業員詳細画面
-  + Tab "部署異動履歴" được thêm vào section 画面レイアウト
-  + Mô tả transition đến TBL-009 được thêm vào
-  Proceed with this change? [Proceed / Skip / Stop]
+1. **Cập nhật Thiết kế màn hình**: Bổ sung tab mới vào bố cục.
+2. **Cập nhật Cơ sở dữ liệu**: Thêm bảng ghi nhận lịch sử thuyên chuyển.
+3. **Cập nhật API & Logic**: Điều chỉnh để trả về dữ liệu lịch sử.
 
-[2/8] Cập nhật TBL-001 社員マスタ
-  + Foreign key tham chiếu đến TBL-009 được thêm vào
-  Proceed with this change? [Proceed / Skip / Stop]
-```
-
-**Các lựa chọn:**
-- **Proceed** — áp dụng thay đổi và tiếp tục
-- **Skip** — bỏ qua tài liệu này (ghi chú "MANUAL REVIEW NEEDED")
-- **Stop** — dừng propagation, giữ nguyên những gì đã làm
-
-Sau mỗi tài liệu được cập nhật, Sekkei tự động thêm entry vào **改訂履歴** (revision history) của tài liệu đó:
-
-```
-| 2024/09/05 | v1.1 | CR-001: 部署異動履歴タブ追加に伴う更新 | BA Team |
-```
+Với mỗi tài liệu được cập nhật thành công, Sekkei sẽ tự động thêm một dòng vào phần **改訂履歴 (Lịch sử sửa đổi)** của tài liệu đó để phục vụ việc kiểm tra sau này.
 
 ---
 
-## Diff Visual
+## So sánh trực quan (Diff Visual)
 
-Xem so sánh trực quan trước/sau khi propagate:
+Để có cái nhìn rõ nét nhất về sự thay đổi giữa hai phiên bản, bạn có thể sử dụng công cụ so sánh trực quan:
 
+```bash
+/sekkei:diff-visual @so-sanh-truoc @so-sanh-sau
 ```
-/sekkei:diff-visual @basic-design-before @basic-design-after
-```
 
-Mở preview browser với side-by-side diff, highlight các thay đổi theo màu (thêm: xanh, xóa: đỏ, sửa: vàng). Hữu ích khi cần trình bày thay đổi cho khách hàng trong cuộc họp review.
+Trình duyệt sẽ mở ra giao diện so sánh song song (side-by-side) với các màu sắc chỉ dẫn trực quan: **Xanh (Thêm mới)**, **Đỏ (Xóa bỏ)**, và **Vàng (Chỉnh sửa)**. Công cụ này cực kỳ hữu ích khi bạn cần giải thích các thay đổi cho khách hàng trong các buổi họp review.
 
 ---
 
-## Validate sau CR
+## Xác thực sau thay đổi
 
-Sau khi propagation hoàn tất, luôn chạy validate để đảm bảo không có broken cross-references:
+Sau khi quá trình cập nhật hoàn tất, bước xác thực cuối cùng là bắt buộc để đảm bảo không có bất kỳ liên kết nào bị đứt gãy:
 
-```
+```bash
 /sekkei:validate
 ```
 
-Các lỗi thường gặp sau CR:
-
-```
-⚠ API-025 (mới) chưa có IT test case nào
-⚠ TBL-009 (mới) chưa xuất hiện trong CRUD図
-⚠ CLS-001 cập nhật nhưng UT-001 chưa được review
-```
-
-Với mỗi lỗi, Sekkei gợi ý lệnh để fix. Ví dụ:
-```
-→ Chạy /sekkei:it-spec @basic-design để sinh test case cho API-025
-→ Chạy /sekkei:matrix để cập nhật CRUD図
-```
+Nếu hệ thống phát hiện lỗi (ví dụ: API mới thêm vào chưa có kịch bản kiểm thử tương ứng), Sekkei sẽ gợi ý chính xác câu lệnh để bạn khắc phục.
 
 ---
 
-## Checklist hoàn thành CR
+## Danh sách kiểm tra (Checklist) hoàn thành
 
-- [ ] Mô tả thay đổi rõ ràng, có affected IDs cụ thể
-- [ ] Impact graph được review và scope được confirm
-- [ ] Tất cả tài liệu bị ảnh hưởng đã được propagate (không có Skip còn mở)
-- [ ] 改訂履歴 được tự động thêm vào mỗi tài liệu đã cập nhật
-- [ ] `/sekkei:validate` chạy sạch — không có lỗi hay warning
-- [ ] Traceability matrix (`/sekkei:matrix`) cập nhật, không có coverage gap mới
-- [ ] Export lại bộ tài liệu đã thay đổi (`/sekkei:export --format=xlsx`)
-- [ ] Gửi lại khách hàng Nhật với email ghi rõ CR-xxx đã được áp dụng
+- [ ] Nội dung thay đổi được mô tả rõ ràng, đi kèm các mã ID bị ảnh hưởng.
+- [ ] Sơ đồ ảnh hưởng được kiểm duyệt và xác nhận phạm vi.
+- [ ] Mọi tài liệu liên quan đã được cập nhật đầy đủ (không có bước nào bị bỏ qua).
+- [ ] **改訂履歴 (Lịch sử sửa đổi)** đã được ghi nhận tự động trong từng tài liệu.
+- [ ] Lệnh `/sekkei:validate` chạy thành công, không còn cảnh báo lỗi.
+- [ ] Ma trận truy xuất nguồn gốc được cập nhật và bao phủ toàn bộ các yêu cầu mới.
+- [ ] Xuất bản lại bộ tài liệu mới nhất dưới định dạng Excel (`/sekkei:export`).
 
 ---
 
-**Xem thêm:** [Tài liệu bổ sung](./04-supplementary.md) | [Role Guides](../05-roles/)
+**Xem thêm:** [Tài liệu bổ trợ](./04-supplementary.md) | [Hướng dẫn theo vai trò](../05-roles/)

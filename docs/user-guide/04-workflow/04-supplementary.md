@@ -1,107 +1,86 @@
-# Tài Liệu Bổ Sung — 9 Loại Tùy Chọn
+# Tài liệu Bổ trợ — 9 Loại Tài liệu Tùy chọn
 
-Xem thêm: [Workflow Index](./index.md) | [Testing Phase](./03-testing.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md)
+Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Testing](./03-testing.md) | [V-Model và Tài liệu](../02-v-model-and-documents.md)
 
 ---
 
 ## Tổng quan
 
-Ngoài 13 tài liệu cốt lõi trong chain, Sekkei hỗ trợ thêm 9 loại tài liệu bổ sung. Các tài liệu này **không bắt buộc** trong mọi dự án — bạn dùng khi tình huống cụ thể yêu cầu, không phải cứ có là dùng hết.
+Ngoài 13 loại tài liệu cốt lõi trong chuỗi liên kết, Sekkei còn hỗ trợ khởi tạo 9 loại tài liệu bổ trợ khác. Các tài liệu này **không mang tính bắt buộc** cho mọi dự án — bạn chỉ nên sử dụng chúng khi tình huống cụ thể yêu cầu để tối ưu hóa nguồn lực.
 
 ---
 
-## Bảng tổng hợp
+## Danh mục tài liệu bổ trợ
 
-| Tài liệu | Khi nào dùng | Lệnh |
+| Tài liệu | Tình huống sử dụng | Câu lệnh |
 |---------|-------------|------|
-| **CRUD図** | Muốn kiểm tra logic CRUD không bị thiếu sót | `/sekkei:matrix` |
-| **トレーサビリティマトリクス** | Trước khi giao hàng, cần proof coverage | `/sekkei:matrix` |
-| **サイトマップ** | Hệ thống có nhiều màn hình (> 15 SCR) | `/sekkei:sitemap` |
-| **運用設計書** | Dự án có SLA cam kết, khách hàng hỏi về vận hành | `/sekkei:operation-design @input` |
-| **移行設計書** | Có hệ thống cũ cần migrate data | `/sekkei:migration-design @input` |
-| **画面設計書** | Tự động khi bật split mode trong 基本設計書 | (auto trong split mode) |
-| **議事録** | Mỗi cuộc họp với khách hàng Nhật | (manual — dùng template) |
-| **ADR** | Ghi lại quyết định kỹ thuật quan trọng | (manual — dùng template) |
-| **テストエビデンス** | Sau khi chạy test, cần gửi bằng chứng cho khách hàng | (manual — screenshot/log) |
-| **翻訳** | Khách hàng muốn bản tiếng Anh hoặc team Việt cần đọc | `/sekkei:translate @doc --lang=en` |
+| **Biểu đồ CRUD (CRUD図)** | Kiểm tra tính logic của các thao tác dữ liệu, tránh thiếu sót. | `/sekkei:matrix` |
+| **Ma trận truy xuất nguồn gốc (トレーサビリティマトリクス)** | Chứng minh độ bao phủ (coverage) trước khi bàn giao. | `/sekkei:matrix` |
+| **Sơ đồ trang web (サイトマップ)** | Sử dụng khi hệ thống có cấu trúc màn hình phức tạp (> 15 SCR). | `/sekkei:sitemap` |
+| **Thiết kế vận hành (運用設計書)** | Khi dự án có cam kết SLA khắt khe về vận hành. | `/sekkei:operation-design @input` |
+| **Thiết kế chuyển đổi (移行設計書)** | Khi cần chuyển đổi dữ liệu từ hệ thống cũ sang hệ thống mới. | `/sekkei:migration-design @input` |
+| **Thiết kế màn hình (画面設計書)** | Chi tiết layout và logic UI (tự động tạo khi bật "split mode"). | (Tự động) |
+| **Biên bản cuộc họp (議事録)** | Ghi lại nội dung sau mỗi buổi làm việc với khách hàng Nhật. | (Sử dụng Template) |
+| **Quyết định kiến trúc (ADR)** | Ghi chép các quyết định kỹ thuật quan trọng của dự án. | (Sử dụng Template) |
+| **Bằng chứng kiểm thử (テストエビデンス)** | Cung cấp ảnh chụp màn hình/log thực tế sau khi chạy test. | (Thực hiện thủ công) |
 
 ---
 
-## CRUD図 và Traceability Matrix
+## Biểu đồ CRUD và Ma trận truy xuất nguồn gốc
 
-**CRUD図** là bảng function × table với C/R/U/D — mỗi ô đánh dấu operation nào được thực hiện. Dùng để phát hiện logic bị thiếu trước khi code:
+**Biểu đồ CRUD (CRUD図)** là bảng đối chiếu giữa Chức năng và Bảng dữ liệu thông qua các thao tác C (Khởi tạo), R (Đọc), U (Cập nhật), D (Xóa). Công cụ này giúp bạn phát hiện các lỗ hổng logic nghiệp vụ trước khi bước vào giai đoạn lập trình.
 
-```
-/sekkei:matrix
-```
-
-Output ví dụ (HR system):
-
-```
-Function         │ employees │ departments │ attendance │ salary
-─────────────────┼───────────┼─────────────┼────────────┼────────
-社員登録          │ C         │ R           │            │
-社員情報更新      │ U         │ R           │            │
-社員削除          │ D         │             │            │
-勤怠打刻          │ R         │             │ C          │
-給与計算          │ R         │             │ R          │ C U
-```
-
-Nếu có ô hoàn toàn trống trong một row quan trọng → có thể missing logic. Sekkei highlight các gaps và gợi ý F-xxx nào cần bổ sung.
-
-**Traceability Matrix** sinh cùng lệnh `/sekkei:matrix` — hiện quan hệ đầy đủ từ REQ → F → SCR → UT → IT → ST → UAT để prove coverage với khách hàng.
+**Ma trận truy xuất nguồn gốc (トレーサビリティマトリクス)** được khởi tạo thông qua cùng một lệnh `/sekkei:matrix`. Nó hiển thị mối liên kết chặt chẽ từ: Yêu cầu (REQ) → Chức năng (F) → Thiết kế (SCR) → Các cấp độ kiểm thử (UT, IT, ST, UAT). Đây là minh chứng rõ ràng nhất về tính toàn vẹn của sản phẩm đối với khách hàng Nhật.
 
 ---
 
-## Export — xlsx / pdf / docx
+## Xuất bản Tài liệu — Excel / PDF / Word
 
-Export bất kỳ tài liệu nào sang 3 định dạng:
+Bạn có thể xuất bất kỳ tài liệu nào ra 3 định dạng phổ biến:
 
 ```bash
-# IPA 4-sheet Excel (表紙 / 更新履歴 / 目次 / 本文) — định dạng khách hàng Nhật ưa nhất
+# Định dạng Excel chuẩn IPA 4-sheet — Định dạng ưa thích của đối tác Nhật
 /sekkei:export @requirements --format=xlsx
 
-# PDF với font Noto Sans JP, A4 — dùng để gửi draft review nhanh
+# Định dạng PDF với font Noto Sans JP — Phù hợp để gửi bản nháp review nhanh
 /sekkei:export @basic-design --format=pdf
 
-# Word với TOC tự động — dùng khi khách hàng cần edit trực tiếp
+# Định dạng Word với mục lục tự động — Dùng khi khách hàng cần chỉnh sửa trực tiếp
 /sekkei:export @uat-spec --format=docx
 
-# Export toàn bộ chain cùng lúc
+# Xuất bản toàn bộ bộ tài liệu của dự án
 /sekkei:export --all --format=xlsx
 ```
 
-**Cấu trúc IPA 4-sheet Excel:**
+**Cấu trúc bảng tính Excel chuẩn IPA (4-sheet):**
 
-| Sheet | Nội dung | Ghi chú |
-|-------|---------|---------|
-| **表紙** | Tên dự án, tên tài liệu, version, ngày tạo, tác giả | Tự động từ `sekkei.config.yaml` |
-| **更新履歴** | Ngày, version, nội dung thay đổi, tác giả | Tự động thêm entry mỗi lần export |
-| **目次** | Danh sách sections với số trang | Tự động generate |
-| **本文** | Nội dung tài liệu với bảng và diagrams | Output chính |
+- **Trang bìa (表紙):** Thông tin dự án, phiên bản, tác giả (lấy từ cấu hình `sekkei.config.yaml`).
+- **Lịch sử cập nhật (更新履歴):** Tự động ghi lại các thay đổi của từng phiên bản.
+- **Mục lục (目次):** Danh sách các chương mục kèm số trang tương ứng.
+- **Nội dung chính (本文):** Nội dung đặc tả chi tiết kèm bảng biểu và sơ đồ.
 
 > [!TIP]
-> Excel format là lựa chọn mặc định khi giao hàng chính thức. PDF dùng cho review nội bộ hoặc gửi draft. Word chỉ dùng khi khách hàng yêu cầu cụ thể vì formatting có thể lệch khi mở trên máy khác.
+> Excel là định dạng bàn giao tiêu chuẩn trong hầu hết các dự án với Nhật Bản. PDF cực kỳ hữu ích cho việc xem xét nội bộ. Định dạng Word chỉ nên dùng khi có yêu cầu đặc biệt về việc chỉnh sửa văn bản trực tiếp.
 
 ---
 
-## Translation — Dịch tài liệu
+## Tính năng Dịch thuật (Translation)
 
-Dịch bất kỳ tài liệu nào sang tiếng Anh hoặc tiếng Việt để team đọc hoặc gửi stakeholder quốc tế:
+Bạn có thể dịch bất kỳ tài liệu nào sang tiếng Anh hoặc tiếng Việt để đội ngũ phát triển nắm bắt nhanh chóng hoặc gửi cho các bên liên quan:
 
 ```bash
-# Dịch sang tiếng Anh
+# Dịch tài liệu sang tiếng Anh
 /sekkei:translate @requirements --lang=en
 
-# Dịch sang tiếng Việt (để BA/Dev team đọc)
+# Dịch tài liệu sang tiếng Việt (phục vụ BA/Dev nội bộ)
 /sekkei:translate @basic-design --lang=vi
 ```
 
-Sekkei giữ nguyên IDs (REQ-xxx, F-xxx, SCR-xxx) trong bản dịch để cross-reference không bị mất. Thuật ngữ chuyên ngành IT được dịch nhất quán theo glossary của dự án — xem `/sekkei:manage_glossary` để quản lý glossary.
+Sekkei sẽ bảo toàn các mã ID (REQ-xxx, F-xxx, SCR-xxx) trong bản dịch để không làm đứt quãng khả năng tham chiếu. Mọi thuật ngữ chuyên ngành sẽ được dịch thống nhất theo bảng thuật ngữ (glossary) của dự án.
 
 > [!NOTE]
-> Bản dịch là tài liệu tham khảo nội bộ. Tài liệu chính thức giao khách hàng Nhật luôn là bản tiếng Nhật gốc.
+> Bản dịch đóng vai trò là tài liệu tham khảo. Bản tiếng Nhật gốc vẫn luôn là căn cứ chính thức cuối cùng để bàn giao cho khách hàng.
 
 ---
 
-**Xem thêm:** [Change Request lifecycle](./05-change-request.md) | [Role Guides](../05-roles/)
+**Xem thêm:** [Quy trình xử lý Thay đổi (Change Request)](./05-change-request.md) | [Hướng dẫn theo vai trò](../05-roles/)

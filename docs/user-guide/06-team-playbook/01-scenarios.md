@@ -1,86 +1,77 @@
-# Scenarios — Tình Huống Thực Tế
+# Kịch bản phối hợp thực tế (Scenarios)
 
-Xem thêm: [Team Playbook](./index.md) | [Checklists](./02-checklists.md) | [Review & Approval](./03-review-and-approval.md)
-
----
-
-Ba tình huống dưới đây dùng cùng một dự án mẫu: **hệ thống quản lý nhân sự** (人事管理システム) cho công ty Nhật, SaaS, khoảng 20–30 tính năng chính.
+Xem thêm: [Team Playbook](./index.md) | [Danh sách kiểm tra](./02-checklists.md) | [Review & Phê duyệt](./03-review-and-approval.md)
 
 ---
 
-## Scenario 1: Dự án mới từ đầu
-
-**Bối cảnh:** Team nhận RFP từ khách hàng Nhật cho hệ thống quản lý nhân sự. Scope: quản lý nhân viên, chấm công, tính lương, báo cáo HR. Timeline: 3 tuần tài liệu hoá.
+Ba kịch bản dưới đây được xây dựng dựa trên một dự án mẫu điển hình: **Hệ thống quản lý nhân sự (人事管理システム)** dành cho doanh nghiệp Nhật Bản, triển khai theo mô hình SaaS với quy mô khoảng 20–30 tính năng chính.
 
 ---
 
-### Tuần 1 — RFP & Requirements
+## Kịch bản 1: Triển khai dự án mới từ đầu
 
-**Ngày 1–2: Sales chạy RFP Workspace**
+**Bối cảnh:** Đội ngũ nhận được hồ sơ yêu cầu (RFP) từ khách hàng Nhật cho hệ thống HRM. Phạm vi công việc: Quản lý hồ sơ nhân viên, chấm công, tính lương và báo cáo nhân sự. Thời hạn hoàn thiện bộ hồ sơ đặc tả: 3 tuần.
 
-```
-# Sales paste RFP từ khách hàng
+---
+
+### Tuần 1: Xử lý RFP và Thiết lập Yêu cầu
+
+**Ngày 1–2: Giai đoạn Sales & Tư vấn giải pháp**
+
+Sales đưa nội dung hồ sơ thầu vào hệ thống:
+```bash
 /sekkei:rfp @rfp-hr-system-2024.pdf
 ```
-
-Sekkei sinh danh sách Q&A tự động. Sales review, xóa câu thừa, thêm câu domain-specific (ví dụ: "Hệ thống có cần tích hợp với phần mềm kế toán hiện tại?").
-
-```
-# Gửi Q&A cho khách hàng, chờ trả lời
-# Khi khách hàng trả lời:
-CLIENT_ANSWERED: [Paste toàn bộ câu trả lời]
-```
-
-Sau khi confirm scope với khách hàng:
-
-```
+Sekkei sẽ tự động phân tích và đưa ra danh sách Q&A. Sales rà soát, bổ sung các câu hỏi chuyên sâu về nghiệp vụ (Ví dụ: "Hệ thống có cần đồng bộ dữ liệu với phần mềm kế toán sẵn có không?"). Sau khi nhận phản hồi và chốt phạm vi với khách hàng, Sales thực hiện lệnh đóng băng phạm vi:
+```bash
 SCOPE_FREEZE
 ```
-
-→ Sekkei tạo `06_scope_freeze.md`. Sales export PDF và gửi khách hàng ký xác nhận.
+Hệ thống tạo file `06_scope_freeze.md`. Sales xuất bản bản lưu trữ và gửi khách hàng ký xác nhận.
 
 ```
 /sekkei:export @scope-freeze --format=pdf
 ```
 
-**Ngày 3: BA nhận handoff, tạo Requirements**
+**Ngày 3: Giai đoạn Phân tích nghiệp vụ (BA)**
 
-```
-# BA dùng scope-freeze làm input
+BA tiếp nhận phạm vi đã chốt để triển khai đặc tả yêu cầu:
+```bash
 /sekkei:requirements @06_scope_freeze.md
 ```
+Lúc này, BA cần kiểm tra kỹ lưỡng các mã REQ-xxx, đảm bảo các quy tắc nghiệp vụ về nhân sự (như chu kỳ chấm công, công thức tính lương) được mô tả chính xác.
 
-Review output kỹ: REQ-xxx IDs đủ chưa, business rules của HR system có đúng không (ví dụ: quy tắc tính lương, chu kỳ chấm công).
+**Ngày 3–4: Hoàn thiện danh mục chức năng và Kế hoạch**
 
-**Ngày 3–4: BA chạy song song 3 tài liệu, PM tạo project plan**
-
-```
+BA triển khai đồng thời danh sách chức năng và yêu cầu phi chức năng:
+```bash
 # BA — Terminal 1
 /sekkei:functions-list @requirements
 
 # BA — Terminal 2 (song song)
 /sekkei:nfr @requirements
-
+```
+PM tiến hành xây dựng kế hoạch dự án dựa trên các yêu cầu này:
+```
 # PM — Terminal 3 (song song)
 /sekkei:project-plan @requirements
 ```
-
-BA thêm glossary cho các term HR-specific:
-
+BA cũng bổ sung các thuật ngữ chuyên ngành vào Glossary như: **人事管理モジュール (Module quản lý nhân sự)**, **給与計算エンジン (Công cụ tính lương)**, **勤怠管理 (Quản lý chấm công)**...
 ```
 /sekkei:glossary add
 # Thêm: 人事管理モジュール, 給与計算エンジン, 勤怠管理, etc.
 ```
 
-**Ngày 5: PM chạy Gate 1**
+**Ngày 5: Kiểm soát chất lượng giai đoạn 1 (Gate 1)**
 
+PM thực hiện xác thực toàn bộ kết quả của Phase Requirements trước khi chuyển sang giai đoạn Thiết kế.
 ```
 # PM validate trước khi chuyển sang Design
 /sekkei:validate @requirements
 /sekkei:validate @functions-list
 /sekkei:validate @nfr
 ```
-
+Khi mọi thứ đã ổn thỏa, PM xuất bản hồ sơ để phê duyệt nội bộ.
+```
 Nếu pass, PM export để gửi stakeholder review:
 
 ```
@@ -91,21 +82,20 @@ Nếu pass, PM export để gửi stakeholder review:
 
 ---
 
-### Tuần 2 — Design
+### Tuần 2: Giai đoạn Thiết kế hệ thống
 
-**Ngày 6–7: Dev Lead tạo Basic Design**
+**Ngày 6–7: Xây dựng Thiết kế cơ bản (Basic Design)**
 
+Dev Lead triển khai:
 ```
 /sekkei:basic-design @requirements @functions-list
 ```
+Rà soát kỹ các thành phần:
+- **SCR-xxx**: Đã đủ các màn hình quản lý nhân viên và bảng lương chưa?
+- **TBL-xxx**: Cấu trúc bảng dữ liệu có tối ưu không?
+- **API-xxx**: Các cổng giao tiếp đã tuân thủ chuẩn RESTful chưa?
 
-Dev Lead review kỹ:
-- SCR-xxx: đủ screens chưa? Màn hình quản lý nhân viên, chấm công, bảng lương?
-- TBL-xxx: schema hợp lý? Primary/foreign keys rõ ràng?
-- API-xxx: RESTful chuẩn? Đủ CRUD cho các entity chính?
-
-Dự án HR 20–30 features → bật split mode:
-
+Với quy mô hơn 20 tính năng, Dev Lead kích hoạt chế độ tách file (Split Mode) trong file cấu hình để quản lý dễ dàng hơn.
 ```yaml
 # sekkei.config.yaml
 output:
@@ -113,8 +103,9 @@ output:
   split_by: module
 ```
 
-**Ngày 8–9: Dev Lead chạy song song Security + Detail Design**
+**Ngày 8–9: Thiết kế Bảo mật và Chi tiết**
 
+Triển khai song song hai tài liệu quan trọng tiếp theo để đảm bảo tiến độ:
 ```
 # Terminal 1
 /sekkei:security-design @basic-design
@@ -123,27 +114,29 @@ output:
 /sekkei:detail-design @basic-design
 ```
 
-**Ngày 10: PM chạy Gate 2**
+**Ngày 10: Kiểm soát chất lượng giai đoạn 2 (Gate 2)**
 
+PM chạy lệnh xác thực thiết kế.
 ```
 /sekkei:validate @basic-design
 /sekkei:validate @detail-design
 ```
-
-→ Nếu pass, Dev Lead handoff sang QA.
+Nếu đạt yêu cầu, Dev Lead chính thức bàn giao hồ sơ thiết kế cho đội ngũ QA.
 
 ---
 
-### Tuần 3 — Testing
+### Tuần 3: Giai đoạn Kiểm thử
 
-**Ngày 11–12: QA tạo Test Plan**
+**Ngày 11–12: Lập Kế hoạch kiểm thử**
 
+QA khởi tạo chiến lược kiểm thử tổng thể:
 ```
 /sekkei:test-plan @requirements @nfr @basic-design
 ```
 
-**Ngày 13–14: QA chạy song song 4 test specs**
+**Ngày 13–14: Triển khai 4 bộ đặc tả kiểm thử**
 
+QA chạy song song các kịch bản kiểm thử: Đơn vị (UT), Tích hợp (IT), Hệ thống (ST) và Nghiệm thu (UAT).
 ```
 # Terminal 1
 /sekkei:ut-spec @detail-design @test-plan
@@ -157,24 +150,22 @@ output:
 # Terminal 4
 /sekkei:uat-spec @requirements @nfr @test-plan
 ```
+BA cùng tham gia rà soát kịch bản UAT để đảm bảo chúng phản ánh đúng các yêu cầu nghiệp vụ nhân sự ban đầu.
 
-BA review UAT spec — đảm bảo UAT scenarios map đúng về REQ-xxx HR system.
+**Ngày 15: Hoàn tất Ma trận truy xuất nguồn gốc**
 
-**Ngày 15: QA chạy Traceability Matrix + Full Validate**
-
+QA thực hiện lệnh tạo ma trận để kiểm chứng độ bao phủ 100% của việc kiểm thử đối với từng yêu cầu nghiệp vụ.
 ```
 /sekkei:matrix
 /sekkei:validate
 ```
-
 Kiểm tra coverage: mỗi REQ-xxx phải có ít nhất 1 test case.
 
 ---
 
-### Delivery
+### Bàn giao sản phẩm (Delivery)
 
-PM export toàn bộ bộ tài liệu:
-
+PM thực hiện xuất bản toàn bộ bộ tài liệu ra định dạng Excel chuẩn Nhật.
 ```
 /sekkei:export @requirements --format=xlsx
 /sekkei:export @functions-list --format=xlsx
@@ -188,14 +179,13 @@ PM export toàn bộ bộ tài liệu:
 /sekkei:export @st-spec --format=xlsx
 /sekkei:export @uat-spec --format=xlsx
 ```
-
-Đóng gói ZIP và giao khách hàng. Export thêm PDF bộ tài liệu chính (requirements + basic-design + uat-spec) để dùng trong buổi trình bày.
+Sau đó, đóng gói hồ sơ (gồm bản Excel và PDF) để gửi khách hàng. Export thêm PDF bộ tài liệu chính (requirements + basic-design + uat-spec) để dùng trong buổi trình bày.
 
 ---
 
-## Scenario 2: Thay đổi giữa dự án
+## Kịch bản 2: Xử lý thay đổi yêu cầu giữa dự án
 
-**Bối cảnh:** Design phase đã hoàn tất. Khách hàng yêu cầu thêm tính năng đăng nhập bằng SNS (Google, Microsoft) vào hệ thống quản lý nhân sự. Thay đổi này ảnh hưởng đến REQ-012 (認証要件).
+**Bối cảnh:** Giai đoạn thiết kế đã kết thúc. Khách hàng bất ngờ yêu cầu bổ sung tính năng đăng nhập bằng mạng xã hội (Google, Microsoft) cho hệ thống HRM. Thay đổi này ảnh hưởng trực tiếp đến **認証要件 (Yêu cầu xác thực)**.
 
 **Impact chain dự kiến:**
 `REQ-012 → F-045, F-046 → SCR-023 (ログイン画面) → API-018 (POST /auth/sso) → SEC-007 (OAuthフロー) → CLS-031 (AuthService) → IT-019, ST-022, UAT-015`
@@ -280,7 +270,7 @@ Sekkei cập nhật theo thứ tự dependency, mỗi bước hiện diff và ch
 ...và tiếp tục cho đến [10/10]
 ```
 
-Sau mỗi tài liệu, Sekkei tự động thêm entry vào 改訂履歴:
+Sau mỗi tài liệu, Sekkei tự động thêm entry vào **改訂履歴 (Lịch sử sửa đổi)**:
 
 ```
 | 2024/11/20 | v1.2 | CR-002: SNSログイン機能追加に伴う更新 | BA Team |
@@ -317,9 +307,9 @@ Gửi lại khách hàng với email ghi rõ: "CR-002 đã được áp dụng v
 
 ---
 
-## Scenario 3: Chuẩn bị audit trước giao hàng
+## Kịch bản 3: Kiểm toán chất lượng trước khi bàn giao
 
-**Bối cảnh:** Dự án hệ thống quản lý nhân sự sắp giao hàng. Khách hàng Nhật yêu cầu kiểm tra chất lượng tài liệu trước khi nghiệm thu. PM dẫn dắt audit session.
+**Bối cảnh:** Dự án HRM chuẩn bị về đích. Để đảm bảo khách hàng Nhật hài lòng tuyệt đối, PM dẫn dắt một buổi kiểm soát chất lượng (Audit) nội bộ.
 
 ---
 
@@ -384,10 +374,10 @@ Mở từng file Excel và xác nhận 4 sheet theo chuẩn IPA:
 
 | Sheet | Nội dung |
 |-------|----------|
-| 表紙 | Tên tài liệu, version, ngày, tên công ty |
-| 改訂履歴 | Lịch sử thay đổi — mỗi phiên bản có entry đầy đủ |
-| 目次 | Mục lục tự động — phải match nội dung thực tế |
-| 本文 | Nội dung chính — format và cross-ref IDs đúng |
+| 表紙 (Trang bìa) | Tên tài liệu, version, ngày, tên công ty |
+| 改訂履歴 (Lịch sử sửa đổi) | Lịch sử thay đổi — mỗi phiên bản có entry đầy đủ |
+| 目次 (Mục lục) | Mục lục tự động — phải match nội dung thực tế |
+| 本文 (Nội dung chính) | Nội dung chính — format và cross-ref IDs đúng |
 
 ### Bước 5: (Optional) Dịch UAT sang tiếng Anh cho stakeholder nội bộ
 
@@ -408,9 +398,9 @@ zip -r hr-system-docs-v1.0-$(date +%Y%m%d).zip workspace-docs/
 
 - [ ] `/sekkei:validate` chạy clean — zero warnings, zero errors
 - [ ] `/sekkei:matrix` xác nhận 100% REQ coverage
-- [ ] Tất cả file Excel có đủ 4 sheet: 表紙, 改訂履歴, 目次, 本文
-- [ ] 改訂履歴 có entries đầy đủ — không có khoảng trống giữa các version
-- [ ] Tên tài liệu, version, ngày trên 表紙 nhất quán với thực tế
+- [ ] Tất cả file Excel có đủ 4 sheet: 表紙 (Trang bìa), 改訂履歴 (Lịch sử sửa đổi), 目次 (Mục lục), 本文 (Nội dung chính)
+- [ ] 改訂履歴 (Lịch sử sửa đổi) có entries đầy đủ — không có khoảng trống giữa các version
+- [ ] Tên tài liệu, version, ngày trên 表紙 (Trang bìa) nhất quán với thực tế
 - [ ] Cross-reference IDs (REQ → F → SCR → UT/IT/ST/UAT) trace được xuyên suốt
 - [ ] PDF bundle của requirements + basic-design + uat-spec đã sẵn sàng cho buổi presentation
 - [ ] Nếu có CR đã xử lý: diff-visual đã được lưu để trình bày thay đổi
@@ -419,4 +409,6 @@ zip -r hr-system-docs-v1.0-$(date +%Y%m%d).zip workspace-docs/
 
 ---
 
-**Xem thêm:** [Checklists](./02-checklists.md) | [Review & Approval](./03-review-and-approval.md) | [Change Request Workflow](../04-workflow/05-change-request.md)
+**Xem thêm:** [Danh sách kiểm tra](./02-checklists.md) | [Review & Phê duyệt](./03-review-and-approval.md) | [Quy trình Quản lý Thay đổi](../04-workflow/05-change-request.md)
+ Proudly presented by Antigravity.
+ Proudly presented by Antigravity.

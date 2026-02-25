@@ -1,40 +1,42 @@
-# Workflow Overview — Luồng Dự Án Sekkei
+# Tổng quan Quy trình làm việc — Luồng Dự án Sekkei
 
-Xem thêm: [Giới thiệu](../01-introduction.md) | [V-Model & Tài liệu](../02-v-model-and-documents.md) | [Quick Start](../03-quick-start.md)
-
----
-
-## Toàn bộ vòng đời dự án
-
-Một dự án Sekkei bắt đầu từ input của bạn (RFP, meeting notes, hoặc mô tả nghiệp vụ), đi qua ba phase chính — **Yêu cầu → Thiết kế → Test** — và kết thúc bằng việc export bộ tài liệu hoàn chỉnh giao cho khách hàng Nhật. Mỗi tài liệu trong chain đều nhận output của tài liệu trước làm input, tạo ra hệ thống cross-reference IDs (REQ-xxx → F-xxx → SCR-xxx → UT-xxx) xuyên suốt toàn bộ dự án — giúp bạn trace impact khi có thay đổi và validate tính nhất quán trước khi giao hàng.
+Xem thêm: [Giới thiệu](../01-introduction.md) | [V-Model và Tài liệu](../02-v-model-and-documents.md) | [Bắt đầu nhanh (Quick Start)](../03-quick-start.md)
 
 ---
 
-## Sơ đồ toàn bộ dự án
+## Toàn bộ vòng đời của một dự án
+
+Một dự án sử dụng Sekkei sẽ bắt đầu từ các thông tin đầu vào (Input) của bạn (như hồ sơ RFP, ghi chú cuộc họp hoặc mô tả nghiệp vụ), trải qua ba giai đoạn (Phase) cốt lõi: **Yêu cầu → Thiết kế → Kiểm thử**, và kết thúc bằng việc xuất bản bộ hồ sơ chuyên nghiệp để bàn giao cho đối tác Nhật Bản.
+
+Mỗi tài liệu trong chuỗi liên kết sẽ tận dụng kết quả của tài liệu trước đó làm dữ liệu đầu vào. Cách tiếp cận này giúp duy trì một hệ thống mã định danh xuyên suốt (**REQ-xxx → F-xxx → SCR-xxx → UT-xxx**). Điều này không chỉ giúp bạn dễ dàng truy vết tầm ảnh hưởng khi có thay đổi mà còn đảm bảo tính nhất quán tuyệt đối trước khi chính thức bàn giao sản phẩm.
+
+---
+
+## Sơ đồ luồng công việc toàn diện
 
 ```mermaid
 flowchart TD
-    INPUT["Input\n(RFP / Meeting Notes / Mô tả)"]
-    RFP["RFP Workspace\n(/sekkei:rfp)"]
-    REQ["要件定義書\n(/sekkei:requirements)"]
+    INPUT["Thông tin đầu vào\n(RFP / Ghi chú / Mô tả)"]
+    RFP["Hồ sơ thầu\n(/sekkei:rfp)"]
+    REQ["要件定義書 (Định nghĩa yêu cầu)\n(/sekkei:requirements)"]
 
-    FL["機能一覧\n(/sekkei:functions-list)"]
-    NFR["非機能要件定義書\n(/sekkei:nfr)"]
-    PP["プロジェクト計画書\n(/sekkei:project-plan)"]
+    FL["機能一覧 (Danh sách chức năng)\n(/sekkei:functions-list)"]
+    NFR["非機能要件定義書 (Định nghĩa yêu cầu phi chức năng)\n(/sekkei:nfr)"]
+    PP["プロジェクト計画書 (Kế hoạch dự án)\n(/sekkei:project-plan)"]
 
-    BD["基本設計書\n(/sekkei:basic-design)"]
+    BD["基本設計書 (Thiết kế cơ bản)\n(/sekkei:basic-design)"]
 
-    SD["セキュリティ設計書\n(/sekkei:security-design)"]
-    DD["詳細設計書\n(/sekkei:detail-design)"]
+    SD["セキュリティ設計書 (Thiết kế bảo mật)\n(/sekkei:security-design)"]
+    DD["詳細設計書 (Thiết kế chi tiết)\n(/sekkei:detail-design)"]
 
-    TP["テスト計画書\n(/sekkei:test-plan)"]
+    TP["テスト計画書 (Kế hoạch kiểm thử)\n(/sekkei:test-plan)"]
 
-    UT["単体テスト仕様書\n(/sekkei:ut-spec)"]
-    IT["結合テスト仕様書\n(/sekkei:it-spec)"]
-    ST["システムテスト仕様書\n(/sekkei:st-spec)"]
-    UAT["受入テスト仕様書\n(/sekkei:uat-spec)"]
+    UT["単体テスト仕様書 (Kiểm thử đơn vị)\n(/sekkei:ut-spec)"]
+    IT["結合テスト仕様書 (Kiểm thử tích hợp)\n(/sekkei:it-spec)"]
+    ST["システムテスト仕様書 (Kiểm thử hệ thống)\n(/sekkei:st-spec)"]
+    UAT["受入テスト仕様書 (Kiểm thử nghiệm thu)\n(/sekkei:uat-spec)"]
 
-    EXPORT["Export & Delivery\n(/sekkei:export)"]
+    EXPORT["Xuất bản & Bàn giao\n(/sekkei:export)"]
 
     INPUT --> RFP
     RFP --> REQ
@@ -70,41 +72,38 @@ flowchart TD
     UAT --> EXPORT
 ```
 
-> Mũi tên đứt nét trong `v-model-and-documents.md` biểu thị quan hệ đối ứng test — sơ đồ trên chỉ hiện quan hệ input/output.
+---
+
+## Tóm tắt theo từng giai đoạn (Phase)
+
+| Phase | Các tài liệu chính | Thời gian dự kiến |
+|-------|---------|-------------------|
+| **Yêu cầu (Requirements)** | 要件定義書 (Định nghĩa yêu cầu), 機能一覧 (Danh sách chức năng), 非機能 yêu cầu phi chức năng và Kế hoạch dự án. | 1–2 ngày |
+| **Thiết kế (Design)** | 基本設計書 (Thiết kế cơ bản), セキュリティ設計書 (Thiết kế bảo mật), 詳細 thiết kế chi tiết. | 2–4 ngày |
+| **Kiểm thử (Test)** | テスト計画書 (Kế hoạch kiểm thử) và 4 loại đặc tả kiểm thử cụ thể. | 2–3 ngày |
 
 ---
 
-## Tóm tắt theo phase
+## Các công cụ hỗ trợ xuyên suốt dự án
 
-| Phase | Tài liệu | Lệnh chính | Thời gian ước tính |
-|-------|---------|------------|-------------------|
-| **Requirements** | 要件定義書, 機能一覧, 非機能要件定義書, プロジェクト計画書 | `/sekkei:requirements` + 3 lệnh song song | 1–2 ngày |
-| **Design** | 基本設計書, セキュリティ設計書, 詳細設計書 | `/sekkei:basic-design` → 2 lệnh song song | 2–4 ngày |
-| **Test** | テスト計画書, 単体テスト仕様書, 結合テスト仕様書, システムテスト仕様書, 受入テスト仕様書 | `/sekkei:test-plan` → 4 specs song song | 2–3 ngày |
+Hai lệnh dưới đây sẽ giúp bạn kiểm soát chất lượng ở mọi thời điểm:
 
-> Thời gian ước tính với dự án SaaS HR 50–80 tính năng. Dự án nhỏ hơn có thể nhanh hơn 50%.
+- **`/sekkei:status`**: Theo dõi tiến độ hoàn thiện của toàn bộ chuỗi hồ sơ.
+- **`/sekkei:validate`**: Tự động rà soát sai sót mã ID, đề mục còn thiếu hoặc các tham chiếu không chính xác.
 
 ---
 
-## Tiện ích xuyên suốt dự án
+## Hướng dẫn chi tiết cho từng giai đoạn
 
-Hai lệnh này bạn sẽ dùng thường xuyên ở mọi phase:
-
-- **`/sekkei:status`** — xem trạng thái toàn bộ chain (tài liệu nào đã xong, tài liệu nào còn pending, tài liệu nào bị broken dependency)
-- **`/sekkei:validate`** — kiểm tra tính nhất quán: ID orphaned, section thiếu, cross-reference broken
-
----
-
-## Điều hướng chi tiết từng phase
-
-| Phase | Tài liệu hướng dẫn |
+| Giai đoạn | Hướng dẫn chi tiết |
 |-------|-------------------|
-| Requirements — 4 tài liệu | [requirements.md](./01-requirements.md) |
-| Design — 3 tài liệu | [design.md](./02-design.md) |
-| Testing — 5 tài liệu | [testing.md](./03-testing.md) |
-| Tài liệu bổ sung — 9 loại | [supplementary.md](./04-supplementary.md) |
-| Change Request lifecycle | [change-request.md](./05-change-request.md) |
+| Quản lý Yêu cầu (Requirements) | [Chi tiết giai đoạn Requirements](./01-requirements.md) |
+| Thiết kế Kỹ thuật (Design) | [Chi tiết giai đoạn Design](./02-design.md) |
+| Chiến lược & Đặc tả Kiểm thử (Testing) | [Chi tiết giai đoạn Testing](./03-testing.md) |
+| Các tài liệu bổ trợ khác | [Tài liệu bổ sung](./04-supplementary.md) |
+| Quy trình xử lý Thay đổi (Change Request) | [Quy trình Change Request](./05-change-request.md) |
 
 ---
 
-**Bắt đầu:** Nếu bạn chưa init project, đọc [Quick Start](../03-quick-start.md) trước. Sau đó vào [Requirements](./01-requirements.md) để bắt đầu phase đầu tiên.
+**Khởi đầu:** Nếu bạn chưa khởi tạo dự án, vui lòng tham khảo [Hướng dẫn Bắt đầu nhanh](../03-quick-start.md). Sau đó, hãy chuyển đến giai đoạn [Quản lý Yêu cầu](./01-requirements.md) để bắt đầu bước thực thi đầu tiên.
+Proudly presented by Antigravity.
