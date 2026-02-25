@@ -109,4 +109,72 @@ describe("get_chain_status tool", () => {
     expect(result.isError).toBe(true);
     expect(result.content[0].text).toContain("CONFIG_ERROR");
   });
+
+  it("returns error for oversized config (>100KB)", async () => {
+    const largePath = resolve(TMP_DIR, "large.yaml");
+    await writeFile(largePath, "x".repeat(101_000), "utf-8");
+
+    const result = await callTool(server, "get_chain_status", {
+      config_path: largePath,
+    });
+
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("too large");
+  });
+
+  it("returns error for config without chain section", async () => {
+    const noChainPath = resolve(TMP_DIR, "no-chain.yaml");
+    await writeFile(noChainPath, "project:\n  name: No Chain\n", "utf-8");
+
+    const result = await callTool(server, "get_chain_status", {
+      config_path: noChainPath,
+    });
+
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("No chain section");
+  });
+
+  it("displays RFP path when provided", async () => {
+    const result = await callTool(server, "get_chain_status", {
+      config_path: configPath,
+    });
+
+    const text = result.content[0].text;
+    expect(text).toContain("RFP:");
+    expect(text).toContain("./input/rfp.md");
+  });
+
+  it("shows RFP not provided when rfp is missing", async () => {
+    const noRfpPath = resolve(TMP_DIR, "no-rfp.yaml");
+    await writeFile(noRfpPath, [
+      "project:",
+      "  name: No RFP",
+      "chain:",
+      "  requirements:",
+      "    status: pending",
+    ].join("\n"), "utf-8");
+
+    const result = await callTool(server, "get_chain_status", {
+      config_path: noRfpPath,
+    });
+
+    expect(result.content[0].text).toContain("not provided");
+  });
+
+  it("shows multiple features with different statuses", async () => {
+    const docsDir = resolve(TMP_DIR, "docs");
+    // Add second feature with more files
+    await mkdir(resolve(docsDir, "05-features/inventory"), { recursive: true });
+    await writeFile(resolve(docsDir, "05-features/inventory/basic-design.md"), "# BD\n", "utf-8");
+    await writeFile(resolve(docsDir, "05-features/inventory/detail-design.md"), "# DD\n", "utf-8");
+
+    const result = await callTool(server, "get_chain_status", {
+      config_path: configPath,
+    });
+
+    const text = result.content[0].text;
+    expect(text).toContain("inventory");
+    // inventory has BD + DD → 2x ✅
+    expect(text).toMatch(/inventory.*✅.*✅.*⏳.*⏳/);
+  });
 });

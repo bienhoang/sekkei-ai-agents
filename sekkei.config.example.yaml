@@ -12,6 +12,7 @@
 #   08-test/          — test-plan.md, ut-spec.md, it-spec.md, st-spec.md, uat-spec.md
 #   09-ui/            — screen-design, interface-spec
 #   10-glossary.md
+#   11-mockups/        — HTML screen mockups (AI-generated from screen-design)
 
 project:
   name: "My Project"
@@ -67,3 +68,4 @@ chain:
   migration_design:   { status: pending, output: "06-data/" }
   operation_design:   { status: pending, output: "07-operations/" }
   glossary:           { status: pending, output: "10-glossary.md" }
+  mockups:            { status: pending, output: "11-mockups/" }

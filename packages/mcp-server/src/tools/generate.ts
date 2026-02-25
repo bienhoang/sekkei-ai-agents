@@ -170,6 +170,12 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- VPN access requirements for remote users",
       "- Legacy system integration security (API compatibility, data sanitization)",
     ].join("\n"),
+    "detail-design": [
+      "## Project Type: Internal System Detail Design",
+      "- Migration-aware class design: LegacyAdapter, DataMigrationService, ParallelRunManager",
+      "- Batch integration classes: ScheduledJobExecutor, FileImporter, LegacyFileParser",
+      "- AD/LDAP integration: LdapAuthProvider, GroupSyncService, RoleMapper",
+    ].join("\n"),
   },
   mobile: {
     "detail-design": [
@@ -196,6 +202,13 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Offline data encryption",
       "- Screenshot/screen recording prevention for sensitive screens",
     ].join("\n"),
+    requirements: [
+      "## Project Type: Mobile",
+      "Include mobile-specific requirements: supported OS versions (iOS/Android minimum),",
+      "device categories (phone/tablet), push notification requirements.",
+      "Add offline mode requirements: sync strategy, conflict resolution, local storage limits.",
+      "Define app distribution: App Store/Play Store guidelines, enterprise distribution if applicable.",
+    ].join("\n"),
   },
   batch: {
     "basic-design": [
@@ -215,9 +228,29 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- Encrypted data transfer for batch input/output files",
       "- Job execution audit logging (start, end, records processed, errors)",
     ].join("\n"),
+    requirements: [
+      "## Project Type: Batch",
+      "Include batch-specific requirements: job scheduling constraints, data volume estimates per job.",
+      "Add operational requirements: monitoring thresholds, alerting rules, restart/recovery procedures.",
+      "Define file I/O requirements: input sources, output destinations, encoding, delimiter formats.",
+    ].join("\n"),
   },
   lp: {
     "basic-design": "## Project Type: Landing Page\nFocus on: page structure, conversion funnel, form spec, analytics/tracking integration.",
+    requirements: "## Project Type: Landing Page\nScope to: conversion goals, A/B test requirements, SEO constraints, analytics/tracking requirements, form validation rules, third-party integration (CRM, MA tools).",
+    "detail-design": [
+      "## Project Type: Landing Page Detail Design",
+      "- Component classes: HeroSection, CTAButton, FormValidator, AnalyticsTracker",
+      "- A/B test framework: VariantRenderer, ExperimentManager, ConversionTracker",
+      "- Third-party integration: CRMAdapter, MarketingAutomationBridge, TagManagerService",
+    ].join("\n"),
+    "security-design": [
+      "## Project Type: Landing Page Security",
+      "- Form input validation and XSS prevention for all user-submitted fields",
+      "- CSRF protection for form submissions",
+      "- Third-party script CSP (Content Security Policy) configuration",
+      "- Privacy compliance: cookie consent, tracking opt-out, GDPR/個人情報保護法",
+    ].join("\n"),
   },
   government: {
     "detail-design": [
@@ -359,6 +392,26 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "- WebSocket/SSE spec for web real-time updates",
       "- Shared REST API backend (single API serves both platforms)",
     ].join("\n"),
+    "detail-design": [
+      "## Project Type: Hybrid Detail Design",
+      "- Shared business logic layer: platform-agnostic Service/UseCase classes",
+      "- Platform adapters: WebPlatformAdapter, MobilePlatformAdapter implementing shared interface",
+      "- Responsive component design: BreakpointManager, LayoutAdapter per platform prefix (W-/M-)",
+    ].join("\n"),
+    requirements: [
+      "## Project Type: Hybrid (Mobile + Web)",
+      "Include platform-specific requirements: web browser support matrix, mobile OS versions.",
+      "Define shared vs platform-specific features clearly.",
+      "Add responsive design requirements: breakpoints, touch vs mouse interaction differences.",
+      "Specify offline capabilities per platform if applicable.",
+    ].join("\n"),
+    "security-design": [
+      "## Project Type: Hybrid Security",
+      "- Web security: CSP headers, XSS prevention, CSRF tokens, secure cookies",
+      "- Mobile security: certificate pinning, secure storage, biometric auth",
+      "- Shared API security: OAuth2 with platform-specific flows (PKCE for mobile, authorization code for web)",
+      "- Session management: platform-aware token refresh, concurrent session limits",
+    ].join("\n"),
   },
   "event-driven": {
     "detail-design": [
@@ -395,6 +448,14 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "Include event-specific NFRs: message throughput, end-to-end latency, delivery guarantees.",
       "Define event schema versioning strategy in constraints section.",
     ].join("\n"),
+    "security-design": [
+      "## Project Type: Event-Driven Security",
+      "- Message-level encryption and signing for sensitive event payloads",
+      "- Topic/queue access control: per-service publish/subscribe permissions",
+      "- Dead letter queue security: encrypted DLQ, access audit for reprocessed messages",
+      "- Event schema validation at ingress to prevent injection via malformed payloads",
+      "- Consumer authentication: mTLS or token-based auth for message broker connections",
+    ].join("\n"),
   },
   "ai-ml": {
     "detail-design": [
@@ -426,6 +487,15 @@ const PROJECT_TYPE_INSTRUCTIONS: Partial<Record<ProjectType, Partial<Record<DocT
       "## Project Type: AI/ML",
       "Include ML-specific NFRs: inference latency, model accuracy thresholds, retraining frequency.",
       "Address ethical considerations: bias detection, explainability requirements.",
+    ].join("\n"),
+    "security-design": [
+      "## Project Type: AI/ML Security",
+      "- Model supply chain security: model provenance, signed model artifacts",
+      "- Adversarial attack protection: input validation against prompt injection, data poisoning",
+      "- Training data security: PII scrubbing, data lineage, access control for training datasets",
+      "- Model output filtering: harmful content detection, confidence threshold enforcement",
+      "- API security for inference endpoints: rate limiting, input size limits, timeout controls",
+      "- Model explainability audit trail: log prediction inputs/outputs for regulated use cases",
     ].join("\n"),
   },
 };

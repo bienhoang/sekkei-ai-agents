@@ -97,6 +97,7 @@ function applyStatusFormatting(sheet: ExcelJS.Worksheet): void {
 }
 
 function autoFitColumns(sheet: ExcelJS.Worksheet): void {
+  if (!sheet.columns) return;
   sheet.columns.forEach((col) => {
     let max = 10;
     col.eachCell?.({ includeEmpty: false }, (cell) => {

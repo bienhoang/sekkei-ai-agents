@@ -2,6 +2,7 @@
  * validate_chain MCP tool — validates cross-references across the entire document chain.
  */
 import { z } from "zod";
+import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { validateChain } from "../lib/cross-ref-linker.js";
 import { SekkeiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
@@ -91,7 +92,7 @@ export async function handleValidateChain(
   return { content: [{ type: "text" as const, text: lines.join("\n") }] };
 }
 
-export function registerValidateChain(server: any): void {
+export function registerValidateChain(server: McpServer): void {
   server.tool(
     "validate_chain",
     "Validate cross-references across entire document chain and generate traceability matrix",

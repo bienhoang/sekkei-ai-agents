@@ -143,6 +143,71 @@ describe("plan-state", () => {
         await rm(isolatedDir, { recursive: true, force: true });
       }
     });
+
+    it("throws SekkeiError for file without frontmatter", async () => {
+      const isolatedDir = await mkdtemp(join(tmpdir(), "sekkei-nofm-plan-"));
+      try {
+        await writeFile(join(isolatedDir, "plan.md"), "# No frontmatter\nJust plain text.\n", "utf-8");
+        let caught: unknown;
+        try {
+          await readPlan(join(isolatedDir, "plan.md"));
+        } catch (e) {
+          caught = e;
+        }
+        expect(caught instanceof SekkeiError).toBe(true);
+        expect((caught as SekkeiError).message).toContain("missing YAML frontmatter");
+      } finally {
+        await rm(isolatedDir, { recursive: true, force: true });
+      }
+    });
+
+    it("preserves plan_id through round-trip", async () => {
+      const planDir = join(plansDir, "planid-roundtrip");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({ plan_id: "20260225-basic-design-generation" });
+      await writePlan(planDir, plan);
+      const read = await readPlan(join(planDir, "plan.md"));
+      expect(read.plan_id).toBe("20260225-basic-design-generation");
+    });
+
+    it("preserves all phase data through round-trip", async () => {
+      const planDir = join(plansDir, "phases-roundtrip");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan();
+      await writePlan(planDir, plan);
+      const read = await readPlan(join(planDir, "plan.md"));
+      expect(read.phases).toHaveLength(3);
+      expect(read.phases[0].type).toBe("shared");
+      expect(read.phases[1].type).toBe("per-feature");
+      expect(read.phases[1].feature_id).toBe("sal");
+      expect(read.phases[2].type).toBe("validation");
+    });
+
+    it("writePlan generates markdown body with phase table", async () => {
+      const planDir = join(plansDir, "body-check");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan();
+      await writePlan(planDir, plan);
+      const raw = await readFile(join(planDir, "plan.md"), "utf-8");
+      // Body should contain table headers and phase rows
+      expect(raw).toContain("| # | Phase | Feature | Status | File |");
+      expect(raw).toContain("Shared Sections");
+      expect(raw).toContain("Sales");
+      expect(raw).toContain("Validation");
+      // Dependencies section
+      expect(raw).toContain("functions-list.md (upstream)");
+      expect(raw).toContain("requirements.md (upstream)");
+    });
+
+    it("handles null survey data in round-trip", async () => {
+      const planDir = join(plansDir, "null-survey");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({ survey: undefined });
+      await writePlan(planDir, plan);
+      const read = await readPlan(join(planDir, "plan.md"));
+      // survey should be undefined or falsy when not set
+      expect(read.survey).toBeFalsy();
+    });
   });
 
   // --- writePhaseFile / readPhase ---
@@ -171,6 +236,46 @@ describe("plan-state", () => {
       await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
       const raw = await readFile(join(planDir, "phase-01-shared-sections.md"), "utf-8");
       expect(raw).not.toContain("feature_id");
+    });
+
+    it("throws SekkeiError for missing phase file", async () => {
+      let caught: unknown;
+      try {
+        await readPhase("/nonexistent/phase-01.md");
+      } catch (e) {
+        caught = e;
+      }
+      expect(caught instanceof SekkeiError).toBe(true);
+      expect((caught as SekkeiError).code).toBe("PLAN_ERROR");
+      expect((caught as SekkeiError).message).toContain("Phase file not found");
+    });
+
+    it("throws SekkeiError for phase file without frontmatter", async () => {
+      const isolatedDir = await mkdtemp(join(tmpdir(), "sekkei-nofm-"));
+      try {
+        await writeFile(join(isolatedDir, "bad-phase.md"), "# No frontmatter here\n", "utf-8");
+        let caught: unknown;
+        try {
+          await readPhase(join(isolatedDir, "bad-phase.md"));
+        } catch (e) {
+          caught = e;
+        }
+        expect(caught instanceof SekkeiError).toBe(true);
+        expect((caught as SekkeiError).message).toContain("missing YAML frontmatter");
+      } finally {
+        await rm(isolatedDir, { recursive: true, force: true });
+      }
+    });
+
+    it("reads validation phase file correctly", async () => {
+      const planDir = join(plansDir, "phases-validation-test");
+      await mkdir(planDir, { recursive: true });
+      await writePhaseFile(planDir, VALIDATION_PHASE, "basic-design", SPLIT_CONFIG);
+      const phase = await readPhase(join(planDir, "phase-final-validation.md"));
+      expect(phase.type).toBe("validation");
+      expect(phase.status).toBe("pending");
+      expect(phase.name).toBe("Validation");
+      expect(phase.feature_id).toBeUndefined();
     });
   });
 
@@ -217,6 +322,20 @@ describe("plan-state", () => {
       const result = await findActivePlan(tmpDir, "basic-design");
       expect(result).toBeNull();
     });
+
+    it("returns null for cancelled plans", async () => {
+      const isolatedDir = await mkdtemp(join(tmpdir(), "sekkei-cancelled-"));
+      const pDir = getPlanDir(isolatedDir);
+      const planDir = join(pDir, "20260225-basic-design-generation");
+      await mkdir(planDir, { recursive: true });
+      await writePlan(planDir, makePlan({ status: "cancelled" }));
+      try {
+        const result = await findActivePlan(isolatedDir, "basic-design");
+        expect(result).toBeNull();
+      } finally {
+        await rm(isolatedDir, { recursive: true, force: true });
+      }
+    });
   });
 
   // --- listPlans ---
@@ -237,6 +356,27 @@ describe("plan-state", () => {
       // sorted by created ascending
       for (let i = 1; i < plans.length; i++) {
         expect(plans[i].created >= plans[i - 1].created).toBe(true);
+      }
+    });
+
+    it("skips directories without valid plan.md", async () => {
+      const isolatedDir = await mkdtemp(join(tmpdir(), "sekkei-skip-bad-"));
+      const pDir = getPlanDir(isolatedDir);
+      await mkdir(pDir, { recursive: true });
+      // Create a valid plan
+      const validDir = join(pDir, "20260225-basic-design-generation");
+      await mkdir(validDir, { recursive: true });
+      await writePlan(validDir, makePlan({ plan_id: "20260225-basic-design-generation" }));
+      // Create an invalid entry (dir without plan.md)
+      const badDir = join(pDir, "20260225-broken-generation");
+      await mkdir(badDir, { recursive: true });
+      try {
+        const plans = await listPlans(isolatedDir);
+        // Should return only the valid plan, not crash
+        expect(plans).toHaveLength(1);
+        expect(plans[0].plan_id).toBe("20260225-basic-design-generation");
+      } finally {
+        await rm(isolatedDir, { recursive: true, force: true });
       }
     });
   });
@@ -271,6 +411,76 @@ describe("plan-state", () => {
       await updatePhaseStatus(planDir, 1, "completed");
       const updated = await readPlan(join(planDir, "plan.md"));
       expect(updated.status).toBe("completed");
+    });
+
+    it("throws SekkeiError for invalid phase number", async () => {
+      const planDir = join(plansDir, "invalid-phase-num");
+      await mkdir(planDir, { recursive: true });
+      await writePlan(planDir, makePlan());
+      let caught: unknown;
+      try {
+        await updatePhaseStatus(planDir, 99, "completed");
+      } catch (e) {
+        caught = e;
+      }
+      expect(caught instanceof SekkeiError).toBe(true);
+      expect((caught as SekkeiError).message).toContain("Phase 99 not found");
+    });
+
+    it("also updates phase file frontmatter status", async () => {
+      const planDir = join(plansDir, "phase-file-update-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await updatePhaseStatus(planDir, 1, "completed");
+      const raw = await readFile(join(planDir, "phase-01-shared-sections.md"), "utf-8");
+      expect(raw).toContain("status: completed");
+    });
+
+    it("does not auto-complete plan with mix of completed and pending", async () => {
+      const planDir = join(plansDir, "mixed-status-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [
+          { ...SHARED_PHASE },
+          { ...FEATURE_PHASE },
+          { ...VALIDATION_PHASE },
+        ],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await updatePhaseStatus(planDir, 1, "completed");
+      const updated = await readPlan(join(planDir, "plan.md"));
+      expect(updated.status).not.toBe("completed");
+    });
+
+    it("auto-completes with mix of completed and skipped", async () => {
+      const planDir = join(plansDir, "skip-complete-test");
+      await mkdir(planDir, { recursive: true });
+      const p1: PlanPhase = { ...SHARED_PHASE, number: 1 };
+      const p2: PlanPhase = { ...FEATURE_PHASE, number: 2 };
+      const plan = makePlan({ phases: [p1, p2] });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, p1, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, p2, "basic-design", SPLIT_CONFIG, FEATURES[0]);
+      await updatePhaseStatus(planDir, 1, "completed");
+      await updatePhaseStatus(planDir, 2, "skipped");
+      const updated = await readPlan(join(planDir, "plan.md"));
+      expect(updated.status).toBe("completed");
+    });
+
+    it("updates the updated timestamp", async () => {
+      const planDir = join(plansDir, "timestamp-update");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({ updated: "2025-01-01" });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await updatePhaseStatus(planDir, 1, "completed");
+      const updated = await readPlan(join(planDir, "plan.md"));
+      expect(updated.updated).not.toBe("2025-01-01");
     });
   });
 
@@ -313,6 +523,29 @@ describe("plan-state", () => {
     it("returns empty string for validation phase type", async () => {
       const result = await assembleUpstream(upstreamBase, "basic-design", "validation");
       expect(result).toBe("");
+    });
+
+    it("includes detail-design + basic-design for test-spec per-feature", async () => {
+      // Create detail-design file for sal feature
+      const salDir = join(upstreamBase, "workspace-docs", "features", "sal");
+      await writeFile(join(salDir, "detail-design.md"), "# Sales Detail Design", "utf-8");
+      const result = await assembleUpstream(upstreamBase, "test-spec", "per-feature", "sal");
+      expect(result).toContain("Sales Detail Design");
+      expect(result).toContain("Sales Basic Design");
+    });
+
+    it("per-feature without featureId still includes base upstream", async () => {
+      const result = await assembleUpstream(upstreamBase, "basic-design", "per-feature");
+      expect(result).toContain("Requirements");
+      expect(result).toContain("Functions");
+    });
+  });
+
+  // --- getPlanDir ---
+  describe("getPlanDir", () => {
+    it("returns workspace-docs/plans path", () => {
+      const dir = getPlanDir("/tmp/project");
+      expect(dir).toBe("/tmp/project/workspace-docs/plans");
     });
   });
 });

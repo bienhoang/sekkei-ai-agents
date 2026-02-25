@@ -64,7 +64,7 @@ Templates at `templates/{lang}/{doc-type}.md` (relative to `packages/mcp-server/
 - **Change Requests** (`tools/change-request.ts`, `tools/cr-actions.ts`, `lib/cr-state-machine.ts`, `lib/cr-propagation.ts`) — track and propagate specification changes across the document chain
 - **Plan Management** (`tools/plan.ts`, `tools/plan-actions.ts`, `lib/plan-state.ts`) — orchestrate multi-phase document generation
 - **Staleness Detection** (`lib/staleness-detector.ts`, `lib/doc-staleness.ts`) — detect when downstream docs are outdated relative to upstream changes
-- **Mockup System** (`lib/mockup-parser.ts`, `lib/mockup-renderer.ts`, `lib/mockup-html-builder.ts`) — wireframe/screen design rendering
+- **Mockup System** — replaced by AI-gen-HTML via `/sekkei:mockup` skill command; CSS at `templates/wireframe/admin-shell.css`
 - **Code Analysis** (`lib/code-analyzer.ts`, `lib/code-context-formatter.ts`) — analyze source code for detail-design generation
 
 ### Cross-Platform

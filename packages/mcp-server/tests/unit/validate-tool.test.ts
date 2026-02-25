@@ -68,4 +68,92 @@ describe("validate_document tool", () => {
     expect(result.content[0].text).toContain("Cross-Reference Report");
     expect(result.content[0].text).toContain("Missing: 1");
   });
+
+  it("returns error when content and doc_type are both missing", async () => {
+    const result = await callTool(server, "validate_document", {});
+
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("VALIDATION_FAILED");
+    expect(result.content[0].text).toContain("content and doc_type required");
+  });
+
+  it("returns error when only content is provided without doc_type", async () => {
+    const result = await callTool(server, "validate_document", {
+      content: "# Some doc\n## Section",
+    });
+
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("VALIDATION_FAILED");
+  });
+
+  it("validates test-plan required sections", async () => {
+    const content = [
+      "# テスト計画書",
+      "## 改訂履歴",
+      "| 版数 | 日付 | 変更内容 | 変更者 |",
+      "| 1.0 | 2026-01-01 | 初版 | テスト |",
+      "## 承認欄",
+      "## 配布先",
+      "## 用語集",
+      "## テスト方針",
+      "## テスト戦略",
+      "## テスト環境",
+      "## 完了基準",
+      "| TP-ID | Level |",
+      "| TP-001 | UT |",
+    ].join("\n");
+
+    const result = await callTool(server, "validate_document", {
+      content,
+      doc_type: "test-plan",
+    });
+
+    expect(result.content[0].text).toContain("Valid:** Yes");
+  });
+
+  it("detects missing table columns", async () => {
+    const content = [
+      "# 機能一覧",
+      "## 改訂履歴",
+      "| 版数 | 日付 | 変更内容 | 変更者 |",
+      "| 1.0 | 2026-01-01 | 初版 | テスト |",
+      "## 承認欄",
+      "## 配布先",
+      "## 用語集",
+      "## 機能一覧",
+      "| No. | 大分類 | 機能名 |",
+      "| 1 | 商品 | 商品登録 |",
+    ].join("\n");
+
+    const result = await callTool(server, "validate_document", {
+      content,
+      doc_type: "functions-list",
+    });
+
+    // Missing columns: 中分類, 機能ID, 関連要件ID, 処理分類, 優先度
+    expect(result.content[0].text).toContain("missing_column");
+  });
+
+  it("validates manifest_path requires doc_type", async () => {
+    const result = await callTool(server, "validate_document", {
+      manifest_path: "/some/path/_index.yaml",
+    });
+
+    expect(result.isError).toBe(true);
+    expect(result.content[0].text).toContain("doc_type required for manifest validation");
+  });
+
+  it("handles multiple validation issues", async () => {
+    const content = "# Empty doc";
+
+    const result = await callTool(server, "validate_document", {
+      content,
+      doc_type: "basic-design",
+    });
+
+    expect(result.content[0].text).toContain("Valid:** No");
+    // Should have multiple missing sections
+    const issueMatches = result.content[0].text.match(/missing_section/g);
+    expect(issueMatches!.length).toBeGreaterThan(3);
+  });
 });

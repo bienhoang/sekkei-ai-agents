@@ -8,7 +8,7 @@ import { handlePlanAction } from "./plan-actions.js";
 import { logger } from "../lib/logger.js";
 
 export const PLAN_ACTIONS = [
-  "create", "status", "list", "execute", "update", "detect", "cancel",
+  "create", "status", "list", "execute", "update", "detect", "cancel", "add_feature",
 ] as const;
 
 const inputSchema = {
@@ -24,7 +24,7 @@ const inputSchema = {
   doc_type: z.string().max(30).optional()
     .describe("Document type for create/detect (basic-design, detail-design, test-spec)"),
   features: z.array(z.object({
-    id: z.string().max(30),
+    id: z.string().max(30).regex(/^[a-z][a-z0-9-]{1,49}$/, "kebab-case feature ID"),
     name: z.string().max(100),
     complexity: z.enum(["simple", "medium", "complex"]).default("medium"),
     priority: z.number().int().min(1).max(50),
@@ -36,6 +36,13 @@ const inputSchema = {
     .describe("New phase status (for update)"),
   survey_data: z.record(z.unknown()).optional()
     .describe("Survey Round 2 data to persist in plan frontmatter"),
+  new_features: z.array(z.object({
+    id: z.string().max(30).regex(/^[a-z][a-z0-9-]{1,49}$/, "kebab-case feature ID"),
+    name: z.string().max(100),
+    complexity: z.enum(["simple", "medium", "complex"]).default("medium"),
+    priority: z.number().int().min(1).max(50),
+  })).max(20).optional()
+    .describe("Features to add (for add_feature action)"),
 };
 
 export interface PlanArgs {
@@ -53,6 +60,12 @@ export interface PlanArgs {
   phase_number?: number;
   phase_status?: "pending" | "in_progress" | "completed" | "skipped";
   survey_data?: Record<string, unknown>;
+  new_features?: Array<{
+    id: string;
+    name: string;
+    complexity: "simple" | "medium" | "complex";
+    priority: number;
+  }>;
 }
 
 export type ToolResult = { content: Array<{ type: "text"; text: string }>; isError?: boolean };
@@ -77,7 +90,7 @@ export async function handlePlan(args: PlanArgs): Promise<ToolResult> {
 export function registerPlanTool(server: McpServer): void {
   server.tool(
     "manage_plan",
-    "Manage generation plans: create, status, list, execute phase, update phase status, detect existing plans",
+    "Manage generation plans: create, status, list, execute phase, update phase status, detect existing plans, add features to existing plans",
     inputSchema,
     async (args) => handlePlan(args as unknown as PlanArgs),
   );

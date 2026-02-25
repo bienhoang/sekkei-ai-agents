@@ -32,6 +32,7 @@ Generate Japanese software specification documents following the V-model documen
 - `/sekkei:rfp [@project-name]` — Presales RFP lifecycle (analyze → Q&A → proposal → scope freeze)
 - `/sekkei:matrix` — Generate CRUD図 or トレーサビリティマトリックス and export to Excel
 - `/sekkei:sitemap` — Generate サイトマップ (System Structure Map) with page hierarchy
+- `/sekkei:mockup` — Generate HTML screen mockups from screen definitions
 - `/sekkei:operation-design @input` — Generate 運用設計書 (Operation Design)
 - `/sekkei:migration-design @input` — Generate 移行設計書 (Migration Design)
 - `/sekkei:validate @doc` — Validate document completeness and cross-references
@@ -76,6 +77,11 @@ Commands: requirements, functions-list, nfr, project-plan
 
 → Read `references/phase-design.md`
 Commands: basic-design, security-design, detail-design
+
+### Screen Mockups
+
+→ Read `references/mockup-command.md`
+Commands: mockup
 
 ### Test Phase
 
@@ -161,3 +167,4 @@ workspace-docs/
 - `references/doc-standards.md` — Japanese documentation standards and column headers
 - `references/v-model-guide.md` — V-model workflow and chain-of-documents guide
 - `references/plan-orchestrator.md` — Plan orchestration logic for large document generation
+- `references/mockup-command.md` — Screen mockup generation: HTML admin-shell, CSS reference, annotation rules

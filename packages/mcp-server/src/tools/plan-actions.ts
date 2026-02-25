@@ -436,17 +436,124 @@ async function handleCancel(args: PlanArgs): Promise<ToolResult> {
   return ok(JSON.stringify({ plan_id, status: "cancelled" }, null, 2));
 }
 
+// --- Add Feature ---
+
+async function handleAddFeature(args: PlanArgs): Promise<ToolResult> {
+  const { workspace_path, plan_id, new_features } = args;
+  if (!plan_id) return err("plan_id is required for add_feature");
+  if (!new_features || new_features.length === 0) {
+    return err("new_features array is required for add_feature");
+  }
+
+  const plansDir = getPlanDir(workspace_path);
+  const planDir = join(plansDir, plan_id);
+  const planFile = join(planDir, "plan.md");
+
+  let plan: GenerationPlan;
+  try {
+    plan = await readPlan(planFile);
+  } catch (e) {
+    const msg = e instanceof SekkeiError ? e.toClientMessage() : `Plan not found: ${plan_id}`;
+    return err(msg);
+  }
+
+  if (plan.status === "completed" || plan.status === "cancelled") {
+    return err(`Cannot add features to ${plan.status} plan: ${plan_id}`);
+  }
+
+  // Reject duplicate feature IDs (intra-batch + against existing)
+  const existingIds = new Set(plan.features.map(f => f.id));
+  const seen = new Set<string>();
+  for (const f of new_features) {
+    if (seen.has(f.id)) return err(`Duplicate feature ID in batch: ${f.id}`);
+    seen.add(f.id);
+  }
+  const dupes = new_features.filter(f => existingIds.has(f.id));
+  if (dupes.length > 0) {
+    return err(`Duplicate feature IDs: ${dupes.map(d => d.id).join(", ")}`);
+  }
+
+  const newPlanFeatures: PlanFeature[] = new_features.map(f => ({
+    id: f.id, name: f.name, complexity: f.complexity, priority: f.priority,
+  }));
+
+  // Find validation phase (always last) and insert before it
+  const validationIdx = plan.phases.findIndex(p => p.type === "validation");
+  const insertAt = validationIdx >= 0 ? validationIdx : plan.phases.length;
+
+  // Gap numbering: start after last per-feature phase number
+  const lastFeaturePhase = plan.phases
+    .filter(p => p.type === "per-feature")
+    .reduce((max, p) => Math.max(max, p.number), 0);
+
+  const sorted = [...newPlanFeatures].sort((a, b) => a.priority - b.priority);
+  const newPhases: PlanPhase[] = sorted.map((feature, i) => {
+    const num = lastFeaturePhase + i + 1;
+    const numStr = String(num).padStart(2, "0");
+    return {
+      number: num,
+      name: feature.name,
+      type: "per-feature" as const,
+      feature_id: feature.id,
+      status: "pending" as const,
+      file: `phase-${numStr}-${feature.id}.md`,
+    };
+  });
+
+  // Insert new phases before validation
+  plan.phases.splice(insertAt, 0, ...newPhases);
+
+  // Update validation phase number (gap numbering — no file rename)
+  if (validationIdx >= 0) {
+    const valPhase = plan.phases.find(p => p.type === "validation");
+    if (valPhase) {
+      valPhase.number = plan.phases.length;
+    }
+  }
+
+  // Update plan metadata
+  plan.features.push(...newPlanFeatures);
+  plan.feature_count = plan.features.length;
+  plan.updated = new Date().toISOString().slice(0, 10);
+
+  // Build split config for phase file generation
+  const splitConfig = {
+    shared: SHARED_SECTIONS[plan.doc_type] ?? [],
+    feature: FEATURE_SECTIONS[plan.doc_type] ?? [],
+  };
+
+  // Write new phase files
+  for (const phase of newPhases) {
+    const feature = newPlanFeatures.find(f => f.id === phase.feature_id);
+    await writePhaseFile(planDir, phase, plan.doc_type, splitConfig, feature);
+  }
+
+  // Persist updated plan
+  await writePlan(planDir, plan);
+
+  return ok(JSON.stringify({
+    success: true,
+    plan_id,
+    added_features: newPlanFeatures.map(f => f.id),
+    total_features: plan.feature_count,
+    phases: plan.phases.map(p => ({
+      number: p.number, name: p.name, type: p.type, status: p.status,
+    })),
+  }, null, 2));
+}
+
 // --- Dispatch ---
 
 export async function handlePlanAction(args: PlanArgs): Promise<ToolResult> {
   switch (args.action) {
-    case "create":  return handleCreate(args);
-    case "status":  return handleStatus(args);
-    case "list":    return handleList(args);
-    case "execute": return handleExecute(args);
-    case "update":  return handleUpdate(args);
-    case "detect":  return handleDetect(args);
-    case "cancel":  return handleCancel(args);
-    default:        return err(`Unknown action: ${args.action}`);
+    case "create":      return handleCreate(args);
+    case "status":      return handleStatus(args);
+    case "list":        return handleList(args);
+    case "execute":     return handleExecute(args);
+    case "update":      return handleUpdate(args);
+    case "detect":      return handleDetect(args);
+    case "cancel":      return handleCancel(args);
+    case "add_feature": return handleAddFeature(args);
+    default:            return err(`Unknown action: ${args.action}`);
   }
 }

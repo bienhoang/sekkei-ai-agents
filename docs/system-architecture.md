@@ -383,29 +383,12 @@ In-process glossary management (153 LOC):
 - `extractGlossaryTerms()` — Extract undefined terms from content
 - Returns: GlossaryEntry[] with term, reading, definition, usage
 
-#### mockup-parser.ts (Phase A)
-Parse HTML mockup markup for screen designs:
-- `parseHTMLMockup()` — Extract screen layout from HTML
-- Identifies: forms, buttons, tables, labels
-- Output: MockupLayout with components and structure
-
-#### mockup-schema.ts (Phase A)
-Validate mockup structure against JSON schema:
-- Component types: form, button, table, label, container
-- Constraints: required properties, valid relationships
-- Error reporting with line/column references
-
-#### mockup-html-builder.ts (Phase A)
-Convert markdown mockup notation to HTML:
-- Pattern: `[component:type:name]` for inline mockups
-- `buildHTMLfromMarkdown()` — Parse pattern and generate HTML
-- Output: styled HTML ready for rendering
-
-#### mockup-renderer.ts (Phase A)
-Render mockup HTML with styling (122 LOC):
-- `renderMockup()` — Add CSS for prototype appearance
-- Wire-frame styling: borders, grids, minimal colors
-- Output: HTML with embedded CSS for export
+#### Mockup System (Skill-based Generation)
+AI-powered mockup generation via `/sekkei:mockup` skill command:
+- Skill command invocation → Claude generates HTML wireframe/mockup directly
+- No schema validation pipeline (removed Phase A files)
+- CSS styling via `templates/wireframe/admin-shell.css` (shared CSS framework)
+- Skill reference: `packages/skills/content/references/mockup-command.md`
 
 #### excel-template-filler.ts (Phase A)
 Fill Excel named ranges with markdown content (168 LOC):

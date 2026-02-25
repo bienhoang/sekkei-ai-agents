@@ -7,20 +7,21 @@
 
 ## 1. Tong quan kien truc
 
-`operation-design` la supplementary doc type trong V-model chain — nhan input tu 2 upstream docs (requirements + nfr) va feed xuong 1 downstream doc (migration-design).
+`operation-design` la supplementary doc type trong V-model chain — nhan input tu 5 upstream docs (requirements, nfr, basic-design, functions-list, security-design) va feed xuong 1 downstream doc (migration-design).
 
 ### Data Flow
 
 ```
-[requirements] ──REQ-xxx──┐
-                           ├──→ generate.ts → AI generates markdown
-[nfr] ──NFR-xxx────────────┘         │
-                                     ▼
-                          operation-design.md
-                               (OP-xxx)
-                                     │
-                                     ▼
-                           migration-design
+[requirements] ──REQ-xxx──────────┐
+[nfr] ──NFR-xxx───────────────────┤
+[basic-design] ──SCR/TBL/API-xxx──┤──→ generate.ts → AI generates markdown
+[functions-list] ──F-xxx──────────┤         │
+[security-design] ──SEC-xxx───────┘         ▼
+                                  operation-design.md
+                                       (OP-xxx)
+                                            │
+                                            ▼
+                                   migration-design
 ```
 
 ### Cac layer chinh

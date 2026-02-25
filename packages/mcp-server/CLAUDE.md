@@ -58,7 +58,7 @@ Each document type has: a Markdown template (`templates/ja/`, 22 templates), gen
 - **Plan Management** (`tools/plan.ts`, `tools/plan-actions.ts`, `lib/plan-state.ts`) — orchestrate multi-phase document generation
 - **Staleness Detection** (`lib/staleness-detector.ts`, `lib/doc-staleness.ts`, `lib/staleness-formatter.ts`) — detect outdated downstream docs
 - **Changelog** (`lib/changelog-manager.ts`) — global changelog with version extraction and propagation logging
-- **Mockup System** (`lib/mockup-parser.ts`, `lib/mockup-renderer.ts`, `lib/mockup-html-builder.ts`, `lib/mockup-schema.ts`) — wireframe/screen design rendering
+- **Mockup System** — replaced by AI-gen-HTML via `/sekkei:mockup` skill command; CSS at `templates/wireframe/admin-shell.css`
 - **Code Analysis** (`lib/code-analyzer.ts`, `lib/code-context-formatter.ts`) — analyze source code for detail-design generation
 
 ### Config

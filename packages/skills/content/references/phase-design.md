@@ -52,14 +52,11 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
          - Construct screen_input = Screen Design Document Instructions (see below) + "\n\n## Feature Requirements\n" + {feature_input}
          - Call `generate_document(doc_type: "basic-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: screen_input, upstream_content: upstream)`
          - Save output to `features/{feature-id}/screen-design.md`
-      iii. Render screen mockup images (auto):
-         - If `screen-design.md` contains YAML layout blocks in section 1:
-           a. Parse YAML layouts from the saved file
-           b. For each screen, render PNG mockup to `features/{feature-id}/images/SCR-{ID}.png`
-           c. In the markdown, insert `![SCR-{ID}](./images/SCR-{ID}.png)` after the YAML block
-           d. Keep YAML block in a `<!-- yaml-source ... -->` HTML comment for re-rendering
-         - If Playwright not available, skip rendering; YAML block stays as-is (still readable)
-         - Log rendered paths to stderr
+      iii. Suggest HTML mockup generation:
+         - After screen-design.md is saved, inform user:
+           "Screen design complete. Run `/sekkei:mockup` to generate HTML mockups, screenshot them, and embed PNGs into screen-design.md."
+         - `/sekkei:mockup` will: generate HTML → screenshot → embed PNG into screen-design.md
+         - Do NOT auto-render — user triggers mockup generation explicitly
       iv. Update `_index.yaml` manifest entry for this feature to list both basic-design.md and screen-design.md files
    f. Create/update `_index.yaml` manifest via manifest-manager
 
@@ -85,19 +82,16 @@ Parent: `SKILL.md` → Workflow Router → Design Phase.
       - Include Mermaid diagrams for architecture and ER diagrams
       - Cross-reference REQ-xxx and F-xxx IDs from upstream documents
    e. Save output to `{output.directory}/03-system/basic-design.md`
-   f. **Render screen mockups (auto):**
-      - If the saved basic-design.md contains YAML layout blocks in section 5:
-        a. Call MCP tool `render_screen_mockup` with `markdown_path: "{output.directory}/03-system/basic-design.md"` and `output_dir: "{output.directory}/03-system"`
-        b. For each rendered PNG path returned, insert `![SCR-xxx](./images/SCR-xxx.png)` after the corresponding YAML block in the markdown
-        c. Keep YAML block in a `<!-- yaml-source ... -->` HTML comment for re-rendering
-      - If Playwright not available (status: "skipped"), YAML blocks remain as human-readable structured text — no error
-      - If no YAML blocks found (status: "no_layouts"), skip silently
+   f. **Suggest HTML mockup generation:**
+      - Inform user: "Basic design complete with screen definitions. Run `/sekkei:mockup` to generate HTML mockups."
+      - Do NOT call render_screen_mockup MCP tool — mockup HTML is generated separately via `/sekkei:mockup` command
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "basic_design"`,
    `status: "complete"`, `output: "03-system/basic-design.md"`
 7. Call MCP tool `validate_document` with saved content and `doc_type: "basic-design"`.
    Show results as non-blocking.
 8. Suggest next steps:
    > "Basic design complete. Next steps:
+   > - `/sekkei:mockup` — generate HTML screen mockups
    > - `/sekkei:detail-design` — generate 詳細設計書
    > - `/sekkei:security-design` — generate セキュリティ設計書
    > - `/sekkei:validate @basic-design` — validate cross-references"

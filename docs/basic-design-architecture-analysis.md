@@ -36,7 +36,7 @@
 | Template | `templates/ja/basic-design.md` (297 LOC) | 10 sections, YAML frontmatter, AI guidance |
 | Validation | `validator.ts` (500+ LOC) | Section/column/ID check, cross-ref report |
 | Cross-ref | `cross-ref-linker.ts` (377 LOC) | Chain pairs, ID origins, upstream constraints |
-| Mockup | `mockup-parser/renderer/html-builder` | YAML layout → Playwright → PNG |
+| Mockup | `/sekkei:mockup` skill command | Claude AI generates HTML wireframe |
 | Export | `excel/pdf/docx-exporter.ts` | Markdown → Excel/PDF/Word |
 | Change Req | `cr-*.ts` (5 files) | CR lifecycle, impact propagation |
 | Plan | `plan-*.ts` (4 files) | Split-mode phased generation |
@@ -58,7 +58,7 @@
 - Mỗi feature gen riêng → giảm AI context, tăng quality
 
 ### 2.3 Graceful degradation
-- Playwright missing → mockup skip, YAML blocks vẫn readable
+- Mockup generation via AI skill → no Playwright dependency
 - Git missing → staleness detection skip
 - Code analyzer → chỉ dùng cho detail-design, basic-design không cần
 

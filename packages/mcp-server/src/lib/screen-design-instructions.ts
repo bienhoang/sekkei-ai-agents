@@ -63,7 +63,7 @@ const TABLE_HEADERS: Record<string, Record<string, string>> = {
 export function buildInlineYamlLayoutHint(): string {
   return [
     "For each screen in 画面一覧, provide a structured YAML layout block inside a ```yaml code fence.",
-    "This YAML will be rendered into a visual PNG mockup image.",
+    "This YAML describes the screen layout structure. For visual HTML mockups, use `/sekkei:mockup` command.",
     "",
     "YAML format:",
     "```yaml",
@@ -117,7 +117,7 @@ export function buildScreenDesignInstruction(featureId: string, language = "ja")
     ``,
     `## 1. ${h[0]}`,
     `Provide a structured YAML layout block inside a \`\`\`yaml code fence.`,
-    `This YAML will be rendered into a visual mockup image with numbered annotations.`,
+    `This YAML describes the layout structure. For visual HTML mockups, run \`/sekkei:mockup\` after completing screen-design.`,
     ``,
     `### YAML Layout Format`,
     `\`\`\`yaml`,
@@ -175,5 +175,8 @@ export function buildScreenDesignInstruction(featureId: string, language = "ja")
     `- Generate specs for ALL screens identified in the feature input`,
     `- Do NOT include system-architecture, DB design, or shared sections — those are in shared/`,
     `- Every screen must have entries in all 6 sections (use N/A rows if not applicable)`,
+    ``,
+    `### HTML Mockups`,
+    `After generating screen-design.md, run \`/sekkei:mockup\` to generate interactive HTML mockups with numbered annotations matching the # column in section 2.`,
   ].join("\n");
 }

@@ -117,4 +117,17 @@ Configure in `sekkei.config.yaml` → `functions_list.extra_columns`:
 
 - **丁寧語:** Standard polite form (です/ます). Most common for specifications.
 - **謙譲語:** Humble form. Used for client-facing formal documents.
-- **simple:** Plain form. Used for internal/technical docs.
+- **simple:** Plain form (だ/である). Used for internal/technical docs.
+
+### Usage Policy per Doc Phase
+
+| Phase | Default Level | Rationale |
+|-------|--------------|-----------|
+| requirements, nfr, project-plan | 丁寧語 | Client-facing, formal tone |
+| basic-design, security-design | 丁寧語 | Reviewed by stakeholders |
+| detail-design | simple | Developer-facing, technical precision |
+| test-plan, test-specs (ut/it/st/uat) | simple | QA-facing, procedural clarity |
+| operation-design, migration-design | 丁寧語 | Ops team + management audience |
+| supplementary (crud-matrix, sitemap, etc.) | simple | Reference material |
+
+Override via `project.keigo` in `sekkei.config.yaml`. Per-document override not currently supported — use `keigo_override` param on `generate_document` tool for one-off changes.
