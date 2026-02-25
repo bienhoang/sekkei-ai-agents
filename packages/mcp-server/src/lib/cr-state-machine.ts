@@ -3,7 +3,7 @@
  * Follows rfp-state-machine.ts patterns with yaml package for nested data.
  */
 import { readFile, writeFile, mkdir, readdir } from "node:fs/promises";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
 import { parse, stringify } from "yaml";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
@@ -120,17 +120,85 @@ export async function writeCR(crFilePath: string, cr: ChangeRequest): Promise<vo
     history: cr.history,
   });
 
-  const body = [
-    `# Change Request: ${cr.description}`,
-    "",
-    "## Changed IDs",
-    ...cr.changed_ids.map(id => `- ${id}`),
-    "",
-    "## Notes",
-    "(user/agent appends notes here)",
-  ].join("\n");
-
+  const body = buildCRBody(cr);
   await writeFile(crFilePath, `---\n${frontmatter}---\n\n${body}\n`, "utf-8");
+
+  // Auto-rebuild INDEX.md — derive basePath from crFilePath
+  // crFilePath = {basePath}/{workspace-docs}/change-requests/CR-xxx.md
+  const basePath = dirname(dirname(dirname(crFilePath)));
+  await writeCRIndex(basePath).catch(() => {
+    // Non-critical: index rebuild may fail if listing fails during partial writes
+  });
+}
+
+/** Build human-readable markdown body from CR data. */
+function buildCRBody(cr: ChangeRequest): string {
+  const lines: string[] = [];
+
+  // Header
+  lines.push(`# ${cr.id}: ${cr.description}`);
+  lines.push("");
+  lines.push("## Status");
+  lines.push("");
+  lines.push("| Field | Value |");
+  lines.push("|-------|-------|");
+  lines.push(`| Status | ${cr.status} |`);
+  lines.push(`| Created | ${cr.created} |`);
+  lines.push(`| Updated | ${cr.updated} |`);
+  lines.push("");
+
+  // Content table
+  lines.push("## Content");
+  lines.push("");
+  lines.push("| Field | Value |");
+  lines.push("|-------|-------|");
+  lines.push(`| Origin Document | ${cr.origin_doc} |`);
+  lines.push(`| Changed IDs | ${cr.changed_ids.join(", ") || "—"} |`);
+  lines.push(`| Description | ${cr.description} |`);
+  lines.push("");
+
+  // Impact
+  lines.push("## Impact");
+  lines.push("");
+  lines.push(cr.impact_summary || "Not yet analyzed");
+  lines.push("");
+
+  // Propagation table
+  if (cr.propagation_steps.length > 0) {
+    lines.push("## Propagation Progress");
+    lines.push("");
+    lines.push("| # | Document | Direction | Status | Note |");
+    lines.push("|---|----------|-----------|--------|------|");
+    cr.propagation_steps.forEach((step, i) => {
+      const icon = step.status === "done" ? "✅" : step.status === "skipped" ? "⏭️" : "⏳";
+      lines.push(`| ${i + 1} | ${step.doc_type} | ${step.direction} | ${icon} ${step.status} | ${step.note ?? ""} |`);
+    });
+    lines.push("");
+  }
+
+  // Conflict warnings
+  if (cr.conflict_warnings.length > 0) {
+    lines.push("## Conflict Warnings");
+    lines.push("");
+    cr.conflict_warnings.forEach(w => lines.push(`- ⚠️ ${w}`));
+    lines.push("");
+  }
+
+  // History table
+  lines.push("## History");
+  lines.push("");
+  lines.push("| Date | Status | Reason |");
+  lines.push("|------|--------|--------|");
+  cr.history.forEach(h => {
+    lines.push(`| ${h.entered} | ${h.status} | ${h.reason ?? ""} |`);
+  });
+  lines.push("");
+
+  // Notes section
+  lines.push("## Notes");
+  lines.push("");
+
+  return lines.join("\n");
 }
 
 // --- CRUD ---
@@ -212,6 +280,30 @@ export async function listCRs(basePath: string): Promise<ChangeRequest[]> {
   }
 
   return crs.sort((a, b) => a.id.localeCompare(b.id));
+}
+
+/** Write INDEX.md listing all CRs in the change-requests directory. */
+export async function writeCRIndex(basePath: string): Promise<void> {
+  const crDir = getCRDir(basePath);
+  const crs = await listCRs(basePath);
+
+  const lines: string[] = [
+    "# Change Requests",
+    "",
+    `> Auto-generated index — ${crs.length} CR(s) total`,
+    "",
+    "| ID | Status | Origin | Description | Created | Updated |",
+    "|----|--------|--------|-------------|---------|---------|",
+  ];
+
+  for (const cr of crs) {
+    lines.push(
+      `| [${cr.id}](./${cr.id}.md) | ${cr.status} | ${cr.origin_doc} | ${cr.description} | ${cr.created} | ${cr.updated} |`,
+    );
+  }
+
+  lines.push("");
+  await writeFile(join(crDir, "INDEX.md"), lines.join("\n"), "utf-8");
 }
 
 /** Validate CR ID format */

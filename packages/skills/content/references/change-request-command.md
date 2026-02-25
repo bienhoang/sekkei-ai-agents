@@ -6,6 +6,15 @@ Track and propagate specification changes across the V-model chain.
 
 ---
 
+# ⚠️ ROUTING GUARD
+
+- **ALWAYS** use `manage_change_request` tool for ALL CR operations (create, analyze, approve, propagate, validate, complete, cancel, rollback, status, list).
+- **NEVER** use `manage_rfp_workspace` for CR operations — that tool is for RFP presales phases only.
+- CRs are stored as individual files at: `{workspace_path}/workspace-docs/change-requests/CR-YYMMDD-NNN.md`
+- The RFP `07_decisions.md` file is for RFP phase transition logs only, NOT for change requests.
+
+---
+
 # ENTRYPOINT BEHAVIOR
 
 1. Parse subcommand (default: new CR, --resume, --status, --list, --cancel, --rollback)
