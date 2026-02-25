@@ -14,12 +14,22 @@ Output: interactive HTML files with numbered annotations mapping to 画面項目
 
 ## Invocation Modes
 
-| Mode | Trigger | Scope |
-|------|---------|-------|
-| Standalone | `/sekkei:mockup` | All screens across all features |
+| Mode | Command | What it does |
+|------|---------|--------------|
+| Full | `/sekkei:mockup` | Generate HTML from screen defs → screenshot → embed PNGs |
+| Screenshot only | `/sekkei:mockup --screenshot` | Re-screenshot existing HTML in `11-mockups/` → update PNGs |
 | From screen-design | After generating screen-design.md | Screens for that feature only |
 
+**Typical flow:**
+```
+/sekkei:mockup                → gen HTML + screenshot + embed
+(user edits HTML manually)
+/sekkei:mockup --screenshot   → re-screenshot + re-embed (no HTML regen)
+```
+
 ## Workflow
+
+### Full mode (default)
 
 1. Read `sekkei.config.yaml` → get `output.directory`
 2. Scan workspace for screen definitions (split or monolithic)
@@ -33,37 +43,44 @@ Output: interactive HTML files with numbered annotations mapping to 画面項目
 5. Copy `admin-shell.css` to `{output.directory}/11-mockups/admin-shell.css`
    - Source: this file is bundled at `packages/mcp-server/templates/wireframe/admin-shell.css`
    - If running via MCP, read the CSS content and write it to the output directory
+6. Continue to screenshot steps below
+
+### Screenshot-only mode (`--screenshot`)
+
+1. Read `sekkei.config.yaml` → get `output.directory`
+2. Scan `{output.directory}/11-mockups/*.html` for existing HTML files
+3. Skip HTML generation — go directly to screenshot steps below
 6. **Screenshot each HTML → PNG** (with annotations visible):
    - Use Playwright or `chrome-devtools` skill to open each HTML file in browser
    - Screenshot the full `.screen-wrap` element (captures shell + annotations)
-   - Save to `{output.directory}/11-mockups/{function-id}-{screen-name-kebab}.png`
+   - **Split mode**: save to `features/{feature-id}/assets/images/{function-id}-{screen-name-kebab}.png`
+   - **Monolithic**: save to `03-system/assets/images/{function-id}-{screen-name-kebab}.png`
    - For multi-screen HTML: screenshot each `.screen-wrap` separately, naming `{id}-{screen}-{seq}.png`
+   - Create `assets/images/` directory if it doesn't exist
 7. **Embed PNG into screen-design.md**:
    - For each screen in `screen-design.md`, insert image reference after section 1 (画面レイアウト):
      ```markdown
-     ![SCR-{ID} モックアップ](../11-mockups/{function-id}-{screen-name-kebab}.png)
+     ![SCR-{ID} モックアップ](./assets/images/{function-id}-{screen-name-kebab}.png)
      ```
-   - **Split mode**: insert into `features/{id}/screen-design.md`
-   - **Monolithic**: insert into `03-system/basic-design.md` after YAML layout block in section 5
+   - **Split mode**: insert into `features/{id}/screen-design.md` (relative: `./assets/images/`)
+   - **Monolithic**: insert into `03-system/basic-design.md` (relative: `./assets/images/`)
    - Keep YAML layout block as-is (human-readable structure reference)
    - The annotation numbers in the PNG must match the # column in 画面項目定義 table (section 2)
 
 ### Screenshot Script (Playwright)
 
 ```javascript
-// Quick screenshot via Playwright (already installed for PDF export)
-const { chromium } = require('playwright');
-(async () => {
-  const browser = await chromium.launch();
-  const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
-  await page.goto(`file://${absolutePathToHtml}`);
-  // Screenshot each screen-wrap
-  const wraps = await page.$$('.screen-wrap');
-  for (let i = 0; i < wraps.length; i++) {
-    await wraps[i].screenshot({ path: `output-${i}.png` });
-  }
-  await browser.close();
-})();
+// Playwright screenshot (already installed for PDF export)
+// viewport: 1440px for full HD clarity; deviceScaleFactor: 2 for crisp retina output
+import { chromium } from 'playwright';
+const browser = await chromium.launch();
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 });
+await page.goto(`file://${absolutePathToHtml}`, { waitUntil: 'networkidle' });
+const wraps = await page.locator('.screen-wrap').all();
+for (let i = 0; i < wraps.length; i++) {
+  await wraps[i].screenshot({ path: `output-${i}.png` });
+}
+await browser.close();
 ```
 
 Alternatively, use `chrome-devtools` or `agent-browser` skill for browser automation.
