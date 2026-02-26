@@ -4,6 +4,7 @@ import { AlertCard } from '../components/cards/alert-card'
 import { StatCard } from '../components/cards/stat-card'
 import { PageSkeleton } from '../components/loading/page-skeleton'
 import { EmptyState } from '../components/empty/empty-state'
+import { Link2, BarChart3, AlertTriangle } from '../lib/icons'
 
 interface CrossRefAnalysis {
   totalDefined: number
@@ -84,18 +85,18 @@ export function AnalyticsPage() {
         {hasCrossRefData ? (
           <div className="h-64"><Bar data={crossRefChartData} options={chartOptions} /></div>
         ) : (
-          <EmptyState icon="🔗" title="No cross-references found" description="Generate documents to see cross-reference analysis." />
+          <EmptyState icon={<Link2 size={40} strokeWidth={1.5} />} title="No cross-references found" description="Generate documents to see cross-reference analysis." />
         )}
         {cr.missing.length > 0 && (
           <div className="mt-4">
             <p className="text-sm font-medium text-[var(--color-danger)]">Missing IDs ({cr.missing.length})</p>
-            <div className="flex flex-wrap gap-1 mt-1">{cr.missing.slice(0, 20).map(id => <span key={id} className="px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 rounded">{id}</span>)}</div>
+            <div className="flex flex-wrap gap-1 mt-1">{cr.missing.slice(0, 20).map(id => <span key={id} className="px-2 py-0.5 text-xs bg-red-100 dark:bg-red-900/30 rounded font-mono">{id}</span>)}</div>
           </div>
         )}
         {cr.orphaned.length > 0 && (
           <div className="mt-3">
             <p className="text-sm font-medium text-[var(--color-warning)]">Orphaned IDs ({cr.orphaned.length})</p>
-            <div className="flex flex-wrap gap-1 mt-1">{cr.orphaned.slice(0, 20).map(id => <span key={id} className="px-2 py-0.5 text-xs bg-yellow-100 dark:bg-yellow-900/30 rounded">{id}</span>)}</div>
+            <div className="flex flex-wrap gap-1 mt-1">{cr.orphaned.slice(0, 20).map(id => <span key={id} className="px-2 py-0.5 text-xs bg-yellow-100 dark:bg-yellow-900/30 rounded font-mono">{id}</span>)}</div>
           </div>
         )}
       </section>
@@ -106,8 +107,8 @@ export function AnalyticsPage() {
           <h3 className="font-medium mb-3">Staleness Warnings</h3>
           <div className="space-y-2">
             {data.staleness.warnings.map((w, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded">
-                <span>⚠️</span>
+              <div key={i} className="flex items-center gap-2.5 text-sm p-2.5 bg-yellow-50 dark:bg-yellow-900/20 rounded">
+                <AlertTriangle size={14} className="text-yellow-600 dark:text-yellow-400 shrink-0" />
                 <span><strong>{w.downstream}</strong> may be stale — upstream <strong>{w.upstream}</strong> was modified more recently</span>
               </div>
             ))}
@@ -121,7 +122,7 @@ export function AnalyticsPage() {
         {data.quality.length > 0 ? (
           <div className="h-64"><Bar data={qualityChartData} options={chartOptions} /></div>
         ) : (
-          <EmptyState icon="📊" title="No quality data" description="Generate and validate documents to see quality scores." />
+          <EmptyState icon={<BarChart3 size={40} strokeWidth={1.5} />} title="No quality data" description="Generate and validate documents to see quality scores." />
         )}
       </section>
     </div>

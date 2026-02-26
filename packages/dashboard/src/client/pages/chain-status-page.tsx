@@ -45,7 +45,7 @@ export function ChainStatusPage() {
         <select
           value={filterPhase}
           onChange={e => setFilterPhase(e.target.value)}
-          className="text-sm border border-[var(--color-border)] rounded-md px-2 py-1 bg-[var(--color-surface)]"
+          className="text-sm border border-[var(--color-border)] rounded-md px-2 py-1.5 bg-[var(--color-surface)] cursor-pointer"
         >
           <option value="all">All Phases</option>
           {data.groups.map(g => <option key={g.phase} value={g.phase}>{g.label}</option>)}
@@ -57,14 +57,14 @@ export function ChainStatusPage() {
       {selectedEntry && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium">{selectedEntry.docType}</h3>
-            <button onClick={() => setSelectedDoc(null)} className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)]">Close</button>
+            <h3 className="font-medium font-mono text-sm">{selectedEntry.docType}</h3>
+            <button onClick={() => setSelectedDoc(null)} className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] cursor-pointer transition-colors duration-150">Close</button>
           </div>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div><span className="text-[var(--color-text-muted)]">Status:</span> <span className={`px-2 py-0.5 rounded text-xs ${STATUS_BADGE[selectedEntry.status] ?? ''}`}>{selectedEntry.status}</span></div>
-            <div><span className="text-[var(--color-text-muted)]">Version:</span> {selectedEntry.version ?? '—'}</div>
-            <div><span className="text-[var(--color-text-muted)]">Output:</span> {selectedEntry.output ?? '—'}</div>
-            <div><span className="text-[var(--color-text-muted)]">Last Modified:</span> {selectedEntry.lastModified ? new Date(selectedEntry.lastModified).toLocaleDateString() : '—'}</div>
+            <div><span className="text-[var(--color-text-muted)]">Version:</span> <span className="font-mono">{selectedEntry.version ?? '--'}</span></div>
+            <div><span className="text-[var(--color-text-muted)]">Output:</span> <span className="font-mono text-xs">{selectedEntry.output ?? '--'}</span></div>
+            <div><span className="text-[var(--color-text-muted)]">Last Modified:</span> {selectedEntry.lastModified ? new Date(selectedEntry.lastModified).toLocaleDateString() : '--'}</div>
           </div>
         </div>
       )}
@@ -85,11 +85,11 @@ export function ChainStatusPage() {
             </thead>
             <tbody>
               {group.entries.map(entry => (
-                <tr key={entry.docType} className="border-t border-[var(--color-border)] hover:bg-gray-50 dark:hover:bg-gray-800/30 cursor-pointer" onClick={() => setSelectedDoc(entry.docType)}>
-                  <td className="px-4 py-2 font-medium">{entry.docType}</td>
+                <tr key={entry.docType} className="border-t border-[var(--color-border)] hover:bg-[var(--color-surface-hover)] cursor-pointer transition-colors duration-150" onClick={() => setSelectedDoc(entry.docType)}>
+                  <td className="px-4 py-2 font-medium font-mono text-sm">{entry.docType}</td>
                   <td className="px-4 py-2"><span className={`px-2 py-0.5 rounded text-xs ${STATUS_BADGE[entry.status] ?? ''}`}>{entry.status}</span></td>
-                  <td className="px-4 py-2">{entry.version ?? '—'}</td>
-                  <td className="px-4 py-2">{entry.lastModified ? new Date(entry.lastModified).toLocaleDateString() : '—'}</td>
+                  <td className="px-4 py-2 font-mono text-xs">{entry.version ?? '--'}</td>
+                  <td className="px-4 py-2">{entry.lastModified ? new Date(entry.lastModified).toLocaleDateString() : '--'}</td>
                 </tr>
               ))}
             </tbody>

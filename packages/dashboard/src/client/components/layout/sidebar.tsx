@@ -1,17 +1,18 @@
 import { NavLink } from 'react-router-dom'
 import { useApi } from '../../hooks/use-api'
+import { LayoutDashboard, Link2, BarChart3, FileText, Puzzle, type LucideIcon } from '../../lib/icons'
 
 interface NavItem {
   to: string
   label: string
-  icon: string
+  icon: LucideIcon
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: 'Overview', icon: '📊' },
-  { to: '/chain', label: 'Chain Status', icon: '🔗' },
-  { to: '/analytics', label: 'Analytics', icon: '📈' },
-  { to: '/changes', label: 'Change History', icon: '📝' },
+  { to: '/', label: 'Overview', icon: LayoutDashboard },
+  { to: '/chain', label: 'Chain Status', icon: Link2 },
+  { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { to: '/changes', label: 'Change History', icon: FileText },
 ]
 
 export function Sidebar() {
@@ -31,14 +32,14 @@ export function Sidebar() {
             to={item.to}
             end={item.to === '/'}
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors ${
+              `flex items-center gap-2.5 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors duration-200 ${
                 isActive
                   ? 'bg-[var(--color-primary)] text-white font-medium'
-                  : 'text-[var(--color-text)] hover:bg-[var(--color-border)]'
+                  : 'text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]'
               }`
             }
           >
-            <span>{item.icon}</span>
+            <item.icon size={16} strokeWidth={2} />
             {item.label}
           </NavLink>
         ))}
@@ -46,14 +47,14 @@ export function Sidebar() {
           <NavLink
             to="/features"
             className={({ isActive }) =>
-              `flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors ${
+              `flex items-center gap-2.5 px-3 py-2 rounded-md text-sm cursor-pointer transition-colors duration-200 ${
                 isActive
                   ? 'bg-[var(--color-primary)] text-white font-medium'
-                  : 'text-[var(--color-text)] hover:bg-[var(--color-border)]'
+                  : 'text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]'
               }`
             }
           >
-            <span>🧩</span>
+            <Puzzle size={16} strokeWidth={2} />
             Features
           </NavLink>
         )}

@@ -4,6 +4,7 @@ import { AlertCard } from '../components/cards/alert-card'
 import { CompletionDonut } from '../components/charts/completion-donut'
 import { VModelPipeline } from '../components/charts/v-model-pipeline'
 import { PageSkeleton } from '../components/loading/page-skeleton'
+import { FileCheck, CheckCircle2, AlertTriangle, RotateCcw } from '../lib/icons'
 
 interface OverviewData {
   project: { name: string; type: string }
@@ -30,10 +31,10 @@ export function OverviewPage() {
       <h2 className="text-xl font-bold">{data.project.name}</h2>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Documents" value={data.totalDocs} icon="📄" color="blue" />
-        <StatCard label="Completion" value={`${data.completionPct}%`} icon="✅" color="green" />
-        <StatCard label="Stale Alerts" value={data.staleCount} icon="⚠️" color="yellow" />
-        <StatCard label="Active CRs" value={data.activeCRs} icon="🔄" color="red" />
+        <StatCard label="Documents" value={data.totalDocs} icon={<FileCheck size={24} strokeWidth={1.5} />} color="blue" />
+        <StatCard label="Completion" value={`${data.completionPct}%`} icon={<CheckCircle2 size={24} strokeWidth={1.5} />} color="green" />
+        <StatCard label="Stale Alerts" value={data.staleCount} icon={<AlertTriangle size={24} strokeWidth={1.5} />} color="yellow" />
+        <StatCard label="Active CRs" value={data.activeCRs} icon={<RotateCcw size={24} strokeWidth={1.5} />} color="red" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -56,10 +57,10 @@ export function OverviewPage() {
               </thead>
               <tbody>
                 {data.recentChangelog.map((entry, i) => (
-                  <tr key={i} className="border-b border-[var(--color-border)] last:border-0">
+                  <tr key={i} className="border-b border-[var(--color-border)] last:border-0 hover:bg-[var(--color-surface-hover)] transition-colors duration-150">
                     <td className="py-2 pr-4 whitespace-nowrap">{entry.date}</td>
                     <td className="py-2 pr-4">{entry.docType}</td>
-                    <td className="py-2 pr-4">{entry.version}</td>
+                    <td className="py-2 pr-4 font-mono text-xs">{entry.version}</td>
                     <td className="py-2 truncate max-w-xs">{entry.changes}</td>
                   </tr>
                 ))}

@@ -1,6 +1,7 @@
 import { useRefresh } from '../../hooks/use-refresh'
 import { useTheme } from '../../hooks/use-theme'
 import { useApi } from '../../hooks/use-api'
+import { RefreshCw, Moon, Sun } from '../../lib/icons'
 
 interface StatusResponse {
   mcpConnected: boolean
@@ -23,20 +24,22 @@ export function Header() {
           {status?.mcpConnected ? 'MCP' : 'Filesystem only'}
         </span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <button
           onClick={refresh}
-          className="px-3 py-1 text-sm rounded-md border border-[var(--color-border)] hover:bg-[var(--color-border)] transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-hover)] transition-colors duration-200 cursor-pointer"
           title="Refresh data"
         >
-          ↻ Refresh
+          <RefreshCw size={14} />
+          Refresh
         </button>
         <button
           onClick={toggle}
-          className="px-2 py-1 text-sm rounded-md border border-[var(--color-border)] hover:bg-[var(--color-border)] transition-colors"
+          className="flex items-center justify-center w-8 h-8 rounded-md border border-[var(--color-border)] hover:bg-[var(--color-surface-hover)] transition-colors duration-200 cursor-pointer"
           title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
         >
-          {theme === 'light' ? '🌙' : '☀️'}
+          {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
         </button>
       </div>
     </header>

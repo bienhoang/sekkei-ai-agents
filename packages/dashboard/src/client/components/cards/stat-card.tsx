@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 const COLOR_MAP = {
   blue: 'border-l-blue-500',
   green: 'border-l-green-500',
@@ -8,7 +10,7 @@ const COLOR_MAP = {
 interface StatCardProps {
   label: string
   value: string | number
-  icon?: string
+  icon?: ReactNode
   color?: keyof typeof COLOR_MAP
 }
 
@@ -20,7 +22,7 @@ export function StatCard({ label, value, icon, color = 'blue' }: StatCardProps) 
           <p className="text-2xl font-bold">{value}</p>
           <p className="text-sm text-[var(--color-text-muted)]">{label}</p>
         </div>
-        {icon && <span className="text-2xl opacity-50">{icon}</span>}
+        {icon && <span className="text-[var(--color-text-muted)]">{icon}</span>}
       </div>
     </div>
   )
