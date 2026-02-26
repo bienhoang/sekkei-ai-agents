@@ -50,6 +50,7 @@ All user-facing output (document content, prompts, confirmations) must use `proj
 - `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in split mode)
 - `/sekkei:implement @plan-path` — Execute a generation plan phase by phase
 - `/sekkei:preview` — Start Express+React docs preview with WYSIWYG editor (`--guide` for readonly user guide)
+- `/sekkei:dashboard` — Start analytics dashboard for workspace-docs overview (chain status, analytics, changes, features)
 - `/sekkei:version` — Show version and environment health check
 - `/sekkei:uninstall` — Remove Sekkei from Claude Code
 - `/sekkei:rebuild` — Rebuild and re-install Sekkei skill + MCP (runs `sekkei update` CLI)

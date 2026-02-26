@@ -167,6 +167,27 @@ Command workflows for validation, export, translation, and maintenance utilities
    - `PUT /api/files` returns 403
 7. Without `--guide`, preview serves V-model spec docs from `workspace-docs/`.
 
+## `/sekkei:dashboard`
+
+1. Run `sekkei-dashboard` from the project root.
+2. Docs dir resolved automatically: `--docs` flag → `workspace-docs/` in CWD → `sekkei.config.yaml output.directory`.
+3. Commands:
+   - `sekkei-dashboard` — start Express server with analytics dashboard
+   - `sekkei-dashboard --docs ./path --port 4984` — custom docs path + port
+   - `sekkei-dashboard --no-open` — start without auto-opening browser
+   - `sekkei-dashboard --help` — show usage
+4. Dashboard URL: `http://localhost:4984` (default). Port auto-selects if busy.
+5. **Pages:**
+   - **Overview** (`/`) — stat cards, V-model pipeline, completion donut, recent changelog
+   - **Chain Status** (`/chain`) — full chain table, hierarchy viz, detail panel
+   - **Analytics** (`/analytics`) — cross-ref analysis, staleness warnings, quality scores
+   - **Change History** (`/changes`) — CHANGELOG timeline, CR tracking with state machine viz
+   - **Feature Progress** (`/features`) — feature × doc matrix, completion bars (split mode only)
+6. Data sources: `sekkei.config.yaml` (chain status), `.sekkei/` (CRs, plans), `CHANGELOG.md`, filesystem scanning. MCP `validate_chain` for optional deeper analysis.
+7. UI language: English-only. Data content stays in original language (Japanese doc names, changelog entries).
+8. MCP integration: spawns `sekkei-mcp-server` as child process. Falls back to filesystem if MCP unavailable.
+9. Can run alongside Preview (different ports: dashboard=4984, preview=4983).
+
 ## `/sekkei:plan @doc-type`
 
 Plan large document generation with user survey and phased execution strategy.
