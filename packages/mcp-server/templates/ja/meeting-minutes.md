@@ -9,6 +9,8 @@ sections:
   - agenda
   - decisions
   - action-items
+review_date: ""
+approval_date: ""
 status: draft
 author: ""
 reviewer: ""

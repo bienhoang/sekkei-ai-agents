@@ -48,6 +48,10 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
     ...STRUCTURAL_SECTIONS,
     "プロジェクト概要", "WBS", "体制", "リスク管理",
   ],
+  "architecture-design": [
+    ...STRUCTURAL_SECTIONS,
+    "システム方式", "開発方式", "運用方式", "ハードウェア", "技術選定",
+  ],
   "basic-design": [
     ...STRUCTURAL_SECTIONS,
     "概要", "システム構成", "業務フロー", "画面設計",
@@ -63,6 +67,18 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
     "概要", "モジュール設計", "クラス設計", "画面設計詳細",
     "DB詳細設計", "API詳細仕様", "処理フロー", "エラーハンドリング",
     "セキュリティ実装", "パフォーマンス考慮",
+  ],
+  "db-design": [
+    ...STRUCTURAL_SECTIONS,
+    "DB設計方針", "ER図", "テーブル", "インデックス設計",
+  ],
+  "report-design": [
+    ...STRUCTURAL_SECTIONS,
+    "帳票概要", "帳票一覧", "帳票レイアウト",
+  ],
+  "batch-design": [
+    ...STRUCTURAL_SECTIONS,
+    "バッチ概要", "ジョブ一覧", "ジョブフロー",
   ],
   "test-plan": [
     ...STRUCTURAL_SECTIONS,
@@ -83,6 +99,10 @@ const REQUIRED_SECTIONS: Record<DocType, string[]> = {
   "uat-spec": [
     ...STRUCTURAL_SECTIONS,
     "テスト設計", "受入テストケース", "トレーサビリティ", "デフェクト報告",
+  ],
+  "test-result-report": [
+    ...STRUCTURAL_SECTIONS,
+    "テスト概要", "テスト実施結果", "不具合サマリー", "品質判定",
   ],
   "crud-matrix": [],
   "traceability-matrix": [],
@@ -131,6 +151,10 @@ const UPSTREAM_OVERRIDES: Partial<Record<DocType, string[]>> = {
   "operation-design": ["NFR", "REQ", "API", "TBL", "F"],
   "detail-design": ["SCR", "TBL", "API", "REQ", "F", "RPT"],
   "it-spec": ["API", "SCR", "TBL", "REQ", "F", "TP"],
+  "db-design": ["TBL", "REQ", "NFR", "ARCH"],
+  "report-design": ["RPT", "F", "SCR", "TBL", "REQ"],
+  "batch-design": ["F", "TBL", "REQ", "NFR", "OP"],
+  "test-result-report": ["TP", "UT", "IT", "ST", "UAT"],
 };
 
 /** Computed once at module load from CHAIN_PAIRS + ID_ORIGIN */
@@ -150,14 +174,19 @@ const REQUIRED_COLUMNS: Record<DocType, string[][]> = {
   requirements: [REVISION_HISTORY_COLUMNS, ["要件ID", "要件名"], ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
   nfr: [REVISION_HISTORY_COLUMNS, ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
   "project-plan": [REVISION_HISTORY_COLUMNS, ["PP-ID"]],
+  "architecture-design": [REVISION_HISTORY_COLUMNS, ["ARCH-ID"]],
   "basic-design": [REVISION_HISTORY_COLUMNS, ["画面ID"], ["テーブルID"], ["API"]],
   "security-design": [REVISION_HISTORY_COLUMNS, ["SEC-ID", "対策項目", "対策内容", "優先度"]],
   "detail-design": [REVISION_HISTORY_COLUMNS, ["クラスID"], ["エラーコード"]],
+  "db-design": [REVISION_HISTORY_COLUMNS, ["DB-ID"], ["テーブル名", "カラム名"]],
+  "report-design": [REVISION_HISTORY_COLUMNS, ["RPT-ID", "帳票名", "出力形式"]],
+  "batch-design": [REVISION_HISTORY_COLUMNS, ["BATCH-ID", "ジョブ名"]],
   "test-plan": [REVISION_HISTORY_COLUMNS, ["TP-ID"]],
   "ut-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
   "it-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
   "st-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
   "uat-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
+  "test-result-report": [REVISION_HISTORY_COLUMNS, ["テストレベル", "総件数", "合格", "合格率"]],
   "crud-matrix": [["機能ID", "機能名"]],
   "traceability-matrix": [["要件ID"]],
   "operation-design": [REVISION_HISTORY_COLUMNS, ["OP-ID", "手順名", "障害レベル", "手順内容", "担当者", "想定時間"]],

@@ -40,13 +40,13 @@ describe("computePropagationOrder", () => {
     expect(downstream.map(s => s.doc_type)).toContain("ut-spec");
   });
 
-  it("ut-spec: upstream includes detail-design and basic-design, no downstream", () => {
+  it("ut-spec: upstream includes detail-design, downstream includes test-result-report", () => {
     const steps = computePropagationOrder("ut-spec");
     const upstream = steps.filter(s => s.direction === "upstream");
     const downstream = steps.filter(s => s.direction === "downstream");
 
     expect(upstream.map(s => s.doc_type)).toContain("detail-design");
-    expect(downstream).toHaveLength(0);
+    expect(downstream.map(s => s.doc_type)).toContain("test-result-report");
   });
 
   it("all steps have status=pending", () => {

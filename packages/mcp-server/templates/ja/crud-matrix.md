@@ -8,6 +8,8 @@ sections:
   - distribution
   - glossary
   - crud-table
+review_date: ""
+approval_date: ""
 status: draft
 author: ""
 reviewer: ""

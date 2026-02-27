@@ -7,9 +7,10 @@ export const DOC_TYPES = [
   // Requirements phase
   "requirements", "nfr", "functions-list", "project-plan",
   // Design phase
-  "basic-design", "security-design", "detail-design",
+  "architecture-design", "basic-design", "security-design", "detail-design",
+  "db-design", "report-design", "batch-design",
   // Test phase
-  "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec",
+  "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec", "test-result-report",
   // Supplementary
   "crud-matrix", "traceability-matrix", "operation-design", "migration-design",
   "sitemap", "test-evidence", "meeting-minutes", "decision-record",
@@ -27,14 +28,19 @@ export const PHASE_MAP: Record<DocType, Phase> = {
   nfr: "requirements",
   "functions-list": "requirements",
   "project-plan": "requirements",
+  "architecture-design": "design",
   "basic-design": "design",
   "security-design": "design",
   "detail-design": "design",
+  "db-design": "design",
+  "report-design": "design",
+  "batch-design": "design",
   "test-plan": "test",
   "ut-spec": "test",
   "it-spec": "test",
   "st-spec": "test",
   "uat-spec": "test",
+  "test-result-report": "test",
   "crud-matrix": "supplementary",
   "traceability-matrix": "supplementary",
   "operation-design": "supplementary",
@@ -112,6 +118,9 @@ export interface DocumentMeta {
   reviewer?: string;
   approver?: string;
   approved_date?: string;
+  review_date?: string;
+  approval_date?: string;
+  review_round?: number;
   related_tickets?: string[];
   approvals?: ApprovalEntry[];
   // Per-template generation overrides (optional)
@@ -208,15 +217,20 @@ export interface ProjectConfig {
     functions_list: ChainEntry;
     project_plan?: ChainEntry;
     // Design phase
+    architecture_design?: ChainEntry;
     basic_design: SplitChainEntry;
     security_design?: ChainEntry;
     detail_design: SplitChainEntry;
+    db_design?: ChainEntry;
+    report_design?: ChainEntry;
+    batch_design?: ChainEntry;
     // Test phase
     test_plan?: ChainEntry;
     ut_spec?: ChainEntry;
     it_spec?: ChainEntry;
     st_spec?: ChainEntry;
     uat_spec?: ChainEntry;
+    test_result_report?: ChainEntry;
     // Supplementary
     operation_design?: ChainEntry;
     migration_design?: ChainEntry;

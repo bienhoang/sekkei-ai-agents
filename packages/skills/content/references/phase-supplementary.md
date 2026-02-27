@@ -98,15 +98,28 @@ Command workflows for supplementary documents (operation, migration, matrix, sit
         - `04-functions-list/functions-list.md` (if exists)
         - `03-system/basic-design.md` (if exists)
         - `03-system/detail-design.md` (if exists)
+        - `03-system/architecture-design.md` (if exists)
+        - `03-system/db-design.md` (if exists)
+        - `03-system/interface-spec.md` (if exists)
         - `08-test/ut-spec.md`, `it-spec.md`, `st-spec.md`, `uat-spec.md` (if exist)
+        - `08-test/test-result-report.md` (if exists)
       - upstream = concatenated content
    b. Call `generate_document` with `doc_type: "traceability-matrix"`, `upstream_content: upstream`
-   c. AI generates markdown table: rows=REQ-xxx, columns=SCR/API/UT/IT/ST coverage
-   d. Call `export_document` with `doc_type: "traceability-matrix"`, `format: "xlsx"`
-   e. Save markdown to `{output.directory}/08-test/traceability-matrix.md`
-   f. Save xlsx to `{output.directory}/08-test/traceability-matrix.xlsx`
+   c. AI generates markdown table: rows=REQ-xxx, columns=F-xxx/SCR/API/UT/IT/ST/UAT coverage
+   d. **Coverage metrics (mandatory in output):**
+      - Forward coverage: % of REQ-xxx traced to at least one design element (SCR/API/F)
+      - Backward coverage: % of REQ-xxx traced to at least one test case (UT/IT/ST/UAT)
+      - Untraced requirements: list any REQ-xxx with no coverage
+   e. Call `export_document` with `doc_type: "traceability-matrix"`, `format: "xlsx"`
+   f. Save markdown to `{output.directory}/08-test/traceability-matrix.md`
+   g. Save xlsx to `{output.directory}/08-test/traceability-matrix.xlsx`
 
-5. Report: file path, dimensions (rows × columns), coverage summary
+5. **Auto-detect mode** (when user runs `/sekkei:matrix` without specifying type):
+   - If both functions-list.md and basic-design.md exist → default to CRUD図
+   - If test specs exist but CRUD dependencies missing → default to トレーサビリティマトリックス
+   - If both available → ask user which matrix to generate
+
+6. Report: file path, dimensions (rows × columns), coverage summary
 
 ## `/sekkei:sitemap`
 

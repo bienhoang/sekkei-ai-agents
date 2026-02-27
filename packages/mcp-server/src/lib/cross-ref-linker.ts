@@ -16,6 +16,14 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["requirements", "functions-list"],
   ["requirements", "project-plan"],
   ["functions-list", "project-plan"],
+  // Architecture design (between requirements and basic-design)
+  ["requirements", "architecture-design"],
+  ["nfr", "architecture-design"],
+  ["functions-list", "architecture-design"],
+  ["architecture-design", "basic-design"],
+  ["architecture-design", "detail-design"],
+  ["architecture-design", "db-design"],
+  ["architecture-design", "security-design"],
   // Design phase
   ["nfr", "basic-design"],
   ["requirements", "basic-design"],
@@ -66,6 +74,24 @@ export const CHAIN_PAIRS: [string, string][] = [
   ["requirements", "interface-spec"],
   // functions-list feeds test planning scope
   ["functions-list", "test-plan"],
+  // test-result-report (aggregates all test specs)
+  ["test-plan", "test-result-report"],
+  ["ut-spec", "test-result-report"],
+  ["it-spec", "test-result-report"],
+  ["st-spec", "test-result-report"],
+  ["uat-spec", "test-result-report"],
+  // db-design (standalone database design)
+  ["basic-design", "db-design"],
+  ["requirements", "db-design"],
+  ["nfr", "db-design"],
+  // report-design (standalone report/form design)
+  ["basic-design", "report-design"],
+  ["requirements", "report-design"],
+  // batch-design (standalone batch processing design)
+  ["basic-design", "batch-design"],
+  ["functions-list", "batch-design"],
+  ["requirements", "batch-design"],
+  ["nfr", "batch-design"],
 ];
 
 /** ID prefix → doc type that defines it */
@@ -76,7 +102,7 @@ export const ID_ORIGIN: Record<string, string | string[]> = {
   SCR: "basic-design",
   TBL: "basic-design",
   API: "basic-design",
-  RPT: "basic-design",
+  RPT: ["basic-design", "report-design"],
   SEC: "security-design",
   CLS: "detail-design",
   DD: "detail-design",
@@ -94,6 +120,10 @@ export const ID_ORIGIN: Record<string, string | string[]> = {
   ADR: "decision-record",
   IF: "interface-spec",
   PG: "sitemap",
+  ARCH: "architecture-design",
+  TR: "test-result-report",
+  DB: "db-design",
+  BATCH: "batch-design",
 };
 
 /**
@@ -135,7 +165,7 @@ function isOriginOf(prefix: string, docType: string): boolean {
 }
 
 /** Standard ID regex — same pattern as id-extractor.ts */
-const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|RPT|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
+const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|RPT|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP|MIG|EV|MTG|ADR|IF|PG|ARCH|TR|DB|BATCH)-(\d{1,4})\b/g;
 
 /** Validate configPath: no path traversal, must end in .yaml/.yml */
 function validateConfigPath(configPath: string): void {
@@ -191,10 +221,15 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
     ["requirements", chain.requirements],
     ["nfr", chain.nfr],
     ["project-plan", chain.project_plan],
+    ["architecture-design", chain.architecture_design],
     ["security-design", chain.security_design],
+    ["db-design", chain.db_design],
+    ["report-design", chain.report_design],
+    ["batch-design", chain.batch_design],
     ["test-plan", chain.test_plan],
     ["st-spec", chain.st_spec],
     ["uat-spec", chain.uat_spec],
+    ["test-result-report", chain.test_result_report],
     ["operation-design", chain.operation_design],
     ["migration-design", chain.migration_design],
   ];
@@ -275,10 +310,14 @@ export function buildTraceabilityMatrix(docs: Map<string, string>): Traceability
   const matrix: TraceabilityEntry[] = [];
   const docOrder = [
     "requirements", "nfr", "functions-list", "project-plan",
-    "basic-design", "security-design", "detail-design",
+    "architecture-design", "basic-design", "screen-design", "interface-spec",
+    "security-design", "detail-design",
+    "db-design", "report-design", "batch-design",
     "operation-design", "migration-design",
     "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec",
+    "test-result-report", "test-evidence",
     "crud-matrix", "traceability-matrix", "sitemap",
+    "meeting-minutes", "decision-record",
   ];
 
   for (const [docType, content] of docs) {

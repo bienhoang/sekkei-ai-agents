@@ -49,6 +49,7 @@ chain:
   functions_list:     { status: pending, output: "04-functions-list/functions-list.md" }
   project_plan:       { status: pending, output: "02-requirements/project-plan.md" }
   # Design phase (設計)
+  architecture_design: { status: pending, output: "03-system/architecture-design.md" }
   basic_design:
     status: pending
     output: "03-system/basic-design.md"
@@ -58,12 +59,16 @@ chain:
   detail_design:
     status: pending
     features_output: "05-features/"
+  db_design:          { status: pending, output: "03-system/db-design.md" }
+  report_design:      { status: pending, output: "03-system/report-design.md" }
+  batch_design:       { status: pending, output: "03-system/batch-design.md" }
   # Test phase (テスト)
   test_plan:          { status: pending, output: "08-test/test-plan.md" }
   ut_spec:            { status: pending, output: "08-test/ut-spec.md" }
   it_spec:            { status: pending, output: "08-test/it-spec.md" }
   st_spec:            { status: pending, output: "08-test/st-spec.md" }
   uat_spec:           { status: pending, output: "08-test/uat-spec.md" }
+  test_result_report: { status: pending, output: "08-test/test-result-report.md" }
   # Supplementary (補足)
   migration_design:   { status: pending, output: "06-data/" }
   operation_design:   { status: pending, output: "07-operations/" }

@@ -19,6 +19,8 @@ sections:
   - external-interface
   - non-functional-design
   - technology-rationale
+review_date: ""
+approval_date: ""
 status: draft
 author: ""
 reviewer: ""
@@ -39,6 +41,14 @@ approver: ""
 | 作成者 | | |
 | 確認者 | | |
 | 承認者 | | |
+
+## 検印欄
+
+| レビュー段階 | レビュー者 | レビュー日 | 指摘件数 | 判定 |
+|------------|----------|----------|---------|------|
+| 第1回レビュー | | | | |
+| 第2回レビュー | | | | |
+| 最終承認 | | | | |
 
 ## 配布先 <!-- required -->
 

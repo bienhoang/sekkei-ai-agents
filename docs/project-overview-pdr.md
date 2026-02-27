@@ -118,43 +118,53 @@ output/
 
 ## Key Features
 
-### 1. Document Generation
+### 1. Document Generation (27 Document Types)
 
 **Tool:** `generate_document`
 
-Generate a specification document given:
-- Document type (requirements, functions-list, basic-design, detail-design, test-plan, ut-spec, etc.)
-- Input content (RFP or upstream document)
-- Project name and language
+Generate specification documents with IPA V-Model compliance:
+- 27 document types: 5 requirements + 9 design + 5 test + 8 supplementary
+- Support for all V-Model phases: requirements → design → test
+- IPA-compliant document chain with explicit architecture, DB design, and test results layers
+- Input content from RFP or upstream document
+- Project name and language support
 
 Output includes:
-- Template with YAML metadata
-- AI generation instructions (for Claude)
-- Suggested output path (based on doc type & scope)
+- Template with YAML metadata + review fields
+- AI generation instructions with IPA grade guidance
+- Suggested output path (based on phase & scope)
+- Enterprise review metadata template (検印欄, approval dates)
 
-### 2. Template System
+### 2. Template System (27 IPA-Compliant Templates)
 
 **Location:** `sekkei/templates/`
 
 Templates available in multiple languages:
-- `ja/` — Japanese templates (primary) — 16 document types including new test-evidence, meeting-minutes, decision-record, interface-spec, screen-design
+- `ja/` — Japanese templates (primary) — 27 document types with IPA compliance
 - `en/` — English templates (optional)
 - `shared/` — language-neutral templates (covers, indices, glossaries)
 
-Templates use YAML frontmatter:
+All templates include enterprise review metadata:
 ```yaml
 ---
-doc_type: basic-design
+doc_type: nfr
 version: "1.0"
 language: ja
-sections:
-  - system-architecture
-  - database-design
-  - external-interface
-  - non-functional-design
-  - technology-rationale
+sections: [...]
+review_date: ""
+approval_date: ""
+status: draft
+author: ""
+reviewer: ""
+approver: ""
 ---
 ```
+
+**IPA Enhancements:**
+- NFR template includes IPA NFUG grade tables (Availability, Performance, Operability, Migration, Security, Ecology)
+- All templates include 検印欄 (review sign-off table) with 3 review stages
+- Architecture-design, DB-design, Test-Result-Report, Batch-Design, Report-Design templates added
+- Approval workflow metadata for enterprise workflows
 
 **Override Support:** Companies can override default templates via `SEKKEI_TEMPLATE_OVERRIDE_DIR` env var.
 
@@ -267,18 +277,25 @@ Reads `sekkei.config.yaml` and returns:
   - `ui_mode` — "simple" (familiar Excel-like) or "power" (markdown + automation)
   - `learning_mode` — annotate docs with explanations of standards
 
-### 11. Five New Document Types (SIer Workflow Support)
+### 11. Ten New Document Types (SIer + IPA Workflow Support)
 
-**Evidence & Traceability:**
-1. **test-evidence** (EV-xxx) — テストエビデンス from test execution. Links to test-spec cases.
-2. **meeting-minutes** (MTG-xxx) — 議事録 (meeting minutes) for decisions during development. Auto-links decisions to docs.
+**IPA V-Model Architectural Layers:**
+1. **architecture-design** (ARC-xxx) — アーキテクチャ設計. High-level system design per IPA V-Model.
+2. **db-design** (DB-xxx) — データベース設計. Database schema specifications per IPA.
+3. **test-result-report** (TR-xxx) — テスト結果報告. Test execution results and evidence per IPA test phase.
 
-**Enterprise Integration:**
-3. **decision-record** (ADR-xxx) — Architecture Decision Records. Captures "why" decisions were made (combats 属人化).
-4. **interface-spec** (IF-xxx) — インターフェース仕様書 for multi-vendor coordination. Auto-generates from API definitions.
-5. **screen-design** (PG-xxx) — 画面設計書 mockups. Reduces Excel方眼紙 formatting time.
+**IPA Operational/Supplementary:**
+4. **batch-design** (BATCH-xxx) — バッチ処理設計. Batch/scheduled processing specifications.
+5. **report-design** (RPT-xxx) — 帳票仕様書. Report output format specifications.
 
-**New ID Prefixes:** EV, MTG, ADR, IF, PG (in addition to F, REQ, NFR, SCR, TBL, API, CLS, DD, TS, UT, IT, ST, UAT, OP, MIG)
+**SIer Workflow Support:**
+6. **test-evidence** (EV-xxx) — テストエビデンス from test execution. Links to test-spec cases.
+7. **meeting-minutes** (MTG-xxx) — 議事録 (meeting minutes) for decisions during development.
+8. **decision-record** (ADR-xxx) — Architecture Decision Records. Captures design rationale.
+9. **interface-spec** (IF-xxx) — インターフェース仕様書 for multi-vendor coordination.
+10. **screen-design** (SCN-xxx) — 画面設計書 mockups. Reduces Excel方眼紙 formatting time.
+
+**Extended ID Prefixes:** F, REQ, NFR, ARC, DB, SEC, SCR, TBL, API, CLS, OP, MIG, BATCH, RPT, SCN, TST, UT, IT, ST, UAT, TR, EV, MTG, ADR, IF (25 total prefixes)
 
 ### 12. Lifecycle Management (CLI Commands)
 

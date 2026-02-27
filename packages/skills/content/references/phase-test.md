@@ -168,3 +168,51 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 7. Call MCP tool `validate_document` with saved content, `doc_type: "uat-spec"`,
    and `upstream_content`.
    **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
+
+## `/sekkei:test-evidence @test-spec`
+
+**Prerequisite check (MUST run before interview):**
+1. At least one test spec must exist (ut-spec, it-spec, st-spec, or uat-spec)
+2. Load available test specs as `upstream_content`
+
+**Interview questions (ask before generating):**
+- Which test levels need evidence? (UT, IT, ST, UAT — all or specific)
+- Evidence format? (screenshot, log, API response)
+
+1. Use `upstream_content` prepared in prerequisite check above
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "test-evidence"`, `upstream_content`, `language` from config
+4. Follow these rules strictly:
+   - ID format: `EV-001`
+   - One evidence row per test case ID from upstream
+   - 9-column table: エビデンスID, テストケースID, テスト項目, 期待結果, 実施結果, スクリーンショット, 合否, テスター, 実施日
+   - Summary section with pass/fail counts per test level
+5. Save output to `{output.directory}/08-test/test-evidence.md`
+6. Call MCP tool `validate_document` with saved content and `doc_type: "test-evidence"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing.
+
+## `/sekkei:test-result-report @test-specs`
+
+**Prerequisite check (MUST run before interview):**
+1. Read `chain.test_plan.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Run `/sekkei:test-plan` first."
+2. Load test-plan + all available test specs (ut-spec, it-spec, st-spec, uat-spec) as `upstream_content`
+
+**Interview questions (ask before generating):**
+- Test completion date?
+- Quality criteria thresholds? (e.g., pass rate ≥95%)
+- Known issues to include?
+
+1. Use `upstream_content` prepared in prerequisite check above
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "test-result-report"`, `upstream_content`, `language` from config
+4. Follow these rules strictly:
+   - ID format: `TR-001`
+   - Result summary table per test level: 総件数, 合格, 不合格, 未実施, 合格率
+   - Defect summary by severity: 件数, 解決済, 未解決
+   - Go/No-Go judgment with quantitative criteria
+   - Cross-reference TP-xxx, UT-xxx, IT-xxx, ST-xxx, UAT-xxx from upstream
+5. Save output to `{output.directory}/08-test/test-result-report.md`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "test_result_report"`,
+   `status: "complete"`, `output: "08-test/test-result-report.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "test-result-report"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing.

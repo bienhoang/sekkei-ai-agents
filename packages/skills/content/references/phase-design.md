@@ -2,6 +2,39 @@
 
 Command workflows for the design phase of the V-model document chain.
 
+## `/sekkei:architecture-design @requirements`
+
+**Prerequisite check (MUST run before interview):**
+1. Verify `{output.directory}/02-requirements/requirements.md` exists — abort if missing: "Run `/sekkei:requirements` first."
+2. Load requirements + nfr + functions-list (if available) as `upstream_content`
+
+**Interview questions (ask before generating):**
+- Architecture pattern? (monolith, microservice, serverless, event-driven)
+- Cloud provider? (AWS, GCP, Azure, on-premise, hybrid)
+- Development methodology? (Scrum, Waterfall, SAFe)
+- Key NFR priorities? (availability, performance, security)
+
+1. Use `upstream_content` prepared in prerequisite check above
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "architecture-design"`, `upstream_content`, `language` from config
+4. Follow these rules strictly:
+   - ID format: `ARCH-001`
+   - 5 sections: システム方式, 開発方式, 運用方式, HW/NW構成, 技術選定
+   - Include Mermaid diagram for system topology
+   - Technology selection table with rationale and alternatives
+   - Cross-reference REQ-xxx, NFR-xxx from upstream
+5. Save output to `{output.directory}/03-system/architecture-design.md`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "architecture_design"`,
+   `status: "complete"`, `output: "03-system/architecture-design.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "architecture-design"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing.
+8. Suggest next steps:
+   > "Architecture design complete. Next steps:
+   > - `/sekkei:basic-design` — generate 基本設計書
+   > - `/sekkei:validate @architecture-design` — validate cross-references"
+
+---
+
 ## `/sekkei:basic-design @input`
 
 **Prerequisite check (MUST run before interview):**
@@ -191,3 +224,131 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
    > "Detail design complete. Next steps:
    > - `/sekkei:ut-spec` — generate 単体テスト仕様書
    > - `/sekkei:validate @detail-design` — validate cross-references"
+
+## `/sekkei:db-design @basic-design`
+
+**Prerequisite check (MUST run before interview):**
+1. Verify `{output.directory}/03-system/basic-design.md` exists — abort if missing: "Run `/sekkei:basic-design` first."
+2. Load basic-design + requirements + nfr as `upstream_content`
+
+**Interview questions (ask before generating):**
+- Database engine? (PostgreSQL, MySQL, Oracle, SQL Server, MongoDB)
+- Estimated data volume? (GB, TB scale)
+- Partitioning strategy needs?
+- Replication / HA requirements?
+
+1. Use `upstream_content` prepared in prerequisite check above
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "db-design"`, `upstream_content`, `language` from config
+4. Follow these rules strictly:
+   - ID format: `DB-001` for design decisions
+   - Expand all TBL-xxx from basic-design with full column definitions
+   - Include Mermaid erDiagram
+   - Index design table with purpose for each index
+   - Cross-reference TBL-xxx, REQ-xxx, NFR-xxx from upstream
+5. Save output to `{output.directory}/03-system/db-design.md`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "db_design"`,
+   `status: "complete"`, `output: "03-system/db-design.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "db-design"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing.
+
+## `/sekkei:screen-design @basic-design`
+
+**Prerequisite check (MUST run before interview):**
+1. Verify `{output.directory}/03-system/basic-design.md` exists — abort if missing: "Run `/sekkei:basic-design` first."
+2. Load basic-design as `upstream_content`
+
+**Interview questions (ask before generating):**
+- Target platform? (Web/Mobile/Desktop)
+- Design system / UI framework?
+- Accessibility requirements?
+
+1. Use `upstream_content` prepared in prerequisite check above
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "screen-design"`, `upstream_content`, `language` from config
+4. Follow these rules strictly:
+   - Screen list with SCR-xxx IDs (8 columns)
+   - Mermaid stateDiagram-v2 for transitions
+   - Per-screen: 6 sub-sections (layout, items, validation, events, transitions, permissions)
+   - YAML layout blocks for screen structure
+   - Cross-reference SCR-xxx, API-xxx from basic-design
+5. Save output to `{output.directory}/03-system/screen-design.md`
+6. Call MCP tool `validate_document` with saved content and `doc_type: "screen-design"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing.
+7. Suggest: "Run `/sekkei:mockup` to generate HTML mockups from screen definitions."
+
+## `/sekkei:interface-spec @basic-design`
+
+**Prerequisite check (MUST run before interview):**
+1. Verify `{output.directory}/03-system/basic-design.md` exists — abort if missing: "Run `/sekkei:basic-design` first."
+2. Load basic-design + requirements as `upstream_content`
+
+**Interview questions (ask before generating):**
+- External systems to integrate?
+- Protocol preferences? (REST, gRPC, MQ, file transfer)
+- SLA requirements per interface?
+
+1. Use `upstream_content` prepared in prerequisite check above
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "interface-spec"`, `upstream_content`, `language` from config
+4. Follow these rules strictly:
+   - ID format: `IF-001`
+   - Request/response schema tables with field types
+   - Error code table with retry guidance
+   - SLA per interface (availability, latency, throughput)
+   - Cross-reference API-xxx from basic-design
+5. Save output to `{output.directory}/03-system/interface-spec.md`
+6. Call MCP tool `validate_document` with saved content and `doc_type: "interface-spec"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing.
+
+## `/sekkei:report-design @basic-design`
+
+**Prerequisite check (MUST run before interview):**
+1. Verify `{output.directory}/03-system/basic-design.md` exists — abort if missing: "Run `/sekkei:basic-design` first."
+2. Load basic-design + functions-list as `upstream_content`
+
+**Interview questions (ask before generating):**
+- Report output formats? (PDF, Excel, CSV)
+- Report delivery method? (print, email, download, scheduled)
+- Paper size / layout preferences?
+
+1. Use `upstream_content` prepared in prerequisite check above
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "report-design"`, `upstream_content`, `language` from config
+4. Follow these rules strictly:
+   - Use existing RPT-xxx IDs from basic-design, add new as RPT-NNN
+   - Layout description per report (header, detail, footer, page break)
+   - Output conditions: filtering, sorting, grouping per report
+   - Data mapping: RPT field → TBL-xxx source
+   - Cross-reference F-xxx, SCR-xxx, TBL-xxx from upstream
+5. Save output to `{output.directory}/03-system/report-design.md`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "report_design"`,
+   `status: "complete"`, `output: "03-system/report-design.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "report-design"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing.
+
+## `/sekkei:batch-design @basic-design`
+
+**Prerequisite check (MUST run before interview):**
+1. Verify `{output.directory}/03-system/basic-design.md` exists — abort if missing: "Run `/sekkei:basic-design` first."
+2. Load basic-design + functions-list + nfr as `upstream_content`
+
+**Interview questions (ask before generating):**
+- Batch execution platform? (cron, AWS Step Functions, Airflow, JP1)
+- Maintenance window constraints?
+- Data volume per batch job?
+
+1. Use `upstream_content` prepared in prerequisite check above
+2. Load `sekkei.config.yaml` — get `output.directory` and `language`
+3. Call MCP tool `generate_document` with `doc_type: "batch-design"`, `upstream_content`, `language` from config
+4. Follow these rules strictly:
+   - ID format: `BATCH-001`
+   - Job list with execution timing, dependencies, retry, timeout
+   - Mermaid flowchart for job dependencies
+   - Error handling per job: retry policy, dead-letter, alert escalation
+   - Cross-reference F-xxx (batch functions), TBL-xxx, OP-xxx from upstream
+5. Save output to `{output.directory}/03-system/batch-design.md`
+6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "batch_design"`,
+   `status: "complete"`, `output: "03-system/batch-design.md"`
+7. Call MCP tool `validate_document` with saved content and `doc_type: "batch-design"`.
+   **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing.

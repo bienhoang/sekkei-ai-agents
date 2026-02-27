@@ -11,6 +11,23 @@ export interface DepthRule {
 }
 
 export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
+  "architecture-design": [
+    {
+      check: "ARCH entries",
+      test: (c: string) => (c.match(/ARCH-\d{3}/g) || []).length >= 3,
+      message: "方式設計書: ARCH-xxxが3つ以上必要です",
+    },
+    {
+      check: "architecture diagram",
+      test: (c: string) => /mermaid/.test(c),
+      message: "方式設計書: アーキテクチャ図（Mermaid）が必要です",
+    },
+    {
+      check: "technology rationale",
+      test: (c: string) => /技術選定|選定理由|代替案/.test(c),
+      message: "方式設計書: 技術選定の理由が必要です",
+    },
+  ],
   "basic-design": [
     {
       check: "screen table",
@@ -291,6 +308,69 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       check: "coverage metric",
       test: (c: string) => /カバレッジ|網羅率|網羅|coverage/.test(c),
       message: "テスト計画書: テストカバレッジの目標値が必要です",
+    },
+  ],
+  "test-result-report": [
+    {
+      check: "TR entries",
+      test: (c: string) => /\|\s*TR-\d{3}/.test(c),
+      message: "テスト結果報告書: TR-xxxが必要です",
+    },
+    {
+      check: "pass rate",
+      test: (c: string) => /合格率|pass\s*rate/i.test(c),
+      message: "テスト結果報告書: テスト合格率の記載が必要です",
+    },
+    {
+      check: "quality judgment",
+      test: (c: string) => /品質判定|総合判定|go\/no-go|合否判定/i.test(c),
+      message: "テスト結果報告書: 品質判定（go/no-go）の記載が必要です",
+    },
+  ],
+  "db-design": [
+    {
+      check: "DB entries",
+      test: (c: string) => (c.match(/DB-\d{3}/g) || []).length >= 3,
+      message: "データベース設計書: DB-xxxが3つ以上必要です",
+    },
+    {
+      check: "ER diagram",
+      test: (c: string) => /erDiagram/.test(c),
+      message: "データベース設計書: ER図（Mermaid erDiagram）が必要です",
+    },
+    {
+      check: "TBL reference",
+      test: (c: string) => /TBL-\d+/.test(c),
+      message: "データベース設計書: TBL-xxx参照が必要です",
+    },
+  ],
+  "report-design": [
+    {
+      check: "RPT entries",
+      test: (c: string) => (c.match(/RPT-\d{3}/g) || []).length >= 3,
+      message: "帳票設計書: RPT-xxxが3つ以上必要です",
+    },
+    {
+      check: "output format",
+      test: (c: string) => /PDF|Excel|CSV|帳票/.test(c),
+      message: "帳票設計書: 出力形式（PDF/Excel/CSV）の記載が必要です",
+    },
+  ],
+  "batch-design": [
+    {
+      check: "BATCH entries",
+      test: (c: string) => (c.match(/BATCH-\d{3}/g) || []).length >= 3,
+      message: "バッチ処理設計書: BATCH-xxxが3つ以上必要です",
+    },
+    {
+      check: "schedule entry",
+      test: (c: string) => /cron|スケジュール|実行タイミング|定期実行/.test(c),
+      message: "バッチ処理設計書: スケジュール定義が必要です",
+    },
+    {
+      check: "error handling",
+      test: (c: string) => /リトライ|タイムアウト|エラー|異常終了/.test(c),
+      message: "バッチ処理設計書: エラーハンドリング方針が必要です",
     },
   ],
   "test-evidence": [

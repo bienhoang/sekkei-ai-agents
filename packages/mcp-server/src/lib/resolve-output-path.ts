@@ -16,6 +16,7 @@ export function resolveOutputPath(
   if (docType === "functions-list")      return "04-functions-list/functions-list.md";
 
   // Design phase
+  if (docType === "architecture-design") return "03-system/architecture-design.md";
   if (docType === "basic-design") {
     if (scope === "shared")  return "03-system/";
     if (scope === "feature" && featureName) return `05-features/${featureName}/basic-design.md`;
@@ -27,6 +28,10 @@ export function resolveOutputPath(
     if (scope === "feature" && featureName) return `05-features/${featureName}/detail-design.md`;
     return "03-system/detail-design.md";
   }
+
+  if (docType === "db-design")           return "03-system/db-design.md";
+  if (docType === "report-design")       return "03-system/report-design.md";
+  if (docType === "batch-design")        return "03-system/batch-design.md";
 
   // Test phase — nested under 08-test/
   if (docType === "test-plan")           return "08-test/test-plan.md";
@@ -40,6 +45,7 @@ export function resolveOutputPath(
   }
   if (docType === "st-spec")             return "08-test/st-spec.md";
   if (docType === "uat-spec")            return "08-test/uat-spec.md";
+  if (docType === "test-result-report")  return "08-test/test-result-report.md";
 
   // Supplementary
   if (docType === "crud-matrix")         return "03-system/crud-matrix.md";
@@ -47,6 +53,11 @@ export function resolveOutputPath(
   if (docType === "sitemap")             return "03-system/sitemap.md";
   if (docType === "migration-design")    return "06-data/migration-design.md";
   if (docType === "operation-design")    return "07-operations/operation-design.md";
+  if (docType === "screen-design")       return "09-ui/screen-design.md";
+  if (docType === "interface-spec")      return "09-ui/interface-spec.md";
+  if (docType === "test-evidence")       return "08-test/test-evidence.md";
+  if (docType === "meeting-minutes")     return "02-requirements/meeting-minutes.md";
+  if (docType === "decision-record")     return "03-system/decision-record.md";
 
   return undefined;
 }

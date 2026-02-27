@@ -2,13 +2,13 @@
 
 ## Repository Overview
 
-**Sekkei (設計)** v2.6.3 is a monorepo containing:
-- **@bienhoang/sekkei-mcp-server** (TypeScript/194 source files/~9,500+ LOC) — AI specification document generation with V-model chain + 5 quality-scoring libs + Phase A features
+**Sekkei (設計)** v2.7.0 is a monorepo containing:
+- **@bienhoang/sekkei-mcp-server** (TypeScript/194 source files/~10,000+ LOC) — IPA V-Model compliant specification generation with 27 doc types + 5 quality-scoring libs + Phase A SIer features
 - **@bienhoang/sekkei-preview** (Express + React + Tiptap v3) — Live preview with WYSIWYG editor
-- **@bienhoang/sekkei-dashboard** (React + Express + Recharts, NEW) — Analytics dashboard with quality metrics, traceability graphs, snapshots
-- **@bienhoang/sekkei-skills** (Claude Code SKILL.md with 31+ sub-commands) — Claude Code skill definition + reference docs
+- **@bienhoang/sekkei-dashboard** (React + Express + Recharts) — Analytics dashboard with quality metrics, traceability graphs, snapshots
+- **@bienhoang/sekkei-skills** (Claude Code SKILL.md with 40+ sub-commands) — Claude Code skill definition + reference docs for all 27 doc types + workflow commands
 - **Python Layer** (7 files) — Export & NLP utilities (Excel/PDF/DOCX/matrix)
-- **Templates** (22 MD + 15 YAML glossaries + 9 wireframe CSS) — Japanese specification templates with industry terminology
+- **Templates** (27 MD IPA-compliant + 15 YAML glossaries + 9 wireframe CSS) — Japanese specification templates per IPA V-Model with review metadata
 - **Adapters** — Cursor (mcp.json), Copilot (copilot-instructions.md), Claude Code integration
 - **Plans & Docs** — Implementation plans, research reports, documentation
 
@@ -31,9 +31,9 @@ sekkei/
 │   │   │   │   ├── template-loader.ts # Load templates from disk
 │   │   │   │   ├── template-resolver.ts # Override dir logic
 │   │   │   │   ├── python-bridge.ts   # Execute Python CLI via execFile (7 whitelisted actions)
-│   │   │   │   ├── resolve-output-path.ts # Doc type → numbered path mapping
+│   │   │   │   ├── resolve-output-path.ts # Doc type → numbered path mapping (IPA v-model phases)
 │   │   │   │   ├── structure-validator.ts # Validate numbered directories
-│   │   │   │   ├── id-extractor.ts    # Extract F-xxx, REQ-xxx IDs (19 prefixes)
+│   │   │   │   ├── id-extractor.ts    # Extract F-xxx, REQ-xxx IDs (25 prefixes, IPA v2.7)
 │   │   │   │   ├── generation-instructions.ts # Build AI prompts
 │   │   │   │   ├── screen-design-instructions.ts # Screen mockup specifics
 │   │   │   │   ├── code-analyzer.ts   # TypeScript AST analysis (v3, 225 LOC)
@@ -51,7 +51,7 @@ sekkei/
 │   │   │   │   ├── content-sanitizer.ts # Strip internal metadata (Phase A, 29 LOC)
 │   │   │   │   ├── excel-template-filler.ts # Named-range Excel filling (Phase A, 168 LOC)
 │   │   │   │   ├── font-manager.ts    # PDF CJK font support (Phase A, 53 LOC)
-│   │   │   │   ├── cross-ref-linker.ts # V-model CHAIN_PAIRS (57 edges), ID extraction, deriveUpstreamIdTypes (v2.1 audit fixes)
+│   │   │   │   ├── cross-ref-linker.ts # V-model CHAIN_PAIRS (68 edges IPA v2.7), ID extraction, deriveUpstreamIdTypes
 │   │   │   │   ├── completeness-rules.ts # Document completeness checks (71 LOC)
 │   │   │   │   ├── keigo-validator.ts # Japanese politeness validation (199 LOC)
 │   │   │   │   ├── cr-state-machine.ts # CR state machine, YAML persistence, CRUD (180 LOC)
@@ -165,35 +165,41 @@ sekkei/
 │   │   └── package.json
 │   └── skills/                        # @bienhoang/sekkei-skills (Claude Code Skill)
 │       └── sekkei/
-│           ├── SKILL.md               # Skill definition (30+ sub-commands)
+│           ├── SKILL.md               # Skill definition (40+ sub-commands for all doc types)
 │           ├── content/               # Skill definition files
-│           └── references/ (6 files)
+│           └── references/ (8+ files)
+│               ├── phase-requirements.md, phase-design.md, phase-test.md
 │               ├── doc-standards.md, v-model-guide.md
 │               ├── plan-orchestrator.md, rfp-manager.md, rfp-command.md
-├── templates/                     # Specification Templates (22 MD + 15 YAML)
-│   ├── ja/                        # Japanese templates (22 files)
-│   │   ├── basic-design.md        # Basic design (split)
+├── templates/                     # IPA V-Model Compliant Templates (27 MD + 15 YAML)
+│   ├── ja/                        # Japanese templates (27 IPA-compliant files)
+│   │   ├── architecture-design.md # 方式設計書 (IPA architectural layer, ARC-)
+│   │   ├── basic-design.md        # 基本設計書 (split, SCR-/TBL-)
+│   │   ├── batch-design.md        # バッチ処理設計書 (IPA operational, BATCH-)
 │   │   ├── crud-matrix.md         # CRUD matrix
-│   │   ├── decision-record.md     # 設計決定記録 ADRs (Phase A)
-│   │   ├── detail-design.md       # Detail design (split by feature)
-│   │   ├── functions-list.md      # Feature/function catalog
-│   │   ├── interface-spec.md      # インターフェース仕様書 (Phase A)
-│   │   ├── it-spec.md             # Integration test specification (v2.0)
-│   │   ├── meeting-minutes.md     # 議事録 meeting records (Phase A)
-│   │   ├── migration-design.md    # Data/migration design
-│   │   ├── nfr.md                 # Non-functional requirements (v2.0)
-│   │   ├── operation-design.md    # Operation procedures
-│   │   ├── project-plan.md        # Project plan (v2.0)
-│   │   ├── requirements.md        # Requirements specification
-│   │   ├── screen-design.md       # Screen design/mockups
-│   │   ├── security-design.md     # Security design (v2.0)
-│   │   ├── sitemap.md             # Site map (v2.0)
-│   │   ├── st-spec.md             # System test specification (v2.0)
-│   │   ├── test-evidence.md       # Test evidence collection (Phase A)
-│   │   ├── test-plan.md           # Test plan (v2.0)
-│   │   ├── traceability-matrix.md # Traceability matrix
-│   │   ├── uat-spec.md            # UAT specification (v2.0)
-│   │   └── ut-spec.md             # Unit test specification (v2.0)
+│   │   ├── db-design.md           # データベース設計書 (IPA layer, DB-)
+│   │   ├── decision-record.md     # 設計決定記録 ADRs (ADR-)
+│   │   ├── detail-design.md       # 詳細設計書 (split by feature, API-/CLS-)
+│   │   ├── functions-list.md      # 機能一覧 (F-)
+│   │   ├── interface-spec.md      # IF仕様書 (IF-)
+│   │   ├── it-spec.md             # 結合テスト仕様書 (IT-)
+│   │   ├── meeting-minutes.md     # 議事録 (MTG-)
+│   │   ├── migration-design.md    # 移行設計書 (MIG-)
+│   │   ├── nfr.md                 # 非機能要件定義書 (NFR-, IPA grades + 検印欄)
+│   │   ├── operation-design.md    # 運用設計書 (OP-)
+│   │   ├── project-plan.md        # プロジェクト計画書
+│   │   ├── report-design.md       # 帳票仕様書 (IPA operational, RPT-)
+│   │   ├── requirements.md        # 要件定義書 (REQ-)
+│   │   ├── screen-design.md       # 画面設計書 (SCN-)
+│   │   ├── security-design.md     # セキュリティ設計書 (SEC-)
+│   │   ├── sitemap.md             # サイトマップ
+│   │   ├── st-spec.md             # システムテスト仕様書 (ST-)
+│   │   ├── test-evidence.md       # テストエビデンス (EV-)
+│   │   ├── test-plan.md           # テスト計画書 (TST-)
+│   │   ├── test-result-report.md  # テスト結果報告書 (IPA layer, TR-)
+│   │   ├── traceability-matrix.md # トレーサビリティマトリックス
+│   │   ├── uat-spec.md            # 受入テスト仕様書 (UAT-)
+│   │   └── ut-spec.md             # 単体テスト仕様書 (UT-)
 │   ├── shared/                    # Language-neutral templates (4 files)
 │   │   ├── cover-page.md          # Cover page
 │   │   ├── feature-index.md       # Feature index

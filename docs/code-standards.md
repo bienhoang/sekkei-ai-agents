@@ -108,7 +108,7 @@ const MAX_MANIFEST_SIZE = 50 * 1024; // 50KB
 const REQUIRED_FILES = ["04-functions-list.md", "10-glossary.md"];
 const VERSION_SUFFIX_RE = /-(v\d+|final|old|copy)\./i;
 const KEBAB_RE = /^[a-z][a-z0-9-]+$/;
-const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|TS|SEC|PP|TP|UT|IT|ST|UAT|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
+const ID_PATTERN = /\b(F|REQ|NFR|ARC|DB|SEC|SCR|TBL|API|CLS|OP|MIG|BATCH|RPT|SCN|TST|UT|IT|ST|UAT|TR|EV|MTG|ADR|IF)-(\d{1,4})\b/g;
 ```
 
 ### Classes & Types
@@ -147,27 +147,37 @@ For documentation and comments, use katakana for foreign words:
 const templateFormat = "markdown";
 ```
 
-## Cross-Reference ID Prefixes
+## Cross-Reference ID Prefixes (25 Total — IPA v2.7)
 
 All extracted IDs follow the pattern `{PREFIX}-{NUMBER}` (e.g., `REQ-001`). Register new prefixes in `id-extractor.ts`:
 
-| Prefix | Document Type | Description | Example |
-|--------|---------------|-------------|---------|
-| F- | functions-list | Feature/function ID | F-001 |
-| REQ- | requirements | Requirement ID | REQ-003 |
-| SCR- | basic-design, detail-design | Screen/component ID | SCR-010 |
-| TBL- | basic-design, detail-design | Table/database ID | TBL-005 |
-| API- | detail-design | API endpoint ID | API-008 |
-| CLS- | detail-design | Class/entity ID | CLS-012 |
-| UT- | ut-spec | Unit test case ID | UT-020 |
-| IT- | it-spec | Integration test case ID | IT-015 |
-| ST- | st-spec | System test case ID | ST-010 |
-| UAT- | uat-spec | User acceptance test case ID | UAT-003 |
-| EV- | test-evidence | Evidence entry ID | EV-001 |
-| MTG- | meeting-minutes | Meeting record ID | MTG-001 |
-| ADR- | decision-record | Architecture Decision Record | ADR-001 |
-| IF- | interface-spec | Interface specification ID | IF-001 |
-| PG- | screen-design | Screen design/mockup ID | PG-001 |
+| Prefix | Document Type | Phase | Description | Example |
+|--------|---------------|-------|-------------|---------|
+| F- | functions-list | requirements | Feature/function ID | F-001 |
+| REQ- | requirements | requirements | Requirement ID | REQ-003 |
+| NFR- | nfr | requirements | Non-functional requirement ID | NFR-005 |
+| ARC- | architecture-design | design | Architecture layer ID | ARC-001 |
+| DB- | db-design | design | Database/table ID | DB-005 |
+| SEC- | security-design | design | Security specification ID | SEC-002 |
+| SCR- | basic-design | design | Screen/component ID | SCR-010 |
+| TBL- | basic-design | design | Table/entity ID | TBL-005 |
+| API- | detail-design | design | API endpoint ID | API-008 |
+| CLS- | detail-design | design | Class/entity ID | CLS-012 |
+| OP- | operation-design | supplementary | Operations procedure ID | OP-003 |
+| MIG- | migration-design | supplementary | Migration step ID | MIG-007 |
+| BATCH- | batch-design | supplementary | Batch processing ID | BATCH-001 |
+| RPT- | report-design | supplementary | Report/form ID | RPT-004 |
+| SCN- | screen-design | supplementary | Screen design/mockup ID | SCN-015 |
+| TST- | test-plan | test | Test plan section ID | TST-001 |
+| UT- | ut-spec | test | Unit test case ID | UT-020 |
+| IT- | it-spec | test | Integration test case ID | IT-015 |
+| ST- | st-spec | test | System test case ID | ST-010 |
+| UAT- | uat-spec | test | User acceptance test case ID | UAT-003 |
+| TR- | test-result-report | test | Test result/evidence ID | TR-001 |
+| EV- | test-evidence | supplementary | Test evidence entry ID | EV-001 |
+| MTG- | meeting-minutes | supplementary | Meeting record ID | MTG-001 |
+| ADR- | decision-record | supplementary | Architecture Decision Record | ADR-001 |
+| IF- | interface-spec | supplementary | Interface specification ID | IF-001 |
 
 **Rules:**
 - Each prefix must be unique (no collisions across documents)

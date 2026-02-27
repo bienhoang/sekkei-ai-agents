@@ -8,6 +8,8 @@ sections:
   - system-overview
   - sitemap-tree
   - page-list
+review_date: ""
+approval_date: ""
 status: draft
 author: ""
 reviewer: ""

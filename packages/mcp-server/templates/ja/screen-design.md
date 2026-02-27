@@ -17,6 +17,8 @@ sections:
   - screen-transition
   - api-mapping
   - permissions
+review_date: ""
+approval_date: ""
 status: draft
 author: ""
 reviewer: ""

@@ -4,8 +4,8 @@
  */
 import type { CoverageMetrics } from "../types/documents.js";
 
-const DESIGN_DOCS = new Set(["basic-design", "detail-design", "security-design"]);
-const TEST_DOCS = new Set(["ut-spec", "it-spec", "st-spec", "uat-spec", "test-plan"]);
+const DESIGN_DOCS = new Set(["basic-design", "detail-design", "security-design", "architecture-design", "db-design", "report-design", "batch-design"]);
+const TEST_DOCS = new Set(["ut-spec", "it-spec", "st-spec", "uat-spec", "test-plan", "test-result-report"]);
 const REQUIREMENTS_DOCS = new Set(["requirements"]);
 
 /**

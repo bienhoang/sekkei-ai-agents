@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, basic-design, security-design, detail-design, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, architecture-design, basic-design, security-design, detail-design, db-design, report-design, batch-design, screen-design, interface-spec, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, test-result-report, test-evidence, meeting-minutes, decision-record, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, dashboard, plan, implement, version, uninstall, rebuild"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -20,9 +20,15 @@ All user-facing output (document content, prompts, confirmations) must use `proj
 - `/sekkei:project-plan @req`     — プロジェクト計画書
 
 ### Design Phase
+- `/sekkei:architecture-design @req` — 方式設計書 (Architecture Design)
 - `/sekkei:basic-design @input`     — 基本設計書
 - `/sekkei:security-design @bd`     — セキュリティ設計書
 - `/sekkei:detail-design @input`    — 詳細設計書
+- `/sekkei:db-design @bd`           — データベース設計書 (DB Design)
+- `/sekkei:screen-design @bd`       — 画面設計書 (Screen Design)
+- `/sekkei:interface-spec @bd`      — IF仕様書 (Interface Spec)
+- `/sekkei:report-design @bd`       — 帳票設計書 (Report/Form Design)
+- `/sekkei:batch-design @bd`        — バッチ処理設計書 (Batch Design)
 
 ### Test Phase
 - `/sekkei:test-plan @req`          — テスト計画書
@@ -30,11 +36,17 @@ All user-facing output (document content, prompts, confirmations) must use `proj
 - `/sekkei:it-spec @basic-design`   — 結合テスト仕様書
 - `/sekkei:st-spec @basic-design`   — システムテスト仕様書
 - `/sekkei:uat-spec @requirements`  — 受入テスト仕様書
+- `/sekkei:test-result-report @test-specs` — テスト結果報告書 (Test Result Report)
+- `/sekkei:test-evidence @test-spec` — テストエビデンス (Test Evidence)
+
+### Management Phase
+- `/sekkei:meeting-minutes @notes`  — 議事録 (Meeting Minutes)
+- `/sekkei:decision-record @notes`  — 設計判断記録 (Architecture Decision Record)
 
 ## Other Commands
 
 - `/sekkei:rfp [@project-name]` — Presales RFP lifecycle (analyze → Q&A → proposal → scope freeze)
-- `/sekkei:matrix` — Generate CRUD図 or トレーサビリティマトリックス and export to Excel
+- `/sekkei:matrix [crud|traceability]` — Generate CRUD図 or トレーサビリティマトリックス (auto-detect from chain or specify type)
 - `/sekkei:sitemap` — Generate サイトマップ (System Structure Map) with page hierarchy
 - `/sekkei:mockup` — Generate HTML screen mockups from screen definitions
 - `/sekkei:operation-design @input` — Generate 運用設計書 (Operation Design)
@@ -81,7 +93,7 @@ Commands: requirements, functions-list, nfr, project-plan
 ### Design Phase
 
 → Read `references/phase-design.md`
-Commands: basic-design, security-design, detail-design
+Commands: architecture-design, basic-design, security-design, detail-design, db-design, screen-design, interface-spec, report-design, batch-design
 
 ### Screen Mockups
 
@@ -92,7 +104,12 @@ Commands: mockup
 ### Test Phase
 
 → Read `references/phase-test.md`
-Commands: test-plan, ut-spec, it-spec, st-spec, uat-spec
+Commands: test-plan, ut-spec, it-spec, st-spec, uat-spec, test-result-report, test-evidence
+
+### Management Phase
+
+→ Read `references/phase-management.md`
+Commands: meeting-minutes, decision-record
 
 ### Supplementary
 
@@ -107,7 +124,7 @@ Commands: change
 ### Utilities
 
 → Read `references/utilities.md`
-Commands: validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild
+Commands: validate, status, export, translate, glossary, update, diff-visual, preview, dashboard, plan, implement, version, uninstall, rebuild
 
 ## Document Chain
 
@@ -119,15 +136,26 @@ RFP (/sekkei:rfp)
         ├─► NFR (/sekkei:nfr)
         ├─► Functions List (/sekkei:functions-list)
         ├─► Project Plan (/sekkei:project-plan)
+        ├─► Architecture Design (/sekkei:architecture-design) ← req + nfr
         └─► Glossary (/sekkei:glossary import|add)
               └─► Basic Design (/sekkei:basic-design)
                     ├─► Security Design (/sekkei:security-design)
                     ├─► Detail Design (/sekkei:detail-design)
-                    └─► Test Plan (/sekkei:test-plan)        ← requirements + nfr + basic-design
-                          ├─► UT Spec (/sekkei:ut-spec)      ← detail-design + test-plan
-                          ├─► IT Spec (/sekkei:it-spec)      ← basic-design + test-plan
-                          ├─► ST Spec (/sekkei:st-spec)      ← basic-design + functions-list + test-plan
-                          └─► UAT Spec (/sekkei:uat-spec)    ← requirements + nfr + test-plan
+                    ├─► DB Design (/sekkei:db-design)           ← basic-design + nfr
+                    ├─► Screen Design (/sekkei:screen-design)   ← basic-design
+                    ├─► Interface Spec (/sekkei:interface-spec) ← basic-design + req
+                    ├─► Report Design (/sekkei:report-design)   ← basic-design
+                    ├─► Batch Design (/sekkei:batch-design)     ← basic-design + functions-list
+                    └─► Test Plan (/sekkei:test-plan)           ← req + nfr + basic-design
+                          ├─► UT Spec (/sekkei:ut-spec)         ← detail-design + test-plan
+                          ├─► IT Spec (/sekkei:it-spec)         ← basic-design + test-plan
+                          ├─► ST Spec (/sekkei:st-spec)         ← basic-design + fl + test-plan
+                          ├─► UAT Spec (/sekkei:uat-spec)       ← req + nfr + test-plan
+                          ├─► Test Evidence (/sekkei:test-evidence) ← test-specs
+                          └─► Test Result Report (/sekkei:test-result-report) ← all test-specs
+Management (standalone):
+  ├─► Meeting Minutes (/sekkei:meeting-minutes)
+  └─► Decision Record (/sekkei:decision-record)
 ```
 
 ## Split Mode
@@ -162,8 +190,9 @@ workspace-docs/
 ## References
 
 - `references/phase-requirements.md` — Requirements phase: functions-list, requirements, nfr, project-plan
-- `references/phase-design.md` — Design phase: basic-design, security-design, detail-design
-- `references/phase-test.md` — Test phase: test-plan, ut-spec, it-spec, st-spec, uat-spec
+- `references/phase-design.md` — Design phase: architecture-design, basic-design, security-design, detail-design, db-design, screen-design, interface-spec, report-design, batch-design
+- `references/phase-test.md` — Test phase: test-plan, ut-spec, it-spec, st-spec, uat-spec, test-result-report, test-evidence
+- `references/phase-management.md` — Management: meeting-minutes, decision-record
 - `references/phase-supplementary.md` — Supplementary: matrix, sitemap, operation-design, migration-design
 - `references/utilities.md` — Utilities: validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild
 - `references/rfp-command.md` — RFP entrypoint: UX patterns, progress dashboard, navigation

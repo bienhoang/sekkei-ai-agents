@@ -11,6 +11,8 @@ sections:
   - test-cases
   - traceability
   - defect-report
+review_date: ""
+approval_date: ""
 status: draft
 author: ""
 reviewer: ""
@@ -38,6 +40,14 @@ approver: ""
 | 承認者 | | |
 
 <!-- AI: Leave 氏名 and 日付 blank — these are filled by humans after review. -->
+
+## 検印欄
+
+| レビュー段階 | レビュー者 | レビュー日 | 指摘件数 | 判定 |
+|------------|----------|----------|---------|------|
+| 第1回レビュー | | | | |
+| 第2回レビュー | | | | |
+| 最終承認 | | | | |
 
 ## 配布先 <!-- required -->
 

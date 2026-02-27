@@ -145,52 +145,61 @@ Quality Metrics Libraries (in MCP Server):
 - **batch-validator.ts** — Config-driven multi-doc validation
 - **nfr-classifier.ts** — IPA NFUG categories (Availability, Performance, etc.)
 
-## Document Chain (V-Model) — v2.0
+## Document Chain (V-Model) — v2.7 (IPA Compliant)
 
-### Branching Chain Structure with Chain Pairs (v2.1 audit fixes)
+### IPA V-Model Chain Structure with Full Compliance
 
 ```
 RFP (提案依頼書)
   ↓
-Requirements (要件定義書)
-  ├─→ NFR (非機能要件)
+Requirements Phase (要件定義)
+  ├─→ Requirements (要件定義書)
+  ├─→ NFR (非機能要件定義書) — IPA grades + review metadata
   ├─→ Functions List (機能一覧)
   ├─→ Project Plan (プロジェクト計画)
-  └─→ Interface Spec (インターフェース仕様書) [NEW]
+  └─→ Interface Spec (インターフェース仕様書)
   ↓
-Basic Design (基本設計書) ← Split into system + features
-  ├─← NFR (非機能要件) [NEW edge]
+Design Phase (設計)
+  ├─→ Architecture Design (アーキテクチャ設計) [IPA v-model layer]
+  ├─→ Basic Design (基本設計書) — Split: system + features
   ├─→ Security Design (セキュリティ設計書)
-  ├─→ Detail Design (詳細設計書) ← Split by feature
-  ├─→ Screen Design (画面設計書) [NEW edge]
-  └─→ Interface Spec [NEW edge]
+  ├─→ DB Design (データベース設計) [IPA v-model layer]
+  ├─→ Detail Design (詳細設計書) — Per-feature, split
+  ├─→ Operation Design (運用設計書)
+  ├─→ Migration Design (移行設計書)
+  └─→ Screen Design (画面設計書)
   ↓
-Test Plan (テスト計画)
-  ├─← Functions List [NEW edge]
+Test Phase (テスト)
+  ├─→ Test Plan (テスト計画)
   ├─→ UT Spec (単体テスト仕様書)
   ├─→ IT Spec (結合テスト仕様書)
   ├─→ ST Spec (システムテスト仕様書)
-  └─→ UAT Spec (受入テスト仕様書)
+  ├─→ UAT Spec (受入テスト仕様書)
+  └─→ Test Result Report (テスト結果報告) [IPA v-model layer]
   ↓
-[Supplementary in parallel]:
+[Supplementary Documents — Parallel]:
+  ├─ Batch Design (バッチ処理設計) [IPA v-model]
+  ├─ Report Design (帳票仕様書) [IPA v-model]
+  ├─ CRUD Matrix (CRUD矩陣)
+  ├─ Traceability Matrix (トレーサビリティ矩陣)
   ├─ Test Evidence (テストエビデンス)
   ├─ Meeting Minutes (議事録)
-  ├─ Architecture Decision Records (設計決定記録)
-  ├─ Screen Design (画面設計書)
-  ├─ Interface Spec (インターフェース仕様書)
-  ├─ Operation Design (運用設計書)
-  └─ Migration Design (移行設計書)
+  └─ Architecture Decision Records (設計決定記録)
   ↓
 Glossary (用語集)
 ```
 
-**Key Changes (v2.1 audit):**
-- Added `nfr → basic-design` edge (NFR shapes system architecture)
-- Added `basic-design → screen-design`, `basic-design → interface-spec`, `requirements → interface-spec` edges (chain integration for supplementary docs)
-- Added `functions-list → test-plan` edge (function inventory feeds test scope estimation)
-- Added `test_evidence`, `meeting_minutes`, `decision_record` to CHAIN_DISPLAY_ORDER for visibility in chain status
-- Removed self-referential `screen-design → screen-design` pair (DAG correctness)
-- Total CHAIN_PAIRS: 57 edges (up from 53)
+**Key Improvements (v2.7 IPA Compliance):**
+- Added `architecture-design` — explicit architectural layer per IPA V-Model
+- Added `db-design` — separate database schema documentation per IPA
+- Added `test-result-report` — test execution reporting per IPA test phase
+- Added `batch-design` and `report-design` — operational/supplementary layers per IPA
+- Updated `nfr.md` with IPA NFUG grade tables (6 categories: Availability, Performance, Operability, Migration, Security, Ecology)
+- All 27 templates include enterprise review metadata:
+  - `review_date`, `approval_date` in frontmatter
+  - 検印欄 (review sign-off table) with 3 review stages (第1回, 第2回, 最終承認)
+- CHAIN_PAIRS extended to 68 edges supporting new document relationships
+- Enterprise preset updated with all new types
 
 ### Output Structure (Numbered Format) — v2.0
 
@@ -261,36 +270,48 @@ project-output/
 - Each numbered directory has `index.md` for navigation
 - Split documents reference files via manifest (`_index.yaml`)
 
-## Document Types & Templates — v2.0
+## Document Types & Templates — v2.7 (IPA V-Model Compliant)
 
-| Type | File | Phase | Split? | Output Path | Scope |
-|------|------|-------|--------|-------------|-------|
-| requirements | `ja/requirements.md` | requirements | No | `02-requirements/requirements.md` | Project-level |
-| nfr | `ja/nfr.md` | requirements | No | `02-requirements/nfr.md` | Non-functional (NEW) |
-| functions-list | `ja/functions-list.md` | requirements | No | `04-functions-list.md` | Feature catalog |
-| project-plan | `ja/project-plan.md` | requirements | No | `02-requirements/project-plan.md` | Project planning (NEW) |
-| basic-design | `ja/basic-design.md` | design | Yes | `03-system/`, `05-features/{name}/` | System + per-feature |
-| security-design | `ja/security-design.md` | design | No | `03-system/security-design.md` | Security design (NEW) |
-| detail-design | `ja/detail-design.md` | design | Yes | `05-features/{name}/` | Per-feature only |
-| test-plan | `ja/test-plan.md` | test | No | `08-test/test-plan.md` | Test planning (NEW) |
-| ut-spec | `ja/ut-spec.md` | test | No | `08-test/ut-spec.md` | Unit tests (NEW) |
-| it-spec | `ja/it-spec.md` | test | No | `08-test/it-spec.md` | Integration tests (NEW) |
-| st-spec | `ja/st-spec.md` | test | No | `08-test/st-spec.md` | System tests (NEW) |
-| uat-spec | `ja/uat-spec.md` | test | No | `08-test/uat-spec.md` | Acceptance tests (NEW) |
-| crud-matrix | `ja/crud-matrix.md` | supplementary | No | `03-system/crud-matrix.md` | System-level |
-| traceability-matrix | `ja/traceability-matrix.md` | supplementary | No | `08-test/traceability-matrix.md` | Test-level |
-| operation-design | `ja/operation-design.md` | supplementary | No | `07-operations/` | Operational |
-| migration-design | `ja/migration-design.md` | supplementary | No | `06-data/` | Data/migration |
-| screen-design | `ja/screen-design.md` | supplementary | No | `09-ui/screen-design.md` | UI/screen mockups |
-| test-evidence | `ja/test-evidence.md` | supplementary | Yes | `08-test/evidence/` | Test evidence collection |
-| meeting-minutes | `ja/meeting-minutes.md` | supplementary | No | `meeting-minutes.md` | Meeting records (議事録) |
-| decision-record | `ja/decision-record.md` | supplementary | No | `decision-records.md` | Architecture decisions (ADR) |
-| interface-spec | `ja/interface-spec.md` | supplementary | No | `interface-spec.md` | Multi-vendor interfaces |
-| sitemap | `ja/sitemap.md` | supplementary | No | `sitemap.md` | Site structure (NEW) |
+| Type | File | Phase | Split? | Output Path | ID Prefix | Scope |
+|------|------|-------|--------|-------------|-----------|-------|
+| requirements | `ja/requirements.md` | requirements | No | `02-requirements/requirements.md` | REQ- | Project-level |
+| nfr | `ja/nfr.md` | requirements | No | `02-requirements/nfr.md` | NFR- | Non-functional (IPA grades) |
+| functions-list | `ja/functions-list.md` | requirements | No | `04-functions-list.md` | F- | Feature catalog |
+| project-plan | `ja/project-plan.md` | requirements | No | `02-requirements/project-plan.md` | - | Project planning |
+| basic-design | `ja/basic-design.md` | design | Yes | `03-system/`, `05-features/{name}/` | SCR-, TBL- | System + per-feature |
+| architecture-design | `ja/architecture-design.md` | design | No | `03-system/architecture-design.md` | ARC- | High-level architecture (IPA v-model) |
+| security-design | `ja/security-design.md` | design | No | `03-system/security-design.md` | SEC- | Security design |
+| db-design | `ja/db-design.md` | design | No | `03-system/db-design.md` | DB- | Database schema (IPA) |
+| detail-design | `ja/detail-design.md` | design | Yes | `05-features/{name}/` | API-, CLS- | Per-feature implementation |
+| test-plan | `ja/test-plan.md` | test | No | `08-test/test-plan.md` | TST- | Test planning |
+| ut-spec | `ja/ut-spec.md` | test | No | `08-test/ut-spec.md` | UT- | Unit tests |
+| it-spec | `ja/it-spec.md` | test | No | `08-test/it-spec.md` | IT- | Integration tests |
+| st-spec | `ja/st-spec.md` | test | No | `08-test/st-spec.md` | ST- | System tests |
+| uat-spec | `ja/uat-spec.md` | test | No | `08-test/uat-spec.md` | UAT- | Acceptance tests |
+| test-result-report | `ja/test-result-report.md` | test | No | `08-test/test-result-report.md` | TR- | Test results (IPA) |
+| crud-matrix | `ja/crud-matrix.md` | supplementary | No | `03-system/crud-matrix.md` | - | System-level |
+| traceability-matrix | `ja/traceability-matrix.md` | supplementary | No | `08-test/traceability-matrix.md` | - | Test-level |
+| operation-design | `ja/operation-design.md` | supplementary | No | `07-operations/` | OP- | Operational procedures |
+| migration-design | `ja/migration-design.md` | supplementary | No | `06-data/` | MIG- | Data migration |
+| batch-design | `ja/batch-design.md` | supplementary | No | `07-operations/batch-design.md` | BATCH- | Batch processing (IPA) |
+| report-design | `ja/report-design.md` | supplementary | No | `07-operations/report-design.md` | RPT- | Report specifications (IPA) |
+| screen-design | `ja/screen-design.md` | supplementary | No | `09-ui/screen-design.md` | SCN- | UI/screen mockups |
+| test-evidence | `ja/test-evidence.md` | supplementary | Yes | `08-test/evidence/` | EV- | Test evidence collection |
+| meeting-minutes | `ja/meeting-minutes.md` | supplementary | No | `meeting-minutes.md` | MTG- | Meeting records |
+| decision-record | `ja/decision-record.md` | supplementary | No | `decision-records.md` | ADR- | Architecture decisions |
+| interface-spec | `ja/interface-spec.md` | supplementary | No | `interface-spec.md` | IF- | Multi-vendor interfaces |
+| sitemap | `ja/sitemap.md` | supplementary | No | `sitemap.md` | - | Site structure |
 
-**Split Document Types:** Only `basic-design` and `detail-design` support feature-level splitting. Others are single-file in directories or standalone.
+**Split Document Types:** `basic-design` and `detail-design` support feature-level splitting. Others are single-file in directories or standalone.
 
-**Removed:** `overview` document type — functionality merged into requirements phase.
+**IPA Compliance Changes (v2.7):**
+- Added `architecture-design` — explicit high-level design phase per IPA V-Model
+- Added `db-design` — separate database schema documentation
+- Added `test-result-report` — test execution results and evidence reporting
+- Added `batch-design` — batch/scheduled processing specifications
+- Added `report-design` — report output format specifications
+- Updated `nfr.md` template with IPA grade tables (Availability, Performance, Operability, Migration, Security, Ecology)
+- All 27 templates include review metadata: `review_date`, `approval_date`, `検印欄` (review sign-off table)
 
 ## Core Components
 
@@ -681,19 +702,37 @@ features:
 6. Python creates Excel/PDF using openpyxl/weasyprint
 7. Return export result
 
-## Cross-Reference System
+## Cross-Reference System — v2.7 Expanded
 
-### ID Patterns by Document
+### ID Patterns by Document (20 Prefixes)
 
-| Doc Type | ID Prefix | Example |
-|----------|-----------|---------|
-| functions-list | F- | F-001, F-002 |
-| requirements | REQ- | REQ-001, REQ-002 |
-| basic-design (screen) | SCR- | SCR-001, SCR-002 |
-| basic-design (table) | TBL- | TBL-001, TBL-002 |
-| detail-design (API) | API- | API-001, API-002 |
-| detail-design (class) | CLS- | CLS-001, CLS-002 |
-| ut-spec / it-spec / st-spec / uat-spec | UT-, IT-, ST-, UAT- | UT-001, IT-001, ST-001, UAT-001 |
+| Doc Type | ID Prefix | Example | Phase |
+|----------|-----------|---------|-------|
+| functions-list | F- | F-001, F-002 | requirements |
+| requirements | REQ- | REQ-001, REQ-002 | requirements |
+| nfr | NFR- | NFR-001, NFR-002 | requirements |
+| basic-design (screen) | SCR- | SCR-001, SCR-002 | design |
+| basic-design (table) | TBL- | TBL-001, TBL-002 | design |
+| architecture-design | ARC- | ARC-001, ARC-002 | design |
+| security-design | SEC- | SEC-001, SEC-002 | design |
+| db-design | DB- | DB-001, DB-002 | design |
+| detail-design (API) | API- | API-001, API-002 | design |
+| detail-design (class) | CLS- | CLS-001, CLS-002 | design |
+| operation-design | OP- | OP-001, OP-002 | supplementary |
+| migration-design | MIG- | MIG-001, MIG-002 | supplementary |
+| batch-design | BATCH- | BATCH-001, BATCH-002 | supplementary |
+| report-design | RPT- | RPT-001, RPT-002 | supplementary |
+| screen-design | SCN- | SCN-001, SCN-002 | supplementary |
+| test-plan | TST- | TST-001, TST-002 | test |
+| ut-spec | UT- | UT-001, UT-002 | test |
+| it-spec | IT- | IT-001, IT-002 | test |
+| st-spec | ST- | ST-001, ST-002 | test |
+| uat-spec | UAT- | UAT-001, UAT-002 | test |
+| test-result-report | TR- | TR-001, TR-002 | test |
+| test-evidence | EV- | EV-001, EV-002 | supplementary |
+| meeting-minutes | MTG- | MTG-001, MTG-002 | supplementary |
+| decision-record | ADR- | ADR-001, ADR-002 | supplementary |
+| interface-spec | IF- | IF-001, IF-002 | supplementary |
 
 ### Cross-Reference Validation
 

@@ -19,8 +19,28 @@ doc_overrides:
       - "帳票設計書"
       - "バッチ設計図"
     notes: "サブシステム単位で分割推奨"
+  architecture-design:
+    additional_sections:
+      - "方式設計書"
+    notes: "IPA共通フレーム2013準拠。技術選定理由必須"
+  db-design:
+    additional_sections:
+      - "データベース設計書"
+    notes: "ER図・命名規約・パーティション設計含む"
+  report-design:
+    additional_sections:
+      - "帳票設計書"
+    notes: "帳票レイアウト・出力条件・配信設計含む"
+  batch-design:
+    additional_sections:
+      - "バッチ処理設計書"
+    notes: "ジョブフロー・スケジュール・エラーハンドリング含む"
   test-spec:
     additional_sections:
       - "テスト結果まとめ"
       - "不具合管理表"
     notes: "実施結果・担当者サインオフ列必須"
+  test-result-report:
+    additional_sections:
+      - "テスト結果報告書"
+    notes: "品質判定・Go/No-Go判定必須"

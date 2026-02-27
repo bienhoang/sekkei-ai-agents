@@ -8,6 +8,8 @@ sections:
   - distribution
   - glossary
   - traceability-table
+review_date: ""
+approval_date: ""
 status: draft
 author: ""
 reviewer: ""

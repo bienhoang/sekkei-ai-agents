@@ -11,11 +11,12 @@ export const ID_TYPES = [
   "SEC", "PP", "TP",
   "OP", "MIG",
   "EV", "MTG", "ADR", "IF", "PG",
+  "ARCH", "TR", "DB", "BATCH",
 ] as const;
 export type IdType = (typeof ID_TYPES)[number];
 
 /** Regex pattern that matches any standard ID: PREFIX-NNN (1-4 digits) */
-const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|RPT|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP|MIG|EV|MTG|ADR|IF|PG)-(\d{1,4})\b/g;
+const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|RPT|CLS|DD|TS|UT|IT|ST|UAT|SEC|PP|TP|OP|MIG|EV|MTG|ADR|IF|PG|ARCH|TR|DB|BATCH)-(\d{1,4})\b/g;
 
 /** Also match custom-prefix IDs like SAL-001, ACC-001 */
 const CUSTOM_ID_PATTERN = /\b([A-Z]{2,5})-(\d{1,4})\b/g;

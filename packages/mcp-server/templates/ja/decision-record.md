@@ -9,6 +9,8 @@ sections:
   - decision
   - consequences
   - participants
+review_date: ""
+approval_date: ""
 status: draft
 author: ""
 reviewer: ""
