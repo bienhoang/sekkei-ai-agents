@@ -21,9 +21,12 @@ export function Sidebar() {
 
   return (
     <aside className="w-56 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col">
-      <div className="p-4 border-b border-[var(--color-border)]">
-        <h1 className="text-lg font-bold text-[var(--color-primary)]">Sekkei</h1>
-        <p className="text-xs text-[var(--color-text-muted)]">Dashboard</p>
+      <div className="p-4 border-b border-[var(--color-border)] flex items-center gap-2.5">
+        <img src="/logo.svg" alt="Sekkei" width={28} height={28} />
+        <div>
+          <h1 className="text-lg font-bold text-[var(--color-primary)] leading-tight">Sekkei</h1>
+          <p className="text-xs text-[var(--color-text-muted)]">Dashboard</p>
+        </div>
       </div>
       <nav className="flex-1 p-2 space-y-1">
         {NAV_ITEMS.map(item => (
