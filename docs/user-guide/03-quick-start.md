@@ -1,3 +1,4 @@
+![Sekkei](./images/logo-full-dark.svg)
 # Hướng dẫn Bắt đầu nhanh (Quick Start) — Khởi tạo Tài liệu đầu tiên
 
 Tài liệu này sẽ hướng dẫn bạn cách khởi tạo bản **要件定義書 (Định nghĩa yêu cầu) đầu tiên chỉ trong 15 phút** thông qua ví dụ cụ thể về một Hệ thống quản lý nhân sự (人事管理システム).

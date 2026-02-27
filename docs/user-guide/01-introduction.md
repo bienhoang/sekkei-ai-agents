@@ -1,4 +1,4 @@
-![Sekkei](./images/logo-mark.svg)
+![Sekkei](./images/logo-full-dark.svg)
 
 # Giới thiệu về Sekkei
 

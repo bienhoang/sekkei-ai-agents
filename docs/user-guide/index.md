@@ -50,6 +50,10 @@ Tài liệu hướng dẫn này được biên soạn dành riêng cho các vai 
 - [Danh sách kiểm tra (Checklists)](./06-team-playbook/02-checklists.md) — Bộ tiêu chuẩn để rà soát chất lượng theo từng chặng.
 - [Review & Phê duyệt](./06-team-playbook/03-review-and-approval.md) — Các chốt kiểm soát chất lượng (Quality Gates).
 
+### Bảng điều khiển phân tích
+
+- [Dashboard — Hướng dẫn sử dụng](./08-dashboard.md) — Giải thích từng màn hình, các chỉ số chất lượng, biểu đồ và cách đọc hiểu kết quả.
+
 ### Tài liệu tham khảo nhanh
 
 - [Tra cứu 30 câu lệnh nhanh](./07-reference/01-commands.md) — Danh mục tổng hợp toàn bộ các lệnh Sekkei.
