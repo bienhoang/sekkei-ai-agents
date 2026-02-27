@@ -1,10 +1,10 @@
 # Tham Chiếu Lệnh — Quick Reference
 
-> Lookup nhanh tất cả lệnh (32 slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
+> Lookup nhanh tất cả lệnh (40+ slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
 
 ---
 
-## Section 1: Tạo Tài Liệu Cốt Lõi (13 lệnh)
+## Section 1: Tạo Tài Liệu Cốt Lõi (18 lệnh)
 
 | # | Lệnh | Syntax | Input | Output | Prerequisite |
 |---|------|--------|-------|--------|-------------|
@@ -13,26 +13,36 @@
 | 3 | **functions-list** | `/sekkei:functions-list @input` | 要件定義書 | 機能一覧 — `functions-list.md` (F-xxx) | requirements |
 | 4 | **nfr** | `/sekkei:nfr @requirements` | 要件定義書 | 非機能要件定義書 — `nfr.md` (NFR-xxx) | requirements |
 | 5 | **project-plan** | `/sekkei:project-plan @req` | 要件定義書 | プロジェクト計画書 — `project-plan.md` (PP-xxx) | requirements |
-| 6 | **basic-design** | `/sekkei:basic-design @input` | 要件定義書 + 機能一覧 | 基本設計書 — `basic-design.md` (SCR-xxx, TBL-xxx, API-xxx) | requirements + functions-list |
-| 7 | **security-design** | `/sekkei:security-design @bd` | 基本設計書 | セキュリティ設計書 — `security-design.md` (SEC-xxx) | basic-design |
-| 8 | **detail-design** | `/sekkei:detail-design @input` | 基本設計書 | 詳細設計書 — `detail-design.md` (CLS-xxx) | basic-design |
-| 9 | **test-plan** | `/sekkei:test-plan @req` | 要件定義書 + 非機能要件 + 機能一覧 + 基本設計書 | テスト計画書 — `test-plan.md` (TP-xxx) | basic-design + functions-list |
-| 10 | **ut-spec** | `/sekkei:ut-spec @detail-design` | 詳細設計書 + テスト計画書 | 単体テスト仕様書 — `ut-spec.md` (UT-xxx) | detail-design + test-plan |
-| 11 | **it-spec** | `/sekkei:it-spec @basic-design` | 基本設計書 + テスト計画書 | 結合テスト仕様書 — `it-spec.md` (IT-xxx) | basic-design + test-plan |
-| 12 | **st-spec** | `/sekkei:st-spec @basic-design` | 基本設計書 + 機能一覧 + テスト計画書 | システムテスト仕様書 — `st-spec.md` (ST-xxx) | basic-design + test-plan |
-| 13 | **uat-spec** | `/sekkei:uat-spec @requirements` | 要件定義書 + 非機能要件 + テスト計画書 | 受入テスト仕様書 — `uat-spec.md` (UAT-xxx) | requirements + test-plan |
+| 6 | **architecture-design** | `/sekkei:architecture-design @input` | 要件定義書 + NFR + 機能一覧 | 方式設計書 — `architecture-design.md` (ARCH-xxx) | requirements + nfr |
+| 7 | **basic-design** | `/sekkei:basic-design @input` | 要件定義書 + 機能一覧 | 基本設計書 — `basic-design.md` (SCR-xxx, TBL-xxx, API-xxx) | requirements + functions-list |
+| 8 | **security-design** | `/sekkei:security-design @bd` | 基本設計書 | セキュリティ設計書 — `security-design.md` (SEC-xxx) | basic-design |
+| 9 | **detail-design** | `/sekkei:detail-design @input` | 基本設計書 | 詳細設計書 — `detail-design.md` (CLS-xxx) | basic-design |
+| 10 | **db-design** | `/sekkei:db-design @input` | 基本設計書 + NFR | データベース設計書 — `db-design.md` (DB-xxx) | basic-design |
+| 11 | **screen-design** | `/sekkei:screen-design @input` | 基本設計書 | 画面設計書 — `screen-design.md` (SCR-xxx) | basic-design |
+| 12 | **interface-spec** | `/sekkei:interface-spec @input` | 基本設計書 | IF仕様書 — `interface-spec.md` (IF-xxx) | basic-design |
+| 13 | **report-design** | `/sekkei:report-design @input` | 基本設計書 | 帳票設計書 — `report-design.md` (RPT-xxx) | basic-design |
+| 14 | **batch-design** | `/sekkei:batch-design @input` | 基本設計書 + 機能一覧 | バッチ処理設計書 — `batch-design.md` (BATCH-xxx) | basic-design |
+| 15 | **test-plan** | `/sekkei:test-plan @req` | 要件定義書 + 非機能要件 + 機能一覧 + 基本設計書 | テスト計画書 — `test-plan.md` (TP-xxx) | basic-design + functions-list |
+| 16 | **ut-spec** | `/sekkei:ut-spec @detail-design` | 詳細設計書 + テスト計画書 | 単体テスト仕様書 — `ut-spec.md` (UT-xxx) | detail-design + test-plan |
+| 17 | **it-spec** | `/sekkei:it-spec @basic-design` | 基本設計書 + テスト計画書 | 結合テスト仕様書 — `it-spec.md` (IT-xxx) | basic-design + test-plan |
+| 18 | **st-spec** | `/sekkei:st-spec @basic-design` | 基本設計書 + 機能一覧 + テスト計画書 | システムテスト仕様書 — `st-spec.md` (ST-xxx) | basic-design + test-plan |
+| 19 | **uat-spec** | `/sekkei:uat-spec @requirements` | 要件定義書 + 非機能要件 + テスト計画書 | 受入テスト仕様書 — `uat-spec.md` (UAT-xxx) | requirements + test-plan |
+| 20 | **test-result-report** | `/sekkei:test-result-report @input` | Các đặc tả kiểm thử | テスト結果報告書 — `test-result-report.md` (TR-xxx) | ut/it/st/uat-spec |
+| 21 | **test-evidence** | `/sekkei:test-evidence @input` | テスト計画書 | テストエビデンス — `test-evidence.md` (EV-xxx) | test-plan |
 
 ---
 
-## Section 2: Tài Liệu Bổ Sung (5 lệnh)
+## Section 2: Tài Liệu Bổ Sung & Quản lý (10 lệnh)
 
 | # | Lệnh | Syntax | Input | Output | Prerequisite |
 |---|------|--------|-------|--------|-------------|
-| 14 | **mockup** | `/sekkei:mockup` | Screen defs từ screen-design.md / basic-design.md | HTML mockups trong `11-mockups/` + PNG screenshots nhúng vào tài liệu | basic-design |
-| 15 | **matrix** | `/sekkei:matrix` | Tài liệu hiện có trong chain | CRUD図 / トレーサビリティマトリクス | basic-design |
-| 16 | **sitemap** | `/sekkei:sitemap` | Tài liệu hiện có trong chain | サイトマップ — phân cấp màn hình (PG-xxx) | basic-design |
-| 17 | **operation-design** | `/sekkei:operation-design @input` | Mô tả yêu cầu vận hành | 運用設計書 — backup, monitoring, DR, SLA | basic-design |
-| 18 | **migration-design** | `/sekkei:migration-design @input` | Mô tả hệ thống cũ và plan | 移行設計書 — data migration, cutover plan | basic-design |
+| 22 | **mockup** | `/sekkei:mockup` | Screen defs từ screen-design.md / basic-design.md | HTML mockups trong `11-mockups/` + PNG screenshots nhúng vào tài liệu | basic-design |
+| 23 | **matrix** | `/sekkei:matrix` | Tài liệu hiện có trong chain | CRUD図 / トレーサビリティマトリクス | basic-design |
+| 24 | **sitemap** | `/sekkei:sitemap` | Tài liệu hiện có trong chain | サイトマップ — phân cấp màn hình (PG-xxx) | basic-design |
+| 25 | **operation-design** | `/sekkei:operation-design @input` | Mô tả yêu cầu vận hành | 運用設計書 — backup, monitoring, DR, SLA | basic-design |
+| 26 | **migration-design** | `/sekkei:migration-design @input` | Mô tả hệ thống cũ và plan | 移行設計書 — data migration, cutover plan | basic-design |
+| 27 | **meeting-minutes** | `/sekkei:meeting-minutes @input` | Nội dung cuộc họp | 議事録 — biên bản, quyết định, action items | Không cần |
+| 28 | **decision-record** | `/sekkei:decision-record @input` | Quyết định kiến trúc | 設計判断記録 (ADR) — context, decision, consequences | Không cần |
 
 ---
 

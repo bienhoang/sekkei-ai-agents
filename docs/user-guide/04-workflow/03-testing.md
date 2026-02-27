@@ -1,4 +1,4 @@
-# Giai đoạn Testing — 5 Tài liệu Kiểm thử cốt lõi
+# Giai đoạn Testing — 7 Tài liệu Kiểm thử cốt lõi
 
 Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Design](./02-design.md) | [V-Model và Tài liệu](../02-v-model-and-documents.md)
 
@@ -6,7 +6,7 @@ Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Design](./02-des
 
 ## Tổng quan giai đoạn
 
-Giai đoạn Kiểm thử (Testing Phase) sẽ khởi tạo 5 tài liệu quan trọng — bao gồm một kế hoạch tổng thể và bốn bộ đặc tả kiểm thử tương ứng với từng cấp độ trong V-Model. Trong đó, テスト計画書 (Kế hoạch kiểm thử) đóng vai trò là "bản quy hoạch tổng thể" mà các đặc tả kiểm thử còn lại phải tuân thủ nghiêm ngặt về phạm vi, môi trường và các điều kiện hoàn thành.
+Giai đoạn Kiểm thử (Testing Phase) sẽ khởi tạo 7 tài liệu quan trọng — bao gồm kế hoạch tổng thể, bốn bộ đặc tả kiểm thử tương ứng với từng cấp độ trong V-Model, テスト結果報告書 (Báo cáo kết quả kiểm thử) và テストエビデンス (Bằng chứng kiểm thử). Trong đó, テスト計画書 (Kế hoạch kiểm thử) đóng vai trò là "bản quy hoạch tổng thể" mà các đặc tả kiểm thử còn lại phải tuân thủ nghiêm ngặt về phạm vi, môi trường và các điều kiện hoàn thành.
 
 **Điều kiện bắt đầu (Entry criteria):**
 
@@ -32,7 +32,7 @@ Giai đoạn Kiểm thử (Testing Phase) sẽ khởi tạo 5 tài liệu quan t
 
 | Tiêu chí | Mô tả |
 |---------|-------|
-| Xác thực đạt | Cả 5 tài liệu vượt qua `/sekkei:validate` |
+| Xác thực đạt | Cả 7 tài liệu vượt qua `/sekkei:validate` |
 | Ma trận hoàn chỉnh | Traceability Matrix không có lỗ hổng |
 | PM phê duyệt | Kế hoạch kiểm thử được PM ký duyệt |
 | Khách hàng xác nhận | Phạm vi UAT được khách hàng đồng ý |
@@ -171,6 +171,38 @@ flowchart TD
 - Sử dụng cấu trúc: *「〜として...できること」* (Với tư cách là [vai trò]... có thể thực hiện [hành động]).
 - Mô tả rõ **確認方法 (Phương pháp xác nhận)** kết quả thực tế.
 - Đảm bảo tính chuyên nghiệp bằng cách sử dụng mức độ kính ngữ (keigo) phù hợp từ cấu hình dự án.
+
+---
+
+## 13. Báo cáo Kết quả Kiểm thử — テスト結果報告書 (MỚI)
+
+**Định nghĩa:** Tổng hợp kết quả thực thi kiểm thử theo từng cấp độ (UT/IT/ST/UAT): tỷ lệ đạt/không đạt, danh sách lỗi phát hiện, đánh giá chất lượng tổng thể và kết luận phát hành.
+
+**Mã ID được sinh ra:** `TR-xxx`.
+
+**Câu lệnh thực hiện:**
+
+```
+/sekkei:test-result-report @ut-spec.md @it-spec.md @st-spec.md @uat-spec.md
+```
+
+**Nội dung chính:**
+- Tổng hợp kết quả theo từng cấp độ kiểm thử
+- Danh sách lỗi (defect list) theo mức độ nghiêm trọng
+- Đánh giá chất lượng (品質判定) và khuyến nghị phát hành
+- Tham chiếu đến テストエビデンス cho bằng chứng cụ thể
+
+---
+
+## 14. Bằng chứng Kiểm thử — テストエビデンス (MỚI)
+
+**Định nghĩa:** Lưu trữ bằng chứng thực tế cho từng test case: ảnh chụp màn hình, kết quả thực thi, tên người thực hiện và ngày thực hiện. Tổ chức theo 4 cấp độ UT/IT/ST/UAT.
+
+**Câu lệnh thực hiện:**
+
+```
+/sekkei:test-evidence @test-plan.md
+```
 
 ---
 

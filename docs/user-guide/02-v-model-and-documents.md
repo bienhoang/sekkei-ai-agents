@@ -1,4 +1,4 @@
-# Mô hình chữ V (V-Model) và 13 Loại Tài liệu Cốt lõi
+# Mô hình chữ V (V-Model) và 18 Loại Tài liệu Cốt lõi
 
 ## Phần 1: Tổng quan về Mô hình chữ V (V-Model)
 
@@ -33,9 +33,9 @@ Nhờ đó, khi một yêu cầu (REQ) thay đổi, hệ thống sẽ tự độ
 
 ---
 
-## Phần 2: Chi tiết 13 Loại Tài liệu Cốt lõi
+## Phần 2: Chi tiết 18 Loại Tài liệu Cốt lõi
 
-Dưới đây là danh mục các tài liệu theo chuẩn IPA mà Sekkei hỗ trợ khởi tạo tự động:
+Dưới đây là danh mục các tài liệu theo chuẩn IPA mà Sekkei hỗ trợ khởi tạo tự động (bao gồm 方式設計書, DB設計書, 帳票設計書, バッチ処理設計書, テスト結果報告書 mới bổ sung):
 
 ### Chuỗi phụ thuộc giữa các tài liệu (Document Chain)
 
@@ -45,10 +45,17 @@ flowchart TD
     REQ --> FL["機能一覧 (Danh sách chức năng)\n(/sekkei:functions-list)"]
     REQ --> NFR["非機能要件定義書 (Yêu cầu phi chức năng)\n(/sekkei:nfr)"]
     REQ --> PP["プロジェクト計画書 (Kế hoạch dự án)\n(/sekkei:project-plan)"]
-    FL --> BD["基本設計書 (Thiết kế cơ bản)\n(/sekkei:basic-design)"]
+    REQ --> ARCH["方式設計書 (Thiết kế kiến trúc)\n(/sekkei:architecture-design)"]
+    NFR --> ARCH
+    FL --> ARCH
+    ARCH --> BD["基本設計書 (Thiết kế cơ bản)\n(/sekkei:basic-design)"]
+    FL --> BD
     NFR --> BD
     BD --> SD["セキュリティ設計書 (Thiết kế bảo mật)\n(/sekkei:security-design)"]
     BD --> DD["詳細設計書 (Thiết kế chi tiết)\n(/sekkei:detail-design)"]
+    BD --> DB["データベース設計書 (Thiết kế DB)\n(/sekkei:db-design)"]
+    BD --> RPT["帳票設計書 (Thiết kế báo cáo)\n(/sekkei:report-design)"]
+    BD --> BATCH["バッチ処理設計書 (Thiết kế batch)\n(/sekkei:batch-design)"]
     BD --> TP["テスト計画書 (Kế hoạch kiểm thử)\n(/sekkei:test-plan)"]
     NFR --> TP
     REQ --> TP
@@ -61,6 +68,10 @@ flowchart TD
     TP --> IT
     TP --> ST
     TP --> UAT
+    UT --> TRR["テスト結果報告書 (Báo cáo kết quả kiểm thử)\n(/sekkei:test-result-report)"]
+    IT --> TRR
+    ST --> TRR
+    UAT --> TRR
 ```
 
 ---
@@ -122,7 +133,20 @@ flowchart TD
 
 ---
 
-### 5. Thiết kế Cơ bản — 基本設計書
+### 5. Thiết kế Kiến trúc — 方式設計書 (MỚI)
+- **Vai trò:** Tài liệu thiết kế kiến trúc cấp cao theo chuẩn IPA V-Model Layer 3, mô tả phương thức hệ thống (システム方式), phương thức phát triển (開発方式), phương thức vận hành (運用方式), cấu hình phần cứng/mạng, và lý do lựa chọn công nghệ.
+- **Vai trò thực hiện:** Dev Lead / Architect (người soạn thảo), PM và Khách hàng (người phê duyệt).
+- **Đầu vào:** 要件定義書, 機能一覧, 非機能要件定義書.
+- **Kết xuất:** `workspace-docs/architecture-design.md` (Mã định danh: `ARCH-xxx`).
+- **Câu lệnh:**
+  ```
+  /sekkei:architecture-design @requirements.md @nfr.md
+  ```
+  *Ví dụ:* ARCH-001 "Kiến trúc microservices với API Gateway", ARCH-002 "Phương thức phát triển Agile + CI/CD pipeline".
+
+---
+
+### 6. Thiết kế Cơ bản — 基本設計書
 - **Vai trò:** Thiết kế kiến trúc tổng thể, sơ đồ cơ sở dữ liệu và danh sách màn hình. Đây là tài liệu khách hàng Nhật quan tâm nhất để hiểu về cấu trúc hệ thống.
 - **Người soạn thảo:** Dev Lead | **Người phê duyệt:** PM + BA + Khách hàng Nhật.
 - **Thời điểm:** Sau khi các tài liệu yêu cầu (要件, 機能, 非機能) đã hoàn chỉnh.
@@ -161,7 +185,41 @@ flowchart TD
 
 ---
 
-### 8. Kế hoạch Kiểm thử — テスト計画書
+### 9. Thiết kế Cơ sở Dữ liệu — データベース設計書 (MỚI)
+- **Vai trò:** Tài liệu thiết kế cơ sở dữ liệu chuyên biệt cho preset enterprise — bao gồm ER図, định nghĩa bảng, thiết kế chỉ mục, phân vùng, chiến lược backup và quy ước đặt tên.
+- **Vai trò thực hiện:** Dev Lead / DBA | **Người phê duyệt:** PM + Khách hàng Nhật.
+- **Đầu vào:** 基本設計書, 要件定義書, 非機能要件定義書.
+- **Kết xuất:** `workspace-docs/db-design.md` (Mã định danh: `DB-xxx`).
+- **Câu lệnh:**
+  ```
+  /sekkei:db-design @basic-design.md
+  ```
+
+---
+
+### 10. Thiết kế Báo cáo — 帳票設計書 (MỚI)
+- **Vai trò:** Thiết kế chi tiết cho các loại báo cáo xuất ra từ hệ thống: layout, điều kiện xuất, ánh xạ dữ liệu, phương thức phân phối.
+- **Đầu vào:** 基本設計書, 要件定義書.
+- **Kết xuất:** `workspace-docs/report-design.md` (Mã định danh: `RPT-xxx`).
+- **Câu lệnh:**
+  ```
+  /sekkei:report-design @basic-design.md
+  ```
+
+---
+
+### 11. Thiết kế Xử lý Batch — バッチ処理設計書 (MỚI)
+- **Vai trò:** Thiết kế chi tiết cho các xử lý batch: danh sách job, job flow, lịch chạy, xử lý lỗi, tích hợp vận hành.
+- **Đầu vào:** 基本設計書, 機能一覧, 要件定義書, 非機能要件定義書.
+- **Kết xuất:** `workspace-docs/batch-design.md` (Mã định danh: `BATCH-xxx`).
+- **Câu lệnh:**
+  ```
+  /sekkei:batch-design @basic-design.md
+  ```
+
+---
+
+### 12. Kế hoạch Kiểm thử — テスト計画書
 - **Vai trò:** Chiến lược kiểm thử tổng thể, định nghĩa môi trường và tiêu chuẩn để bắt đầu/kết thúc quá trình kiểm thử.
 - **Người soạn thảo:** QA Lead | **Người phê duyệt:** PM + Dev Lead.
 - **Thời điểm:** Có thể bắt đầu song song với giai đoạn Thiết kế cơ bản (基本設計).
@@ -226,7 +284,19 @@ flowchart TD
 
 ---
 
-### 13. Yêu cầu Thay đổi — 変更要求書 (CR)
+### 17. Báo cáo Kết quả Kiểm thử — テスト結果報告書 (MỚI)
+- **Vai trò:** Tổng hợp kết quả thực thi kiểm thử theo từng cấp độ (UT/IT/ST/UAT): tỷ lệ đạt, danh sách lỗi, đánh giá chất lượng và kết luận phát hành.
+- **Vai trò thực hiện:** QA Lead | **Người phê duyệt:** PM + Dev Lead.
+- **Đầu vào:** Các đặc tả kiểm thử đã thực thi (ut-spec, it-spec, st-spec, uat-spec).
+- **Kết xuất:** `workspace-docs/test-result-report.md` (Mã định danh: `TR-xxx`).
+- **Câu lệnh:**
+  ```
+  /sekkei:test-result-report @ut-spec.md @it-spec.md
+  ```
+
+---
+
+### 18. Yêu cầu Thay đổi — 変更要求書 (CR)
 - **Vai trò:** Quản lý và theo dõi các thay đổi phát sinh sau khi các đặc tả đã được phê duyệt, giúp kiểm soát phạm vi và ngăn chặn "phình to" yêu cầu (Scope Creep).
 - **Người soạn thảo:** BA / PM | **Người phê duyệt:** Dev Lead + Khách hàng Nhật.
 - **Thời điểm:** Bất cứ khi nào có yêu cầu thay đổi sau khi đặc tả đã được "đóng băng" (freeze).
@@ -245,36 +315,44 @@ flowchart TD
 flowchart LR
     REQ["REQ-xxx\n(Định nghĩa yêu cầu)"] --> F["F-xxx\n(Danh sách chức năng)"]
     REQ --> NFR2["NFR-xxx\n(Yêu cầu phi chức năng)"]
+    REQ --> ARCH["ARCH-xxx\n(Thiết kế kiến trúc)"]
     F --> SCR["SCR-xxx\n(Màn hình - Thiết kế cơ bản)"]
     F --> TBL["TBL-xxx\n(Bảng DB - Thiết kế cơ bản)"]
     F --> API["API-xxx\n(API - Thiết kế cơ bản)"]
+    TBL --> DB2["DB-xxx\n(Thiết kế DB)"]
     SCR --> CLS["CLS-xxx\n(Thiết kế chi tiết)"]
     CLS --> UT2["UT-xxx\n(Kiểm thử đơn vị)"]
     API --> IT2["IT-xxx\n(Kiểm thử tích hợp)"]
     SCR --> ST2["ST-xxx\n(Kiểm thử hệ thống)"]
     REQ --> UAT2["UAT-xxx\n(Kiểm thử nghiệm thu)"]
+    UT2 --> TR["TR-xxx\n(Báo cáo kết quả)"]
+    IT2 --> TR
+    ST2 --> TR
+    UAT2 --> TR
 ```
 
 ---
 
-## Phần 3: 9 Tài liệu Bổ sung
+## Phần 3: Tài liệu Bổ sung
 
-Ngoài 13 tài liệu cốt lõi, Sekkei hỗ trợ thêm các tài liệu tùy chọn tùy theo quy mô và yêu cầu của dự án.
+Ngoài 18 tài liệu cốt lõi, Sekkei hỗ trợ thêm các tài liệu tùy chọn tùy theo quy mô và yêu cầu của dự án. Tất cả các tài liệu dưới đây **đều có câu lệnh riêng** (cập nhật từ phiên bản IPA compliance):
 
 | Tài liệu | Câu lệnh | Mô tả ngắn gọn |
 |---------|------|------------|
 | **CRUD図 (Ma trận CRUD)** | `/sekkei:matrix` | Bảng đối chiếu Chức năng × Bảng DB (C/R/U/D) để kiểm tra tính đầy đủ của logic. |
+| **トレーサビリティマトリクス** | `/sekkei:matrix --type traceability` | Ma trận truy xuất REQ→F→Design→Test. |
 | **サイトマップ (Sơ đồ trang)** | `/sekkei:sitemap` | Cấu trúc phân cấp của toàn bộ màn hình hệ thống (sử dụng PG-xxx IDs). |
 | **運用設計書 (Thiết kế vận hành)** | `/sekkei:operation-design` | Kế hoạch vận hành: sao lưu, giám sát, phục hồi sau sự cố, SLA. |
 | **移行設計書 (Thiết kế chuyển đổi)** | `/sekkei:migration-design` | Kế hoạch chuyển đổi dữ liệu và chuyển giao từ hệ thống cũ. |
-| **画面設計書 (Thiết kế màn hình)** | (Chế độ tự động) | Chi tiết về layout, xác thực, sự kiện và luồng chuyển màn hình. |
-| **議事録 (Biên bản cuộc họp)** | (Thủ công) | Mẫu biên bản ghi lại nội dung các cuộc họp. |
-| **ADR (Quyết định kiến trúc)** | (Thủ công) | Ghi lại lý do đằng sau các quyết định quan trọng về kiến trúc phần mềm. |
-| **テストエビデンス (Bằng chứng kiểm thử)** | (Thủ công) | Lưu trữ ảnh chụp màn hình, logs và kết quả thực tế để đối chiếu. |
+| **画面設計書 (Thiết kế màn hình)** | `/sekkei:screen-design` | Chi tiết về layout, xác thực, sự kiện và luồng chuyển màn hình. |
+| **IF仕様書 (Đặc tả giao diện)** | `/sekkei:interface-spec` | Đặc tả giao diện với hệ thống bên ngoài. |
+| **議事録 (Biên bản cuộc họp)** | `/sekkei:meeting-minutes` | Mẫu biên bản ghi lại nội dung các cuộc họp. |
+| **ADR (Quyết định kiến trúc)** | `/sekkei:decision-record` | Ghi lại lý do đằng sau các quyết định quan trọng về kiến trúc phần mềm. |
+| **テストエビデンス (Bằng chứng kiểm thử)** | `/sekkei:test-evidence` | Lưu trữ ảnh chụp màn hình, logs và kết quả thực tế để đối chiếu. |
 | **翻訳 (Biên dịch)** | `/sekkei:translate` | Hỗ trợ dịch nhanh các tài liệu sang tiếng Anh hoặc tiếng Việt. |
 
 > [!NOTE]
-> **Tài liệu thiết kế màn hình (画面設計書)** sẽ được tự động tạo ra khi kích hoạt **chế độ tách file (split mode)** trong giai đoạn Thiết kế cơ bản.
+> **Tài liệu thiết kế màn hình (画面設計書)** có thể được tự động tạo ra khi kích hoạt **chế độ tách file (split mode)** trong giai đoạn Thiết kế cơ bản, hoặc khởi tạo riêng bằng `/sekkei:screen-design`.
 
 ---
 

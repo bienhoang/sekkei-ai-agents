@@ -1,4 +1,4 @@
-# Giai đoạn Design — 3 Tài liệu Thiết kế Kỹ thuật
+# Giai đoạn Design — 9 Tài liệu Thiết kế Kỹ thuật
 
 Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Requirements](./01-requirements.md) | [V-Model và Tài liệu](../02-v-model-and-documents.md)
 
@@ -6,7 +6,7 @@ Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Requirements](./
 
 ## Tổng quan giai đoạn
 
-Giai đoạn thiết kế (Design Phase) có nhiệm vụ chuyển hóa các yêu cầu nghiệp vụ thành những bản thiết kế kỹ thuật chi tiết để đội ngũ phát triển có thể triển khai thực tế. Ba tài liệu trong giai đoạn này đóng vai trò là "trục xoay" của toàn bộ chuỗi tài liệu — trong đó, 基本設計書 (Thiết kế cơ bản) là tài liệu trung tâm mà tất cả các đặc tả kiểm thử sau này đều phải dựa vào.
+Giai đoạn thiết kế (Design Phase) có nhiệm vụ chuyển hóa các yêu cầu nghiệp vụ thành những bản thiết kế kỹ thuật chi tiết để đội ngũ phát triển có thể triển khai thực tế. Chín tài liệu trong giai đoạn này bao gồm: 方式設計書 (kiến trúc cấp cao), 基本設計書 (trung tâm), セキュリティ設計書, 詳細設計書, データベース設計書, 画面設計書, IF仕様書, 帳票設計書, バッチ処理設計書. Trong đó, 基本設計書 là tài liệu trung tâm mà tất cả các đặc tả kiểm thử sau này đều phải dựa vào.
 
 **Điều kiện bắt đầu (Entry criteria):**
 - Tài liệu `requirements.md` đã được xác thực ✓
@@ -22,7 +22,7 @@ Giai đoạn thiết kế (Design Phase) có nhiệm vụ chuyển hóa các yê
 | **BA** | Tham vấn (Consulted) | Hỗ trợ làm rõ các yêu cầu nghiệp vụ khi cần thiết. |
 | **Khách hàng Nhật** | Nhận thông tin (Informed) | Tiếp nhận, xem xét và ký duyệt bản Thiết kế cơ bản. |
 
-**Điều kiện hoàn thiện (Exit criteria):** Cả 3 tài liệu vượt qua bước xác thực, được Dev Lead phê duyệt nội dung và khách hàng Nhật ký duyệt bản Thiết kế cơ bản.
+**Điều kiện hoàn thiện (Exit criteria):** Các tài liệu thiết kế chính vượt qua bước xác thực, được Dev Lead phê duyệt nội dung và khách hàng Nhật ký duyệt bản Thiết kế cơ bản.
 
 ---
 
@@ -31,21 +31,49 @@ Giai đoạn thiết kế (Design Phase) có nhiệm vụ chuyển hóa các yê
 ```mermaid
 flowchart TD
     REQ["Định nghĩa yêu cầu\n+ Danh sách chức năng\n+ Yêu cầu phi chức năng"]
+    ARCH["方式設計書 (Thiết kế kiến trúc)\n(ARCH-xxx)"]
     BD["基本設計書 (Thiết kế cơ bản)\n(SCR-xxx, TBL-xxx, API-xxx)"]
     SD["セキュリティ設計書 (Thiết kế bảo mật)\n(SEC-xxx)"]
     DD["詳細設計書 (Thiết kế chi tiết)\n(CLS-xxx)"]
+    DB["データベース設計書 (Thiết kế DB)\n(DB-xxx)"]
+    RPT["帳票設計書 (Thiết kế báo cáo)\n(RPT-xxx)"]
+    BATCH["バッチ処理設計書\n(BATCH-xxx)"]
     VAL["Xác thực\n(/sekkei:validate)"]
     NEXT["→ Giai đoạn Kiểm thử\n(test-plan)"]
 
-    REQ --> BD
+    REQ --> ARCH
+    ARCH --> BD
     BD --> SD
     BD --> DD
+    BD --> DB
+    BD --> RPT
+    BD --> BATCH
     SD --> VAL
     DD --> VAL
+    DB --> VAL
     VAL --> NEXT
 ```
 
-> Sau khi hoàn thiện Thiết kế cơ bản (基本設計書), tài liệu Thiết kế bảo mật và Thiết kế chi tiết có thể được thực hiện đồng thời.
+> Sau khi hoàn thiện Thiết kế kiến trúc (方式設計書) và Thiết kế cơ bản (基本設計書), các tài liệu thiết kế khác có thể được thực hiện đồng thời.
+
+---
+
+## 4. Tài liệu Thiết kế Kiến trúc — 方式設計書 (MỚI)
+
+**Định nghĩa:** Tài liệu thiết kế kiến trúc cấp cao theo chuẩn IPA V-Model, mô tả: phương thức hệ thống (hạ tầng, phân tầng), phương thức phát triển (quy trình, công cụ), phương thức vận hành (giám sát, backup), cấu hình phần cứng/mạng, và lý do lựa chọn công nghệ.
+
+**Mã ID được sinh ra:** `ARCH-xxx`.
+
+**Câu lệnh thực hiện:**
+
+```
+/sekkei:architecture-design @requirements.md @nfr.md
+```
+
+**Ví dụ:**
+- `ARCH-001` システム方式: Microservices với API Gateway (Kong), Container orchestration (K8s)
+- `ARCH-002` 開発方式: Agile/Scrum, CI/CD pipeline (GitHub Actions → AWS ECS)
+- `ARCH-003` 運用方式: CloudWatch monitoring, Aurora automated backup
 
 ---
 
@@ -130,7 +158,65 @@ Sekkei sẽ tự động trích xuất các yêu cầu phi chức năng (NFR-xxx
 
 ---
 
-## 8. Tạo Mockup màn hình — `/sekkei:mockup`
+## 8. Thiết kế Cơ sở Dữ liệu — データベース設計書 (MỚI)
+
+**Định nghĩa:** Tài liệu thiết kế chi tiết cho cơ sở dữ liệu, dành cho preset enterprise hoặc dự án có quy mô DB phức tạp. Bao gồm: ER図, định nghĩa bảng chi tiết (cột, kiểu dữ liệu, ràng buộc), thiết kế chỉ mục, phân vùng, chiến lược sao lưu và quy ước đặt tên.
+
+**Mã ID được sinh ra:** `DB-xxx`.
+
+**Câu lệnh thực hiện:**
+
+```
+/sekkei:db-design @basic-design.md
+```
+
+---
+
+## 9. Thiết kế Màn hình — 画面設計書
+
+**Định nghĩa:** Chi tiết layout, xác thực, sự kiện và luồng chuyển đổi cho từng màn hình. Có thể tạo tự động trong split mode hoặc tạo riêng bằng lệnh:
+
+```
+/sekkei:screen-design @basic-design.md
+```
+
+---
+
+## 10. Đặc tả Giao diện — IF仕様書
+
+**Định nghĩa:** Đặc tả giao diện với hệ thống bên ngoài, bao gồm: định dạng dữ liệu, giao thức, xử lý lỗi, retry logic.
+
+```
+/sekkei:interface-spec @basic-design.md
+```
+
+---
+
+## 11. Thiết kế Báo cáo — 帳票設計書 (MỚI)
+
+**Định nghĩa:** Thiết kế chi tiết cho các loại báo cáo: danh sách, layout, điều kiện xuất, ánh xạ dữ liệu.
+
+**Mã ID được sinh ra:** `RPT-xxx`.
+
+```
+/sekkei:report-design @basic-design.md
+```
+
+---
+
+## 12. Thiết kế Xử lý Batch — バッチ処理設計書 (MỚI)
+
+**Định nghĩa:** Thiết kế danh sách job, job flow diagram, lịch chạy, xử lý lỗi và tích hợp vận hành.
+
+**Mã ID được sinh ra:** `BATCH-xxx`.
+
+```
+/sekkei:batch-design @basic-design.md
+```
+
+---
+
+## 13. Tạo Mockup màn hình — `/sekkei:mockup`
 
 Sau khi hoàn thành Thiết kế cơ bản (hoặc Thiết kế màn hình riêng), bạn có thể tạo **mockup HTML tương tác** trực tiếp từ các định nghĩa màn hình trong tài liệu.
 

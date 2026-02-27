@@ -1,4 +1,4 @@
-# Tài liệu Bổ trợ — 9 Loại Tài liệu Tùy chọn
+# Tài liệu Bổ trợ — Các Loại Tài liệu Tùy chọn
 
 Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Testing](./03-testing.md) | [V-Model và Tài liệu](../02-v-model-and-documents.md)
 
@@ -6,7 +6,7 @@ Xem thêm: [Tổng quan quy trình](./index.md) | [Giai đoạn Testing](./03-te
 
 ## Tổng quan
 
-Ngoài 13 loại tài liệu cốt lõi trong chuỗi liên kết, Sekkei còn hỗ trợ khởi tạo 9 loại tài liệu bổ trợ khác. Các tài liệu này **không mang tính bắt buộc** cho mọi dự án — bạn chỉ nên sử dụng chúng khi tình huống cụ thể yêu cầu để tối ưu hóa nguồn lực.
+Ngoài 18 loại tài liệu cốt lõi trong chuỗi liên kết, Sekkei còn hỗ trợ khởi tạo các tài liệu bổ trợ khác. Các tài liệu này **không mang tính bắt buộc** cho mọi dự án — bạn chỉ nên sử dụng chúng khi tình huống cụ thể yêu cầu. **Tất cả đều đã có câu lệnh riêng** (cập nhật IPA compliance).
 
 ---
 
@@ -15,14 +15,15 @@ Ngoài 13 loại tài liệu cốt lõi trong chuỗi liên kết, Sekkei còn h
 | Tài liệu | Tình huống sử dụng | Câu lệnh |
 |---------|-------------|------|
 | **Biểu đồ CRUD (CRUD図)** | Kiểm tra tính logic của các thao tác dữ liệu, tránh thiếu sót. | `/sekkei:matrix` |
-| **Ma trận truy xuất nguồn gốc (トレーサビリティマトリクス)** | Chứng minh độ bao phủ (coverage) trước khi bàn giao. | `/sekkei:matrix` |
+| **Ma trận truy xuất nguồn gốc (トレーサビリティマトリクス)** | Chứng minh độ bao phủ (coverage) trước khi bàn giao. | `/sekkei:matrix --type traceability` |
 | **Sơ đồ trang web (サイトマップ)** | Sử dụng khi hệ thống có cấu trúc màn hình phức tạp (> 15 SCR). | `/sekkei:sitemap` |
 | **Thiết kế vận hành (運用設計書)** | Khi dự án có cam kết SLA khắt khe về vận hành. | `/sekkei:operation-design @input` |
 | **Thiết kế chuyển đổi (移行設計書)** | Khi cần chuyển đổi dữ liệu từ hệ thống cũ sang hệ thống mới. | `/sekkei:migration-design @input` |
-| **Thiết kế màn hình (画面設計書)** | Chi tiết layout và logic UI (tự động tạo khi bật "split mode"). | (Tự động) |
-| **Biên bản cuộc họp (議事録)** | Ghi lại nội dung sau mỗi buổi làm việc với khách hàng Nhật. | (Sử dụng Template) |
-| **Quyết định kiến trúc (ADR)** | Ghi chép các quyết định kỹ thuật quan trọng của dự án. | (Sử dụng Template) |
-| **Bằng chứng kiểm thử (テストエビデンス)** | Cung cấp ảnh chụp màn hình/log thực tế sau khi chạy test. | (Thực hiện thủ công) |
+| **Thiết kế màn hình (画面設計書)** | Chi tiết layout và logic UI. | `/sekkei:screen-design @input` |
+| **Đặc tả giao diện (IF仕様書)** | Đặc tả giao diện với hệ thống bên ngoài. | `/sekkei:interface-spec @input` |
+| **Biên bản cuộc họp (議事録)** | Ghi lại nội dung sau mỗi buổi làm việc với khách hàng Nhật. | `/sekkei:meeting-minutes @input` |
+| **Quyết định kiến trúc (ADR)** | Ghi chép các quyết định kỹ thuật quan trọng của dự án. | `/sekkei:decision-record @input` |
+| **Bằng chứng kiểm thử (テストエビデンス)** | Cung cấp ảnh chụp màn hình/log thực tế sau khi chạy test. | `/sekkei:test-evidence @input` |
 
 ---
 

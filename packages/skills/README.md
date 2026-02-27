@@ -41,9 +41,15 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 
 | Command | Description |
 |---------|-------------|
+| `/sekkei:architecture-design @input` | Generate 方式設計書 (Architecture Design) |
 | `/sekkei:basic-design @input` | Generate 基本設計書 (Basic Design) |
 | `/sekkei:security-design @input` | Generate セキュリティ設計書 (Security Design) |
 | `/sekkei:detail-design @input` | Generate 詳細設計書 (Detail Design) |
+| `/sekkei:db-design @input` | Generate データベース設計書 (DB Design) |
+| `/sekkei:screen-design @input` | Generate 画面設計書 (Screen Design) |
+| `/sekkei:interface-spec @input` | Generate IF仕様書 (Interface Spec) |
+| `/sekkei:report-design @input` | Generate 帳票設計書 (Report Design) |
+| `/sekkei:batch-design @input` | Generate バッチ処理設計書 (Batch Design) |
 
 ### Test Phase
 
@@ -54,6 +60,15 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 | `/sekkei:it-spec @input` | Generate 結合テスト仕様書 (Integration Test Spec) |
 | `/sekkei:st-spec @input` | Generate システムテスト仕様書 (System Test Spec) |
 | `/sekkei:uat-spec @input` | Generate 受入テスト仕様書 (UAT Spec) |
+| `/sekkei:test-result-report @input` | Generate テスト結果報告書 (Test Result Report) |
+| `/sekkei:test-evidence @input` | Generate テストエビデンス (Test Evidence) |
+
+### Management
+
+| Command | Description |
+|---------|-------------|
+| `/sekkei:meeting-minutes @input` | Generate 議事録 (Meeting Minutes) |
+| `/sekkei:decision-record @input` | Generate 設計判断記録 (Architecture Decision Record) |
 
 ### Supplementary & Utilities
 
@@ -128,7 +143,7 @@ Skills invoke MCP tools via Claude Code's MCP integration. Ensure `@bienhoang/se
 
 sekkei-skillsは、Claude Codeのスラッシュコマンドで日本語設計書を生成するスキルです。
 
-V字モデルのドキュメントチェーン（要件定義書→機能一覧→NFR→基本設計書→セキュリティ設計書→詳細設計書→UT/IT/ST/UAT仕様書）に沿って、各種設計書を順番に生成できます。32のサブコマンドで、RFP分析・初期化・生成・検証・エクスポート・翻訳・プレビュー・ダッシュボード・変更管理までの全ワークフローをカバーします。
+V字モデルのドキュメントチェーン（要件定義書→方式設計書→基本設計書→DB設計書→詳細設計書→UT/IT/ST/UAT仕様書→テスト結果報告書）に沿って、IPA準拠の各種設計書を順番に生成できます。40以上のサブコマンドで、RFP分析・初期化・生成・検証・エクスポート・翻訳・プレビュー・ダッシュボード・変更管理・議事録・ADRまでの全ワークフローをカバーします。
 
 ## License
 

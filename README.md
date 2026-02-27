@@ -28,21 +28,26 @@ Sekkei generates structured Japanese specification documents (設計書) from RF
          List      Req
               │
               ▼
+         方式設計書 ────────────────────────────────────┐
+         Architecture Design                          │
+              │                                       │
+              ▼                                       ▼
          基本設計書 ──────────────────► 受入テスト仕様書
          Basic Design                  UAT Spec
               │
-        ┌─────┴──────────┐
-        ▼                ▼
-  セキュリティ設計書    詳細設計書
-  Security Design      Detail Design
-                            │
-                       ┌────┼────┐
-                       ▼    ▼    ▼
-                    UT仕様書 IT仕様書 ST仕様書
-                    UT Spec  IT Spec  ST Spec
+        ┌─────┼──────────┬───────┐
+        ▼     ▼          ▼       ▼
+  セキュリティ  詳細設計書  DB設計  帳票/バッチ
+  Security     Detail     DB     Report/Batch
+  Design       Design     Design Design
+                  │
+             ┌────┼────┐
+             ▼    ▼    ▼
+          UT仕様書 IT仕様書 ST仕様書 ──► テスト結果報告書
+          UT Spec  IT Spec  ST Spec     Test Result Report
 ```
 
-Additional types: プロジェクト計画書, テスト計画書, 運用設計書, 移行設計書, CRUD図, トレーサビリティ, サイトマップ.
+Additional types: プロジェクト計画書, テスト計画書, 運用設計書, 移行設計書, CRUD図, トレーサビリティ, サイトマップ, 画面設計書, IF仕様書, テストエビデンス, 議事録, ADR.
 
 ## Packages
 
@@ -50,7 +55,7 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 |---------|---------|-------------|
 | [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.4.4 | Core MCP server — document generation, validation, export, CLI |
 | [@bienhoang/sekkei-preview](./packages/preview/) | 1.3.4 | Express+React live preview + Tiptap v3 WYSIWYG editor |
-| [@bienhoang/sekkei-skills](./packages/skills/) | 1.5.4 | Claude Code slash commands (`/sekkei:*`) — 32 sub-commands |
+| [@bienhoang/sekkei-skills](./packages/skills/) | 1.5.4 | Claude Code slash commands (`/sekkei:*`) — 40+ sub-commands |
 | [@bienhoang/sekkei-dashboard](./packages/dashboard/) | 0.1.1 | Analytics dashboard — chain status, quality metrics, traceability graphs, snapshots |
 
 ## Quick Start
@@ -132,7 +137,7 @@ chmod +x install.sh && ./install.sh          # Build + install (includes Python)
 - **Transport**: STDIO (stdout reserved for JSON-RPC, logs to stderr)
 - **15 MCP Tools**: `generate_document`, `get_template`, `validate_document`, `get_chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`, `simulate_change_impact`, `import_document`, `manage_rfp_workspace`, `manage_change_request`, `update_chain_status`, `manage_plan`
 - **MCP Resources**: `templates://` for doc templates, `rfp://` for RFP workflow instructions
-- **22 Templates**: Japanese (ja) with YAML frontmatter — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
+- **27 Templates**: Japanese (ja) with YAML frontmatter, 検印欄 (review stamps) — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
 - **Python Bridge**: `execFile`-based (no shell injection) for Excel/PDF/DOCX export via `SEKKEI_INPUT` env var
 
 ### Dashboard (NEW)
@@ -162,7 +167,7 @@ Built with citty. Available commands:
 
 ## Slash Commands (Claude Code)
 
-32 sub-commands covering the full V-model workflow:
+40+ sub-commands covering the full V-model workflow:
 
 **Requirements Phase**
 
@@ -179,9 +184,15 @@ Built with citty. Available commands:
 
 | Command | Description |
 |---------|-------------|
+| `/sekkei:architecture-design @input` | Generate 方式設計書 (Architecture Design) |
 | `/sekkei:basic-design @input` | Generate 基本設計書 (Basic Design) |
 | `/sekkei:security-design @input` | Generate セキュリティ設計書 (Security Design) |
 | `/sekkei:detail-design @input` | Generate 詳細設計書 (Detail Design) |
+| `/sekkei:db-design @input` | Generate データベース設計書 (DB Design) |
+| `/sekkei:screen-design @input` | Generate 画面設計書 (Screen Design) |
+| `/sekkei:interface-spec @input` | Generate IF仕様書 (Interface Spec) |
+| `/sekkei:report-design @input` | Generate 帳票設計書 (Report Design) |
+| `/sekkei:batch-design @input` | Generate バッチ処理設計書 (Batch Design) |
 | `/sekkei:mockup` | Generate HTML screen mockups with screenshots from screen definitions |
 
 **Test Phase**
@@ -193,6 +204,15 @@ Built with citty. Available commands:
 | `/sekkei:it-spec @input` | Generate 結合テスト仕様書 (Integration Test Spec) |
 | `/sekkei:st-spec @input` | Generate システムテスト仕様書 (System Test Spec) |
 | `/sekkei:uat-spec @input` | Generate 受入テスト仕様書 (UAT Spec) |
+| `/sekkei:test-result-report @input` | Generate テスト結果報告書 (Test Result Report) |
+| `/sekkei:test-evidence @input` | Generate テストエビデンス (Test Evidence) |
+
+**Management**
+
+| Command | Description |
+|---------|-------------|
+| `/sekkei:meeting-minutes @input` | Generate 議事録 (Meeting Minutes) |
+| `/sekkei:decision-record @input` | Generate 設計判断記録 (Architecture Decision Record) |
 
 **Supplementary & Utilities**
 
@@ -284,7 +304,7 @@ sekkei/
 │   │   │   ├── resources/       # Template + RFP instruction resources
 │   │   │   ├── lib/             # 57+ core logic modules (quality metrics, analyzers, etc.)
 │   │   │   └── cli/             # CLI commands (citty-based)
-│   │   ├── templates/ja/        # 22 Japanese doc templates
+│   │   ├── templates/ja/        # 27 Japanese doc templates (IPA V-Model compliant)
 │   │   ├── python/              # Export layer (Excel, PDF, DOCX, glossary, diff)
 │   │   ├── bin/                 # setup.js, init.js, cli.js
 │   │   └── adapters/            # Platform configs (Claude Code, Cursor, Copilot)
@@ -301,7 +321,7 @@ sekkei/
 │   │   └── cli.ts               # CLI command entry
 │   └── skills/                  # @bienhoang/sekkei-skills (v1.5.4)
 │       ├── bin/install.js       # Skill installer
-│       └── content/SKILL.md     # 31 sub-commands + workflow router
+│       └── content/SKILL.md     # 40+ sub-commands + workflow router
 └── .github/                     # CI/CD
 ```
 

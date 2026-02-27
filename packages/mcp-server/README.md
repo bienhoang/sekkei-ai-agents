@@ -10,7 +10,7 @@ MCP Server for generating Japanese software specification documents (設計書) 
 
 - **15 MCP tools** — generate, validate, chain-validate, export, translate, glossary, RFP workspace, change requests, plan management, and more
 - **V-model chain** — branching document chain with phase-grouped types (requirements, design, test, supplementary)
-- **22 document templates** — functions-list, requirements, NFR, basic/detail/security design, project-plan, test-plan, UT/IT/ST/UAT spec, operation/migration design, and more
+- **27 document templates** — IPA V-Model compliant with 検印欄 (review stamps): requirements, NFR, architecture/basic/detail/security/db design, report/batch design, screen/interface spec, test-plan, UT/IT/ST/UAT spec, test-result-report, test-evidence, and more
 - **Quality metrics** — coverage scoring, health scoring, risk assessment (5-dimension weighted), NFR classification (IPA NFUG)
 - **15 industry glossaries** — automotive, finance, medical, manufacturing, retail, and more
 - **3 presets** — standard, enterprise, agile project configurations
@@ -144,9 +144,15 @@ cp adapters/copilot/copilot-instructions.md .github/
 
 | Type | Japanese | Description |
 |------|----------|-------------|
+| architecture-design | 方式設計書 | High-level system architecture (IPA Layer 3) |
 | basic-design | 基本設計書 | System architecture, screens, DB, API design |
 | security-design | セキュリティ設計書 | Security architecture and threat modeling |
 | detail-design | 詳細設計書 | Modules, classes, API specs, validation rules |
+| db-design | データベース設計書 | ER diagrams, table definitions, index design |
+| screen-design | 画面設計書 | Screen layout, validation, events, transitions |
+| interface-spec | IF仕様書 | External interface specifications |
+| report-design | 帳票設計書 | Report format, layout, output conditions |
+| batch-design | バッチ処理設計書 | Batch job design, scheduling, error handling |
 
 ### Test Phase
 
@@ -157,6 +163,15 @@ cp adapters/copilot/copilot-instructions.md .github/
 | it-spec | 結合テスト仕様書 | Integration test cases |
 | st-spec | システムテスト仕様書 | System-level test cases |
 | uat-spec | 受入テスト仕様書 | User acceptance test cases |
+| test-result-report | テスト結果報告書 | Test execution results, pass rates, defect summary |
+| test-evidence | テストエビデンス | Screenshots, logs, actual results evidence |
+
+### Management
+
+| Type | Japanese | Description |
+|------|----------|-------------|
+| meeting-minutes | 議事録 | Meeting minutes with action items |
+| decision-record | 設計判断記録 | Architecture Decision Records (ADR) |
 
 ### Supplementary
 
@@ -236,7 +251,7 @@ npm run lint         # Type check
 
 Sekkei MCP Serverは、V字モデルに従って日本語ソフトウェア設計書を生成するためのMCPサーバーです。
 
-22種類のドキュメントテンプレート（要件定義、NFR、基本設計、セキュリティ設計、詳細設計、UT/IT/ST/UAT仕様書など）、15業界対応の用語集、3つのプロジェクトプリセットを搭載。V字モデルの分岐チェーンをサポートし、各ドキュメントの出力が下流ドキュメントの入力となります。品質メトリクス（カバレッジ、健全性、リスク評価）、RFPプリセールスワークフロー、変更要求管理、Markdownテンプレートシステム、Excel/PDF/DOCXエクスポート、用語集管理、クロスリファレンスバリデーションを備えています。
+27種類のIPA準拠ドキュメントテンプレート（方式設計書、要件定義、NFR、基本設計、セキュリティ設計、詳細設計、DB設計、帳票設計、バッチ設計、UT/IT/ST/UAT仕様書、テスト結果報告書など）、検印欄付きレビューワークフロー、15業界対応の用語集、3つのプロジェクトプリセットを搭載。V字モデルの分岐チェーンをサポートし、各ドキュメントの出力が下流ドキュメントの入力となります。品質メトリクス（カバレッジ、健全性、リスク評価）、RFPプリセールスワークフロー、変更要求管理、Markdownテンプレートシステム、Excel/PDF/DOCXエクスポート、用語集管理、クロスリファレンスバリデーションを備えています。
 
 ## License
 
