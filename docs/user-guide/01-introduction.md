@@ -48,6 +48,7 @@ flowchart TD
 - **Tính nhất quán tuyệt đối (Cross-reference)**: Mọi mã định danh (ID) từ Yêu cầu đến Chức năng, Giao diện và Kiểm thử đều được liên kết chặt chẽ và nhất quán.
 - **Xác thực thông minh (Validation)**: Tự động rà soát sai sót, thiếu hụt hoặc mâu thuẫn giữa các tài liệu trước khi bàn giao.
 - **Xuất bản chuẩn IPA**: Tự động tạo file Excel với đầy đủ 4 sheet tiêu chuẩn: **Trang bìa (表紙)**, **Lịch sử sửa đổi (更新履歴)**, **Mục lục (目次)** và **Nội dung chính (本文)**.
+- **Phân tích Chất lượng & Truy xuất nguy cơ**: Bảng điều khiển Analytics (Dashboard) cung cấp chỉ số chất lượng, đồ thị truy xuất tính khả thi (traceability graph) và điểm số rủi ro thời gian thực.
 
 ## Môi trường hỗ trợ
 

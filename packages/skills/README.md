@@ -71,7 +71,11 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 | `/sekkei:diff-visual @before @after` | Color-coded revision Excel (朱書き) |
 | `/sekkei:plan @doc-type` | Create generation plan for large documents |
 | `/sekkei:implement @plan-path` | Execute a generation plan phase by phase |
-| `/sekkei:preview` | Start VitePress docs preview server |
+| `/sekkei:preview` | Start Express+React docs preview server |
+| `/sekkei:dashboard` | Open analytics dashboard (quality metrics, traceability, risk) |
+| `/sekkei:change @doc` | Change request lifecycle (create, approve, propagate) |
+| `/sekkei:mockup` | Generate HTML screen mockups with screenshots |
+| `/sekkei:sitemap` | Generate サイトマップ (System Structure Map) |
 
 ## Workflow Example
 
@@ -117,13 +121,14 @@ Skills invoke MCP tools via Claude Code's MCP integration. Ensure `@bienhoang/se
 | Package | Description |
 |---------|-------------|
 | [@bienhoang/sekkei-mcp-server](../mcp-server/) | Core MCP server that skills invoke for document generation |
-| [@bienhoang/sekkei-preview](../preview/) | VitePress live preview started by `/sekkei:preview` |
+| [@bienhoang/sekkei-preview](../preview/) | Express+React live preview started by `/sekkei:preview` |
+| [@bienhoang/sekkei-dashboard](../dashboard/) | Analytics dashboard started by `/sekkei:dashboard` |
 
 ## 日本語
 
 sekkei-skillsは、Claude Codeのスラッシュコマンドで日本語設計書を生成するスキルです。
 
-V字モデルのドキュメントチェーン（要件定義書→機能一覧→NFR→基本設計書→セキュリティ設計書→詳細設計書→UT/IT/ST/UAT仕様書）に沿って、各種設計書を順番に生成できます。30のサブコマンドで、RFP分析・初期化・生成・検証・エクスポート・翻訳・プレビューまでの全ワークフローをカバーします。
+V字モデルのドキュメントチェーン（要件定義書→機能一覧→NFR→基本設計書→セキュリティ設計書→詳細設計書→UT/IT/ST/UAT仕様書）に沿って、各種設計書を順番に生成できます。32のサブコマンドで、RFP分析・初期化・生成・検証・エクスポート・翻訳・プレビュー・ダッシュボード・変更管理までの全ワークフローをカバーします。
 
 ## License
 

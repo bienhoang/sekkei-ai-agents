@@ -41,6 +41,14 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │ 15. update_chain_status    → CR propagation actions     │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │  ┌─────────────────────────────────────────────────────────┐   │
+│  │    Quality Metrics Libraries (Phase B Dashboard)        │   │
+│  │  • coverage-metrics.ts    → Traceability matrix %       │   │
+│  │  • health-scorer.ts       → Doc health (err+warn)       │   │
+│  │  • risk-scorer.ts         → 5-dimension risk weighted   │   │
+│  │  • batch-validator.ts     → Config-driven batch check   │   │
+│  │  • nfr-classifier.ts      → IPA NFUG classification    │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────────┐   │
 │  │              MCP Resources                             │   │
 │  │  • template://{lang}/{doc-type} → template content     │   │
 │  │  • rfp://instructions/{flow}    → RFP flow instructions│   │
@@ -87,6 +95,55 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
           Output Files
         (Excel, PDF, etc.)
 ```
+
+## Dashboard Architecture (Phase B)
+
+```
+┌──────────────────────────────────────────────────────────┐
+│         Dashboard React SPA (@sekkei-dashboard)          │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │ 5 Pages: Overview, Chain-Status, Analytics,        │  │
+│  │ Changes, Features                                  │  │
+│  ├────────────────────────────────────────────────────┤  │
+│  │ Components (Recharts + @xyflow/react + dagre):     │  │
+│  │  • Traceability Graph (DAG visualization)          │  │
+│  │  • Risk Gauge (5-dimension weighted)               │  │
+│  │  • Health Radar (errors + warnings)                │  │
+│  │  • NFR Radar (IPA NFUG categories)                 │  │
+│  │  • Completion Donut (phase progress %)             │  │
+│  │  • Trend Line (historical metrics)                 │  │
+│  │  • Score Cards (coverage, health, risk)            │  │
+│  └────────────────────────────────────────────────────┘  │
+└────────────┬──────────────────────────────────────────────┘
+             │ REST API
+             ↓
+┌──────────────────────────────────────────────────────────┐
+│   Dashboard Server (Express + Cached MCP Service)        │
+│  • /api/metrics      → quality scores                    │
+│  • /api/coverage     → traceability %                    │
+│  • /api/risk         → risk assessment                   │
+│  • /api/chain-status → doc chain progress                │
+│  • /api/snapshots    → historical data                   │
+│  • /api/workspace    → doc inventory                     │
+│  • POST /api/snapshot → capture metrics                  │
+│                                                          │
+│  Services:                                               │
+│  • cached-mcp-service (5-min cache)                      │
+│  • snapshot-service (metrics persistence)                │
+│  • workspace-scanner (doc enumeration)                   │
+│  • changelog-parser (change extraction)                  │
+└────────────┬──────────────────────────────────────────────┘
+             │ MCP Client Integration
+             ↓
+        MCP Server (Quality Metrics)
+```
+
+Quality Metrics Libraries (in MCP Server):
+- **coverage-metrics.ts** — REQ→design, REQ→test traceability %
+- **health-scorer.ts** — Score = 100 - 10*errors - 3*warnings
+- **risk-scorer.ts** — 30% trace + 20% nfr + 20% test + 15% freshness + 15% health
+- **batch-validator.ts** — Config-driven multi-doc validation
+- **nfr-classifier.ts** — IPA NFUG categories (Availability, Performance, etc.)
 
 ## Document Chain (V-Model) — v2.0
 

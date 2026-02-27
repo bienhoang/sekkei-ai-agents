@@ -693,100 +693,57 @@ Auto-migrate v1 configs to v2.0:
 
 ## Phase A: SIer Psychology-Driven Features (NEW)
 
-### New Document Types (5 types + 5 ID prefixes)
+### 5 New Document Types + Libraries
 
-1. **test-evidence** (EV-xxx) — テストエビデンス
-   - Template: `templates/ja/test-evidence.md`
-   - Tool: generate_document with `doc_type: "test-evidence"`
-   - Output path: `08-test/evidence/`
+- **test-evidence** (EV-xxx), **meeting-minutes** (MTG-xxx), **decision-record** (ADR-xxx), **interface-spec** (IF-xxx), **screen-design** (PG-xxx)
+- **Core libraries:** confidence-extractor, traceability-extractor, content-sanitizer, impact-analyzer
+- **Tools:** simulate_change_impact, import_document (Excel→Markdown reverse migration)
+- **Config:** approval_chain, ui_mode, learning_mode support
 
-2. **meeting-minutes** (MTG-xxx) — 議事録 (meeting minutes/decisions)
-   - Template: `templates/ja/meeting-minutes.md`
-   - Supports: decision tracking, linking to affected documents
-   - Output path: `meeting-minutes.md`
+## Phase B: Quality Metrics Libraries (NEW v2.6.3)
 
-3. **decision-record** (ADR-xxx) — 設計決定記録 (Architecture Decision Records)
-   - Template: `templates/ja/decision-record.md`
-   - Combats 属人化 (knowledge silos) with structured context, options, consequences
-   - Output path: `decision-records.md`
+### Dashboard Quality Scorers
 
-4. **interface-spec** (IF-xxx) — インターフェース仕様書 (Interface Specifications)
-   - Template: `templates/ja/interface-spec.md`
-   - Multi-vendor coordination support
-   - Output path: `interface-spec.md`
+1. **coverage-metrics.ts** — Traceability matrix coverage
+   - `calculateCoverage()` — REQ→design %, REQ→test %
+   - Returns CoverageMetrics with required/traced counts
 
-5. **screen-design** (PG-xxx) — 画面設計書 (Screen Design/Mockups)
-   - Template: `templates/ja/screen-design.md`
-   - Reduces Excel方眼紙 formatting time
-   - Output path: `09-ui/screen-design.md`
+2. **health-scorer.ts** — Document health scoring
+   - Formula: 100 - 10*error_count - 3*warning_count
+   - Returns HealthScore with grade (A/B/C/D/F)
 
-### New MCP Tools (2 tools)
+3. **risk-scorer.ts** — Multi-dimension risk assessment
+   - 5 dimensions: 30% traceability + 20% NFR + 20% test + 15% freshness + 15% health
+   - Returns RiskScore with grade (green/yellow/red)
 
-1. **simulate_change_impact** (tools/simulate-impact.ts)
-   - Impact graph visualization for specification changes
-   - Cascade analysis: what breaks when one doc changes?
-   - Input: doc ID, change type (section added/removed/modified)
-   - Output: ImpactGraph with affected docs, priority, risk
+4. **batch-validator.ts** — Config-driven batch validation
+   - Validates multiple docs per chain configuration
+   - Returns BatchValidationResult with error counts
 
-2. **import_document** (tools/import-document.ts)
-   - Reverse migration: Excel/Markdown → Sekkei
-   - Auto-detection of document structure
-   - Python bridge: `python/cli.py` (import-excel action)
+5. **nfr-classifier.ts** — IPA NFUG category classification
+   - Categories: Availability, Performance, Operability, Migration, Security, Environment
+   - Returns ClassificationResult with category distribution
 
-### Enhanced Tool Parameters
+### Dashboard Components (@sekkei-dashboard)
 
-- **generate_document**:
-  - `include_confidence` — add AI confidence scores (高/中/低)
-  - `include_traceability` — add source citations ("この記述は{DOC}-{ID}に基づく")
-  - `ticket_ids` — link to change request IDs
-
-- **export_document**:
-  - `read_only` param — strip internal metadata for client-safe exports via `content-sanitizer.ts`
-
-### New Core Libraries (4 modules)
-
-1. **confidence-extractor.ts** — Extract AI confidence scores per section
-   - Function: `extractConfidenceScores(content: string): SectionConfidence[]`
-   - Levels: high (信頼度高), medium (信頼度中), low (信頼度低)
-
-2. **traceability-extractor.ts** — Generate source traceability
-   - Function: `generateTraceability(content: string, context: TraceabilityContext): TraceabilityMap`
-   - Format: "この記述は{DOC_TYPE}-{ID}に基づく"
-
-3. **content-sanitizer.ts** — Strip internal metadata
-   - Function: `sanitizeForClient(content: string): string`
-   - Removes: confidence scores, internal notes, AI markers
-   - Preserves: cross-references, structure, technical content
-
-4. **impact-analyzer.ts** — Spec change cascade analysis
-   - Function: `simulateChangeImpact(config: ProjectConfig, change: DocChange): ImpactGraph`
-   - Output: affected documents, dependency levels, update priority
-
-### New Configuration Fields (Phase A)
-
-```yaml
-approval_chain:                  # Approval workflows per doc type
-ui_mode: "power"                # "simple" or "power" (markdown + automation)
-learning_mode: true             # Annotate docs with standard explanations
-```
-
-### Enhanced diff_analyzer.py (Phase A)
-- Granular line-by-line change tracking
-- 朱書き (red character) marks for visual diffs
+- **5 Pages:** Overview, Chain-Status, Analytics, Changes, Features
+- **Charts:** Traceability DAG (Recharts + @xyflow/react), risk/health/NFR radars, trend lines
+- **Services:** cached-mcp-service, snapshot-service, workspace-scanner, changelog-parser
+- **CLI:** `sekkei-dashboard` command for local development
 
 ## Summary Statistics
 
-- **Total Files:** 140+ files (38+ TS src, Python, 26+ templates, 15 glossaries, adapters, skills, docs)
-- **TypeScript Files:** 38+ source files in src/ — MCP server, tools, libraries
-- **Templates:** ja/22 + shared/4 + rfp/7 + 15 YAML glossaries + 3 presets
-- **Tests:** 22+ unit test files | **Adapters:** SKILL.md, Cursor, Copilot
-- **MCP Tools:** 13 (8 core + 2 Phase A + 1 v3 + 1 RFP + 1 CR)
+- **Total Source Files:** 194+ files (src + templates + adapters + dashboard)
+- **TypeScript Files:** 100+ source files — MCP (57 lib modules), tools, dashboard
+- **Templates:** ja/22 + shared/4 + rfp/7 + wireframe/9 CSS + 15 YAML glossaries + 3 presets
+- **Tests:** 22+ unit + integration test files | **Adapters:** SKILL.md, Cursor, Copilot, Dashboard
+- **MCP Tools:** 15 (8 core + 3 Phase A + 2 v3 + 1 RFP + 1 CR/Plan)
 - **MCP Resources:** template:// URIs + rfp://instructions/{flow} (7 flows)
 
 ## Development & Deployment
 
-**Workflow:** `npm run dev` (hot reload), `npm run lint` (type check), `npm run build` (compile), `npm test` (Jest)
+**Workflow:** `npm run build` (compile), `npm test` (Jest), `npm run lint` (type check)
 
-**Runtime:** Node.js 20+ (ESM), Python 3.8+, STDIO transport (JSON-RPC 2.0 on stdout, logs on stderr)
+**Runtime:** Node.js 20+ (ESM), Python 3.8+, STDIO (JSON-RPC 2.0 stdout, logs stderr)
 
-**Setup:** `npm install`, `pip install -r python/requirements.txt`, `npx sekkei init` (auto-installs adapters)
+**Setup:** `npm install && npx sekkei init` (auto-installs adapters + Python deps)

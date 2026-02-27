@@ -4,7 +4,7 @@
 
 ### Vision
 
-**Sekkei (設計) v1.1.1** — an AI-powered MCP server that generates comprehensive Japanese software specification documents following the V-model architecture pattern. The system automates the transformation from RFP (Request for Proposal) through a chain of specification documents, each feeding the next, ensuring traceability and consistency across the entire specification hierarchy. Phase A adds SIer psychology-driven features: AI confidence scoring, source traceability, presales RFP lifecycle management, and document import/impact analysis.
+**Sekkei (設計) v2.6.3** — an AI-powered MCP server that generates comprehensive Japanese software specification documents following the V-model architecture pattern. Includes dashboard analytics with quality metrics, traceability graphs, and snapshot history. SIer psychology-driven features: AI confidence scoring, source traceability, presales RFP lifecycle management, and document import/impact analysis. 5 quality-scoring libraries for risk assessment, health evaluation, and coverage analysis.
 
 ### Mission
 
@@ -387,6 +387,14 @@ Exports via Python CLI (openpyxl, WeasyPrint):
 | FR-028 | RFP presales lifecycle management with state machine | ✅ Complete (v1.1.1) |
 | FR-029 | Auto-extract requirements and scope from RFP | ✅ Complete (v1.1.1) |
 | FR-030 | Generate presales proposal with budget/timeline | ✅ Complete (v1.1.1) |
+| FR-031 | Calculate and display traceability matrix coverage | ✅ Complete (v2.6.3) |
+| FR-032 | Score document health (errors, warnings, completeness) | ✅ Complete (v2.6.3) |
+| FR-033 | Risk assessment with 5-dimension weighted scoring | ✅ Complete (v2.6.3) |
+| FR-034 | Batch validation from chain configuration | ✅ Complete (v2.6.3) |
+| FR-035 | NFR classification by IPA NFUG categories | ✅ Complete (v2.6.3) |
+| FR-036 | Traceability graph visualization with DAG layout | ✅ Complete (v2.6.3) |
+| FR-037 | Dashboard analytics and quality metrics display | ✅ Complete (v2.6.3) |
+| FR-038 | Snapshot system for historical metric tracking | ✅ Complete (v2.6.3) |
 
 ### Non-Functional Requirements
 
@@ -550,6 +558,16 @@ sekkei/
 - ✅ Lifecycle commands: version, uninstall, update, health-check
 - 🔄 朱書き Diff View (color-coded revisions) — partial, enhanced diff_analyzer.py
 - 📅 Digital approval workflows with timestamp tracking (planned Phase B)
+
+### Phase B: Dashboard & Quality Metrics (IN PROGRESS)
+- ✅ Quality metrics library (5 scorers): coverage, health, risk, NFR classification, batch validation
+- ✅ Analytics dashboard (5 pages): overview, chain-status, analytics, changes, features
+- ✅ Traceability visualization: DAG with Recharts + @xyflow/react + dagre
+- ✅ Risk/health/NFR radars: 5-dimension visualization
+- ✅ Snapshot system: historical metric capture per version tag
+- ✅ Workspace scanner: doc inventory + changelog parser
+- ✅ Cached MCP service: efficient metrics retrieval
+- 📅 Approval workflow UI (Phase C)
 
 ### Phase 4: Multilingual & Export (IN PROGRESS)
 - 🔄 Full English templates

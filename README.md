@@ -48,9 +48,10 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.4.0 | Core MCP server — document generation, validation, export, CLI |
-| [@bienhoang/sekkei-preview](./packages/preview/) | 1.3.0 | Express+React live preview with VitePress-like UI + Tiptap v3 WYSIWYG editor |
-| [@bienhoang/sekkei-skills](./packages/skills/) | 1.5.0 | Claude Code slash commands (`/sekkei:*`) — 31 sub-commands |
+| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.4.4 | Core MCP server — document generation, validation, export, CLI |
+| [@bienhoang/sekkei-preview](./packages/preview/) | 1.3.4 | Express+React live preview + Tiptap v3 WYSIWYG editor |
+| [@bienhoang/sekkei-skills](./packages/skills/) | 1.5.4 | Claude Code slash commands (`/sekkei:*`) — 32 sub-commands |
+| [@bienhoang/sekkei-dashboard](./packages/dashboard/) | 0.1.1 | Analytics dashboard — chain status, quality metrics, traceability graphs, snapshots |
 
 ## Quick Start
 
@@ -134,6 +135,17 @@ chmod +x install.sh && ./install.sh          # Build + install (includes Python)
 - **22 Templates**: Japanese (ja) with YAML frontmatter — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
 - **Python Bridge**: `execFile`-based (no shell injection) for Excel/PDF/DOCX export via `SEKKEI_INPUT` env var
 
+### Dashboard (NEW)
+
+Real-time analytics dashboard for specification chain monitoring:
+- **5 pages**: Overview, Chain Status, Analytics, Changes, Features
+- **Quality Metrics**: Traceability coverage, health scoring, risk assessment (5-dimension weighted)
+- **Visualization**: Traceability DAG (Recharts + @xyflow/react + dagre), risk/health radars, completion donuts
+- **Integration**: MCP client integration, cached-mcp-service, workspace-scanner
+- **Client**: React SPA with Tailwind CSS, Lucide icons
+- **Server**: Express backend with 7 routes
+- **CLI**: `sekkei-dashboard` command
+
 ### CLI (`sekkei` command)
 
 Built with citty. Available commands:
@@ -150,7 +162,7 @@ Built with citty. Available commands:
 
 ## Slash Commands (Claude Code)
 
-31 sub-commands covering the full V-model workflow:
+32 sub-commands covering the full V-model workflow:
 
 **Requirements Phase**
 
@@ -203,6 +215,7 @@ Built with citty. Available commands:
 | `/sekkei:version` | Show version + health check |
 | `/sekkei:uninstall` | Remove Sekkei from Claude Code |
 | `/sekkei:rebuild` | Rebuild and re-install skill + MCP |
+| `/sekkei:dashboard` | Open analytics dashboard (quality metrics, traceability, risk) |
 
 ## Platform Setup
 
@@ -265,23 +278,30 @@ sekkei/
 ├── install.sh                   # Local install script for Claude Code
 ├── sekkei.config.example.yaml   # Template for project config
 ├── packages/
-│   ├── mcp-server/              # @bienhoang/sekkei-mcp-server
+│   ├── mcp-server/              # @bienhoang/sekkei-mcp-server (v2.4.4)
 │   │   ├── src/
 │   │   │   ├── tools/           # 15 MCP tool handlers
 │   │   │   ├── resources/       # Template + RFP instruction resources
-│   │   │   ├── lib/             # Core logic (template-loader, python-bridge, etc.)
+│   │   │   ├── lib/             # 57+ core logic modules (quality metrics, analyzers, etc.)
 │   │   │   └── cli/             # CLI commands (citty-based)
 │   │   ├── templates/ja/        # 22 Japanese doc templates
 │   │   ├── python/              # Export layer (Excel, PDF, DOCX, glossary, diff)
 │   │   ├── bin/                 # setup.js, init.js, cli.js
 │   │   └── adapters/            # Platform configs (Claude Code, Cursor, Copilot)
-│   ├── preview/                 # @bienhoang/sekkei-preview
+│   ├── preview/                 # @bienhoang/sekkei-preview (v1.3.4)
 │   │   └── src/
 │   │       ├── client/          # React + Tiptap v3 WYSIWYG editor
 │   │       └── server/          # Express server + API
-│   └── skills/                  # @bienhoang/sekkei-skills
+│   ├── dashboard/               # @bienhoang/sekkei-dashboard (v0.1.1)
+│   │   ├── src/
+│   │   │   ├── pages/           # 5 dashboard pages (React)
+│   │   │   ├── components/      # Charts (Recharts), traceability graph
+│   │   │   ├── services/        # MCP client, snapshot, workspace scanner
+│   │   │   └── server/          # Express backend (7 routes)
+│   │   └── cli.ts               # CLI command entry
+│   └── skills/                  # @bienhoang/sekkei-skills (v1.5.4)
 │       ├── bin/install.js       # Skill installer
-│       └── content/SKILL.md     # 30 sub-commands + workflow router
+│       └── content/SKILL.md     # 31 sub-commands + workflow router
 └── .github/                     # CI/CD
 ```
 

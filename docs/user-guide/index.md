@@ -58,7 +58,7 @@ Tài liệu hướng dẫn này được biên soạn dành riêng cho các vai 
 
 ---
 
-> **Phiên bản:** Tài liệu áp dụng cho Sekkei v2.0 trở lên.
+> **Phiên bản:** Tài liệu áp dụng cho Sekkei v2.6.3 trở lên.
 > Hãy sử dụng lệnh `/sekkei:version` để xác nhận phiên bản của bạn.
  Proudly presented by Antigravity.
  Proudly presented by Antigravity.

@@ -36,7 +36,8 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 - Architecture diagrams (MCP server, document chain, output structure)
 - V-model document chain with split document support
 - Numbered output structure rules (01-rfp through 10-glossary)
-- 15 MCP tools and their responsibilities (8 core + 3 Phase A + 1 RFP + 3 CR/Plan)
+- 15 MCP tools and their responsibilities
+- Dashboard architecture (5 pages, 7 routes, quality metrics pipeline)
 - Phase 3 Intelligence Layer: code-analyzer, staleness-detector, structure-rules, google-sheets-exporter
 - CLI commands including new `watch` command for continuous monitoring
 - Core libraries (validator, resolver, manifest-manager, python-bridge, etc.)
@@ -98,7 +99,7 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 
 **Includes:**
 - Complete repository structure (Turborepo monorepo organization)
-- File tree with descriptions (3 scoped packages: @bienhoang/sekkei-{mcp-server,preview,skills})
+- File tree with descriptions (4 scoped packages: @bienhoang/sekkei-{mcp-server,preview,skills,dashboard})
 - **@bienhoang/sekkei-mcp-server:** 93 TypeScript files overview
 - **@bienhoang/sekkei-preview:** VitePress + Milkdown (9 TS+Vue files)
 - **@bienhoang/sekkei-skills:** Claude Code SKILL.md (30+ sub-commands)
@@ -288,6 +289,14 @@ When updating documentation:
 
 ## Version History
 
+- **v2.6.4** (2026-02-27) — Dashboard Analytics & Quality Metrics
+  - NEW: `@bienhoang/sekkei-dashboard` (v0.1.1) — full-stack analytics dashboard
+  - 5 quality-scoring libs: coverage-metrics, health-scorer, risk-scorer, batch-validator, nfr-classifier
+  - Traceability graph (Recharts + @xyflow/react + dagre), risk/health radars, completion donuts
+  - Snapshot system for historical metric tracking
+  - Mockup improvements: mobile shell template, multi-layout system (9 templates)
+  - Lucide SVG icons replacing emoji across dashboard
+  - Architecture optimization: token diet & parallelization
 - **v1.1.1** (2026-02-23) — Presales RFP Lifecycle Management
   - New `/sekkei:rfp` command with state machine (RFP_RECEIVED → SCOPE_FREEZE)
   - RFP parsing, requirement extraction, scope definition, budget estimation
@@ -308,5 +317,5 @@ When updating documentation:
 
 ---
 
-**Last Updated:** 2026-02-24 (v1.1.2)
+**Last Updated:** 2026-02-27 (v2.6.4)
 **Documentation Status:** Complete ✅ (Split oversized docs into modular files, all files <800 lines)

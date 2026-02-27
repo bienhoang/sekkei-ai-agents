@@ -8,12 +8,14 @@ MCP Server for generating Japanese software specification documents (設計書) 
 
 ## Features
 
-- **10 MCP tools** — generate, validate, chain-validate, export, translate, glossary, RFP workspace, and more
+- **15 MCP tools** — generate, validate, chain-validate, export, translate, glossary, RFP workspace, change requests, plan management, and more
 - **V-model chain** — branching document chain with phase-grouped types (requirements, design, test, supplementary)
-- **18 document templates** — functions-list, requirements, NFR, basic/detail/security design, project-plan, test-plan, UT/IT/ST/UAT spec, and more
+- **22 document templates** — functions-list, requirements, NFR, basic/detail/security design, project-plan, test-plan, UT/IT/ST/UAT spec, operation/migration design, and more
+- **Quality metrics** — coverage scoring, health scoring, risk assessment (5-dimension weighted), NFR classification (IPA NFUG)
 - **15 industry glossaries** — automotive, finance, medical, manufacturing, retail, and more
 - **3 presets** — standard, enterprise, agile project configurations
 - **RFP workflow** — MCP tool + resources for cross-editor presales workflow
+- **Change requests** — track and propagate specification changes across the document chain
 - **Template system** — Markdown templates with YAML frontmatter, override support
 - **Excel/PDF/DOCX export** — IPA-standard 4-sheet Excel, PDF with Japanese fonts, Word
 - **Multi-platform** — Claude Code, Cursor, VS Code/Copilot via adapters
@@ -86,7 +88,12 @@ cp adapters/copilot/copilot-instructions.md .github/
 | `manage_glossary` | CRUD operations for project terminology glossary |
 | `analyze_update` | Diffs upstream changes and finds downstream impacts |
 | `validate_chain` | Validates cross-references across the entire document chain |
+| `simulate_change_impact` | Simulates impact of specification changes across the chain |
+| `import_document` | Imports external documents (Excel → Sekkei Markdown) |
 | `manage_rfp_workspace` | RFP presales workflow — create, status, transition, read, write |
+| `manage_change_request` | Change request lifecycle — create, approve, propagate, rollback |
+| `update_chain_status` | Update document chain status in config |
+| `manage_plan` | Multi-phase document generation plan orchestration |
 
 ## MCP Resources
 
@@ -221,14 +228,15 @@ npm run lint         # Type check
 
 | Package | Description |
 |---------|-------------|
-| [@bienhoang/sekkei-preview](../preview/) | VitePress live preview + WYSIWYG editor for generated documents |
+| [@bienhoang/sekkei-preview](../preview/) | Express+React live preview + WYSIWYG editor for generated documents |
 | [@bienhoang/sekkei-skills](../skills/) | Claude Code slash commands (`/sekkei:*`) for the full workflow |
+| [@bienhoang/sekkei-dashboard](../dashboard/) | Analytics dashboard — quality metrics, traceability graphs, snapshots |
 
 ## 日本語
 
 Sekkei MCP Serverは、V字モデルに従って日本語ソフトウェア設計書を生成するためのMCPサーバーです。
 
-18種類のドキュメントテンプレート（要件定義、NFR、基本設計、セキュリティ設計、詳細設計、UT/IT/ST/UAT仕様書など）、15業界対応の用語集、3つのプロジェクトプリセットを搭載。V字モデルの分岐チェーンをサポートし、各ドキュメントの出力が下流ドキュメントの入力となります。RFPプリセールスワークフロー、Markdownテンプレートシステム、Excel/PDF/DOCXエクスポート、用語集管理、クロスリファレンスバリデーションを備えています。
+22種類のドキュメントテンプレート（要件定義、NFR、基本設計、セキュリティ設計、詳細設計、UT/IT/ST/UAT仕様書など）、15業界対応の用語集、3つのプロジェクトプリセットを搭載。V字モデルの分岐チェーンをサポートし、各ドキュメントの出力が下流ドキュメントの入力となります。品質メトリクス（カバレッジ、健全性、リスク評価）、RFPプリセールスワークフロー、変更要求管理、Markdownテンプレートシステム、Excel/PDF/DOCXエクスポート、用語集管理、クロスリファレンスバリデーションを備えています。
 
 ## License
 

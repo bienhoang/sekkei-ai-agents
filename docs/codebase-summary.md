@@ -2,12 +2,13 @@
 
 ## Repository Overview
 
-**Sekkei (設計)** v2.0 is a monorepo containing:
-- **@bienhoang/sekkei-mcp-server** (TypeScript/93 files/8,200+ LOC) — AI specification document generation with V-model chain restructure + Phase A + v3 extensions
-- **@bienhoang/sekkei-preview** (Express + React + Tiptap v3/9 TS+TSX files) — Express server + React SPA + Tiptap v3 WYSIWYG editor
-- **@bienhoang/sekkei-skills** (Claude Code SKILL.md with 30+ sub-commands) — Claude Code skill definition + reference docs
-- **Python Layer** (7 files in cli.py, rest in .venv) — Export & NLP utilities (Excel/PDF/DOCX/matrix)
-- **Templates** (22 MD + 15 YAML glossaries) — Japanese specification templates with industry terminology
+**Sekkei (設計)** v2.6.3 is a monorepo containing:
+- **@bienhoang/sekkei-mcp-server** (TypeScript/194 source files/~9,500+ LOC) — AI specification document generation with V-model chain + 5 quality-scoring libs + Phase A features
+- **@bienhoang/sekkei-preview** (Express + React + Tiptap v3) — Live preview with WYSIWYG editor
+- **@bienhoang/sekkei-dashboard** (React + Express + Recharts, NEW) — Analytics dashboard with quality metrics, traceability graphs, snapshots
+- **@bienhoang/sekkei-skills** (Claude Code SKILL.md with 31+ sub-commands) — Claude Code skill definition + reference docs
+- **Python Layer** (7 files) — Export & NLP utilities (Excel/PDF/DOCX/matrix)
+- **Templates** (22 MD + 15 YAML glossaries + 9 wireframe CSS) — Japanese specification templates with industry terminology
 - **Adapters** — Cursor (mcp.json), Copilot (copilot-instructions.md), Claude Code integration
 - **Plans & Docs** — Implementation plans, research reports, documentation
 

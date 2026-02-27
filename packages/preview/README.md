@@ -4,14 +4,16 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../../LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D20-brightgreen)](https://nodejs.org/)
 
-VitePress-based live preview + WYSIWYG editor for Sekkei specification documents.
+Express+React live preview + WYSIWYG editor for Sekkei specification documents.
 
 ## Features
 
-- **VitePress SSG** — fast, Markdown-native documentation preview
-- **Milkdown WYSIWYG** — rich-text editing for specification documents
+- **Express+React** — fast, responsive document preview server
+- **Tiptap v3 WYSIWYG** — rich-text editing for specification documents
 - **Auto sidebar** — generates navigation from `sekkei.config.yaml`
-- **Vue 3** — custom theme with Japanese document styling
+- **Tailwind CSS v4** — clean, responsive styling with Japanese document support
+- **Full-text search** — instant search across all generated documents
+- **Mermaid rendering** — diagram support in preview
 - **Live reload** — instant preview updates on file changes
 
 ## Installation
@@ -53,9 +55,9 @@ The CLI reads `sekkei.config.yaml` from the project root to generate VitePress c
 ## How It Works
 
 1. Reads `sekkei.config.yaml` to discover generated documents
-2. Generates VitePress config with sidebar from document chain
-3. Serves the `workspace-docs/` directory as a VitePress site
-4. Milkdown editor provides WYSIWYG editing with live preview
+2. Generates sidebar navigation from document chain
+3. Serves the `workspace-docs/` directory with Express backend
+4. Tiptap v3 editor provides WYSIWYG editing with live preview
 
 ## Ecosystem
 
@@ -63,12 +65,13 @@ The CLI reads `sekkei.config.yaml` from the project root to generate VitePress c
 |---------|-------------|
 | [@bienhoang/sekkei-mcp-server](../mcp-server/) | Core MCP server — generates the documents this package previews |
 | [@bienhoang/sekkei-skills](../skills/) | Claude Code slash commands — `/sekkei:preview` starts this server |
+| [@bienhoang/sekkei-dashboard](../dashboard/) | Analytics dashboard — quality metrics, traceability graphs |
 
 ## 日本語
 
-sekkei-previewは、Sekkeiで生成された日本語設計書をVitePressベースでプレビュー・編集するツールです。
+sekkei-previewは、Sekkeiで生成された日本語設計書をExpress+Reactベースでプレビュー・編集するツールです。
 
-Milkdown WYSIWYGエディタにより、ブラウザ上でリッチテキスト編集が可能です。`sekkei.config.yaml`からサイドバーナビゲーションを自動生成し、ドキュメントチェーンの順序で表示します。
+Tiptap v3 WYSIWYGエディタにより、ブラウザ上でリッチテキスト編集が可能です。`sekkei.config.yaml`からサイドバーナビゲーションを自動生成し、ドキュメントチェーンの順序で表示します。
 
 ## License
 

@@ -126,6 +126,16 @@ Hệ thống sẽ rà soát các mã ID, các liên kết chéo và các đề m
 
 ---
 
+## Bước 6: Xem Dashboard Phân Tích
+
+Để theo dõi chỉ số chất lượng tài liệu, đồ thị truy xuất và điểm số rủi ro:
+```bash
+/sekkei:dashboard
+```
+Giao diện web sẽ mở tại `http://localhost:4002` hiển thị các chỉ số hiệu năng, độ hoàn chỉnh của chuỗi tài liệu (chain completeness) và truy xuất liên kết ID qua các tài liệu.
+
+---
+
 ## Các bước tiếp theo
 
 Sau khi hoàn thiện bản **要件定義書 (Định nghĩa yêu cầu)**, bạn có thể tiếp tục triển khai các tài liệu kế tiếp trong chuỗi liên kết:

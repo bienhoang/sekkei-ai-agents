@@ -153,7 +153,7 @@ async ({ config_path, doc_type }) => {
 All document types defined in `types/documents.ts`:
 
 ```typescript
-// v2.0: 20 types organized by phase
+// v2.0: 22 types organized by phase
 export const DOC_TYPES = [
   // Requirements phase
   "requirements", "nfr", "functions-list", "project-plan",

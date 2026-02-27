@@ -399,6 +399,39 @@ console.log("message");
 console.error("error");
 ```
 
+## React Component Patterns (Dashboard)
+
+Dashboard uses Recharts for charts and @xyflow/react for graph visualization:
+
+```typescript
+// Chart components (Recharts)
+import { LineChart, Line, CartesianGrid, Tooltip, Legend } from "recharts";
+
+export const TrendChart = ({ data }) => (
+  <LineChart data={data}>
+    <CartesianGrid strokeDasharray="3 3" />
+    <Tooltip />
+    <Legend />
+    <Line type="monotone" dataKey="value" stroke="#2563eb" />
+  </LineChart>
+);
+
+// Graph components (@xyflow/react + dagre)
+import ReactFlow, { Node, Edge } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+
+export const TraceabilityGraph = ({ nodes, edges }) => (
+  <ReactFlow nodes={nodes} edges={edges} fitView>
+    {/* DAG layout applied via dagre */}
+  </ReactFlow>
+);
+```
+
+**Icon Convention:** Use lucide-react for all UI icons (replaced emoji in v2.6.3)
+```typescript
+import { AlertCircle, CheckCircle, TrendingUp } from "lucide-react";
+```
+
 ## State Machines & Documentation
 
 See [code-practices.md](./code-practices.md) for detailed guidance on state machines, schema validation, document types, configuration, cross-references, testing patterns, code quality standards, and documentation practices.

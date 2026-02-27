@@ -1,6 +1,6 @@
 # Tham Chiếu Lệnh — Quick Reference
 
-> Lookup nhanh tất cả lệnh (31 slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
+> Lookup nhanh tất cả lệnh (32 slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
 
 ---
 
@@ -36,7 +36,7 @@
 
 ---
 
-## Section 3: Lệnh Tiện Ích (14 lệnh)
+## Section 3: Lệnh Tiện Ích (15 lệnh)
 
 | # | Lệnh | Syntax | Options / Subcommands | Mục đích |
 |---|------|--------|-----------------------|----------|
@@ -51,9 +51,10 @@
 | 27 | **plan** | `/sekkei:plan @doc-type` | — | Khảo sát yêu cầu + tạo kế hoạch triển khai nhiều phase |
 | 28 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
 | 29 | **preview** | `/sekkei:preview` | `--docs` / `--guide` / `--port <number>` / `--no-open` / `--help` | Khởi động Express preview server tại localhost:4983 |
-| 30 | **version** | `/sekkei:version` | `--json` | Version info + MCP server status |
-| 31 | **doctor** | `sekkei doctor` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
-| 32 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |
+| 30 | **dashboard** | `/sekkei:dashboard` | `--port <number>` / `--open` | Bảng điều khiển Analytics — chỉ số chất lượng, đồ thị truy xuất, điểm rủi ro (mặc định: port 4002) |
+| 31 | **version** | `/sekkei:version` | `--json` | Version info + MCP server status |
+| 32 | **doctor** | `sekkei doctor` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
+| 33 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |
 
 ---
 
