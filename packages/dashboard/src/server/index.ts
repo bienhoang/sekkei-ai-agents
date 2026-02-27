@@ -8,6 +8,7 @@ import getPort from 'get-port'
 import open from 'open'
 import { createApp } from './app.js'
 import { DashboardMcpClient } from './services/mcp-client.js'
+import { CachedMcpService } from './services/cached-mcp-service.js'
 import * as configReader from './services/config-reader.js'
 import * as workspaceScanner from './services/workspace-scanner.js'
 import * as changelogParser from './services/changelog-parser.js'
@@ -130,6 +131,8 @@ async function main(): Promise<void> {
     process.stderr.write('Warning: MCP client unavailable, using filesystem-only data\n')
   }
 
+  const cachedMcp = new CachedMcpService(mcpClient)
+
   const services: ServiceContext = {
     docsRoot,
     configPath,
@@ -137,6 +140,7 @@ async function main(): Promise<void> {
     workspaceScanner,
     changelogParser,
     mcpClient,
+    cachedMcp,
   }
 
   const port = await getPort({ port: preferredPort })

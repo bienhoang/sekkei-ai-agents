@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Bar } from 'react-chartjs-2'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { useApi } from '../hooks/use-api'
 import { AlertCard } from '../components/cards/alert-card'
 import { PageSkeleton } from '../components/loading/page-skeleton'
@@ -61,14 +61,10 @@ export function ChangeHistoryPage() {
 
   const docTypes = [...new Set(data.changelog.map(e => e.docType))]
 
-  const timelineChartData = {
-    labels: data.timeline.map(t => t.date),
-    datasets: [{
-      label: 'Changes',
-      data: data.timeline.map(t => t.count),
-      backgroundColor: '#2563eb',
-    }],
-  }
+  const timelineData = data.timeline.map(t => ({
+    date: t.date,
+    changes: t.count,
+  }))
 
   return (
     <div className="space-y-6">
@@ -100,9 +96,15 @@ export function ChangeHistoryPage() {
       {data.timeline.length > 0 && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-4">
           <h3 className="text-sm font-medium text-[var(--color-text-muted)] mb-3">Changes Over Time</h3>
-          <div className="h-48">
-            <Bar data={timelineChartData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
-          </div>
+          <ResponsiveContainer width="100%" height={192}>
+            <BarChart data={timelineData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Bar dataKey="changes" fill="#2563eb" name="Changes" />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       )}
 

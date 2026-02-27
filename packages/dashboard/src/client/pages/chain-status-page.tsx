@@ -1,8 +1,20 @@
-import { useState } from 'react'
+import { useState, lazy, Suspense } from 'react'
 import { useApi } from '../hooks/use-api'
 import { AlertCard } from '../components/cards/alert-card'
 import { VModelPipeline } from '../components/charts/v-model-pipeline'
 import { PageSkeleton } from '../components/loading/page-skeleton'
+
+const TraceabilityGraph = lazy(() => import('../components/charts/traceability-graph'))
+
+interface AnalyticsData {
+  crossRef: {
+    totalDefined: number
+    totalReferenced: number
+    missing: string[]
+    orphaned: string[]
+    coverageByType: { idType: string; defined: number; referenced: number; coverage: number }[]
+  }
+}
 
 interface ChainGroup {
   phase: string
@@ -24,6 +36,7 @@ const STATUS_BADGE: Record<string, string> = {
 
 export function ChainStatusPage() {
   const { data, loading, error } = useApi<ChainData>('/api/chain')
+  const { data: analyticsData } = useApi<AnalyticsData>('/api/analytics')
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null)
   const [filterPhase, setFilterPhase] = useState<string>('all')
 
@@ -53,6 +66,12 @@ export function ChainStatusPage() {
       </div>
 
       <VModelPipeline entries={allEntries} onNodeClick={setSelectedDoc} />
+
+      {analyticsData && (
+        <Suspense fallback={<div className="h-[460px] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg animate-pulse" />}>
+          <TraceabilityGraph data={analyticsData} />
+        </Suspense>
+      )}
 
       {selectedEntry && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-4">

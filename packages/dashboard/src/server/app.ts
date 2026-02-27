@@ -6,6 +6,8 @@ import { createChainRouter } from './routes/chain.js'
 import { createAnalyticsRouter } from './routes/analytics.js'
 import { createChangesRouter } from './routes/changes.js'
 import { createFeaturesRouter } from './routes/features.js'
+import { createQualityMetricsRouter } from './routes/quality-metrics.js'
+import { createSnapshotsRouter } from './routes/snapshots.js'
 import type { ServiceContext, StatusData } from './types.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -29,6 +31,8 @@ export function createApp(options: AppOptions): express.Express {
   app.use('/api', createAnalyticsRouter(services))
   app.use('/api', createChangesRouter(services))
   app.use('/api', createFeaturesRouter(services))
+  app.use('/api', createQualityMetricsRouter(services))
+  app.use('/api', createSnapshotsRouter(services))
 
   // Status endpoint
   app.get('/api/status', (_req, res) => {

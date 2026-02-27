@@ -4,6 +4,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { validateChain } from "../lib/cross-ref-linker.js";
+import { computeCoverageMetrics } from "../lib/coverage-metrics.js";
 import { SekkeiError } from "../lib/errors.js";
 import { logger } from "../lib/logger.js";
 
@@ -20,6 +21,10 @@ export async function handleValidateChain(
   let report;
   try {
     report = await validateChain(config_path);
+    report.coverage_metrics = computeCoverageMetrics(
+      report.traceability_matrix,
+      report.links.map(l => ({ upstream: l.upstream, downstream: l.downstream }))
+    );
   } catch (err: unknown) {
     const msg = err instanceof SekkeiError
       ? err.toClientMessage()
@@ -70,6 +75,24 @@ export async function handleValidateChain(
     for (const entry of report.traceability_matrix) {
       const refs = entry.downstream_refs.length > 0 ? entry.downstream_refs.join(", ") : "—";
       lines.push(`| ${entry.id} | ${entry.doc_type} | ${refs} |`);
+    }
+    lines.push("");
+  }
+
+  // Coverage metrics section
+  if (report.coverage_metrics) {
+    const cm = report.coverage_metrics;
+    lines.push("## Coverage Metrics", "");
+    lines.push(`- **Overall coverage:** ${cm.overall}%`);
+    lines.push(`- **Req → Design:** ${cm.reqToDesign}%`);
+    lines.push(`- **Req → Test:** ${cm.reqToTest}%`);
+    lines.push(`- **Full trace (Design + Test):** ${cm.fullTrace}%`);
+    if (Object.keys(cm.byDocType).length > 0) {
+      lines.push("", "| Doc Type | Total | Traced | Coverage |");
+      lines.push("|----------|-------|--------|----------|");
+      for (const [dt, stats] of Object.entries(cm.byDocType)) {
+        lines.push(`| ${dt} | ${stats.total} | ${stats.traced} | ${stats.coverage}% |`);
+      }
     }
     lines.push("");
   }

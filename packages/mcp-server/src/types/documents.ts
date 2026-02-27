@@ -334,6 +334,38 @@ export interface StalenessWarning {
   message: string;
 }
 
+export interface CoverageMetrics {
+  overall: number;
+  byDocType: Record<string, { total: number; traced: number; coverage: number }>;
+  reqToDesign: number;
+  reqToTest: number;
+  fullTrace: number;
+}
+
+export interface NfrCategory {
+  category: string;
+  categoryEn: string;
+  nfrIds: string[];
+  coverage: number;
+}
+
+export interface HealthScore {
+  overall: number;
+  perDoc: { docType: string; score: number; topIssues: string[] }[];
+}
+
+export interface RiskScore {
+  overall: number;
+  grade: "green" | "yellow" | "red";
+  breakdown: {
+    traceCompleteness: number;
+    nfrCoverage: number;
+    testCoverage: number;
+    freshness: number;
+    structuralHealth: number;
+  };
+}
+
 export interface ChainRefReport {
   links: ChainLinkReport[];
   orphaned_ids: { id: string; defined_in: string; expected_in: string }[];
@@ -341,6 +373,7 @@ export interface ChainRefReport {
   traceability_matrix: TraceabilityEntry[];
   suggestions: string[];
   staleness_warnings?: StalenessWarning[];
+  coverage_metrics?: CoverageMetrics;
 }
 
 // --- Impact Cascade Types ---

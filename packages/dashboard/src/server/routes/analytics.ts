@@ -4,33 +4,27 @@ import { join } from 'node:path'
 import { existsSync } from 'node:fs'
 import type { ServiceContext, AnalyticsData, CrossRefAnalysis, StalenessData, QualityData } from '../types.js'
 import { getChainEntries } from '../services/config-reader.js'
-
-// Cross-reference ID pattern
-const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|UT|IT|ST|UAT)-\d{1,4}\b/g
-
-const CACHE_TTL = 60_000
+import { ID_PATTERN, computeStaleness } from '../lib/chain-helpers.js'
 
 export function createAnalyticsRouter(ctx: ServiceContext): Router {
   const router = Router()
-  let analyticsCache: { data: AnalyticsData; timestamp: number } | null = null
 
   router.get('/analytics', async (req, res) => {
     try {
       const refresh = req.query.refresh === 'true'
-      if (!refresh && analyticsCache && Date.now() - analyticsCache.timestamp < CACHE_TTL) {
-        return res.json(analyticsCache.data)
+
+      if (refresh) {
+        ctx.cachedMcp?.invalidate()
       }
 
       const config = await ctx.configReader.readConfig(ctx.configPath)
       const chainEntries = getChainEntries(config)
 
       const crossRef = await scanCrossRefs(ctx.docsRoot, chainEntries)
-      const staleness = computeStaleness(ctx.docsRoot, chainEntries)
+      const staleness = computeAnalyticsStaleness(ctx.docsRoot, chainEntries)
       const quality = computeQuality(chainEntries, crossRef)
 
       const data: AnalyticsData = { crossRef, staleness, quality }
-      analyticsCache = { data, timestamp: Date.now() }
-
       res.json(data)
     } catch (err) {
       res.status(500).json({ error: (err as Error).message })
@@ -94,50 +88,9 @@ async function scanCrossRefs(docsRoot: string, entries: { docType: string; outpu
   }
 }
 
-function computeStaleness(docsRoot: string, entries: { docType: string; lastModified: string | null; status: string }[]): StalenessData {
-  const warnings: StalenessData['warnings'] = []
-  let staleCount = 0
-
-  // Chain order for upstream/downstream detection
-  const chainOrder = [
-    'requirements', 'functions-list', 'nfr', 'project-plan',
-    'basic-design', 'security-design', 'detail-design',
-    'test-plan', 'ut-spec', 'it-spec', 'st-spec', 'uat-spec',
-  ]
-
-  const entryMap = new Map(entries.map(e => [e.docType, e]))
-
-  for (let i = 1; i < chainOrder.length; i++) {
-    const downstream = entryMap.get(chainOrder[i])
-    if (!downstream?.lastModified || downstream.status === 'pending') continue
-
-    // Find upstream
-    for (let j = i - 1; j >= 0; j--) {
-      const upstream = entryMap.get(chainOrder[j])
-      if (!upstream?.lastModified) continue
-
-      const upTime = new Date(upstream.lastModified).getTime()
-      const downTime = new Date(downstream.lastModified).getTime()
-
-      if (upTime > downTime) {
-        staleCount++
-        warnings.push({
-          upstream: chainOrder[j],
-          downstream: chainOrder[i],
-          message: `${chainOrder[i]} may be outdated (upstream ${chainOrder[j]} was modified later)`,
-        })
-      }
-      break
-    }
-  }
-
-  return {
-    overallScore: entries.length > 0 ? Math.round((1 - staleCount / entries.length) * 100) : 100,
-    staleCount,
-    totalDocs: entries.length,
-    entries: [],
-    warnings,
-  }
+function computeAnalyticsStaleness(docsRoot: string, entries: { docType: string; lastModified: string | null; status: string }[]): StalenessData {
+  void docsRoot
+  return computeStaleness(entries)
 }
 
 function computeQuality(entries: { docType: string; status: string }[], crossRef: CrossRefAnalysis): QualityData[] {
