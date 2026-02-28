@@ -40,17 +40,48 @@ Prepend this YAML block to the input_content before calling generate_document.
 2. If @input provided, merge with RFP content as additional context
 3. If `sekkei.config.yaml` exists, load project metadata and `project_type`
 4. Call MCP tool `generate_document` with `doc_type: "requirements"`, input content, `project_type`, and `language` from config (default: "ja"). Pass `input_lang` if input not Japanese.
-5. Use the returned template + AI instructions to generate the 要件定義書
-6. Follow these rules strictly:
-   - 10-section structure as defined in the template
-   - Functional requirements: REQ-001 format
-   - Non-functional requirements: NFR-001 format with measurable targets
+5. Use the returned template + AI instructions. Generate in **4 sequential stages** — save/append after each stage so user sees progress:
+
+   **Stage 1 — Admin + §1 + §2** (write to file):
+   Generate ONLY these sections using template structure + interview context + RFP input:
+   - YAML frontmatter (from template)
+   - 改訂履歴, 承認欄, 検印欄, 配布先, 用語集 (admin sections — fill placeholders)
+   - §1 概要 (目的・背景, プロジェクト概要, 対象組織, 制約条件)
+   - §2 現状課題 (現システム構成, 業務フロー, 課題分析, 改善目標)
+   → **Save** to `{output.directory}/02-requirements/requirements.md`
+
+   **Stage 2 — §3.1 機能要件** (append to file):
+   Using Stage 1 output as context for consistency, generate ONLY:
+   - §3 header + §3.1 機能要件:
+     - §3.1.1 ユーザーロール
+     - §3.1.2 ユースケース
+     - §3.1.3 機能要件一覧 (11-column table, REQ-001 format)
+     - §3.1.4 業務フロー図
+   → **Append** to requirements.md
+
+   **Stage 3 — §3.2 非機能要件** (append to file):
+   Using Stage 1+2 output as context (reference REQ-xxx IDs from Stage 2), generate ONLY:
+   - §3.2 非機能要件 (6-column NFR table, NFR-001 format with numeric targets)
+   → **Append** to requirements.md
+
+   **Stage 4 — §4-§8** (append to file):
+   Using Stage 1+2+3 output as context, generate ONLY:
+   - §4 制約条件・前提条件 (技術的制約, 予算, 法的制約, 前提条件)
+   - §5 受け入れ基準 (機能的, 非機能的, サインオフ条件)
+   - §6 対象外・今後の検討事項
+   - §7 用語定義・参考資料 (専門用語定義表, 関連ドキュメント)
+   - §8 附録 (ユースケース記述, 業務ルール, 連携仕様)
+   → **Append** to requirements.md
+
+6. Follow these rules strictly across ALL stages:
+   - Functional requirements: REQ-001 format (sequential within Stage 2)
+   - Non-functional requirements: NFR-001 format with measurable targets (Stage 3)
    - Trace each requirement back to RFP source via 関連RFP項目 column
    - Do NOT reference F-xxx — functions-list does not exist yet
    - This is the FIRST document after RFP — defines REQ-xxx IDs for all downstream docs
-   - Include acceptance criteria for each major requirement
+   - Include acceptance criteria for each major requirement (Stage 4 §5)
    - If `preset: agile` in sekkei.config.yaml, use user story format: 'As a [role], I want [feature], so that [benefit]' instead of detailed 機能要件一覧 table
-7. Save output to `{output.directory}/02-requirements/requirements.md`
+7. After all 4 stages complete, read the full file content for validation in step 8.
 8. In parallel:
    a. Call MCP tool `validate_document` with saved content and `doc_type: "requirements"`
    b. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "requirements"`, `status: "complete"`, `output: "02-requirements/requirements.md"`
