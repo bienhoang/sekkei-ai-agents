@@ -32,6 +32,18 @@ Command workflows for validation, export, translation, and maintenance utilities
    - Display WARNING for docs where upstream changed after downstream was last generated
    - Staleness is advisory only — does not affect validation result
 9. Suggest fixes for issues found
+10. **Post-validation changelog sync** (if validation passes):
+    a. Check if 改訂履歴 last entry date is older than file's last-modified date:
+       ```bash
+       git log -1 --format="%ai" -- {doc_path}
+       ```
+    b. If stale: ask user via `AskUserQuestion` — "Document {doc_type} was modified but 改訂履歴 is not updated. Update now?"
+    c. If user confirms:
+       - Read document, find 改訂履歴 table, parse last version number
+       - Increment version (+0.1), insert new row: next version | today's date | 作成者 (blank) | "Manual update"
+       - Save document
+       - Pass updated content as `existing_content` to `generate_document` with `auto_insert_changelog: false` to preserve the manually inserted row
+    d. If user declines: skip, continue to next doc
 
 ### If no `@doc` (full chain validation):
 
@@ -123,6 +135,17 @@ Command workflows for validation, export, translation, and maintenance utilities
 8. **改訂履歴の更新手順:** `change-request-command.md` §Changelog (改訂履歴) Preservation を参照。upstream doc と downstream doc の両方に適用する。
 9. Ask user: confirm & save? Or edit the row first?
 10. If regenerating: pass updated document as `existing_content` to `generate_document` — also pass `auto_insert_changelog: true` and `change_description: "{summary}"` as safety net
+11. **Global CHANGELOG sync** (after user confirms update):
+    a. Before regeneration: read target doc's 改訂履歴, parse last version → increment (+0.1)
+    b. Insert new 改訂履歴 row: next version | today's date | 作成者 (blank) | "Upstream sync: {upstream_doc_type} changed"
+    c. Pass updated content as `existing_content` to `generate_document` with `auto_insert_changelog: true`, `change_description: "Upstream sync: {changed_ids}"`
+    d. After regeneration: append entry to Global CHANGELOG (`workspace-docs/CHANGELOG.md`):
+       ```
+       ## {today's date} — {doc_type} updated
+       - Upstream sync from {upstream_doc_type}: {changed_ids}
+       - Version bumped to {new_version}
+       ```
+    e. Notify user: "Updated {doc_type} — run `/sekkei:validate` to verify chain consistency"
 
 ### Staleness mode:
 

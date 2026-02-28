@@ -13,6 +13,12 @@ Track and propagate specification changes across the V-model chain.
 
 ---
 
+# PATH RESOLUTION (run before any action)
+
+1. Locate `sekkei.config.yaml` in project root → set `config_path`
+2. Set `workspace_path` = directory containing `sekkei.config.yaml` (project root)
+3. Both `workspace_path` and `config_path` are **required for every action call** — always pass them.
+
 # ENTRYPOINT BEHAVIOR
 
 1. Parse subcommand (default: new CR, --resume, --status, --list, --cancel, --rollback)
@@ -70,7 +76,7 @@ Display CR ID in dashboard.
 
 ## Step 3: Analyze
 
-Call `manage_change_request` action=analyze with cr_id, config_path.
+Call `manage_change_request` action=analyze with workspace_path, cr_id, config_path.
 Display impact report: affected sections, Mermaid dependency graph.
 Display backfill suggestions (upstream additions needed).
 
@@ -92,7 +98,7 @@ Call `manage_change_request` action=approve.
   g. Note: "Origin document 改訂履歴 updated before propagation begins"
 
 For each step:
-  Call `manage_change_request` action=propagate_next with cr_id, config_path.
+  Call `manage_change_request` action=propagate_next with workspace_path, cr_id, config_path.
   - If upstream: show suggestion text, ask user to confirm/skip
   - If downstream: show regeneration instruction, optionally call generate_document
     - Pass `auto_insert_changelog: true` and `change_description: "CR {CR-ID}: {summary}"` to `generate_document`
@@ -113,13 +119,20 @@ Repeat until all_steps_complete.
 
 ## Step 6: Validate
 
-Call `manage_change_request` action=validate with cr_id, config_path.
+Call `manage_change_request` action=validate with workspace_path, cr_id, config_path.
 Display validation report (chain ref issues if any).
 
 ## Step 7: Complete
 
-Call `manage_change_request` action=complete.
+**MANDATORY — must always execute after validate.**
+
+Call `manage_change_request` action=complete with cr_id, config_path, workspace_path.
+- `config_path` is **required** for proper version extraction and Global CHANGELOG update.
+- This step writes entries to `workspace-docs/CHANGELOG.md` for all propagated documents.
+- Without this step, the Global CHANGELOG will NOT be updated.
+
 Display completion summary with all steps reviewed.
+Show Global CHANGELOG entries that were appended.
 
 ---
 

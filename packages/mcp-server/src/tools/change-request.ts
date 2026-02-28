@@ -23,7 +23,7 @@ const inputSchema = {
   config_path: z.string().max(500).optional()
     .refine(p => !p || !p.includes(".."), { message: "no path traversal" })
     .refine(p => !p || /\.ya?ml$/i.test(p), { message: "must be .yaml/.yml" })
-    .describe("Path to sekkei.config.yaml; required for analyze/propagate_next/validate"),
+    .describe("Path to sekkei.config.yaml; required for analyze/propagate_next/validate/complete"),
   origin_doc: z.string().max(50).optional()
     .describe("Origin doc type; required for create"),
   description: z.string().max(2000).optional()

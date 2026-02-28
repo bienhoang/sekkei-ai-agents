@@ -64,6 +64,7 @@ const SUBCMD_DEFS: [string, string, string][] = [
   ["update", "Detect upstream changes", "@doc"],
   ["diff-visual", "Color-coded revision Excel (朱書き)", "@before @after"],
   ["preview", "Start Express+React docs preview with WYSIWYG editor", "[--guide] [--docs path] [--port N]"],
+  ["dashboard", "Start analytics dashboard for workspace-docs overview", "[--docs path] [--port N] [--no-open]"],
   ["version", "Show version and health check", ""],
   ["uninstall", "Remove Sekkei from Claude Code", "[--force]"],
   ["rfp", "Presales RFP lifecycle", "[@project-name]"],
@@ -143,6 +144,22 @@ export const updateCommand = defineCommand({
         } catch (err) {
           s.stop("Preview build failed (non-fatal)");
           process.stderr.write(`  Preview: ${(err as Error).message}\n`);
+        }
+      }
+    }
+
+    // 1c. Build dashboard package
+    if (!args.skipBuild) {
+      const dashboardDir = resolve(SEKKEI_ROOT, "packages", "dashboard");
+      if (existsSync(dashboardDir)) {
+        const s = p.spinner();
+        s.start("Building dashboard package...");
+        try {
+          execSync("npm run build", { cwd: dashboardDir, stdio: "pipe" });
+          s.stop("Dashboard build complete");
+        } catch (err) {
+          s.stop("Dashboard build failed (non-fatal)");
+          process.stderr.write(`  Dashboard: ${(err as Error).message}\n`);
         }
       }
     }

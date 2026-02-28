@@ -176,6 +176,20 @@ function checkPreviewBuild(): HealthItem {
   return { name: "Preview", status: "warn", detail: "not built (run sekkei update)" };
 }
 
+function checkDashboardBuild(): HealthItem {
+  const dashboardDir = resolve(PKG_ROOT, "..", "dashboard");
+  const dashboardServer = join(dashboardDir, "dist", "server.js");
+  if (existsSync(dashboardServer)) {
+    try {
+      const pkg = JSON.parse(readFileSync(join(dashboardDir, "package.json"), "utf-8"));
+      return { name: "Dashboard", status: "ok", detail: `v${pkg.version}` };
+    } catch {
+      return { name: "Dashboard", status: "ok", detail: "dist/server.js found" };
+    }
+  }
+  return { name: "Dashboard", status: "warn", detail: "not built (run sekkei update)" };
+}
+
 function checkSubCommands(): HealthItem {
   const cmdDir = join(CLAUDE_DIR, "commands", "sekkei");
   try {
@@ -199,7 +213,7 @@ export async function checkHealth(): Promise<HealthReport> {
   return {
     version: getPackageVersion(),
     environment: [checkNodeVersion(), checkPython(), checkPlaywright()],
-    paths: [checkTemplateDir(), checkConfig(), checkPythonVenv(), checkPreviewBuild()],
+    paths: [checkTemplateDir(), checkConfig(), checkPythonVenv(), checkPreviewBuild(), checkDashboardBuild()],
     claudeCode: [checkClaudeSkill(), checkMcpRegistration(), checkSubCommands()],
   };
 }
