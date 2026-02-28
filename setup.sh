@@ -138,6 +138,13 @@ if [[ -f "$CLI_JS" ]]; then
     ok "Linked: ~/.local/bin/sekkei-preview"
   fi
 
+  # Link sekkei-dashboard if built
+  DASHBOARD_JS="$SEKKEI_HOME/packages/dashboard/dist/server.js"
+  if [[ -f "$DASHBOARD_JS" ]]; then
+    ln -sf "$DASHBOARD_JS" "$HOME/.local/bin/sekkei-dashboard"
+    ok "Linked: ~/.local/bin/sekkei-dashboard"
+  fi
+
   # Ensure ~/.local/bin is in PATH
   SHELL_RC=""
   if [[ "${SHELL:-}" == *zsh* ]]; then

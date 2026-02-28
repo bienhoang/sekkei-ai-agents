@@ -192,13 +192,13 @@ Command workflows for validation, export, translation, and maintenance utilities
 
 ## `/sekkei:dashboard`
 
-1. Run `sekkei-dashboard` from the project root.
+1. Run `npx sekkei-dashboard` from the project root (or `sekkei-dashboard` if globally linked).
 2. Docs dir resolved automatically: `--docs` flag → `workspace-docs/` in CWD → `sekkei.config.yaml output.directory`.
 3. Commands:
-   - `sekkei-dashboard` — start Express server with analytics dashboard
-   - `sekkei-dashboard --docs ./path --port 4984` — custom docs path + port
-   - `sekkei-dashboard --no-open` — start without auto-opening browser
-   - `sekkei-dashboard --help` — show usage
+   - `npx sekkei-dashboard` — start Express server with analytics dashboard
+   - `npx sekkei-dashboard --docs ./path --port 4984` — custom docs path + port
+   - `npx sekkei-dashboard --no-open` — start without auto-opening browser
+   - `npx sekkei-dashboard --help` — show usage
 4. Dashboard URL: `http://localhost:4984` (default). Port auto-selects if busy.
 5. **Pages:**
    - **Overview** (`/`) — stat cards, V-model pipeline, completion donut, recent changelog

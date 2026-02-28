@@ -275,6 +275,8 @@ ERRORS=0
 [[ -L "$COMMANDS_DIR/sekkei.md" ]] && ok "Slash command /sekkei linked" || { fail "/sekkei command missing"; ((ERRORS++)); }
 [[ -f "$MCP_ENTRY" ]] && ok "MCP server binary present" || { fail "MCP entry missing"; ((ERRORS++)); }
 [[ -n "$PREVIEW_CLI" && -f "$PREVIEW_CLI" ]] && ok "sekkei-preview CLI: $PREVIEW_CLI" || warn "sekkei-preview CLI not found (preview unavailable)"
+DASHBOARD_CLI="$SEKKEI_HOME/packages/dashboard/dist/server.js"
+[[ -f "$DASHBOARD_CLI" ]] && ok "sekkei-dashboard CLI: $DASHBOARD_CLI" || warn "sekkei-dashboard CLI not found (dashboard unavailable)"
 
 # Verify MCP server config in settings
 node -e "
