@@ -7,6 +7,12 @@ description: "Generate Japanese specification documents (設計書) following V-
 
 Generate Japanese software specification documents following the V-model document chain.
 
+## MCP Tools
+
+MCP server name: `sekkei`. Any reference to the tools below must be called with prefix `mcp__sekkei__`. Example: `generate_document` → call `mcp__sekkei__generate_document`.
+
+Tools: `generate_document`, `validate_document`, `update_chain_status`, `get_chain_status`, `get_template`, `manage_glossary`, `manage_plan`, `manage_change_request`, `manage_rfp_workspace`, `export_document`, `translate_document`, `analyze_update`, `validate_chain`, `simulate_change_impact`, `import_document`.
+
 ## Output Language
 
 All user-facing output (document content, prompts, confirmations) must use `project.language` from `sekkei.config.yaml`. Default: `"ja"` (Japanese). Override per call with the `language` parameter on `generate_document`.
