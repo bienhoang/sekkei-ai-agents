@@ -24,7 +24,7 @@ import { homedir } from "node:os";
 import { checkHealth, formatHealthReport } from "./health-check.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const PKG_ROOT = resolve(__dirname, "..", "..");
+const PKG_ROOT = resolve(__dirname, "..", "..", "..");
 const SEKKEI_ROOT = resolve(PKG_ROOT, "..", "..");
 const SKILL_SRC = resolve(SEKKEI_ROOT, "packages", "skills", "content");
 const TEMPLATES_DIR = resolve(PKG_ROOT, "templates");

@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-**Sekkei (設計)** v2.7.0 is a monorepo containing:
+**Sekkei (設計)** v2.7.1 is a monorepo containing:
 - **@bienhoang/sekkei-mcp-server** (TypeScript/194 source files/~10,000+ LOC) — IPA V-Model compliant specification generation with 27 doc types + 5 quality-scoring libs + Phase A SIer features
 - **@bienhoang/sekkei-preview** (Express + React + Tiptap v3) — Live preview with WYSIWYG editor
 - **@bienhoang/sekkei-dashboard** (React + Express + Recharts) — Analytics dashboard with quality metrics, traceability graphs, snapshots
