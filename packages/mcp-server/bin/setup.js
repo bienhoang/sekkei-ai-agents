@@ -24,10 +24,12 @@ function ok(msg) { log(`${GREEN}  [OK]${RESET} ${msg}`); }
 function warn(msg) { log(`${YELLOW}  [WARN]${RESET} ${msg}`); }
 function fail(msg) { log(`${RED}  [FAIL]${RESET} ${msg}`); }
 
+const isWin = process.platform === "win32";
+
 /** Check if a command exists */
 function commandExists(cmd) {
   try {
-    execFileSync("which", [cmd], { stdio: "ignore" });
+    execFileSync(isWin ? "where" : "which", [cmd], { stdio: "ignore" });
     return true;
   } catch { return false; }
 }
@@ -126,7 +128,10 @@ function checkPython() {
   log("");
   log(`${BOLD}Checking Python...${RESET}`);
 
-  const pythonCmd = commandExists("python3") ? "python3" : commandExists("python") ? "python" : null;
+  // On Windows try `python` first (more common), on POSIX try `python3` first
+  const pythonCmd = isWin
+    ? (commandExists("python") ? "python" : commandExists("python3") ? "python3" : null)
+    : (commandExists("python3") ? "python3" : commandExists("python") ? "python" : null);
   if (!pythonCmd) {
     warn("Python not found. Export features (Excel/PDF) require Python 3.9+");
     warn("Install: https://www.python.org/downloads/");

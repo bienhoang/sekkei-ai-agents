@@ -45,6 +45,18 @@ npx sekkei init
 /sekkei:requirements @rfp.md
 ```
 
+### Windows Support
+
+Sekkei runs natively on Windows (cmd.exe, PowerShell). No WSL2 required.
+
+**Prerequisites:** Node.js >= 20, Python 3.10+ (optional, for Python export engine)
+
+**Notes:**
+- Default export engine is Node.js (Playwright PDF + ExcelJS) — works out of the box
+- Python venv auto-detected at `.venv\Scripts\python.exe`
+- Symlinks require Developer Mode; without it, file copies are used as fallback
+- Run `npx sekkei doctor` for platform-specific health diagnostics
+
 ## Platform Setup
 
 ### Claude Code

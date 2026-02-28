@@ -148,7 +148,8 @@ async function main() {
   const claudeDir = join(homedir(), ".claude");
   const settingsPath = join(claudeDir, "settings.json");
   try {
-    const venvPython = resolve(PYTHON_DIR, ".venv", "bin", "python3");
+    const isWin = process.platform === "win32";
+    const venvPython = resolve(PYTHON_DIR, ".venv", isWin ? "Scripts" : "bin", isWin ? "python.exe" : "python3");
     const mcpEntry = {
       command: "node",
       args: [resolve(DIST_DIR, "index.js")],

@@ -6,6 +6,7 @@ import { access, constants } from "node:fs/promises";
 import { resolve, normalize } from "node:path";
 import type { DocType } from "../types/documents.js";
 import { logger } from "./logger.js";
+import { isSubPath } from "./platform.js";
 
 /** Resolve template path: override dir → language-specific default → ja/ fallback. */
 export async function resolveTemplatePath(
@@ -20,7 +21,7 @@ export async function resolveTemplatePath(
     const normalizedPath = normalize(overridePath);
 
     // Path containment check — prevent traversal outside override dir
-    if (!normalizedPath.startsWith(normalizedBase)) {
+    if (!isSubPath(normalizedPath, normalizedBase)) {
       logger.warn({ overrideDir, docType }, "Path traversal detected in override, using default");
     } else {
       try {

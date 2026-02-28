@@ -7,6 +7,7 @@ import { chromium, Browser } from "playwright";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { logger } from "./logger.js";
+import { isWin } from "./platform.js";
 
 const execFileAsync = promisify(execFile);
 const IDLE_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
@@ -70,5 +71,9 @@ class BrowserPool {
 export const browserPool = new BrowserPool();
 
 // Graceful shutdown — prevent orphaned Chromium processes
-process.on("SIGTERM", () => { void browserPool.close(); });
 process.on("SIGINT", () => { void browserPool.close(); });
+process.on("SIGTERM", () => { void browserPool.close(); });
+if (isWin) {
+  // SIGTERM is dead code on Windows — use beforeExit for cleanup
+  process.on("beforeExit", async () => { await browserPool.close(); });
+}

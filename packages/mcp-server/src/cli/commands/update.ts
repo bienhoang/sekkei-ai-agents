@@ -6,6 +6,7 @@ import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
 import { execSync } from "node:child_process";
 import {
+  copyFileSync,
   cpSync,
   existsSync,
   lstatSync,
@@ -18,6 +19,7 @@ import {
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { getVenvPython } from "../../lib/platform.js";
 import { homedir } from "node:os";
 import { checkHealth, formatHealthReport } from "./health-check.js";
 
@@ -100,7 +102,7 @@ function updateMcpEntry(): void {
       args: [MCP_ENTRY],
       env: {
         SEKKEI_TEMPLATE_DIR: TEMPLATES_DIR,
-        SEKKEI_PYTHON: join(PYTHON_DIR, ".venv", "bin", "python3"),
+        SEKKEI_PYTHON: getVenvPython(PYTHON_DIR),
       },
     };
     writeFileSync(SETTINGS, JSON.stringify(settings, null, 2) + "\n");
@@ -173,7 +175,12 @@ export const updateCommand = defineCommand({
     try {
       symlinkSync(join(SKILL_DEST, "SKILL.md"), symlinkPath);
     } catch {
-      // non-fatal
+      // Windows without admin/Dev Mode — fallback to file copy
+      try {
+        copyFileSync(join(SKILL_DEST, "SKILL.md"), symlinkPath);
+      } catch (copyErr) {
+        process.stderr.write(`Warning: could not link or copy SKILL.md: ${copyErr}\n`);
+      }
     }
     process.stdout.write(`  \u2713 ${SUBCMD_DEFS.length} sub-command stubs regenerated\n`);
 

@@ -97,7 +97,7 @@ export async function analyzeTypeScript(projectPath: string): Promise<CodeContex
     }
 
     let sourceFiles = project.getSourceFiles().filter(
-      (f) => !f.getFilePath().includes("node_modules") && !f.getFilePath().includes("/dist/")
+      (f) => !f.getFilePath().includes("node_modules") && !/[/\\]dist[/\\]/.test(f.getFilePath())
     );
 
     if (sourceFiles.length > MAX_FILES) {

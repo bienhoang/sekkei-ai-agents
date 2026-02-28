@@ -7,6 +7,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { logger } from "./logger.js";
 import { SekkeiError } from "./errors.js";
+import { getVenvPython, isWin } from "./platform.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PYTHON_DIR = resolve(__dirname, "../../python");
@@ -26,14 +27,17 @@ function getPythonPath(): string {
   }
 
   // 2. Project venv
-  const venvPython = resolve(PYTHON_DIR, ".venv/bin/python3");
+  const venvPython = getVenvPython(PYTHON_DIR);
   if (existsSync(venvPython)) return venvPython;
 
-  // 3. System python3 fallback
-  try {
-    execFileSync("python3", ["--version"], { stdio: "pipe" });
-    return "python3";
-  } catch { /* not available */ }
+  // 3. System python fallback (try platform-preferred order)
+  const candidates = isWin ? ["python", "python3"] : ["python3", "python"];
+  for (const cmd of candidates) {
+    try {
+      execFileSync(cmd, ["--version"], { stdio: "pipe" });
+      return cmd;
+    } catch { /* not available */ }
+  }
 
   throw new SekkeiError(
     "CONFIG_ERROR",

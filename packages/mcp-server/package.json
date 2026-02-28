@@ -21,9 +21,9 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsx src/index.ts",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' jest --config jest.config.cjs",
-    "test:unit": "NODE_OPTIONS='--experimental-vm-modules' jest --config jest.config.cjs tests/unit",
-    "test:integration": "NODE_OPTIONS='--experimental-vm-modules' jest --config jest.config.cjs tests/integration",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.cjs",
+    "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.cjs tests/unit",
+    "test:integration": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.cjs tests/integration",
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build"
   },
@@ -46,6 +46,7 @@
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@types/node": "^22.13.0",
+    "cross-env": "^10.1.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.0",
     "ts-node": "^10.9.0",

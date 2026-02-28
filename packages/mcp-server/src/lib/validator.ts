@@ -8,6 +8,7 @@ import { DOC_TYPES } from "../types/documents.js";
 import { extractIds, extractIdsByType } from "./id-extractor.js";
 import { deriveUpstreamIdTypes } from "./cross-ref-linker.js";
 import { SekkeiError } from "./errors.js";
+import { isSubPath } from "./platform.js";
 import { validateKeigoComprehensive } from "./keigo-validator.js";
 import { CONTENT_DEPTH_RULES } from "./completeness-rules.js";
 import { validateMermaidBlocks } from "./mermaid-validator.js";
@@ -770,7 +771,7 @@ export async function validateSplitDocument(
 /** Ensure resolved path stays within base directory (prevent path traversal) */
 function assertContained(baseDir: string, filePath: string): void {
   const resolved = resolve(baseDir, filePath);
-  if (!resolved.startsWith(baseDir + "/") && resolved !== baseDir) {
+  if (!isSubPath(resolved, baseDir)) {
     throw new SekkeiError("MANIFEST_ERROR", `Path escapes base directory: ${filePath}`);
   }
 }

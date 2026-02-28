@@ -8,6 +8,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
 import { EXPECTED_SUBCMD_COUNT } from "./update.js";
+import { getVenvPython, isWin } from "../../lib/platform.js";
 
 // ── Interfaces ─────────────────────────────────────────────────────────
 export interface HealthItem {
@@ -80,7 +81,9 @@ function checkPython(): HealthItem {
 
 function checkPlaywright(): HealthItem {
   // Check common cache dirs for chromium
-  const cacheDir = join(homedir(), ".cache", "ms-playwright");
+  const cacheDir = isWin
+    ? join(process.env.LOCALAPPDATA || join(homedir(), "AppData", "Local"), "ms-playwright")
+    : join(homedir(), ".cache", "ms-playwright");
   try {
     if (existsSync(cacheDir)) {
       const entries = readdirSync(cacheDir).filter((e) => e.startsWith("chromium"));
@@ -128,7 +131,7 @@ function checkConfig(): HealthItem {
 }
 
 function checkPythonVenv(): HealthItem {
-  const venvPython = resolve(PKG_ROOT, "python", ".venv", "bin", "python3");
+  const venvPython = getVenvPython(resolve(PKG_ROOT, "python"));
   if (existsSync(venvPython)) {
     return { name: "Python venv", status: "ok", detail: resolve(PKG_ROOT, "python", ".venv") };
   }

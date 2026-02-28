@@ -12,7 +12,11 @@ concurrency:
 
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
@@ -39,8 +43,13 @@ jobs:
       - name: Build
         run: npx turbo run build
 
-      - name: Install Playwright
+      - name: Install Playwright (Linux)
+        if: runner.os == 'Linux'
         run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright (Windows)
+        if: runner.os == 'Windows'
+        run: npx playwright install chromium
 
       - name: Test
         run: npx turbo run test

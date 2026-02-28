@@ -7,11 +7,12 @@ import { resolve, dirname } from "node:path";
 import type { Manifest } from "../types/documents.js";
 import { getMergeOrder } from "./manifest-manager.js";
 import { SekkeiError } from "./errors.js";
+import { isSubPath } from "./platform.js";
 
 /** Ensure resolved path stays within base directory (prevent path traversal) */
 function assertContained(baseDir: string, filePath: string): void {
   const resolved = resolve(baseDir, filePath);
-  if (!resolved.startsWith(baseDir + "/") && resolved !== baseDir) {
+  if (!isSubPath(resolved, baseDir)) {
     throw new SekkeiError("MANIFEST_ERROR", `Path escapes base directory: ${filePath}`);
   }
 }

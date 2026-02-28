@@ -4,6 +4,7 @@
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
+import { isSubPath } from "./platform.js";
 import { fileURLToPath } from "node:url";
 import { parse, stringify } from "yaml";
 
@@ -93,7 +94,7 @@ export function importIndustry(
   // Path containment check
   const realDir = resolve(GLOSSARIES_DIR);
   const realFile = resolve(glossaryFile);
-  if (!realFile.startsWith(realDir + "/")) {
+  if (!isSubPath(realFile, realDir)) {
     throw new Error("Path traversal detected");
   }
 

@@ -111,6 +111,15 @@ chmod +x install.sh && ./install.sh          # Build + install (includes Python)
 ./install.sh --skip-python                   # Skip Python export setup
 ```
 
+### Windows Install
+
+```bash
+git clone https://github.com/bienhoang/sekkei-ai-agents.git
+cd sekkei-ai-agents/packages/mcp-server
+node bin/install.js                          # Full install (includes Python)
+node bin/install.js --skip-python            # Skip Python export setup
+```
+
 ## Architecture
 
 ```

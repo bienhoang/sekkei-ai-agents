@@ -11,6 +11,7 @@ import { loadTemplate } from "../lib/template-loader.js";
 import { DOC_TYPES, LANGUAGES, INPUT_LANGUAGES, KEIGO_LEVELS, PROJECT_TYPES } from "../types/documents.js";
 import type { DocType, ProjectType, ProjectConfig } from "../types/documents.js";
 import { SekkeiError } from "../lib/errors.js";
+import { isSubPath } from "../lib/platform.js";
 import { logger } from "../lib/logger.js";
 import {
   GENERATION_INSTRUCTIONS,
@@ -292,7 +293,7 @@ export async function handleGenerateDocument(
         for (const p of upstream_paths) {
           const abs = resolve(baseDir, p);
           // Path containment security check
-          if (!abs.startsWith(baseDir + sep) && abs !== baseDir) {
+          if (!isSubPath(abs, baseDir)) {
             logger.warn({ path: p, baseDir }, "upstream_paths: path outside workspace, skipping");
             continue;
           }
