@@ -113,12 +113,20 @@ chmod +x install.sh && ./install.sh          # Build + install (includes Python)
 
 ### Windows Install
 
-```bash
+Sekkei runs natively on Windows (cmd.exe, PowerShell). No WSL2 required.
+
+```powershell
 git clone https://github.com/bienhoang/sekkei-ai-agents.git
-cd sekkei-ai-agents/packages/mcp-server
+cd sekkei-ai-agents\packages\mcp-server
 node bin/install.js                          # Full install (includes Python)
 node bin/install.js --skip-python            # Skip Python export setup
 ```
+
+**Notes:**
+- Default export engine is Node.js (Playwright PDF + ExcelJS) — works out of the box
+- Python venv auto-detected at `.venv\Scripts\python.exe`
+- Symlinks require Developer Mode; without it, file copies are used as fallback
+- Run `npx sekkei doctor` for platform-specific health diagnostics
 
 ## Architecture
 

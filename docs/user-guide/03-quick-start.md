@@ -25,6 +25,23 @@ Sau khi hoàn tất, hãy kiểm tra lại bằng lệnh:
 sekkei doctor    # Kiểm tra sức khỏe toàn diện của hệ thống
 ```
 
+### Cài đặt trên Windows
+
+Sekkei hỗ trợ chạy trực tiếp trên Windows (cmd.exe, PowerShell) mà **không cần WSL2**.
+
+```powershell
+git clone https://github.com/bienhoang/sekkei-ai-agents.git
+cd sekkei-ai-agents\packages\mcp-server
+node bin/install.js                          # Cài đặt đầy đủ (bao gồm Python)
+node bin/install.js --skip-python            # Bỏ qua cài đặt Python
+```
+
+**Lưu ý cho Windows:**
+- Engine xuất bản mặc định là Node.js (Playwright PDF + ExcelJS) — hoạt động ngay mà không cần cấu hình thêm.
+- Môi trường ảo Python được tự động phát hiện tại `.venv\Scripts\python.exe`.
+- Symlink yêu cầu bật **Developer Mode**; nếu không, hệ thống sẽ tự động sao chép file thay thế.
+- Chạy `npx sekkei doctor` để kiểm tra sức khỏe hệ thống theo nền tảng.
+
 ---
 
 ## Bước 1: Khởi tạo dự án Sekkei
