@@ -5,12 +5,11 @@
 Generate HTML screen mockups from screen definitions using shell-type templates.
 Output: interactive HTML files with numbered annotations mapping to 画面項目定義 tables.
 
-## Prerequisites
+## Prerequisite check (MUST run before generating)
 
-1. `sekkei.config.yaml` exists with `output.directory` configured
-2. Screen definitions exist in one of:
-   - **Split mode**: `features/{id}/screen-design.md` (per-feature)
-   - **Monolithic**: `03-system/basic-design.md` § 画面一覧
+1. Verify `sekkei.config.yaml` exists with `output.directory` configured — abort if missing: "Run `sekkei init` first."
+2. Verify at least one `features/{id}/screen-design.md` exists with SCR-xxx definitions — abort if missing: "No screen definitions found. Run `/sekkei:basic-design` first to generate screen designs."
+3. Check `{output.directory}/04-functions-list/functions-list.md` exists — warn if missing (not blocking): "Functions-list not found; sidebar nav will use placeholder items. Run `/sekkei:functions-list` to populate."
 
 ## Shell Detection
 
@@ -62,7 +61,7 @@ viewport: desktop
 ### Full mode (default)
 
 1. Read `sekkei.config.yaml` → get `output.directory`
-2. Scan workspace for screen definitions (split or monolithic)
+2. Scan `features/*/screen-design.md` for screen definitions
 3. Read `functions-list.md` → extract nav items for sidebar
 4. For each screen:
    a. Copy HTML template skeleton below
@@ -82,8 +81,7 @@ viewport: desktop
 6. **Screenshot each HTML → PNG** (with annotations visible):
    - Use Playwright or `chrome-devtools` skill to open each HTML file in browser
    - Screenshot the full `.screen-wrap` element (captures shell + annotations)
-   - **Split mode**: save to `features/{feature-id}/assets/images/{function-id}-{screen-name-kebab}.png`
-   - **Monolithic**: save to `03-system/assets/images/{function-id}-{screen-name-kebab}.png`
+   - Save to `features/{feature-id}/assets/images/{function-id}-{screen-name-kebab}.png`
    - For multi-screen HTML: screenshot each `.screen-wrap` separately, naming `{id}-{screen}-{seq}.png`
    - Create `assets/images/` directory if it doesn't exist
 7. **Embed PNG into screen-design.md**:
@@ -91,8 +89,7 @@ viewport: desktop
      ```markdown
      ![SCR-{ID} モックアップ](./assets/images/{function-id}-{screen-name-kebab}.png)
      ```
-   - **Split mode**: insert into `features/{id}/screen-design.md` (relative: `./assets/images/`)
-   - **Monolithic**: insert into `03-system/basic-design.md` (relative: `./assets/images/`)
+   - Insert into `features/{id}/screen-design.md` (relative: `./assets/images/`)
    - Keep YAML layout block as-is (human-readable structure reference)
    - The annotation numbers in the PNG must match the # column in 画面項目定義 table (section 2)
 
