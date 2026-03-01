@@ -6,7 +6,7 @@
 - **@bienhoang/sekkei-mcp-server** (TypeScript/194 source files/~14,500 LOC src + ~13,800 LOC tests) — IPA V-Model compliant specification generation with 27 doc types + 5 quality-scoring libs + Phase A SIer features + Phase B dashboard
 - **@bienhoang/sekkei-preview** (Express + React + Tiptap v3) — Live preview with WYSIWYG editor (1,600+ LOC)
 - **@bienhoang/sekkei-dashboard** (React + Express + Recharts + @xyflow/react) — Analytics dashboard with quality metrics, traceability graphs, snapshots (3,600+ LOC, 5 pages)
-- **@bienhoang/sekkei-skills** (Claude Code SKILL.md with 40+ sub-commands) — Claude Code skill definition + reference docs for all 27 doc types + workflow commands (2,800+ LOC)
+- **@bienhoang/sekkei-skills** (Claude Code SKILL.md with 44 sub-commands) — Claude Code skill definition + reference docs for all 27 doc types + workflow commands (2,800+ LOC)
 - **Python Layer** (7 files) — Export & NLP utilities (Excel/PDF/DOCX/matrix/diff/glossary/import)
 - **Templates** (27 MD IPA-compliant + 15 YAML glossaries + 9 wireframe CSS + 7 RFP flows) — Japanese specification templates per IPA V-Model with review metadata
 - **Adapters** — Cursor (mcp.json), Copilot (copilot-instructions.md), Claude Code integration
@@ -116,7 +116,7 @@ sekkei/
 │   │   ├── dist/                      # Compiled output (tsc)
 │   │   ├── adapters/
 │   │   │   ├── claude-code/
-│   │   │   │   └── SKILL.md           # Claude Code skill definition (40+ sub-commands)
+│   │   │   │   └── SKILL.md           # Claude Code skill definition (44 sub-commands)
 │   │   │   ├── cursor/
 │   │   │   │   ├── mcp.json           # Cursor MCP server config
 │   │   │   │   └── cursorrules.md     # Cursor-specific instructions
@@ -184,7 +184,7 @@ sekkei/
 │   │   └── package.json
 │   └── skills/                        # @bienhoang/sekkei-skills v2.7.2 (Claude Code Skill, 2,800+ LOC)
 │       └── sekkei/
-│           ├── SKILL.md               # Skill definition (40+ sub-commands for all doc types + workflow router)
+│           ├── SKILL.md               # Skill definition (44 sub-commands for all doc types + workflow router)
 │           ├── content/               # Skill definition files
 │           │   └── [sub-command definitions]
 │           └── references/            # 8+ reference documents

@@ -1,6 +1,6 @@
 # Tham Chiếu Lệnh — Quick Reference
 
-> Lookup nhanh tất cả lệnh (40+ slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
+> Lookup nhanh tất cả lệnh (44 slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
 
 ---
 

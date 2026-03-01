@@ -102,7 +102,7 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 - File tree with descriptions (4 scoped packages: @bienhoang/sekkei-{mcp-server,preview,skills,dashboard})
 - **@bienhoang/sekkei-mcp-server:** 93 TypeScript files overview
 - **@bienhoang/sekkei-preview:** VitePress + Milkdown (9 TS+Vue files)
-- **@bienhoang/sekkei-skills:** Claude Code SKILL.md (30+ sub-commands)
+- **@bienhoang/sekkei-skills:** Claude Code SKILL.md (44 sub-commands)
 - Phase grouping (requirements, design, test, supplementary)
 - V-Model chain structure with 57 edges
 - Summary statistics
