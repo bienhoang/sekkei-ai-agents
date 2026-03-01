@@ -64,6 +64,7 @@ Templates at `templates/{lang}/{doc-type}.md` (relative to `packages/mcp-server/
 - **Change Requests** (`tools/change-request.ts`, `tools/cr-actions.ts`, `lib/cr-state-machine.ts`, `lib/cr-propagation.ts`) — track and propagate specification changes across the document chain
 - **Plan Management** (`tools/plan.ts`, `tools/plan-actions.ts`, `lib/plan-state.ts`) — orchestrate multi-phase document generation
 - **Staleness Detection** (`lib/staleness-detector.ts`, `lib/doc-staleness.ts`) — detect when downstream docs are outdated relative to upstream changes
+- **Translation Pipeline** (`tools/translate.ts`, `lib/translation-validator.ts`, `lib/translation-tracker.ts`) — bidirectional glossary mapping (ja↔en↔vi), post-translation structural validation (ID preservation, table rows, heading count), and SHA-256 hash-based incremental tracking for delta-only retranslation
 - **Mockup System** — replaced by AI-gen-HTML via `/sekkei:mockup` skill command; 9 shell CSS files at `templates/wireframe/*-shell.css` (admin, auth, error, onboarding, public, email, print, blank, mobile)
 - **Code Analysis** (`lib/code-analyzer.ts`, `lib/code-context-formatter.ts`) — analyze source code for detail-design generation
 

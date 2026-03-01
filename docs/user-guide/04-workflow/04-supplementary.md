@@ -75,9 +75,18 @@ Bạn có thể dịch bất kỳ tài liệu nào sang tiếng Anh hoặc tiế
 
 # Dịch tài liệu sang tiếng Việt (phục vụ BA/Dev nội bộ)
 /sekkei:translate @basic-design --lang=vi
+
+# Dịch toàn bộ tài liệu trong chain đã hoàn thành sang tiếng Anh
+/sekkei:translate --all --lang=en
 ```
 
-Sekkei sẽ bảo toàn các mã ID (REQ-xxx, F-xxx, SCR-xxx) trong bản dịch để không làm đứt quãng khả năng tham chiếu. Mọi thuật ngữ chuyên ngành sẽ được dịch thống nhất theo bảng thuật ngữ (glossary) của dự án.
+**Tính năng nâng cao:**
+
+- **Ánh xạ glossary hai chiều** — Sekkei tự động ánh xạ thuật ngữ theo chiều ja↔en↔vi dựa trên ngôn ngữ nguồn và đích. Không chỉ dịch một chiều từ tiếng Nhật.
+- **Kiểm tra cấu trúc sau dịch** — Sau khi dịch, Sekkei tự động so sánh tài liệu gốc và bản dịch để phát hiện ID bị mất, số dòng bảng lệch, hoặc số lượng heading thay đổi.
+- **Dịch gia tăng (Incremental)** — Khi tài liệu nguồn được cập nhật một phần, Sekkei chỉ dịch lại các section đã thay đổi (dựa trên SHA-256 hash), tiết kiệm thời gian và chi phí.
+
+Sekkei bảo toàn các mã ID (REQ-xxx, F-xxx, SCR-xxx) trong bản dịch để không làm đứt quãng khả năng tham chiếu. Mọi thuật ngữ chuyên ngành được dịch thống nhất theo glossary của dự án.
 
 > [!NOTE]
 > Bản dịch đóng vai trò là tài liệu tham khảo. Bản tiếng Nhật gốc vẫn luôn là căn cứ chính thức cuối cùng để bàn giao cho khách hàng.

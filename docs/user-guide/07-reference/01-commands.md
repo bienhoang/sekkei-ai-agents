@@ -53,7 +53,7 @@
 | 19 | **validate** | `/sekkei:validate [@doc]` | Không có arg = validate cả chain | Kiểm tra completeness, broken cross-ref IDs, thiếu section |
 | 20 | **status** | `/sekkei:status` | — | Xem tiến độ chain, gợi ý tài liệu tiếp theo |
 | 21 | **export** | `/sekkei:export @doc --format=xlsx` | `xlsx` / `pdf` / `docx` | Export sang Excel (IPA 4-sheet) / PDF / Word |
-| 22 | **translate** | `/sekkei:translate @doc --lang=en` | `--lang=en` / `--lang=vi` | Dịch tài liệu, giữ nguyên cross-ref IDs |
+| 22 | **translate** | `/sekkei:translate @doc --lang=en` | `--lang=en` / `--lang=vi` / `--all` | Dịch tài liệu với glossary hai chiều (ja↔en↔vi), kiểm tra cấu trúc sau dịch, dịch gia tăng theo section |
 | 23 | **glossary** | `/sekkei:glossary [subcommand]` | `add` / `list` / `find` / `export` / `import` | Quản lý thuật ngữ dự án |
 | 24 | **change** | `/sekkei:change` | `--resume` / `--status` / `--list` / `--cancel` / `--rollback` | Quản lý lifecycle của change request (変更要求書) |
 | 25 | **update** | `/sekkei:update @doc` | `--since <git-ref>` | Phát hiện upstream changes, sinh danh sách tài liệu cần cập nhật |
