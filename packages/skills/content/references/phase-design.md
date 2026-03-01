@@ -71,7 +71,7 @@ Command workflows for the design phase of the V-model document chain.
    - Call MCP tool `manage_plan(action="detect", workspace_path, config_path, doc_type="basic-design")`
    - Response: `{ should_trigger, reason, feature_count, has_active_plan, plan_path? }`
    - If `should_trigger=true` and `has_active_plan=false`:
-     → Ask: "Detected {feature_count} features in split mode. Create a generation plan first? [Y/n]"
+     → Ask: "Detected {feature_count} features. Create a per-feature generation plan? [Y/n]"
      → If Y: run `/sekkei:plan basic-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
    - If `should_trigger=true` and `has_active_plan=true`:
@@ -79,11 +79,11 @@ Command workflows for the design phase of the V-model document chain.
      → If Resume: run `/sekkei:implement @{plan_path}`
 1. Read the input (ideally the generated 要件定義書 or requirements summary)
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
-3. **Check for split config**: read `sekkei.config.yaml` → `split.basic-design`
-4. **If split enabled:**
+3. **Check functions-list**: verify `{output.directory}/04-functions-list/functions-list.md` exists
+4. **If functions-list exists (split generation):**
    a. Read `functions-list.md` → extract feature groups (大分類)
    b. Create output directories: `shared/`, `features/{feature-id}/`
-   c. For each shared section in split config:
+   c. For each shared section:
       - Call `generate_document` with `scope: "shared"`, `upstream_paths: ["02-requirements/requirements.md", "04-functions-list/functions-list.md"]`
       - Save to `shared/{section-name}.md`
    d. For each feature from functions-list:
@@ -97,7 +97,7 @@ Command workflows for the design phase of the V-model document chain.
          - **Stage 2**: Read existing; generate §5 画面設計 for this feature's SCR-xxx → **Append** → TaskUpdate complete
          - **Stage 3**: Read existing; generate §3 業務フロー for this feature → **Append** → TaskUpdate complete
          - **Stage 4**: Read existing; generate remaining sections → **Append** → TaskUpdate complete
-      ii. Generate per-feature screen-design (split mode only):
+      ii. Generate per-feature screen-design (per-feature mode only):
          - Construct screen_input = Screen Design Document Instructions (see below) + "\n\n## Feature Requirements\n" + {feature_input}
          - Call `generate_document(doc_type: "basic-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: screen_input, upstream_paths: ["02-requirements/requirements.md", "04-functions-list/functions-list.md"])`
          - Save output to `features/{feature-id}/screen-design.md`
@@ -108,13 +108,13 @@ Command workflows for the design phase of the V-model document chain.
       iv. Update `_index.yaml` manifest entry for this feature to list both basic-design.md and screen-design.md files
    e. Create/update `_index.yaml` manifest via manifest-manager
 
-**Screen Design Rules (split mode only):**
+**Screen Design Rules (per-feature mode only):**
 - Screen IDs use format SCR-{FEATURE_ID}-{seq} (e.g., SCR-AUTH-001)
 - Each screen-design.md covers ALL screens for that feature
 - 6 mandatory sections per screen: 画面レイアウト, 画面項目定義, バリデーション一覧, イベント一覧, 画面遷移, 権限
-- Do NOT add per-screen sections to basic-design.md in split mode — reference screen-design.md instead
+- Do NOT add per-screen sections to basic-design.md in per-feature mode — reference screen-design.md instead
 - The Screen Design Document Instructions block is provided by `buildScreenDesignInstruction(featureId, language)` from `generation-instructions.ts` — pass the project language from config
-5. **If not split (default):**
+5. **If functions-list not available (monolithic fallback):**
    a. Call MCP tool `generate_document` with:
       - `doc_type: "basic-design"`, `language` from config
       - `input_content: @input`, `project_type` from config
@@ -224,7 +224,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 **Prerequisite check (MUST run before interview):**
 1. Confirm basic-design exists: check `chain.basic_design.status == "complete"` in config, or any `features/*/basic-design.md`, or `03-system/basic-design.md` — abort if all fail: "Run `/sekkei:basic-design` first."
 2. **Load upstream (mode-aware):**
-   - **Split mode** (`split.detail-design` in config): global_upstream = `shared/*.md` + requirements.md + functions-list.md (per-feature upstream assembled in §4 below)
+   - **Per-feature mode** (functions-list exists): global_upstream = `shared/*.md` + requirements.md + functions-list.md (per-feature upstream assembled in §4 below)
    - **Monolithic**: upstream_content = basic-design.md + requirements.md + functions-list.md (last two if they exist)
 
 **Interview questions (ask before generating):**
@@ -237,7 +237,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
    - Call MCP tool `manage_plan(action="detect", workspace_path, config_path, doc_type="detail-design")`
    - Response: `{ should_trigger, reason, feature_count, has_active_plan, plan_path? }`
    - If `should_trigger=true` and `has_active_plan=false`:
-     → Ask: "Detected {feature_count} features in split mode. Create a generation plan first? [Y/n]"
+     → Ask: "Detected {feature_count} features. Create a per-feature generation plan? [Y/n]"
      → If Y: run `/sekkei:plan detail-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
    - If `should_trigger=true` and `has_active_plan=true`:
@@ -245,11 +245,11 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
      → If Resume: run `/sekkei:implement @{plan_path}`
 1. Read the input (ideally the generated 基本設計書)
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
-3. **Check for split config**: read `sekkei.config.yaml` → `split.detail-design`
-4. **If split enabled:**
+3. **Check functions-list**: verify functions-list exists (same check as basic-design §3)
+4. **If functions-list exists (split generation):**
    a. Read `functions-list.md` → extract feature groups (大分類)
    b. Create output directories: `shared/`, `features/{feature-id}/`
-   c. For each shared section in `split.detail-design.shared` config:
+   c. For each shared section:
       - Call `generate_document` with `doc_type: "detail-design"`, `scope: "shared"`, `upstream_content: global_upstream`
       - Save to `shared/{section-name}.md`
    d. For each feature from functions-list:
@@ -269,7 +269,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
          - **Stage 4**: Read existing; generate §7 処理フロー + remaining sections → **Append** → TaskUpdate complete
       iii. Update `_index.yaml` manifest entry
    e. Create/update `_index.yaml` manifest via manifest-manager
-5. **If not split (default):**
+5. **If functions-list not available (monolithic fallback):**
    a. Use `upstream_content` prepared in prerequisite check above
    b. Call MCP tool `generate_document` with `doc_type: "detail-design"`, `language` from config (default: "ja"),
       `input_content: @input`, `upstream_content: upstream`. Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
@@ -293,7 +293,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
       Read existing file; generate ONLY: §7 処理フロー (Mermaid sequence diagrams) + §8 エラー処理 + §9 セキュリティ + §10 パフォーマンス →
       Pass existing content → **Append** → TaskUpdate complete
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "detail_design"`:
-   - **If split mode:** `status: "complete"`, `system_output: "03-system/"`, `features_output: "05-features/"`
+   - **If per-feature:** `status: "complete"`, `system_output: "03-system/"`, `features_output: "05-features/"`
    - **If monolithic:** `status: "complete"`, `output: "03-system/detail-design.md"`
 7. TaskUpdate: validate in_progress
 8. Call MCP tool `validate_document` with saved content and `doc_type: "detail-design"`.

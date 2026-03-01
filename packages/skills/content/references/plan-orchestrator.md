@@ -14,14 +14,14 @@ Response shape: `{ should_trigger: bool, reason: string, feature_count: N, has_a
   - If Create New → run `/sekkei:plan {doc-type}` → run `/sekkei:implement @{returned-plan-path}`
   - If Skip Plan → continue with normal generation flow
 - If `should_trigger=true` and `has_active_plan=false` → prompt user:
-  > "Detected {feature_count} features in split mode. Create a generation plan first? [Y/n]"
+  > "Detected {feature_count} features. Create a per-feature generation plan? [Y/n]"
   - If Y → run `/sekkei:plan {doc-type}` → run `/sekkei:implement @{returned-plan-path}`
   - If N → continue with normal generation flow
 
 **Trigger conditions evaluated by detect action** (for reference):
 1. Doc-type is one of: `basic-design`, `detail-design`, `test-spec`
-2. `sekkei.config.yaml` has `split.{doc-type}` section enabled
-3. Feature count (大分類 in `functions-list.md`) >= 3
+2. `functions-list.md` exists in workspace output directory
+3. Feature count (大分類 in `functions-list.md`) > 0
 4. No active plan exists for this doc-type (when `has_active_plan=false`)
 
 ## §2 Survey Flow
@@ -90,7 +90,7 @@ phases:
 ## Overview
 - **Doc type:** {doc-type}
 - **Features:** {count} selected
-- **Split mode:** enabled
+- **Per-feature:** yes
 - **Created:** {date}
 
 ## Phases
@@ -105,7 +105,7 @@ phases:
 ## Dependencies
 - functions-list.md (upstream)
 - requirements.md (upstream)
-- sekkei.config.yaml (split config)
+- functions-list.md (feature detection source)
 ```
 
 ## §4 Phase Mapping Templates
@@ -152,7 +152,7 @@ status: pending
 `/sekkei:{doc-type}` with scope params from §4 mapping table above.
 
 ## Scope
-- Sections: {list from split config}
+- Sections: {list from hardcoded defaults}
 - Feature: {ID} — {name} (if per-feature)
 - Survey data: complexity={val}, requirements={val}
 

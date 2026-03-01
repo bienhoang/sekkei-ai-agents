@@ -137,7 +137,7 @@ Prepend this YAML block to the input_content before calling generate_document.
    - TaskUpdate: mark this group's task in_progress
    - Read existing file content
    - Generate ONLY: `## 機能一覧表 — {大分類名}` sub-table (F-xxx rows for this group)
-   - ID format: `F-001` (sequential). For split mode with custom prefixes, use subsystem prefix (e.g., SAL-001)
+   - ID format: `F-001` (sequential). For per-feature generation with custom prefixes, use subsystem prefix (e.g., SAL-001)
    - 処理分類: 入力 / 照会 / 帳票 / バッチ / API / イベント / スケジューラ / Webhook
    - 優先度 & 難易度: 高 / 中 / 低
    - Cross-reference REQ-xxx IDs from upstream 要件定義書
@@ -152,7 +152,7 @@ Prepend this YAML block to the input_content before calling generate_document.
    - TaskUpdate: mark summary task complete
 10. (If monolithic fallback from step 5): Use the returned template + AI instructions to generate the full 機能一覧:
     - 3-tier hierarchy: 大分類 → 中分類 → 小機能
-    - ID format: `F-001` (sequential). For split mode with custom prefixes, use subsystem prefix (e.g., SAL-001)
+    - ID format: `F-001` (sequential). For per-feature generation with custom prefixes, use subsystem prefix (e.g., SAL-001)
     - 処理分類: 入力 / 照会 / 帳票 / バッチ / API / イベント / スケジューラ / Webhook
     - 優先度 & 難易度: 高 / 中 / 低
     - Cross-reference REQ-xxx IDs from upstream 要件定義書
@@ -170,33 +170,18 @@ Prepend this YAML block to the input_content before calling generate_document.
 16. **Count 大分類 feature groups** from the generated `functions-list.md`:
     - Scan for distinct values in the 大分類 column of the 機能一覧 table
     - Derive a short feature ID for each (2–5 uppercase letters, e.g., "AUTH", "SALES", "REPORT")
-17. **If count >= 3**, prompt the user:
-    > "Detected {N} feature groups: {list}. Enable split mode? Split generates separate files per feature for basic-design, detail-design, and test-spec. Recommended for projects with 3+ features. [Y/n]"
-18. **If user confirms split:**
-    a. Uncomment/rewrite the `split:` block in `sekkei.config.yaml` with defaults:
-       ```yaml
-       split:
-         basic-design:
-           shared: [system-architecture, database-design, external-interface, non-functional-design, technology-rationale]
-           per_feature: [overview, business-flow, screen-design, report-design, functions-list]
-         detail-design:
-           shared: [system-architecture, database-design]
-           per_feature: [overview, module-design, class-design, api-detail, processing-flow]
-         test-spec:
-           shared: []
-           per_feature: [unit-test, integration-test, system-test, acceptance-test]
-       ```
-    b. Create directories: `{output_dir}/features/{feature-id}/` for each detected 大分類
-    c. Write `{output_dir}/_index.yaml` manifest with detected features:
-       ```yaml
-       version: "1"
-       project: "{project_name}"
-       language: "{project_language}"
-       documents: {}
-       ```
-       Then for each feature, add an entry to the manifest's feature list.
-    d. Confirm: "Split mode enabled. Created {N} feature directories. Run `/sekkei:basic-design` to generate split documents."
-19. **If user declines split (or count < 3):** proceed without changes. Monolithic flow remains default.
+17. **If count > 0**, inform the user:
+    > "Detected {N} feature groups: {list}. Per-feature generation will be used automatically for basic-design and detail-design."
+18. Create directories: `{output_dir}/features/{feature-id}/` for each detected 大分類
+19. Write `{output_dir}/_index.yaml` manifest with detected features:
+    ```yaml
+    version: "1"
+    project: "{project_name}"
+    language: "{project_language}"
+    documents: {}
+    ```
+    Then for each feature, add an entry to the manifest's feature list.
+20. Confirm: "Per-feature directories created. Run `/sekkei:basic-design` to generate per-feature documents."
 
 ## `/sekkei:nfr @requirements`
 

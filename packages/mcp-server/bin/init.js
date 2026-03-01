@@ -14,7 +14,7 @@ import { execSync } from "node:child_process";
 import { homedir } from "node:os";
 import { runEditorSetup } from "./setup.js";
 import { t } from "./init/i18n.js";
-import { askLanguage, askProject, askStacks, askDocOptions, askSplitMode, buildSplitConfig, showSummary } from "./init/prompts.js";
+import { askLanguage, askProject, askStacks, askDocOptions, showSummary } from "./init/prompts.js";
 import { installDeps } from "./init/deps.js";
 
 const CONFIG_FILE = "sekkei.config.yaml";
@@ -39,7 +39,6 @@ async function main() {
 
   // 2. Check existing config — offer merge or overwrite
   let existingChain = null;
-  let existingSplit = null;
   if (existsSync(CONFIG_FILE)) {
     const action = await p.select({
       message: t(lang, "existing_action"),
@@ -57,7 +56,6 @@ async function main() {
         const raw = readFileSync(CONFIG_FILE, "utf-8");
         const existing = parseYaml(raw);
         existingChain = existing?.chain ?? null;
-        existingSplit = existing?.split ?? null;
       } catch { /* parse error — treat as fresh */ }
     }
   }
@@ -72,17 +70,10 @@ async function main() {
   let docOpts = await askDocOptions(lang, presetValue);
   if (!docOpts || p.isCancel(docOpts)) { p.cancel(t(lang, "cancel")); process.exit(0); }
 
-  // Pre-populate split from existing config when merging
-  const existingSplitOpts = existingSplit
-    ? { enabled: true, types: Object.keys(existingSplit) }
-    : undefined;
-  let splitOpts = await askSplitMode(lang, existingSplitOpts);
-  if (p.isCancel(splitOpts)) { p.cancel(t(lang, "cancel")); process.exit(0); }
-
   // Summary + redo loop
   let confirmed = false;
   while (!confirmed) {
-    const action = await showSummary(lang, project, stack, docOpts, splitOpts);
+    const action = await showSummary(lang, project, stack, docOpts);
     if (action === "cancel") { p.cancel(t(lang, "cancel")); process.exit(0); }
     if (action === "ok") { confirmed = true; break; }
     if (action === "project") {
@@ -99,9 +90,6 @@ async function main() {
     } else if (action === "doc") {
       const redo = await askDocOptions(lang, presetValue, docOpts);
       if (redo && !p.isCancel(redo)) docOpts = redo;
-    } else if (action === "split") {
-      const redo = await askSplitMode(lang, splitOpts);
-      if (!p.isCancel(redo)) splitOpts = redo;
     }
   }
 
@@ -162,8 +150,6 @@ async function main() {
     }
   }
 
-  const splitConfig = buildSplitConfig(splitOpts);
-
   const config = {
     project: {
       name: project.name,
@@ -176,7 +162,6 @@ async function main() {
       industry: docOpts.industry !== "none" ? docOpts.industry : undefined,
     },
     output: { directory: outDir },
-    ...(splitConfig ? { split: splitConfig } : {}),
     chain: defaultChain,
   };
   writeFileSync(CONFIG_FILE, stringify(config), "utf-8");

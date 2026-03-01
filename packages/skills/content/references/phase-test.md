@@ -2,14 +2,14 @@
 
 Command workflows for the test phase of the V-model document chain.
 
-## Split Mode Detection
+## Per-Feature Detection
 
-Before generating test specs (ut-spec, it-spec), check for split mode:
+Before generating test specs (ut-spec, it-spec), check for per-feature generation:
 
 1. Call MCP tool `manage_plan(action="detect", workspace_path, config_path, doc_type="test-spec")`
 2. Response: `{ should_trigger, reason, feature_count, has_active_plan, plan_path? }`
 3. If `should_trigger=true` and `has_active_plan=false`:
-   → Prompt user: "Detected {feature_count} features in split mode. Create a test-spec generation plan first? [Y/n]"
+   → Prompt user: "Detected {feature_count} features. Create a per-feature generation plan? [Y/n]"
    - If Y: run `/sekkei:plan test-spec` → run `/sekkei:implement @{returned-plan-path}` → stop
    - If N: continue with normal generation below
 4. If `should_trigger=true` and `has_active_plan=true`:

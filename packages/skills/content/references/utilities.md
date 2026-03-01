@@ -8,7 +8,7 @@ Command workflows for validation, export, translation, and maintenance utilities
 
 1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory` (default: `workspace-docs`)
 2. **Resolve doc path**: `{output.directory}/{doc-type-dir}/{doc-type}.md`
-   - Check for split mode: look for `_index.yaml` in `{output.directory}/{doc-type-dir}/`
+   - Check for per-feature mode: look for `_index.yaml` in `{output.directory}/{doc-type-dir}/`
 3. **Determine upstream doc type** from V-model chain:
    - requirements → (no upstream, skip cross-ref)
    - functions-list → requirements
@@ -20,7 +20,7 @@ Command workflows for validation, export, translation, and maintenance utilities
    - st-spec → basic-design + functions-list
    - uat-spec → requirements
 4. **Auto-load upstream**: Read upstream doc(s) from `{output.directory}/` → concatenate as `upstream_content`
-5. **If split mode (manifest exists):**
+5. **If per-feature mode (manifest exists):**
    a. Call `validate_document` with `manifest_path` + `upstream_content`
    b. Display per-file validation + aggregate cross-ref report
 6. **If monolithic:**
@@ -65,7 +65,7 @@ Command workflows for validation, export, translation, and maintenance utilities
 1. Read the document or identify doc type
 2. Determine format from `--format` flag (default: xlsx)
 3. **Check for manifest**: look for `_index.yaml` in output directory
-4. **If manifest exists for this doc type (type=split):**
+4. **If manifest exists for this doc type (per-feature):**
    a. Ask user: "Export merged document or per-feature?"
    b. If merged: Call `export_document` with `source: "manifest"`, `manifest_path`
    c. If per-feature: Ask which feature → call with `feature_id`
@@ -90,7 +90,7 @@ Command workflows for validation, export, translation, and maintenance utilities
    g. Merge: keep unchanged translated sections + newly translated sections
    h. Insert updated hashes into final output via `insertHashes()`
    i. If no existing translation, proceed with full translation (step 4/5)
-4. **If manifest exists and doc type is split:**
+4. **If manifest exists and doc type is per-feature:**
    a. Load `_index.yaml` via manifest-manager
    b. Get document entry for the specified doc type
    c. Load glossary once from `workspace-docs/glossary.yaml`
@@ -241,7 +241,7 @@ Batch translate all completed documents in the V-model chain.
    - **Chain Status** (`/chain`) — full chain table, hierarchy viz, detail panel
    - **Analytics** (`/analytics`) — cross-ref analysis, staleness warnings, quality scores
    - **Change History** (`/changes`) — CHANGELOG timeline, CR tracking with state machine viz
-   - **Feature Progress** (`/features`) — feature × doc matrix, completion bars (split mode only)
+   - **Feature Progress** (`/features`) — feature × doc matrix, completion bars (per-feature mode only)
 6. Data sources: `sekkei.config.yaml` (chain status), `.sekkei/` (CRs, plans), `CHANGELOG.md`, filesystem scanning. MCP `validate_chain` for optional deeper analysis.
 7. UI language: English-only. Data content stays in original language (Japanese doc names, changelog entries).
 8. MCP integration: spawns `sekkei-mcp-server` as child process. Falls back to filesystem if MCP unavailable.

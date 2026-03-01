@@ -21,7 +21,7 @@ read the `recommended_strategy` value before deciding how to generate:
 |----------|---------|--------|
 | `monolithic` | Estimated < 16K tokens | Generate in single call (skip progressive) |
 | `progressive` | Estimated 16K-24K tokens | Use progressive stages (default behavior) |
-| `split_required` | Estimated > 24K tokens | Must use manage_plan split mode — do NOT attempt monolithic |
+| `split_required` | Estimated > 24K tokens | Must use manage_plan per-feature mode — do NOT attempt monolithic |
 
 The advisory also includes `entity_counts` (e.g. `{ SCR: 12, API: 8 }`) and
 `sections_breakdown` — use these to size per-section batches in Step 1 pre-scan.

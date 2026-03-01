@@ -66,7 +66,7 @@ All user-facing output (document content, prompts, confirmations) must use `proj
 - `/sekkei:change` — Change request lifecycle (impact analysis → approval → propagation → validation)
 - `/sekkei:update @doc` — Detect upstream changes and impacted sections
 - `/sekkei:diff-visual @before @after` — Generate color-coded revision Excel (朱書き)
-- `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in split mode)
+- `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered when functions-list exists)
 - `/sekkei:implement @plan-path` — Execute a generation plan phase by phase
 - `/sekkei:preview` — Start Express+React docs preview with WYSIWYG editor (`--guide` for readonly user guide)
 - `/sekkei:dashboard` — Start analytics dashboard for workspace-docs overview (chain status, analytics, changes, features)
@@ -164,9 +164,9 @@ Management (standalone):
   └─► Decision Record (/sekkei:decision-record)
 ```
 
-## Split Mode
+## Per-Feature Generation
 
-When `sekkei.config.yaml` contains a `split` section, generation commands (basic-design, detail-design, test-spec) produce per-feature files instead of monolithic documents.
+When `functions-list.md` exists, basic-design and detail-design commands automatically produce per-feature files instead of monolithic documents. No configuration needed.
 
 **Structure:**
 ```

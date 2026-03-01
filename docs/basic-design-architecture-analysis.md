@@ -52,10 +52,11 @@
 - Downstream docs CHỈ được reference SCR/TBL/API từ basic-design
 - Validator check orphaned IDs (IDs không có nguồn gốc upstream)
 
-### 2.2 Split-mode cho project lớn
-- Config-driven: `sekkei.config.yaml` → `split.basic-design.features[]`
-- Plan orchestration auto-detect khi feature_count > threshold
+### 2.2 Split-mode cho project lớn (Auto-detected, v2.9.0+)
+- Auto-detect: functions-list.md có 3+ features → activate per-feature generation
+- Plan orchestration: `manage_plan(action="detect")` tự kiểm tra
 - Mỗi feature gen riêng → giảm AI context, tăng quality
+- No config needed — automatic based on functions list presence
 
 ### 2.3 Graceful degradation
 - Mockup generation via AI skill → no Playwright dependency

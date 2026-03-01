@@ -4,7 +4,6 @@
  */
 import { readFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
-import { parse } from "yaml";
 import { DEFAULT_WORKSPACE_DIR } from "../lib/constants.js";
 import type { PlanArgs, ToolResult } from "./plan.js";
 import { ok, err } from "./plan.js";
@@ -53,33 +52,6 @@ const FEATURE_SECTIONS: Record<string, string[]> = {
   "detail-design": ["module-design", "class-design", "api-detail", "processing-flow"],
   "test-spec": ["unit-test", "integration-test", "system-test", "acceptance-test"],
 };
-
-// --- Config Helper ---
-
-async function readSplitConfig(
-  configPath: string,
-  docType: string,
-): Promise<Record<string, string[]>> {
-  let raw: string;
-  try {
-    raw = await readFile(configPath, "utf-8");
-  } catch {
-    throw new SekkeiError("PLAN_ERROR", `Config file not found: ${configPath}`);
-  }
-
-  const config = parse(raw) as Record<string, unknown>;
-  const split = (config.split ?? {}) as Record<string, unknown>;
-  const docConfig = split[docType];
-
-  if (!docConfig) {
-    throw new SekkeiError("PLAN_ERROR", `Split mode not configured for ${docType}`);
-  }
-
-  // Return a normalized split config map
-  const shared = SHARED_SECTIONS[docType] ?? [];
-  const featureSections = FEATURE_SECTIONS[docType] ?? [];
-  return { shared, feature: featureSections };
-}
 
 // --- Phase Builder ---
 
@@ -138,7 +110,10 @@ async function handleCreate(args: PlanArgs): Promise<ToolResult> {
     return err("features array is required for create");
   }
 
-  const splitConfig = await readSplitConfig(config_path, doc_type);
+  const splitConfig = {
+    shared: SHARED_SECTIONS[doc_type] ?? [],
+    feature: FEATURE_SECTIONS[doc_type] ?? [],
+  };
 
   const active = await findActivePlan(workspace_path, doc_type);
   if (active) {
@@ -232,47 +207,38 @@ async function handleDetect(args: PlanArgs): Promise<ToolResult> {
   if (!doc_type) return err("doc_type is required for detect");
   if (!config_path) return err("config_path is required for detect");
 
-  // 1. Check split config
-  let hasSplitConfig = false;
+  // 1. Check functions-list existence
+  let hasFunctionsList = false;
+  let featureCount = 0;
   try {
-    await readSplitConfig(config_path, doc_type);
-    hasSplitConfig = true;
+    const functionsListPath = join(workspace_path, DEFAULT_WORKSPACE_DIR, "04-functions-list", "functions-list.md");
+    const content = await readFile(functionsListPath, "utf-8");
+    hasFunctionsList = true;
+    const matches = content.match(/^## .+/gm);
+    featureCount = matches ? matches.length : 0;
   } catch {
-    hasSplitConfig = false;
+    hasFunctionsList = false;
   }
 
-  if (!hasSplitConfig) {
+  if (!hasFunctionsList) {
     return ok(JSON.stringify({
       should_trigger: false,
-      reason: `Split mode not configured for ${doc_type}`,
+      reason: "functions-list.md not found — monolithic generation",
       feature_count: 0,
       has_active_plan: false,
     }, null, 2));
   }
 
-  // 2. Count 大分類 features in functions-list.md
-  let featureCount = 0;
-  try {
-    const functionsListPath = join(workspace_path, DEFAULT_WORKSPACE_DIR, "functions-list.md");
-    const content = await readFile(functionsListPath, "utf-8");
-    const matches = content.match(/^## .+/gm);
-    featureCount = matches ? matches.length : 0;
-  } catch {
-    featureCount = 0;
-  }
-
-  // 3. Check active plan
+  // 2. Check active plan
   const activePlan = await findActivePlan(workspace_path, doc_type);
   const hasActivePlan = activePlan !== null;
 
-  const shouldTrigger = hasSplitConfig && featureCount >= 3 && !hasActivePlan;
-  const reason = !hasSplitConfig
-    ? `Split mode not configured for ${doc_type}`
-    : featureCount < 3
-      ? `Feature count (${featureCount}) below threshold of 3`
-      : hasActivePlan
-        ? "Active plan already exists"
-        : `${featureCount} features detected — split mode recommended`;
+  const shouldTrigger = hasFunctionsList && featureCount > 0 && !hasActivePlan;
+  const reason = featureCount === 0
+    ? "No features found in functions-list"
+    : hasActivePlan
+      ? "Active plan already exists"
+      : `${featureCount} features detected — per-feature generation recommended`;
 
   return ok(JSON.stringify({
     should_trigger: shouldTrigger,

@@ -830,7 +830,7 @@ split:
   });
 
   it("returns should_trigger=true when features >= 3 and no active plan", async () => {
-    const docsDir = join(tmpDir, "workspace-docs");
+    const docsDir = join(tmpDir, "workspace-docs", "04-functions-list");
     await mkdir(docsDir, { recursive: true });
     await writeFile(join(docsDir, "functions-list.md"), [
       "# 機能一覧",
@@ -855,11 +855,11 @@ split:
     expect(data.has_active_plan).toBe(false);
   });
 
-  it("returns should_trigger=false when features < 3", async () => {
+  it("returns should_trigger=true even with 1 feature", async () => {
     const fewDir = await mkdtemp(join(tmpdir(), "sekkei-testspec-few-"));
     const cfg = join(fewDir, "sekkei.config.yaml");
     await writeFile(cfg, CONFIG_YAML, "utf-8");
-    const docs = join(fewDir, "workspace-docs");
+    const docs = join(fewDir, "workspace-docs", "04-functions-list");
     await mkdir(docs, { recursive: true });
     await writeFile(join(docs, "functions-list.md"), "# FL\n## Feature A\nF-001", "utf-8");
 
@@ -871,31 +871,30 @@ split:
         doc_type: "test-spec",
       });
       const data = parseResult(result);
-      expect(data.should_trigger).toBe(false);
-      expect(data.feature_count).toBeLessThan(3);
-      expect(data.reason).toContain("below threshold");
+      expect(data.should_trigger).toBe(true);
+      expect(data.feature_count).toBe(1);
     } finally {
       await rm(fewDir, { recursive: true, force: true });
     }
   });
 
-  it("returns should_trigger=false when split config missing for test-spec", async () => {
-    const noSplitDir = await mkdtemp(join(tmpdir(), "sekkei-testspec-nosplit-"));
-    const noSplitCfg = join(noSplitDir, "sekkei.config.yaml");
-    await writeFile(noSplitCfg, "split: {}", "utf-8");
+  it("returns should_trigger=false when functions-list missing for test-spec", async () => {
+    const noFLDir = await mkdtemp(join(tmpdir(), "sekkei-testspec-nofl-"));
+    const noFLCfg = join(noFLDir, "sekkei.config.yaml");
+    await writeFile(noFLCfg, "project: {}", "utf-8");
 
     try {
       const result = await callPlan({
         action: "detect",
-        workspace_path: noSplitDir,
-        config_path: noSplitCfg,
+        workspace_path: noFLDir,
+        config_path: noFLCfg,
         doc_type: "test-spec",
       });
       const data = parseResult(result);
       expect(data.should_trigger).toBe(false);
-      expect(data.reason).toContain("not configured");
+      expect(data.reason).toContain("functions-list.md not found");
     } finally {
-      await rm(noSplitDir, { recursive: true, force: true });
+      await rm(noFLDir, { recursive: true, force: true });
     }
   });
 
@@ -904,7 +903,7 @@ split:
     const planDir = await mkdtemp(join(tmpdir(), "sekkei-testspec-active-"));
     const planCfg = join(planDir, "sekkei.config.yaml");
     await writeFile(planCfg, CONFIG_YAML, "utf-8");
-    const docs = join(planDir, "workspace-docs");
+    const docs = join(planDir, "workspace-docs", "04-functions-list");
     await mkdir(docs, { recursive: true });
     await writeFile(join(docs, "functions-list.md"), [
       "# FL", "## A", "F-001", "## B", "F-002", "## C", "F-003",

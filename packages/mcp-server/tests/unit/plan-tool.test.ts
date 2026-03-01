@@ -49,7 +49,7 @@ describe("manage_plan tool", () => {
     await writeFile(configPath, CONFIG_YAML, "utf-8");
 
     // Write functions-list.md with 3+ ## headers (features)
-    const docsDir = join(tmpDir, "workspace-docs");
+    const docsDir = join(tmpDir, "workspace-docs", "04-functions-list");
     await mkdir(docsDir, { recursive: true });
     functionsListPath = join(docsDir, "functions-list.md");
     await writeFile(functionsListPath, [
@@ -143,17 +143,22 @@ describe("manage_plan tool", () => {
       expect(result.isError).toBe(true);
     });
 
-    it("rejects when split config missing for doc_type", async () => {
-      const noSplitConfig = join(tmpDir, "no-split.yaml");
-      await writeFile(noSplitConfig, "split: {}", "utf-8");
-      const result = await call({
-        action: "create",
-        workspace_path: tmpDir,
-        config_path: noSplitConfig,
-        doc_type: "detail-design",
-        features: FEATURES,
-      });
-      expect(result.isError).toBe(true);
+    it("succeeds without split config (hardcoded defaults)", async () => {
+      const noSplitDir = await mkdtemp(join(tmpdir(), "sekkei-nosplit-"));
+      const noSplitConfig = join(noSplitDir, "no-split.yaml");
+      await writeFile(noSplitConfig, "project: {}", "utf-8");
+      try {
+        const result = await call({
+          action: "create",
+          workspace_path: noSplitDir,
+          config_path: noSplitConfig,
+          doc_type: "detail-design",
+          features: FEATURES,
+        });
+        expect(result.isError).toBeUndefined();
+      } finally {
+        await rm(noSplitDir, { recursive: true, force: true });
+      }
     });
 
     it("rejects when active plan already exists", async () => {
@@ -360,24 +365,30 @@ describe("manage_plan tool", () => {
       expect(data.feature_count).toBeGreaterThanOrEqual(3);
     });
 
-    it("returns should_trigger=false when split config missing", async () => {
-      const noSplitCfg = join(tmpDir, "empty.yaml");
-      await writeFile(noSplitCfg, "split: {}", "utf-8");
-      const result = await call({
-        action: "detect",
-        workspace_path: tmpDir,
-        config_path: noSplitCfg,
-        doc_type: "detail-design",
-      });
-      const data = parseResult(result);
-      expect(data.should_trigger).toBe(false);
+    it("returns should_trigger=false when functions-list missing", async () => {
+      const noFLDir = await mkdtemp(join(tmpdir(), "sekkei-nofl-"));
+      const cfg = join(noFLDir, "sekkei.config.yaml");
+      await writeFile(cfg, "project: {}", "utf-8");
+      try {
+        const result = await call({
+          action: "detect",
+          workspace_path: noFLDir,
+          config_path: cfg,
+          doc_type: "detail-design",
+        });
+        const data = parseResult(result);
+        expect(data.should_trigger).toBe(false);
+        expect(data.reason).toContain("functions-list.md not found");
+      } finally {
+        await rm(noFLDir, { recursive: true, force: true });
+      }
     });
 
-    it("returns should_trigger=false when feature_count < 3", async () => {
+    it("returns should_trigger=true even with 1 feature", async () => {
       const fewFeaturesDir = await mkdtemp(join(tmpdir(), "sekkei-few-"));
       const cfg = join(fewFeaturesDir, "sekkei.config.yaml");
       await writeFile(cfg, CONFIG_YAML, "utf-8");
-      const docs = join(fewFeaturesDir, "workspace-docs");
+      const docs = join(fewFeaturesDir, "workspace-docs", "04-functions-list");
       await mkdir(docs, { recursive: true });
       await writeFile(join(docs, "functions-list.md"), "# FL\n## Feature A\nF-001", "utf-8");
       try {
@@ -388,8 +399,8 @@ describe("manage_plan tool", () => {
           doc_type: "basic-design",
         });
         const data = parseResult(result);
-        expect(data.should_trigger).toBe(false);
-        expect(data.feature_count).toBeLessThan(3);
+        expect(data.should_trigger).toBe(true);
+        expect(data.feature_count).toBe(1);
       } finally {
         await rm(fewFeaturesDir, { recursive: true, force: true });
       }

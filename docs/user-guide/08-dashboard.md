@@ -232,7 +232,7 @@ Bảng liệt kê chi tiết các thay đổi: Ngày, Tài liệu, Phiên bản,
 ## 7. Màn hình Features — Tiến độ theo tính năng
 
 > [!NOTE]
-> Màn hình này **chỉ hiển thị khi bật split mode** trong `sekkei.config.yaml`. Split mode cho phép tạo tài liệu riêng biệt cho từng tính năng (feature).
+> Màn hình này **hiển thị khi functions-list.md có 3+ tính năng**. Split mode tự động kích hoạt để tạo tài liệu riêng biệt cho từng tính năng (feature) — không cần cấu hình.
 
 ### 7.1 Thẻ thống kê
 

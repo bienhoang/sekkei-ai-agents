@@ -30,12 +30,9 @@
 |-----|------|---------|-------|
 | `export.excel_template` | string | — | Đường dẫn đến file Excel template của công ty (optional) — dùng khi khách hàng yêu cầu format riêng |
 
-### `split` — Tách file lớn
+### `split` — ~~Tách file lớn~~ DEPRECATED
 
-| Key | Type | Default | Mô tả |
-|-----|------|---------|-------|
-| `split.basic-design` | boolean | `false` | Tách 基本設計書 theo từng feature group nếu `true` |
-| `split.detail-design` | boolean | `false` | Tách 詳細設計書 theo từng feature group nếu `true` |
+> **Removed in v2.9.0** — Split mode is now automatic and requires no configuration. When `functions-list.md` contains 3+ features, Sekkei automatically generates per-feature documents for `basic-design`, `detail-design`, and test-specs.
 
 ### Các keys khác
 
@@ -73,10 +70,6 @@ output:
 
 export:
   excel_template: ./templates/company-template.xlsx  # optional
-
-split:
-  basic-design: false
-  detail-design: false
 
 autoCommit: false
 
@@ -137,4 +130,4 @@ workspace-docs/
 ```
 
 > [!NOTE]
-> Khi bật `split.basic-design: true`, thư mục `05-features/` sẽ được tách thành subfolder theo feature group — ví dụ `05-features/employee-management/`, `05-features/payroll/`, mỗi folder có `basic-design.md` và `screen-design.md` riêng.
+> **Auto-activation (v2.9.0+):** When `functions-list.md` contains 3+ major features (identified by `## ` headings), Sekkei automatically generates per-feature documents. The thư mục `05-features/` is then populated with subfolders per feature — ví dụ `05-features/employee-management/`, `05-features/payroll/`, mỗi folder có `basic-design.md` và `screen-design.md` riêng. No configuration needed.
