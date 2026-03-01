@@ -48,13 +48,20 @@ function readPkgVersion(pkgDir: string): string {
   }
 }
 
+/** Check if MCP is registered via `claude mcp get` CLI */
+function isMcpRegisteredViaCli(): boolean {
+  try {
+    const out = execFileSync("claude", ["mcp", "get", "sekkei"], { timeout: 5000, encoding: "utf-8" });
+    return !!out && !out.includes("No MCP server found");
+  } catch {
+    return false;
+  }
+}
+
 function isMcpProcessRunning(): boolean {
   if (isWin) return false;
   try {
-    const settingsPath = join(CLAUDE_DIR, "settings.json");
-    const settings = JSON.parse(readFileSync(settingsPath, "utf-8"));
-    const entryPoint: string | undefined = settings?.mcpServers?.sekkei?.args?.[0];
-    if (!entryPoint) return false;
+    const entryPoint = resolve(PKG_ROOT, "dist", "index.js");
     execFileSync("pgrep", ["-f", entryPoint], { timeout: 3000, stdio: "ignore" });
     return true;
   } catch {
@@ -71,11 +78,7 @@ function checkPackages(): PackageItem[] {
 
   // mcp-server
   const mcpVer = readPkgVersion(PKG_ROOT);
-  let mcpRegistered = false;
-  try {
-    const settings = JSON.parse(readFileSync(join(CLAUDE_DIR, "settings.json"), "utf-8"));
-    mcpRegistered = !!settings?.mcpServers?.sekkei;
-  } catch { /* not registered */ }
+  const mcpRegistered = isMcpRegisteredViaCli();
   const mcpRunning = mcpRegistered && isMcpProcessRunning();
 
   // preview
@@ -224,19 +227,24 @@ function checkClaudeSkill(): HealthItem {
 }
 
 function checkMcpRegistration(): HealthItem {
-  const settingsPath = join(CLAUDE_DIR, "settings.json");
+  // Primary: check via `claude mcp get` CLI (the authoritative registry)
   try {
-    if (!existsSync(settingsPath)) {
-      return { name: "MCP Server", status: "fail", detail: "settings.json not found" };
-    }
-    const settings = JSON.parse(readFileSync(settingsPath, "utf-8"));
-    if (settings?.mcpServers?.sekkei) {
+    const out = execFileSync("claude", ["mcp", "get", "sekkei"], { timeout: 5000, encoding: "utf-8" });
+    if (out && !out.includes("No MCP server found")) {
       return { name: "MCP Server", status: "ok", detail: "registered" };
     }
-    return { name: "MCP Server", status: "fail", detail: "not registered" };
-  } catch {
-    return { name: "MCP Server", status: "fail", detail: "cannot parse settings.json" };
-  }
+  } catch { /* claude CLI not available or sekkei not found */ }
+  // Fallback: check settings.json (legacy)
+  const settingsPath = join(CLAUDE_DIR, "settings.json");
+  try {
+    if (existsSync(settingsPath)) {
+      const settings = JSON.parse(readFileSync(settingsPath, "utf-8"));
+      if (settings?.mcpServers?.sekkei) {
+        return { name: "MCP Server", status: "warn", detail: "legacy settings.json only" };
+      }
+    }
+  } catch { /* ignore */ }
+  return { name: "MCP Server", status: "fail", detail: "not registered" };
 }
 
 function checkPreviewBuild(): HealthItem {

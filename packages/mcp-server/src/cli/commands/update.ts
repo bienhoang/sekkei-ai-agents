@@ -94,21 +94,30 @@ function createSubCmdStub(name: string, desc: string, hint: string): void {
 }
 
 function updateMcpEntry(): void {
-  if (!existsSync(SETTINGS)) return;
+  const mcpConfig = JSON.stringify({
+    command: "node",
+    args: [MCP_ENTRY],
+    env: {
+      SEKKEI_TEMPLATE_DIR: TEMPLATES_DIR,
+      SEKKEI_PYTHON: getVenvPython(PYTHON_DIR),
+    },
+  });
   try {
-    const settings = JSON.parse(readFileSync(SETTINGS, "utf-8"));
-    if (!settings.mcpServers) settings.mcpServers = {};
-    settings.mcpServers.sekkei = {
-      command: "node",
-      args: [MCP_ENTRY],
-      env: {
-        SEKKEI_TEMPLATE_DIR: TEMPLATES_DIR,
-        SEKKEI_PYTHON: getVenvPython(PYTHON_DIR),
-      },
-    };
-    writeFileSync(SETTINGS, JSON.stringify(settings, null, 2) + "\n");
+    // Remove existing entry first (ignore if not found)
+    execSync("claude mcp remove sekkei -s user", { stdio: "ignore" });
+  } catch { /* not found — ok */ }
+  try {
+    execSync(`claude mcp add-json -s user sekkei '${mcpConfig}'`, { stdio: "pipe" });
   } catch {
-    // non-fatal
+    // Fallback: write to settings.json for non-Claude editors
+    try {
+      if (existsSync(SETTINGS)) {
+        const settings = JSON.parse(readFileSync(SETTINGS, "utf-8"));
+        if (!settings.mcpServers) settings.mcpServers = {};
+        settings.mcpServers.sekkei = JSON.parse(mcpConfig);
+        writeFileSync(SETTINGS, JSON.stringify(settings, null, 2) + "\n");
+      }
+    } catch { /* non-fatal */ }
   }
 }
 

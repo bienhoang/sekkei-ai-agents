@@ -14,7 +14,7 @@ const FIX_SUGGESTIONS: Record<string, { fail?: string; warn?: string }> = {
     warn: "Run: cd ~/.sekkei/packages/mcp-server && python3 -m venv python/.venv && python/.venv/bin/pip install -r python/requirements.txt",
   },
   "Skill": { fail: "Re-run installer: ~/.sekkei/install.sh" },
-  "MCP Server": { fail: "Re-run installer: ~/.sekkei/install.sh, then restart Claude Code" },
+  "MCP Server": { fail: "Run: sekkei update (or: claude mcp add-json -s user sekkei '{...}')", warn: "Run: sekkei update (to migrate from legacy settings.json)" },
   "Commands": { warn: "Run: sekkei update" },
 };
 

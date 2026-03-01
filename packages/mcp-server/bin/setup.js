@@ -60,6 +60,34 @@ function detectEditors() {
   return editors;
 }
 
+/** Configure Claude Code MCP — register via `claude mcp add-json -s user` */
+function setupClaudeCode() {
+  const distEntry = resolve(PACKAGE_ROOT, "dist", "index.js");
+  const templatesDir = resolve(PACKAGE_ROOT, "templates");
+  const venvPython = resolve(PACKAGE_ROOT, "python", ".venv", isWin ? "Scripts/python.exe" : "bin/python3");
+
+  const mcpConfig = JSON.stringify({
+    command: "node",
+    args: [distEntry],
+    env: {
+      SEKKEI_TEMPLATE_DIR: templatesDir,
+      SEKKEI_PYTHON: venvPython,
+    },
+  });
+
+  try {
+    // Remove existing entry first (ignore if not found)
+    execFileSync("claude", ["mcp", "remove", "sekkei", "-s", "user"], { stdio: "ignore" });
+  } catch { /* not found — ok */ }
+  try {
+    execFileSync("claude", ["mcp", "add-json", "-s", "user", "sekkei", mcpConfig], { stdio: "pipe" });
+    ok("MCP server registered globally (claude mcp add-json -s user)");
+  } catch {
+    warn("Could not register MCP via CLI — 'claude' command not found or failed");
+    warn("Run manually: claude mcp add-json -s user sekkei '" + mcpConfig + "'");
+  }
+}
+
 /** Configure Cursor MCP */
 function setupCursor(configDir) {
   const mcpConfigDir = resolve(configDir, "mcp");
@@ -178,8 +206,7 @@ export async function runEditorSetup({ skipPython = false } = {}) {
 
     switch (editor.id) {
       case "claude-code":
-        ok("Claude Code uses SKILL.md — no MCP config needed");
-        ok("Copy skills/sekkei/ to your project or ~/.claude/skills/");
+        setupClaudeCode();
         break;
       case "cursor":
         setupCursor(editor.configDir);
