@@ -58,10 +58,9 @@ Service account authentication (dynamic google-auth-library import).
 - Flags: `--skip-deps`, `--preset`
 
 #### `src/cli/commands/version.ts` (28 lines)
-`sekkei version` command with health check:
-- Shows package version + detailed environment report
-- Checks: Node.js, Python, Playwright, templates, config, venv, skill, MCP, commands
-- Flag: `--json` outputs structured report
+`sekkei version` (shortcut: `sekkei -v`) command with health check:
+- Shows package version + environment report (Packages, Environment, Claude Code sections)
+- Flag: `--json` outputs full structured report including paths
 - Exit code 1 if any check fails
 
 #### `src/cli/commands/uninstall.ts` (82 lines — NEW)
@@ -70,12 +69,12 @@ Service account authentication (dynamic google-auth-library import).
 - Prompts for confirmation (skip with `--force`)
 - Safe: keeps package, build artifacts, Python venv
 
-#### `src/cli/commands/update.ts` (154 lines — NEW)
-`sekkei update` rebuilds and reinstalls:
+#### `src/cli/commands/update.ts`
+`sekkei update` (shortcut: `sekkei -u`) rebuilds and reinstalls:
 - (1) npm build (unless `--skip-build`)
 - (2) Copy skill files from `packages/skills/content`
-- (3) Regenerate 20 sub-command stubs in `~/.claude/commands/sekkei/`
-- (4) Update MCP entry in `~/.claude/settings.json`
+- (3) Regenerate sub-command stubs in `~/.claude/commands/sekkei/`
+- (4) Update MCP entry via `claude mcp add-json -s user`
 - (5) Run health check
 
 #### `src/cli/commands/health-check.ts` (212 lines — NEW)

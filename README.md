@@ -172,15 +172,14 @@ Real-time analytics dashboard for specification chain monitoring:
 
 Built with citty. Available commands:
 
-| Command | Description |
-|---------|-------------|
-| `sekkei init` | Initialize project config (interactive wizard) |
-| `sekkei doctor` | Installation health check + fix suggestions |
-| `sekkei version` | Version + environment info |
-| `sekkei glossary` | Manage terminology |
-| `sekkei update` | Update skill stubs and MCP registration |
-| `sekkei migrate` | Migrate config underscore keys to hyphen format |
-| `sekkei uninstall` | Remove Sekkei from system |
+| Command | Shortcut | Description |
+|---------|----------|-------------|
+| `sekkei init` | | Initialize project config (interactive wizard) |
+| `sekkei doctor` | `sekkei -d` | Installation health check + fix suggestions |
+| `sekkei version` | `sekkei -v` | Version + environment info |
+| `sekkei update` | `sekkei -u` | Update skill stubs and MCP registration |
+| `sekkei migrate` | | Migrate config underscore keys to hyphen format |
+| `sekkei uninstall` | | Remove Sekkei from system |
 
 ## Slash Commands (Claude Code)
 

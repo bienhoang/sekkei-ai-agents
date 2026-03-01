@@ -62,9 +62,10 @@
 | 28 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
 | 29 | **preview** | `/sekkei:preview` | `--docs` / `--guide` / `--port <number>` / `--no-open` / `--help` | Khởi động Express preview server tại localhost:4983 |
 | 30 | **dashboard** | `/sekkei:dashboard` | `--port <number>` / `--open` | Bảng điều khiển Analytics — chỉ số chất lượng, đồ thị truy xuất, điểm rủi ro (mặc định: port 4002) |
-| 31 | **version** | `/sekkei:version` | `--json` | Version info + MCP server status |
-| 32 | **doctor** | `sekkei doctor` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
-| 33 | **uninstall** | `/sekkei:uninstall` | — | Gỡ cài đặt Sekkei khỏi Claude Code |
+| 31 | **version** | `/sekkei:version` hoặc `sekkei -v` | `--json` | Version info + MCP server status |
+| 32 | **doctor** | `sekkei doctor` hoặc `sekkei -d` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
+| 33 | **update** | `sekkei update` hoặc `sekkei -u` | `--skip-build` | Rebuild và re-install Sekkei skill + MCP |
+| 34 | **uninstall** | `/sekkei:uninstall` | — | Gỡ cài đặt Sekkei khỏi Claude Code |
 
 ---
 

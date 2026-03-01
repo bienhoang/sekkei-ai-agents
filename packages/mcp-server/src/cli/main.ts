@@ -7,7 +7,6 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { defineCommand, runMain } from "citty";
 import { initCommand } from "./commands/init.js";
-import { glossaryCommand } from "./commands/glossary.js";
 import { versionCommand } from "./commands/version.js";
 import { uninstallCommand } from "./commands/uninstall.js";
 import { updateCommand } from "./commands/update.js";
@@ -17,6 +16,19 @@ import { doctorCommand } from "./commands/doctor.js";
 const __cli_dirname = dirname(fileURLToPath(import.meta.url));
 const pkgJson = JSON.parse(readFileSync(resolve(__cli_dirname, "..", "..", "package.json"), "utf-8"));
 
+/** Shortcut flag → subcommand mapping (processed before citty routing) */
+const SHORTCUTS: Record<string, string> = {
+  "-v": "version",
+  "-d": "doctor",
+  "-u": "update",
+};
+
+// Pre-process shortcut flags into subcommands
+const firstArg = process.argv[2];
+if (firstArg && SHORTCUTS[firstArg]) {
+  process.argv[2] = SHORTCUTS[firstArg];
+}
+
 const main = defineCommand({
   meta: {
     name: "sekkei",
@@ -25,7 +37,6 @@ const main = defineCommand({
   },
   subCommands: {
     init: initCommand,
-    glossary: glossaryCommand,
     version: versionCommand,
     uninstall: uninstallCommand,
     update: updateCommand,

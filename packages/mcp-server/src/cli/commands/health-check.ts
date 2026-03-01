@@ -329,7 +329,6 @@ export function formatHealthReport(report: HealthReport): string {
 
   const sections: [string, HealthItem[]][] = [
     ["Environment", report.environment],
-    ["Paths", report.paths],
     ["Claude Code", report.claudeCode],
   ];
 
