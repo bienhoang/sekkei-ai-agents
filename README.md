@@ -55,7 +55,7 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 |---------|---------|-------------|
 | [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.7.3 | Core MCP server — document generation, validation, export, CLI |
 | [@bienhoang/sekkei-preview](./packages/preview/) | 1.3.4 | Express+React live preview + Tiptap v3 WYSIWYG editor |
-| [@bienhoang/sekkei-skills](./packages/skills/) | 2.7.3 | Claude Code slash commands (`/sekkei:*`) — 40+ sub-commands |
+| [@bienhoang/sekkei-skills](./packages/skills/) | 2.7.3 | Claude Code slash commands (`/sekkei:*`) — 44 sub-commands |
 | [@bienhoang/sekkei-dashboard](./packages/dashboard/) | 0.1.1 | Analytics dashboard — chain status, quality metrics, traceability graphs, snapshots |
 
 ## Quick Start
@@ -183,7 +183,7 @@ Built with citty. Available commands:
 
 ## Slash Commands (Claude Code)
 
-40+ sub-commands covering the full V-model workflow:
+44 sub-commands covering the full V-model workflow:
 
 **Requirements Phase**
 
@@ -336,7 +336,7 @@ sekkei/
 │   │   └── cli.ts               # CLI command entry
 │   └── skills/                  # @bienhoang/sekkei-skills (v1.5.4)
 │       ├── bin/install.js       # Skill installer
-│       └── content/SKILL.md     # 40+ sub-commands + workflow router
+│       └── content/SKILL.md     # 44 sub-commands + workflow router
 └── .github/                     # CI/CD
 ```
 
