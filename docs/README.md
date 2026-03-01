@@ -219,7 +219,7 @@ The validate tool supports 4 modes (Phase 3+):
 - **Templating:** jinja2 (optional)
 
 ### Templates & Content
-- 16 document types (overview, functions-list, requirements, basic/detail design, test-spec, screen-design, CRUD/traceability matrix, operation/migration design, test-evidence, meeting-minutes, decision-record, interface-spec, glossary)
+- 27 document types (requirements, nfr, functions-list, project-plan, architecture/basic/security/detail design, db/report/batch design, test-plan, ut/it/st/uat-spec, test-result-report, CRUD/traceability matrix, operation/migration design, sitemap, test-evidence, meeting-minutes, decision-record, interface-spec, screen-design)
 - 15+ industry glossaries (automotive, finance, medical, manufacturing, retail, etc.)
 - 3 presets (standard, enterprise, agile) — Phase 3 structure validation
 - YAML frontmatter (metadata), Markdown body (content)
@@ -289,6 +289,29 @@ When updating documentation:
 
 ## Version History
 
+- **v2.8.0** (2026-03-01) — Enhanced Translation & Status Improvements
+  - Enhanced translate flow: bidirectional glossary mapping (ja↔en↔vi), post-translation structural validation, SHA-256 incremental tracking
+  - `/sekkei:status` shows all 27 doc types with dependency column
+  - Auto-create missing chain keys, timeout for staleness git ops
+  - Preview editor: fixed table data loss on cells with line breaks
+  - Removed `/sekkei:init` and `/sekkei:rebuild` slash commands (CLI `sekkei init` still available)
+  - Removed CLI glossary, added shortcuts, hidden paths in health report
+- **v2.7.3** (2026-02-28) — MCP Registration Migration
+  - Migrated all MCP registration to `claude mcp add-json -s user`
+- **v2.7.2** (2026-02-28) — Progressive Generation & Task Tracking
+  - Progressive document generation with Claude task tracking for all doc flows
+  - Split requirements generation into 4 sequential stages for incremental output
+  - Package version summary in doctor/version, build preview/dashboard during install
+  - Vietnamese diacritics enforcement in output language instructions
+  - MCP tool name mapping to SKILL.md for proper tool discovery
+  - Dashboard command stub, CR changelog flow fix, manual edit changelog sync
+- **v2.7.1** (2026-02-28) — Windows Support & Bug Fixes
+  - Correct PKG_ROOT path in update command
+  - Windows install instructions in README and user guide
+- **v2.7.0** (2026-02-27) — IPA V-Model Compliance
+  - 5 new IPA document types: architecture-design, db-design, report-design, batch-design, test-result-report
+  - Review stamps support
+  - Updated documentation for IPA compliance
 - **v2.6.4** (2026-02-27) — Dashboard Analytics & Quality Metrics
   - NEW: `@bienhoang/sekkei-dashboard` (v0.1.1) — full-stack analytics dashboard
   - 5 quality-scoring libs: coverage-metrics, health-scorer, risk-scorer, batch-validator, nfr-classifier
@@ -317,5 +340,5 @@ When updating documentation:
 
 ---
 
-**Last Updated:** 2026-02-27 (v2.6.4)
+**Last Updated:** 2026-03-01 (v2.8.0)
 **Documentation Status:** Complete ✅ (Split oversized docs into modular files, all files <800 lines)

@@ -119,4 +119,4 @@ Sau khi hoàn tất, hãy luôn thực hiện rà soát chất lượng bằng l
 Khi hệ thống hiển thị thông báo `basic-design: READY`, bạn đã đủ điều kiện để chuyển sang giai đoạn kế tiếp.
 
 **Giai đoạn tiếp theo:** [Giai đoạn Thiết kế (Design Phase)](./02-design.md) — Xây dựng các bản Thiết kế cơ bản, Chi tiết và Bảo mật.
- Proudly presented by Antigravity.
+ 

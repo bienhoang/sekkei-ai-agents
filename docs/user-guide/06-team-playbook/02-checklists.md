@@ -58,17 +58,18 @@ Bạn hãy copy-paste danh sách kiểm tra tương ứng vào công cụ quản
 
 *Bắt đầu sau khi hoàn tất bàn giao từ BA và vượt qua Gate 1.*
 
+- [ ] Đã khởi tạo **方式設計書 (Thiết kế kiến trúc)** — phương thức hệ thống, phát triển và vận hành.
 - [ ] Đã chạy lệnh khởi tạo **基本設計書 (Thiết kế cơ bản)** làm nền tảng cho hệ thống.
 - [ ] Rà soát màn hình (SCR): Đảm bảo đầy đủ các giao diện cần thiết theo luồng nghiệp vụ.
 - [ ] Rà soát dữ liệu (TBL): Cấu trúc bảng, khóa chính/ngoại và quan hệ giữa các bảng được thiết kế tối ưu.
 - [ ] Rà soát cổng giao tiếp (API): Đạt chuẩn RESTful và hỗ trợ đầy đủ các thao tác nghiệp vụ.
 - [ ] Kích hoạt chế độ tách file (Split mode) nếu dự án có quy mô lớn.
-- [ ] Triển khai song song **セキュリティ設計書 (Thiết kế bảo mật)** và **詳細設計書 (Thiết kế chi tiết)**.
+- [ ] Triển khai song song **セキュリティ設計書**, **詳細設計書** và **データベース設計書**.
 - [ ] Các sơ đồ lớp (CLS) trong Thiết kế chi tiết tham chiếu chính xác đến mã ID của bảng và API.
 - [ ] Các mối đe dọa bảo mật đã được đối soát và ánh xạ vào danh sách OWASP Top 10.
 - [ ] Toàn bộ bộ hồ sơ thiết kế đã vượt qua lệnh xác thực hệ thống `/sekkei:validate`.
 - [ ] PM đã rà soát và phê duyệt chốt chặn giai đoạn 2 (Gate 2).
-- [ ] **Bàn giao cho QA:** Chuyển giao đầy đủ bộ hồ sơ Thiết kế cơ bản, Bảo mật và Chi tiết.
+- [ ] **Bàn giao cho QA:** Chuyển giao đầy đủ bộ hồ sơ thiết kế (kiến trúc, cơ bản, bảo mật, chi tiết, CSDL).
 
 ---
 
@@ -112,5 +113,5 @@ Bạn hãy copy-paste danh sách kiểm tra tương ứng vào công cụ quản
 ---
 
 **Xem thêm:** [Kịch bản phối hợp](./01-scenarios.md) | [Review & Phê duyệt](./03-review-and-approval.md)
- Proudly presented by Antigravity.
- Proudly presented by Antigravity.
+ 
+ 

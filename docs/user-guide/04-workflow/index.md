@@ -21,13 +21,15 @@ flowchart TD
     REQ["要件定義書 (Định nghĩa yêu cầu)\n(/sekkei:requirements)"]
 
     FL["機能一覧 (Danh sách chức năng)\n(/sekkei:functions-list)"]
-    NFR["非機能要件定義書 (Định nghĩa yêu cầu phi chức năng)\n(/sekkei:nfr)"]
+    NFR["非機能要件定義書 (Yêu cầu phi chức năng)\n(/sekkei:nfr)"]
     PP["プロジェクト計画書 (Kế hoạch dự án)\n(/sekkei:project-plan)"]
 
+    ARCH["方式設計書 (Thiết kế kiến trúc)\n(/sekkei:architecture-design)"]
     BD["基本設計書 (Thiết kế cơ bản)\n(/sekkei:basic-design)"]
 
     SD["セキュリティ設計書 (Thiết kế bảo mật)\n(/sekkei:security-design)"]
     DD["詳細設計書 (Thiết kế chi tiết)\n(/sekkei:detail-design)"]
+    DB["データベース設計書 (Thiết kế CSDL)\n(/sekkei:db-design)"]
 
     TP["テスト計画書 (Kế hoạch kiểm thử)\n(/sekkei:test-plan)"]
 
@@ -35,6 +37,7 @@ flowchart TD
     IT["結合テスト仕様書 (Kiểm thử tích hợp)\n(/sekkei:it-spec)"]
     ST["システムテスト仕様書 (Kiểm thử hệ thống)\n(/sekkei:st-spec)"]
     UAT["受入テスト仕様書 (Kiểm thử nghiệm thu)\n(/sekkei:uat-spec)"]
+    TR["テスト結果報告書 (Báo cáo kết quả)\n(/sekkei:test-result-report)"]
 
     EXPORT["Xuất bản & Bàn giao\n(/sekkei:export)"]
 
@@ -46,11 +49,16 @@ flowchart TD
     REQ --> NFR
     REQ --> PP
 
+    REQ --> ARCH
+    NFR --> ARCH
+    FL --> ARCH
+
     FL --> BD
     NFR --> BD
 
     BD --> SD
     BD --> DD
+    BD --> DB
     BD --> TP
     REQ --> TP
     NFR --> TP
@@ -66,10 +74,16 @@ flowchart TD
     TP --> ST
     TP --> UAT
 
+    UT --> TR
+    IT --> TR
+    ST --> TR
+    UAT --> TR
+
     UT --> EXPORT
     IT --> EXPORT
     ST --> EXPORT
     UAT --> EXPORT
+    TR --> EXPORT
 ```
 
 ---
@@ -78,9 +92,9 @@ flowchart TD
 
 | Phase | Các tài liệu chính | Thời gian dự kiến |
 |-------|---------|-------------------|
-| **Yêu cầu (Requirements)** | 要件定義書 (Định nghĩa yêu cầu), 機能一覧 (Danh sách chức năng), 非機能 yêu cầu phi chức năng và Kế hoạch dự án. | 1–2 ngày |
-| **Thiết kế (Design)** | 基本設計書 (Thiết kế cơ bản), セキュリティ設計書 (Thiết kế bảo mật), 詳細 thiết kế chi tiết. | 2–4 ngày |
-| **Kiểm thử (Test)** | テスト計画書 (Kế hoạch kiểm thử) và 4 loại đặc tả kiểm thử cụ thể. | 2–3 ngày |
+| **Yêu cầu (Requirements)** | 要件定義書, 機能一覧, 非機能要件定義書, プロジェクト計画書 | 1–2 ngày |
+| **Thiết kế (Design)** | 方式設計書, 基本設計書, セキュリティ設計書, 詳細設計書, データベース設計書, 帳票設計書, バッチ処理設計書 | 2–4 ngày |
+| **Kiểm thử (Test)** | テスト計画書, 単体/結合/システム/受入テスト仕様書, テスト結果報告書 | 2–3 ngày |
 
 ---
 
@@ -88,7 +102,7 @@ flowchart TD
 
 Hai lệnh dưới đây sẽ giúp bạn kiểm soát chất lượng ở mọi thời điểm:
 
-- **`/sekkei:status`**: Theo dõi tiến độ hoàn thiện của toàn bộ chuỗi hồ sơ.
+- **`/sekkei:status`**: Theo dõi tiến độ hoàn thiện của toàn bộ 27 loại tài liệu với cột dependency, gợi ý tài liệu tiếp theo.
 - **`/sekkei:validate`**: Tự động rà soát sai sót mã ID, đề mục còn thiếu hoặc các tham chiếu không chính xác.
 
 ---
@@ -106,4 +120,4 @@ Hai lệnh dưới đây sẽ giúp bạn kiểm soát chất lượng ở mọi
 ---
 
 **Khởi đầu:** Nếu bạn chưa khởi tạo dự án, vui lòng tham khảo [Hướng dẫn Bắt đầu nhanh](../03-quick-start.md). Sau đó, hãy chuyển đến giai đoạn [Quản lý Yêu cầu](./01-requirements.md) để bắt đầu bước thực thi đầu tiên.
-Proudly presented by Antigravity.
+

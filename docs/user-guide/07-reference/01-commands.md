@@ -1,10 +1,10 @@
 # Tham Chiếu Lệnh — Quick Reference
 
-> Lookup nhanh tất cả lệnh (44 slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
+> Lookup nhanh tất cả 44 lệnh (slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
 
 ---
 
-## Section 1: Tạo Tài Liệu Cốt Lõi (18 lệnh)
+## Section 1: Tạo Tài Liệu (21 lệnh)
 
 | # | Lệnh | Syntax | Input | Output | Prerequisite |
 |---|------|--------|-------|--------|-------------|
@@ -32,7 +32,7 @@
 
 ---
 
-## Section 2: Tài Liệu Bổ Sung & Quản lý (10 lệnh)
+## Section 2: Tài Liệu Bổ Sung & Quản lý (7 lệnh)
 
 | # | Lệnh | Syntax | Input | Output | Prerequisite |
 |---|------|--------|-------|--------|-------------|
@@ -46,26 +46,26 @@
 
 ---
 
-## Section 3: Lệnh Tiện Ích (15 lệnh)
+## Section 3: Lệnh Tiện Ích (16 lệnh)
 
 | # | Lệnh | Syntax | Options / Subcommands | Mục đích |
 |---|------|--------|-----------------------|----------|
-| 19 | **validate** | `/sekkei:validate [@doc]` | Không có arg = validate cả chain | Kiểm tra completeness, broken cross-ref IDs, thiếu section |
-| 20 | **status** | `/sekkei:status` | — | Xem tiến độ chain, gợi ý tài liệu tiếp theo |
-| 21 | **export** | `/sekkei:export @doc --format=xlsx` | `xlsx` / `pdf` / `docx` | Export sang Excel (IPA 4-sheet) / PDF / Word |
-| 22 | **translate** | `/sekkei:translate @doc --lang=en` | `--lang=en` / `--lang=vi` / `--all` | Dịch tài liệu với glossary hai chiều (ja↔en↔vi), kiểm tra cấu trúc sau dịch, dịch gia tăng theo section |
-| 23 | **glossary** | `/sekkei:glossary [subcommand]` | `add` / `list` / `find` / `export` / `import` | Quản lý thuật ngữ dự án |
-| 24 | **change** | `/sekkei:change` | `--resume` / `--status` / `--list` / `--cancel` / `--rollback` | Quản lý lifecycle của change request (変更要求書) |
-| 25 | **update** | `/sekkei:update @doc` | `--since <git-ref>` | Phát hiện upstream changes, sinh danh sách tài liệu cần cập nhật |
-| 26 | **diff-visual** | `/sekkei:diff-visual @before @after` | — | Export Excel màu thể hiện diff giữa 2 version |
-| 27 | **plan** | `/sekkei:plan @doc-type` | — | Khảo sát yêu cầu + tạo kế hoạch triển khai nhiều phase |
-| 28 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
-| 29 | **preview** | `/sekkei:preview` | `--docs` / `--guide` / `--port <number>` / `--no-open` / `--help` | Khởi động Express preview server tại localhost:4983 |
-| 30 | **dashboard** | `/sekkei:dashboard` | `--port <number>` / `--open` | Bảng điều khiển Analytics — chỉ số chất lượng, đồ thị truy xuất, điểm rủi ro (mặc định: port 4002) |
-| 31 | **version** | `/sekkei:version` hoặc `sekkei -v` | `--json` | Version info + MCP server status |
-| 32 | **doctor** | `sekkei doctor` hoặc `sekkei -d` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
-| 33 | **update** | `sekkei update` hoặc `sekkei -u` | `--skip-build` | Rebuild và re-install Sekkei skill + MCP |
-| 34 | **uninstall** | `/sekkei:uninstall` | — | Gỡ cài đặt Sekkei khỏi Claude Code |
+| 29 | **validate** | `/sekkei:validate [@doc]` | Không có arg = validate cả chain | Kiểm tra completeness, broken cross-ref IDs, thiếu section |
+| 30 | **status** | `/sekkei:status` | — | Xem tiến độ 27 loại tài liệu với cột dependency, gợi ý tài liệu tiếp theo |
+| 31 | **export** | `/sekkei:export @doc --format=xlsx` | `xlsx` / `pdf` / `docx` | Export sang Excel (IPA 4-sheet) / PDF / Word |
+| 32 | **translate** | `/sekkei:translate @doc --lang=en` | `--lang=en` / `--lang=vi` / `--all` | Dịch tài liệu với glossary hai chiều (ja↔en↔vi), kiểm tra cấu trúc sau dịch, dịch gia tăng theo section (SHA-256 hash) |
+| 33 | **glossary** | `/sekkei:glossary [subcommand]` | `add` / `list` / `find` / `export` / `import` | Quản lý thuật ngữ dự án |
+| 34 | **change** | `/sekkei:change` | `--resume` / `--status` / `--list` / `--cancel` / `--rollback` | Quản lý lifecycle của change request (変更要求書) |
+| 35 | **update** | `/sekkei:update @doc` | `--since <git-ref>` | Phát hiện upstream changes, sinh danh sách tài liệu cần cập nhật |
+| 36 | **diff-visual** | `/sekkei:diff-visual @before @after` | — | Export Excel màu thể hiện diff giữa 2 version |
+| 37 | **plan** | `/sekkei:plan @doc-type` | — | Khảo sát yêu cầu + tạo kế hoạch triển khai nhiều phase |
+| 38 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
+| 39 | **preview** | `/sekkei:preview` | `--docs` / `--guide` / `--port <number>` / `--no-open` / `--help` | Khởi động Express preview server tại localhost:4983 |
+| 40 | **dashboard** | `/sekkei:dashboard` | `--port <number>` / `--open` | Bảng điều khiển Analytics — chỉ số chất lượng, đồ thị truy xuất, điểm rủi ro (mặc định: port 4002) |
+| 41 | **version** | `/sekkei:version` hoặc `sekkei -v` | `--json` | Version info + MCP server status |
+| 42 | **doctor** | `sekkei doctor` hoặc `sekkei -d` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
+| 43 | **update (CLI)** | `sekkei update` hoặc `sekkei -u` | `--skip-build` | Rebuild và re-install Sekkei skill + MCP |
+| 44 | **uninstall** | `/sekkei:uninstall` | — | Gỡ cài đặt Sekkei khỏi Claude Code |
 
 ---
 

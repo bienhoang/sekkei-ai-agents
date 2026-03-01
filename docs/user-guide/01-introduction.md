@@ -8,13 +8,13 @@
 
 Thay vì phải tiêu tốn hàng tuần để soạn thảo thủ công hàng trăm trang tài liệu tiếng Nhật — một công việc đòi hỏi sự tỉ mỉ và am hiểu sâu sắc về thuật ngữ chuyên ngành — bạn chỉ cần cung cấp yêu cầu bằng tiếng Việt hoặc tiếng Anh. Sekkei sẽ tự động chuyển hóa các ý tưởng đó thành bộ tài liệu chuyên nghiệp, đúng định dạng và văn hóa làm việc của khách hàng Nhật Bản.
 
-**Bộ hồ sơ đầu ra bao gồm 13 loại tài liệu cốt lõi:**
+**Bộ hồ sơ đầu ra bao gồm 18 loại tài liệu cốt lõi theo chuẩn IPA:**
 
 | Nhóm | Danh sách tài liệu |
 |------|----------|
 | **Yêu cầu (Requirements)** | 要件定義書 (Định nghĩa yêu cầu), 機能一覧 (Danh sách chức năng), 非機能要件定義書 (Định nghĩa yêu cầu phi chức năng), プロジェクト計画書 (Kế hoạch dự án) |
-| **Thiết kế (Design)** | 基本設計書 (Thiết kế cơ bản), セキュリティ設計書 (Thiết kế bảo mật), 詳細設計書 (Thiết kế chi tiết) |
-| **Kiểm thử (Test)** | テスト計画書 (Kế hoạch kiểm thử), 単体テスト仕様書 (Đặc tả kiểm thử đơn vị), 結合テスト仕様書 (Đặc tả kiểm thử tích hợp), システムテスト仕様書 (Đặc tả kiểm thử hệ thống), 受入テスト仕様書 (Đặc tả kiểm thử nghiệm thu) |
+| **Thiết kế (Design)** | 方式設計書 (Thiết kế kiến trúc), 基本設計書 (Thiết kế cơ bản), セキュリティ設計書 (Thiết kế bảo mật), 詳細設計書 (Thiết kế chi tiết), データベース設計書 (Thiết kế CSDL), 帳票設計書 (Thiết kế biểu mẫu), バッチ処理設計書 (Thiết kế xử lý hàng loạt) |
+| **Kiểm thử (Test)** | テスト計画書 (Kế hoạch kiểm thử), 単体テスト仕様書 (Đặc tả kiểm thử đơn vị), 結合テスト仕様書 (Đặc tả kiểm thử tích hợp), システムテスト仕様書 (Đặc tả kiểm thử hệ thống), 受入テスト仕様書 (Đặc tả kiểm thử nghiệm thu), テスト結果報告書 (Báo cáo kết quả kiểm thử) |
 | **Thay đổi (Change)** | 変更要求書 (Yêu cầu thay đổi) |
 
 ## Tại sao kết quả đầu ra lại là tiếng Nhật chuẩn IPA?
@@ -66,5 +66,3 @@ Sekkei hiện đã sẵn sàng tích hợp trên các nền tảng lập trình 
 ---
 
 **Bước tiếp theo:** Hãy tham khảo hướng dẫn [Bắt đầu nhanh (Quick Start)](./03-quick-start.md) để khởi tạo tài liệu chuẩn Nhật đầu tiên chỉ trong 15 phút.
- Proudly presented by Antigravity.
- Proudly presented by Antigravity.

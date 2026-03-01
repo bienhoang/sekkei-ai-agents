@@ -34,11 +34,11 @@ flowchart TD
     end
 
     subgraph "Dev Lead (Trưởng nhóm phát triển)"
-        D1["Giai đoạn Thiết kế\n基本設計書 + セキュリティ設計書\n+ 詳細設計書"]
+        D1["Giai đoạn Thiết kế\n方式設計書 + 基本設計書\n+ セキュリティ + 詳細 + DB設計書"]
     end
 
     subgraph "QA (Đảm bảo chất lượng)"
-        Q1["Giai đoạn Kiểm thử\nテスト計画書 + UT/IT/ST Spec"]
+        Q1["Giai đoạn Kiểm thử\nテスト計画書 + UT/IT/ST Spec\n+ テスト結果報告書"]
         Q2["Ma trận truy xuất\n/sekkei:matrix"]
     end
 
@@ -67,9 +67,11 @@ flowchart TD
 | **機能一覧** (Chức năng) | I | R | C | I | — |
 | **非機能要件定義書** (Phi chức năng) | A | R | C | I | — |
 | **プロジェクト計画書** (Kế hoạch dự án) | R | C | C | — | — |
+| **方式設計書** (Thiết kế kiến trúc) | A | C | R | I | — |
 | **基本設計書** (Thiết kế cơ bản) | A | C | R | I | — |
 | **セキュリティ設計書** (Bảo mật) | I | — | R | C | — |
 | **詳細設計書** (Thiết kế chi tiết) | I | — | R | C | — |
+| **データベース設計書** (CSDL) | I | — | R | C | — |
 | **テスト計画書** (Kế hoạch kiểm thử) | A | C | C | R | — |
 | UT/IT/ST Especifics | I | — | C | R | — |
 | **受入テスト仕様書** (UAT) | A | C | — | R | — |
@@ -87,7 +89,7 @@ flowchart TD
 - Nội dung: **要件定義書**, **機能一覧** và **非機能要件定義書** (Tất cả đã vượt qua lệnh `/sekkei:validate`).
 
 **3. Bàn giao từ Dev Lead sang QA:** Thiết kế đã được xác thực, PM đã phê duyệt giai đoạn 2.
-- Nội dung: **基本設計書**, **セキュリティ設計書** và **詳細設計書** (Mã ID nhất quán, CLS-xxx đầy đủ).
+- Nội dung: **方式設計書**, **基本設計書**, **セキュリティ設計書**, **詳細設計書** và **データベース設計書** (Mã ID nhất quán, CLS-xxx đầy đủ).
 
 **4. Bàn giao từ QA sang PM:** Toàn bộ chuỗi tài liệu đã xác thực, ma trận đạt độ bao phủ 100%.
 - Nội dung: Toàn bộ Đặc tả kiểm thử và Ma trận truy xuất nguồn gốc để PM thực hiện xuất bản bàn giao.

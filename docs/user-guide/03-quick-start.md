@@ -77,7 +77,7 @@ Tiếp theo, hãy kiểm tra trạng thái của bộ hồ sơ trong Claude Code
 ```bash
 /sekkei:status
 ```
-Trong lần đầu tiên, tất cả các tài liệu sẽ ở trạng thái `pending` (đang chờ khởi tạo).
+Bảng trạng thái sẽ hiển thị toàn bộ 27 loại tài liệu kèm cột dependency. Trong lần đầu tiên, tất cả sẽ ở trạng thái `pending` (đang chờ khởi tạo).
 
 ---
 
@@ -101,7 +101,7 @@ Nếu chưa có tài liệu, bạn có thể mô tả ý tưởng bằng tiếng
 Các tính năng chính gồm: Quản lý hồ sơ, chấm công, tự động tính lương và phân quyền người dùng. 
 Hệ thống cần tuân thủ Luật Lao động Nhật Bản và đảm bảo bảo mật thông tin theo Luật bảo vệ thông tin cá nhân (個人情報保護法).]
 ```
-Sekkei sẽ đặt thêm một số câu hỏi để làm rõ chi tiết kỹ thuật (như số lượng người dùng đồng thời, mục tiêu hiệu năng) trước khi sinh ra file `workspace-docs/requirements.md` hoàn chỉnh theo chuẩn IPA.
+Sekkei sẽ đặt thêm một số câu hỏi để làm rõ chi tiết kỹ thuật (như số lượng người dùng đồng thời, mục tiêu hiệu năng) trước khi sinh ra file `workspace-docs/requirements.md` hoàn chỉnh theo chuẩn IPA. Quá trình tạo tài liệu được chia thành 4 giai đoạn tuần tự (progressive generation), cho phép bạn theo dõi tiến trình tạo tài liệu theo thời gian thực.
 
 ---
 
@@ -111,7 +111,7 @@ Hãy kiểm tra nội dung tài liệu vừa tạo thông qua máy chủ xem tr�
 ```bash
 /sekkei:preview
 ```
-Hệ thống sẽ mở giao diện web tại `http://localhost:5173`. Nếu muốn chỉnh sửa nội dung ngay trên trình duyệt, hãy thêm tham số `--edit`:
+Hệ thống sẽ mở giao diện web tại `http://localhost:4983`. Nếu muốn chỉnh sửa nội dung ngay trên trình duyệt, hãy thêm tham số `--edit`:
 ```bash
 /sekkei:preview --edit
 ```
@@ -160,10 +160,10 @@ Sau khi hoàn thiện bản **要件定義書 (Định nghĩa yêu cầu)**, b�
 - **Danh sách chức năng**: `/sekkei:functions-list`
 - **Yêu cầu phi chức năng**: `/sekkei:nfr`
 - **Kế hoạch dự án**: `/sekkei:project-plan`
+- **Thiết kế kiến trúc**: `/sekkei:architecture-design`
 - **Thiết kế cơ bản**: `/sekkei:basic-design`
 
 ---
 
 **Chúc mừng!** Bạn đã hoàn tất quy trình khởi tạo tài liệu đầu tiên với Sekkei.
- Proudly presented by Antigravity.
- Proudly presented by Antigravity.
+

@@ -84,7 +84,14 @@ Nếu pass, PM export để gửi stakeholder review:
 
 ### Tuần 2: Giai đoạn Thiết kế hệ thống
 
-**Ngày 6–7: Xây dựng Thiết kế cơ bản (Basic Design)**
+**Ngày 6: Xây dựng Thiết kế kiến trúc (Architecture Design)**
+
+Dev Lead khởi tạo thiết kế kiến trúc cấp cao trước:
+```
+/sekkei:architecture-design @requirements @nfr @functions-list
+```
+
+**Ngày 7–8: Xây dựng Thiết kế cơ bản (Basic Design)**
 
 Dev Lead triển khai:
 ```
@@ -103,23 +110,28 @@ output:
   split_by: module
 ```
 
-**Ngày 8–9: Thiết kế Bảo mật và Chi tiết**
+**Ngày 9–10: Thiết kế Bảo mật, Chi tiết và Cơ sở Dữ liệu**
 
-Triển khai song song hai tài liệu quan trọng tiếp theo để đảm bảo tiến độ:
+Triển khai song song các tài liệu thiết kế tiếp theo để đảm bảo tiến độ:
 ```
 # Terminal 1
 /sekkei:security-design @basic-design
 
 # Terminal 2 (song song)
 /sekkei:detail-design @basic-design
+
+# Terminal 3 (song song)
+/sekkei:db-design @basic-design
 ```
 
 **Ngày 10: Kiểm soát chất lượng giai đoạn 2 (Gate 2)**
 
 PM chạy lệnh xác thực thiết kế.
 ```
+/sekkei:validate @architecture-design
 /sekkei:validate @basic-design
 /sekkei:validate @detail-design
+/sekkei:validate @db-design
 ```
 Nếu đạt yêu cầu, Dev Lead chính thức bàn giao hồ sơ thiết kế cho đội ngũ QA.
 
@@ -170,9 +182,11 @@ PM thực hiện xuất bản toàn bộ bộ tài liệu ra định dạng Exce
 /sekkei:export @requirements --format=xlsx
 /sekkei:export @functions-list --format=xlsx
 /sekkei:export @nfr --format=xlsx
+/sekkei:export @architecture-design --format=xlsx
 /sekkei:export @basic-design --format=xlsx
 /sekkei:export @security-design --format=xlsx
 /sekkei:export @detail-design --format=xlsx
+/sekkei:export @db-design --format=xlsx
 /sekkei:export @test-plan --format=xlsx
 /sekkei:export @ut-spec --format=xlsx
 /sekkei:export @it-spec --format=xlsx
@@ -358,9 +372,11 @@ Mục tiêu: mỗi REQ-xxx trong hệ thống quản lý nhân sự phải có �
 /sekkei:export @requirements --format=xlsx
 /sekkei:export @nfr --format=xlsx
 /sekkei:export @project-plan --format=xlsx
+/sekkei:export @architecture-design --format=xlsx
 /sekkei:export @basic-design --format=xlsx
 /sekkei:export @security-design --format=xlsx
 /sekkei:export @detail-design --format=xlsx
+/sekkei:export @db-design --format=xlsx
 /sekkei:export @test-plan --format=xlsx
 /sekkei:export @ut-spec --format=xlsx
 /sekkei:export @it-spec --format=xlsx
@@ -410,5 +426,4 @@ zip -r hr-system-docs-v1.0-$(date +%Y%m%d).zip workspace-docs/
 ---
 
 **Xem thêm:** [Danh sách kiểm tra](./02-checklists.md) | [Review & Phê duyệt](./03-review-and-approval.md) | [Quy trình Quản lý Thay đổi](../04-workflow/05-change-request.md)
- Proudly presented by Antigravity.
- Proudly presented by Antigravity.
+

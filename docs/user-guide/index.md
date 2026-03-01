@@ -16,7 +16,7 @@ Tài liệu hướng dẫn này được biên soạn dành riêng cho các vai 
 
 | Vai trò | Bắt đầu tại | Các lệnh trọng tâm |
 |-----------|------------|-----------|
-| **Quản trị dự án (PM)** | [Hướng dẫn dành cho PM](./05-roles/01-pm.md) | `sekkei init`, `/sekkei:status`, `/sekkei:validate` |
+| **Quản trị dự án (PM)** | [Hướng dẫn dành cho PM](./05-roles/01-pm.md) | `/sekkei:status`, `/sekkei:validate`, `sekkei init` |
 | **Phân tích nghiệp vụ (BA)** | [Hướng dẫn dành cho BA](./05-roles/02-ba.md) | `/sekkei:requirements`, `/sekkei:functions-list` |
 | **Trưởng nhóm kỹ thuật (Dev Lead)** | [Hướng dẫn dành cho Dev Lead](./05-roles/03-dev-lead.md) | `/sekkei:basic-design`, `/sekkei:detail-design` |
 | **Kiểm thử (QA)** | [Hướng dẫn dành cho QA](./05-roles/04-qa.md) | `/sekkei:test-plan`, `/sekkei:ut-spec`, `/sekkei:validate` |
@@ -27,7 +27,7 @@ Tài liệu hướng dẫn này được biên soạn dành riêng cho các vai 
 ### Khái niệm nền tảng
 
 - [Sekkei là gì](./01-introduction.md) — Giá trị cốt lõi và tầm nhìn của công cụ.
-- [Mô hình chữ V và các loại tài liệu](./02-v-model-and-documents.md) — Tìm hiểu về 13 loại tài liệu cốt lõi và 9 tài liệu bổ sung.
+- [Mô hình chữ V và các loại tài liệu](./02-v-model-and-documents.md) — Tìm hiểu về 18 loại tài liệu cốt lõi và 9 tài liệu bổ sung.
 - [Bắt đầu nhanh](./03-quick-start.md) — Cài đặt, khởi tạo và tạo hồ sơ đầu tiên.
 
 ### Quy trình thực thi (Workflow)
@@ -56,13 +56,11 @@ Tài liệu hướng dẫn này được biên soạn dành riêng cho các vai 
 
 ### Tài liệu tham khảo nhanh
 
-- [Tra cứu 30 câu lệnh nhanh](./07-reference/01-commands.md) — Danh mục tổng hợp toàn bộ các lệnh Sekkei.
+- [Tra cứu lệnh nhanh](./07-reference/01-commands.md) — Danh mục tổng hợp toàn bộ các lệnh Sekkei.
 - [Cấu hình sekkei.config.yaml](./07-reference/02-configuration.md) — Hướng dẫn thiết lập các tham số dự án.
 - [Bảng thuật ngữ đa ngôn ngữ](./07-reference/03-glossary.md) — Tra cứu thuật ngữ Việt ↔ Nhật ↔ Anh chuyên ngành IT.
 
 ---
 
-> **Phiên bản:** Tài liệu áp dụng cho Sekkei v2.6.3 trở lên.
+> **Phiên bản:** Tài liệu áp dụng cho Sekkei v2.8.0 trở lên.
 > Hãy sử dụng lệnh `/sekkei:version` để xác nhận phiên bản của bạn.
- Proudly presented by Antigravity.
- Proudly presented by Antigravity.

@@ -380,5 +380,5 @@ Sự chuyên nghiệp trong cách trình bày là chìa khóa để xây dựng 
 ---
 
 **Bước tiếp theo:** Hãy khám phá hướng dẫn [Bắt đầu nhanh (Quick Start)](./03-quick-start.md) để khởi tạo tài liệu đầu tiên của bạn.
- Proudly presented by Antigravity.
- Proudly presented by Antigravity.
+ 
+ 
