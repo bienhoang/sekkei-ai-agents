@@ -76,12 +76,30 @@ export async function loadChainDocPaths(configPath: string): Promise<Map<string,
   return paths;
 }
 
+/** Timeout limit for each git operation (ms) */
+const GIT_TIMEOUT_MS = 5_000;
+
+/** Race a promise against a timeout. Returns null on timeout. */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T | null> {
+  return Promise.race([
+    promise,
+    new Promise<null>((resolve) => setTimeout(() => resolve(null), ms)),
+  ]);
+}
+
 /** Get git last-modified date for a file path. Returns ISO string or null. */
 async function gitLastModified(repoRoot: string, filePath: string): Promise<string | null> {
   try {
     const git = getGit(repoRoot);
-    const log = await git.log({ file: filePath, maxCount: 1, format: { date: "%aI" } });
-    return log.latest?.date ?? null;
+    const result = await withTimeout(
+      git.log({ file: filePath, maxCount: 1, format: { date: "%aI" } }),
+      GIT_TIMEOUT_MS,
+    );
+    if (!result) {
+      logger.warn({ filePath }, "git log timed out for staleness check");
+      return null;
+    }
+    return result.latest?.date ?? null;
   } catch {
     return null;
   }

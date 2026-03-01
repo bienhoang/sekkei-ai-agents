@@ -66,11 +66,10 @@ export async function handleUpdateChainStatus(
   }
 
   const chain = config.chain as Record<string, unknown>;
+  // Auto-create chain entry if missing (common when config was initialized without all doc types)
   if (!(doc_type in chain)) {
-    return {
-      content: [{ type: "text", text: `[CONFIG_ERROR] doc_type "${doc_type}" not found in chain` }],
-      isError: true,
-    };
+    logger.info({ doc_type }, "Chain key not found — auto-creating entry");
+    chain[doc_type] = {};
   }
 
   const entry = (chain[doc_type] ?? {}) as Record<string, unknown>;
