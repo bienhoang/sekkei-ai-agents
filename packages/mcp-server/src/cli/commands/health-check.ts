@@ -17,8 +17,16 @@ export interface HealthItem {
   detail: string;
 }
 
+export interface PackageItem {
+  name: string;
+  version: string;
+  status: "ok" | "warn" | "fail";
+  statusText: string;
+}
+
 export interface HealthReport {
   version: string;
+  packages: PackageItem[];
   environment: HealthItem[];
   paths: HealthItem[];
   claudeCode: HealthItem[];
@@ -28,6 +36,75 @@ export interface HealthReport {
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = resolve(__dirname, "..", "..", "..");
 const CLAUDE_DIR = join(homedir(), ".claude");
+
+// ── Package helpers ───────────────────────────────────────────────────
+
+function readPkgVersion(pkgDir: string): string {
+  try {
+    const pkg = JSON.parse(readFileSync(join(pkgDir, "package.json"), "utf-8"));
+    return pkg.version ?? "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+
+function isMcpProcessRunning(): boolean {
+  if (isWin) return false;
+  try {
+    const settingsPath = join(CLAUDE_DIR, "settings.json");
+    const settings = JSON.parse(readFileSync(settingsPath, "utf-8"));
+    const entryPoint: string | undefined = settings?.mcpServers?.sekkei?.args?.[0];
+    if (!entryPoint) return false;
+    execFileSync("pgrep", ["-f", entryPoint], { timeout: 3000, stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function checkPackages(): PackageItem[] {
+  const monorepoRoot = resolve(PKG_ROOT, "..", "..");
+  const packagesDir = resolve(PKG_ROOT, "..");
+
+  // sekkei (monorepo)
+  const sekkeiVer = readPkgVersion(monorepoRoot);
+
+  // mcp-server
+  const mcpVer = readPkgVersion(PKG_ROOT);
+  let mcpRegistered = false;
+  try {
+    const settings = JSON.parse(readFileSync(join(CLAUDE_DIR, "settings.json"), "utf-8"));
+    mcpRegistered = !!settings?.mcpServers?.sekkei;
+  } catch { /* not registered */ }
+  const mcpRunning = mcpRegistered && isMcpProcessRunning();
+
+  // preview
+  const previewDir = resolve(packagesDir, "preview");
+  const previewVer = readPkgVersion(previewDir);
+  const previewBuilt = existsSync(join(previewDir, "dist", "server.js"));
+
+  // dashboard
+  const dashboardDir = resolve(packagesDir, "dashboard");
+  const dashboardVer = readPkgVersion(dashboardDir);
+  const dashboardBuilt = existsSync(join(dashboardDir, "dist", "server.js"));
+
+  // skills
+  const skillsDir = resolve(packagesDir, "skills");
+  const skillsVer = readPkgVersion(skillsDir);
+  const skillInstalled = existsSync(join(CLAUDE_DIR, "skills", "sekkei", "SKILL.md"));
+
+  return [
+    { name: "sekkei", version: sekkeiVer, status: sekkeiVer !== "unknown" ? "ok" : "warn", statusText: "" },
+    { name: "mcp-server", version: mcpVer, status: mcpRegistered ? "ok" : "fail",
+      statusText: mcpRunning ? "running" : mcpRegistered ? "registered" : "not registered" },
+    { name: "preview", version: previewVer, status: previewBuilt ? "ok" : "warn",
+      statusText: previewBuilt ? "built" : "not built" },
+    { name: "dashboard", version: dashboardVer, status: dashboardBuilt ? "ok" : "warn",
+      statusText: dashboardBuilt ? "built" : "not built" },
+    { name: "skills", version: skillsVer, status: skillInstalled ? "ok" : "fail",
+      statusText: skillInstalled ? "installed" : "not installed" },
+  ];
+}
 
 // ── Individual checks ──────────────────────────────────────────────────
 
@@ -212,6 +289,7 @@ function checkSubCommands(): HealthItem {
 export async function checkHealth(): Promise<HealthReport> {
   return {
     version: getPackageVersion(),
+    packages: checkPackages(),
     environment: [checkNodeVersion(), checkPython(), checkPlaywright()],
     paths: [checkTemplateDir(), checkConfig(), checkPythonVenv(), checkPreviewBuild(), checkDashboardBuild()],
     claudeCode: [checkClaudeSkill(), checkMcpRegistration(), checkSubCommands()],
@@ -229,6 +307,17 @@ function pad(s: string, len: number): string {
 export function formatHealthReport(report: HealthReport): string {
   const lines: string[] = [];
   lines.push(`sekkei v${report.version}\n`);
+
+  // Packages section (compact format: name: version ✓ statusText)
+  if (report.packages.length > 0) {
+    lines.push("Packages:");
+    for (const pkg of report.packages) {
+      const icon = ICONS[pkg.status];
+      const suffix = pkg.statusText ? ` ${pkg.statusText}` : "";
+      lines.push(`  ${pad(pkg.name + ":", 16)} ${pkg.version}  ${icon}${suffix}`);
+    }
+    lines.push("");
+  }
 
   const sections: [string, HealthItem[]][] = [
     ["Environment", report.environment],

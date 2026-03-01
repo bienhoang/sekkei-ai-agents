@@ -29,18 +29,35 @@ function findPython() {
   return null;
 }
 
+const MONOREPO_ROOT = resolve(PKG_ROOT, "..", "..");
+
 console.log("=== Sekkei Installer ===\n");
 
 // Step 1: npm install
-console.log("[1/5] Installing npm dependencies...");
+console.log("[1/6] Installing npm dependencies...");
 run("npm install");
 
-// Step 2: Build
-console.log("\n[2/5] Building TypeScript...");
+// Step 2: Build MCP server
+console.log("\n[2/6] Building MCP server...");
 run("npm run build");
 
-// Step 3: Python venv (optional)
-console.log("\n[3/5] Setting up Python environment...");
+// Step 3: Build preview & dashboard
+console.log("\n[3/6] Building preview & dashboard...");
+for (const pkg of ["preview", "dashboard"]) {
+  const pkgDir = resolve(MONOREPO_ROOT, "packages", pkg);
+  if (existsSync(pkgDir)) {
+    try {
+      console.log(`  Building ${pkg}...`);
+      execSync("npm run build", { cwd: pkgDir, stdio: "pipe" });
+      console.log(`  ✓ ${pkg} built`);
+    } catch {
+      console.log(`  ⚠ ${pkg} build failed (non-fatal)`);
+    }
+  }
+}
+
+// Step 4: Python venv (optional)
+console.log("\n[4/6] Setting up Python environment...");
 if (!skipPython) {
   const pythonCmd = findPython();
   if (pythonCmd) {
@@ -66,12 +83,12 @@ if (!skipPython) {
   console.log("  --skip-python: skipping Python venv setup");
 }
 
-// Step 4: Run setup (adapter config)
-console.log("\n[4/5] Configuring editor adapters...");
+// Step 5: Run setup (adapter config)
+console.log("\n[5/6] Configuring editor adapters...");
 run("node bin/setup.js");
 
-// Step 5: Health check
-console.log("\n[5/5] Running health check...");
+// Step 6: Health check
+console.log("\n[6/6] Running health check...");
 try { run("npx sekkei doctor"); } catch { /* non-fatal */ }
 
 console.log("\n=== Sekkei installed successfully! ===");
