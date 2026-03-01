@@ -75,14 +75,54 @@ export async function handleChainStatus(
   const configDir = dirname(config_path);
 
   const CHAIN_DISPLAY_ORDER: { phase: Phase; label: string; keys: string[] }[] = [
-    { phase: "requirements", label: "要件定義", keys: ["requirements", "nfr", "functions_list", "project_plan"] },
-    { phase: "design", label: "設計", keys: ["basic_design", "security_design", "detail_design"] },
-    { phase: "test", label: "テスト", keys: ["test_plan", "ut_spec", "it_spec", "st_spec", "uat_spec"] },
+    { phase: "requirements", label: "要件定義", keys: [
+      "requirements", "nfr", "functions_list", "project_plan",
+    ]},
+    { phase: "design", label: "設計", keys: [
+      "architecture_design", "basic_design", "security_design", "detail_design",
+      "db_design", "screen_design", "interface_spec", "report_design",
+      "batch_design", "sitemap",
+    ]},
+    { phase: "test", label: "テスト", keys: [
+      "test_plan", "ut_spec", "it_spec", "st_spec", "uat_spec", "test_result_report",
+    ]},
     { phase: "supplementary", label: "補足", keys: [
-      "operation_design", "migration_design", "glossary",
-      "test_evidence", "meeting_minutes", "decision_record",
+      "operation_design", "migration_design", "crud_matrix", "traceability_matrix",
+      "glossary", "test_evidence", "meeting_minutes", "decision_record", "mockups",
     ]},
   ];
+
+  const DEPENDENCY_MAP: Record<string, string[]> = {
+    requirements: ["RFP"],
+    nfr: ["requirements"],
+    functions_list: ["requirements"],
+    project_plan: ["requirements"],
+    architecture_design: ["requirements", "nfr"],
+    basic_design: ["requirements", "functions_list"],
+    security_design: ["basic_design"],
+    detail_design: ["basic_design"],
+    db_design: ["basic_design", "nfr"],
+    screen_design: ["basic_design"],
+    interface_spec: ["basic_design", "requirements"],
+    report_design: ["basic_design"],
+    batch_design: ["basic_design", "functions_list"],
+    sitemap: ["basic_design"],
+    test_plan: ["requirements", "nfr", "basic_design"],
+    ut_spec: ["detail_design", "test_plan"],
+    it_spec: ["basic_design", "test_plan"],
+    st_spec: ["basic_design", "functions_list", "test_plan"],
+    uat_spec: ["requirements", "nfr", "test_plan"],
+    test_result_report: ["ut_spec", "it_spec", "st_spec", "uat_spec"],
+    operation_design: ["basic_design"],
+    migration_design: ["db_design"],
+    crud_matrix: ["functions_list", "db_design"],
+    traceability_matrix: ["requirements", "functions_list", "basic_design"],
+    glossary: [],
+    test_evidence: ["ut_spec", "it_spec", "st_spec", "uat_spec"],
+    meeting_minutes: [],
+    decision_record: [],
+    mockups: ["screen_design"],
+  };
 
   for (const group of CHAIN_DISPLAY_ORDER) {
     for (const key of group.keys) {
@@ -133,13 +173,17 @@ export async function handleChainStatus(
   let entryIdx = 0;
   for (const group of CHAIN_DISPLAY_ORDER) {
     lines.push(``, `## ${group.label} (${group.phase})`, ``);
-    lines.push(`| Document | Chain Status | Lifecycle | Version | Output |`);
-    lines.push(`|----------|-------------|-----------|---------|--------|`);
-    for (const _key of group.keys) {
+    lines.push(`| Document | Chain Status | Depend on (Input) | Lifecycle | Version | Output |`);
+    lines.push(`|----------|-------------|-------------------|-----------|---------|--------|`);
+    for (const key of group.keys) {
       const e = entries[entryIdx++];
       if (!e) continue;
       const icon = e.status === "complete" ? "✅" : e.status === "in-progress" ? "🔄" : e.status === "provided" ? "📄" : "⏳";
-      lines.push(`| ${e.doc_type} | ${icon} ${e.status} | ${e.lifecycle ?? "-"} | ${e.version ?? "-"} | ${e.output ?? "-"} |`);
+      const deps = DEPENDENCY_MAP[key];
+      const depStr = deps && deps.length > 0
+        ? `← ${deps.map(d => d.replace(/_/g, "-")).join(", ")}`
+        : "-";
+      lines.push(`| ${e.doc_type} | ${icon} ${e.status} | ${depStr} | ${e.lifecycle ?? "-"} | ${e.version ?? "-"} | ${e.output ?? "-"} |`);
     }
   }
 

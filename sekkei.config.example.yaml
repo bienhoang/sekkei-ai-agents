@@ -62,6 +62,9 @@ chain:
   db_design:          { status: pending, output: "03-system/db-design.md" }
   report_design:      { status: pending, output: "03-system/report-design.md" }
   batch_design:       { status: pending, output: "03-system/batch-design.md" }
+  screen_design:      { status: pending, output: "09-ui/screen-design.md" }
+  interface_spec:     { status: pending, output: "09-ui/interface-spec.md" }
+  sitemap:            { status: pending, output: "03-system/sitemap.md" }
   # Test phase (テスト)
   test_plan:          { status: pending, output: "08-test/test-plan.md" }
   ut_spec:            { status: pending, output: "08-test/ut-spec.md" }
@@ -70,7 +73,12 @@ chain:
   uat_spec:           { status: pending, output: "08-test/uat-spec.md" }
   test_result_report: { status: pending, output: "08-test/test-result-report.md" }
   # Supplementary (補足)
-  migration_design:   { status: pending, output: "06-data/" }
   operation_design:   { status: pending, output: "07-operations/" }
+  migration_design:   { status: pending, output: "06-data/" }
+  crud_matrix:        { status: pending, output: "03-system/crud-matrix.md" }
+  traceability_matrix: { status: pending, output: "03-system/traceability-matrix.md" }
   glossary:           { status: pending, output: "10-glossary.md" }
+  test_evidence:      { status: pending, output: "08-test/test-evidence.md" }
+  meeting_minutes:    { status: pending, output: "03-system/meeting-minutes.md" }
+  decision_record:    { status: pending, output: "03-system/decision-record.md" }
   mockups:            { status: pending, output: "11-mockups/" }
