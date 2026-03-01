@@ -57,9 +57,8 @@ Command workflows for validation, export, translation, and maintenance utilities
 
 1. Locate `sekkei.config.yaml` in the project root
 2. Call MCP tool `get_chain_status` with the config path
-3. Display the document chain progress table
-4. If `_index.yaml` exists, show per-feature split status
-5. Suggest the next document to generate based on chain status
+3. **Display the MCP response content verbatim** — it includes phase-grouped tables with all 6 columns: Document, Chain Status, Depend on (Input), Lifecycle, Version, Output. Do NOT reformat or simplify the tables.
+4. Suggest the next document to generate based on dependency readiness (all upstream deps must be `complete`)
 
 ## `/sekkei:export @doc --format=xlsx|pdf|docx`
 
