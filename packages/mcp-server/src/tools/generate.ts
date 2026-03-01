@@ -26,7 +26,8 @@ import {
   buildChangelogPreservationInstruction,
 } from "../lib/generation-instructions.js";
 import { loadGlossary } from "../lib/glossary-native.js";
-import { extractAllIds } from "../lib/id-extractor.js";
+import { extractAllIds, extractIds } from "../lib/id-extractor.js";
+import { estimateOutputTokens, formatAdvisory } from "../lib/token-budget-estimator.js";
 import { resolveOutputPath } from "../lib/resolve-output-path.js";
 import { autoCommit } from "../lib/git-committer.js";
 import { appendGlobalChangelog, extractVersionFromContent, incrementVersion } from "../lib/changelog-manager.js";
@@ -416,6 +417,18 @@ export async function handleGenerateDocument(
 
     if (upstreamIdsBlock) {
       sections.push(``, upstreamIdsBlock);
+    }
+
+    // Token budget advisory: estimate output size from entity counts
+    const upstreamForEstimation = upstream_content ?? "";
+    if (upstreamForEstimation) {
+      const idMap = extractIds(upstreamForEstimation);
+      const entityCounts: Record<string, number> = {};
+      for (const [prefix, ids] of idMap) entityCounts[prefix] = ids.length;
+      const budgetResult = estimateOutputTokens(doc_type, entityCounts);
+      if (budgetResult.estimated_tokens > 16000) {
+        sections.push(``, formatAdvisory(budgetResult));
+      }
     }
 
     if (append_mode) {

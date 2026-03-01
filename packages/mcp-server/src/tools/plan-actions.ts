@@ -19,9 +19,14 @@ import {
   findActivePlan,
   updatePhaseStatus,
   assembleUpstream,
+  updateSectionStatus,
+  saveCheckpoint,
+  getCheckpoint,
 } from "../lib/plan-state.js";
 import { SekkeiError } from "../lib/errors.js";
 import { resolveOutputPath } from "../lib/resolve-output-path.js";
+import { extractIds } from "../lib/id-extractor.js";
+import { estimateOutputTokens } from "../lib/token-budget-estimator.js";
 import type { GenerationPlan, PlanPhase, PlanFeature } from "../types/plan.js";
 import type { DocType } from "../types/documents.js";
 
@@ -372,13 +377,23 @@ async function handleExecute(args: PlanArgs): Promise<ToolResult> {
     }, null, 2));
   }
 
-  // Assemble upstream content
+  // Assemble upstream content (Phase 1: pass featureName for filtering)
+  const feature = phaseEntry.feature_id
+    ? plan.features.find(f => f.id === phaseEntry.feature_id)
+    : undefined;
   const upstream = await assembleUpstream(
     workspace_path,
     plan.doc_type,
     phaseDetail.type,
     phaseEntry.feature_id,
+    feature?.name,
   );
+
+  // Token budget estimation (Phase 2: estimate from filtered upstream)
+  const idMap = extractIds(upstream);
+  const entityCounts: Record<string, number> = {};
+  for (const [prefix, ids] of idMap) entityCounts[prefix] = ids.length;
+  const budgetResult = estimateOutputTokens(plan.doc_type, entityCounts);
 
   // Build generate_document command args
   const scope = phaseDetail.type === "shared" ? "shared" : "feature";
@@ -398,6 +413,11 @@ async function handleExecute(args: PlanArgs): Promise<ToolResult> {
         feature_name: featureName ?? null,
         upstream_content: upstream,
       },
+    },
+    token_budget: {
+      estimated_tokens: budgetResult.estimated_tokens,
+      recommended_strategy: budgetResult.recommended_strategy,
+      entity_counts: budgetResult.entity_counts,
     },
     output_path: outputPath,
     survey_data: plan.survey ?? null,
@@ -542,18 +562,85 @@ async function handleAddFeature(args: PlanArgs): Promise<ToolResult> {
   }, null, 2));
 }
 
+// --- Section & Checkpoint Actions ---
+
+async function handleUpdateSection(args: PlanArgs): Promise<ToolResult> {
+  const { workspace_path, plan_id, phase_number, section_id, section_name, phase_status, last_id, tokens_used, decisions } = args;
+  if (!plan_id) return err("plan_id is required for update_section");
+  if (phase_number == null) return err("phase_number is required for update_section");
+  if (!section_id) return err("section_id is required for update_section");
+
+  const status = phase_status ?? "in_progress";
+  const plansDir = getPlanDir(workspace_path);
+  const planDir = join(plansDir, plan_id);
+
+  try {
+    const sections = await updateSectionStatus(planDir, phase_number, section_id, status, {
+      name: section_name,
+      last_id,
+    });
+
+    // Auto-save checkpoint if last_id or tokens_used provided
+    if (last_id || tokens_used != null || decisions) {
+      const checkpointData: Partial<import("../types/plan.js").PhaseCheckpoint> = {};
+      if (last_id) {
+        // Infer prefix from last_id (e.g. "SCR-SAL-008" → "SCR")
+        const prefix = last_id.split("-")[0];
+        checkpointData.last_assigned_ids = { [prefix]: last_id };
+      }
+      if (tokens_used != null) checkpointData.tokens_used = tokens_used;
+      if (decisions) checkpointData.decisions = decisions;
+      await saveCheckpoint(planDir, phase_number, checkpointData);
+    }
+
+    return ok(JSON.stringify({
+      success: true,
+      phase_number,
+      section_id,
+      status,
+      sections,
+    }, null, 2));
+  } catch (e) {
+    const msg = e instanceof SekkeiError ? e.toClientMessage() : `Failed to update section: ${section_id}`;
+    return err(msg);
+  }
+}
+
+async function handleGetCheckpoint(args: PlanArgs): Promise<ToolResult> {
+  const { workspace_path, plan_id, phase_number } = args;
+  if (!plan_id) return err("plan_id is required for get_checkpoint");
+  if (phase_number == null) return err("phase_number is required for get_checkpoint");
+
+  const plansDir = getPlanDir(workspace_path);
+  const planDir = join(plansDir, plan_id);
+
+  try {
+    const checkpoint = await getCheckpoint(planDir, phase_number);
+    return ok(JSON.stringify({
+      phase_number,
+      checkpoint: checkpoint ?? null,
+      message: checkpoint ? "Checkpoint found" : "No checkpoint saved",
+    }, null, 2));
+  } catch (e) {
+    const msg = e instanceof SekkeiError ? e.toClientMessage() : `Failed to get checkpoint for phase ${phase_number}`;
+    return err(msg);
+  }
+}
+
 // --- Dispatch ---
 
 export async function handlePlanAction(args: PlanArgs): Promise<ToolResult> {
   switch (args.action) {
-    case "create":      return handleCreate(args);
-    case "status":      return handleStatus(args);
-    case "list":        return handleList(args);
-    case "execute":     return handleExecute(args);
-    case "update":      return handleUpdate(args);
-    case "detect":      return handleDetect(args);
-    case "cancel":      return handleCancel(args);
-    case "add_feature": return handleAddFeature(args);
-    default:            return err(`Unknown action: ${args.action}`);
+    case "create":         return handleCreate(args);
+    case "status":         return handleStatus(args);
+    case "list":           return handleList(args);
+    case "execute":        return handleExecute(args);
+    case "update":         return handleUpdate(args);
+    case "detect":         return handleDetect(args);
+    case "cancel":         return handleCancel(args);
+    case "add_feature":    return handleAddFeature(args);
+    case "update_section": return handleUpdateSection(args);
+    case "get_checkpoint": return handleGetCheckpoint(args);
+    default:               return err(`Unknown action: ${args.action}`);
   }
 }

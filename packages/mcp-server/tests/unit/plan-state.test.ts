@@ -13,6 +13,9 @@ import {
   updatePhaseStatus,
   assembleUpstream,
   getPlanDir,
+  updateSectionStatus,
+  saveCheckpoint,
+  getCheckpoint,
 } from "../../src/lib/plan-state.js";
 import { SekkeiError } from "../../src/lib/errors.js";
 import type { GenerationPlan, PlanPhase, PlanFeature } from "../../src/types/plan.js";
@@ -546,6 +549,131 @@ describe("plan-state", () => {
     it("returns workspace-docs/plans path", () => {
       const dir = getPlanDir("/tmp/project");
       expect(dir).toBe("/tmp/project/workspace-docs/plans");
+    });
+  });
+
+  // --- updateSectionStatus ---
+  describe("updateSectionStatus", () => {
+    it("creates section if not exists", async () => {
+      const planDir = join(plansDir, "section-create-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+
+      const sections = await updateSectionStatus(planDir, 1, "screen-design", "in_progress", { name: "Screen Design" });
+      expect(sections).toHaveLength(1);
+      expect(sections[0].id).toBe("screen-design");
+      expect(sections[0].name).toBe("Screen Design");
+      expect(sections[0].status).toBe("in_progress");
+    });
+
+    it("updates existing section status", async () => {
+      const planDir = join(plansDir, "section-update-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+
+      await updateSectionStatus(planDir, 1, "header", "in_progress", { name: "Header" });
+      const sections = await updateSectionStatus(planDir, 1, "header", "completed");
+      expect(sections[0].status).toBe("completed");
+    });
+
+    it("sets completed_at when status is completed", async () => {
+      const planDir = join(plansDir, "section-completed-at-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+
+      const sections = await updateSectionStatus(planDir, 1, "api-design", "completed", { name: "API Design" });
+      expect(sections[0].completed_at).toBeDefined();
+      expect(sections[0].completed_at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    });
+  });
+
+  // --- saveCheckpoint / getCheckpoint ---
+  describe("saveCheckpoint / getCheckpoint", () => {
+    it("writes checkpoint to phase file", async () => {
+      const planDir = join(plansDir, "checkpoint-write-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+
+      const result = await saveCheckpoint(planDir, 1, {
+        last_assigned_ids: { SCR: "SCR-SAL-008" },
+        tokens_used: 5000,
+      });
+      expect(result.last_assigned_ids.SCR).toBe("SCR-SAL-008");
+      expect(result.tokens_used).toBe(5000);
+    });
+
+    it("merges into existing checkpoint without field overwrite", async () => {
+      const planDir = join(plansDir, "checkpoint-merge-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+
+      await saveCheckpoint(planDir, 1, {
+        last_assigned_ids: { SCR: "SCR-SAL-005" },
+        tokens_used: 3000,
+        decisions: ["Merged sections A and B"],
+      });
+      const merged = await saveCheckpoint(planDir, 1, {
+        last_assigned_ids: { API: "API-SAL-003" },
+        decisions: ["Split section C"],
+      });
+      expect(merged.last_assigned_ids.SCR).toBe("SCR-SAL-005"); // preserved
+      expect(merged.last_assigned_ids.API).toBe("API-SAL-003"); // added
+      expect(merged.tokens_used).toBe(3000); // preserved
+      expect(merged.decisions).toHaveLength(2);
+    });
+
+    it("returns null when no checkpoint in file", async () => {
+      const planDir = join(plansDir, "checkpoint-null-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+
+      const result = await getCheckpoint(planDir, 1);
+      expect(result).toBeNull();
+    });
+
+    it("returns checkpoint data correctly after save", async () => {
+      const planDir = join(plansDir, "checkpoint-read-test");
+      await mkdir(planDir, { recursive: true });
+      const plan = makePlan({
+        phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
+      });
+      await writePlan(planDir, plan);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+
+      await saveCheckpoint(planDir, 1, {
+        last_assigned_ids: { TBL: "TBL-003" },
+        tokens_used: 7200,
+        decisions: ["Used progressive mode"],
+      });
+      const result = await getCheckpoint(planDir, 1);
+      expect(result).not.toBeNull();
+      expect(result!.last_assigned_ids.TBL).toBe("TBL-003");
+      expect(result!.tokens_used).toBe(7200);
+      expect(result!.decisions).toContain("Used progressive mode");
     });
   });
 });

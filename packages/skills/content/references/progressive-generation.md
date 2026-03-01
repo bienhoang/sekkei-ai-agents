@@ -12,6 +12,20 @@ Use progressive generation when a document has **3+ content sections**. Benefits
 
 **Fallback:** If pre-scan finds **<= 2 content sections**, skip progressive mode and generate monolithically (single call, no tasks created).
 
+## Token Budget Advisory
+
+When `generate_document` returns a `## Token Budget Advisory` section in its response,
+read the `recommended_strategy` value before deciding how to generate:
+
+| Strategy | Meaning | Action |
+|----------|---------|--------|
+| `monolithic` | Estimated < 16K tokens | Generate in single call (skip progressive) |
+| `progressive` | Estimated 16K-24K tokens | Use progressive stages (default behavior) |
+| `split_required` | Estimated > 24K tokens | Must use manage_plan split mode — do NOT attempt monolithic |
+
+The advisory also includes `entity_counts` (e.g. `{ SCR: 12, API: 8 }`) and
+`sections_breakdown` — use these to size per-section batches in Step 1 pre-scan.
+
 ## Section Boundary Reference
 
 Each doc type has natural section boundaries for splitting:
@@ -108,6 +122,24 @@ Each stage MUST continue IDs from where the previous stage ended:
 
 The AI instruction for each content stage should include:
 > "Continue ID numbering from existing content. The last ID assigned was {last_id}."
+
+## Session Recovery After Compaction
+
+If a session compacts mid-phase, use manage_plan checkpoints to resume:
+
+1. Call `manage_plan(action="get_checkpoint", workspace_path, plan_id, phase_number)`
+   → returns `{ checkpoint: { last_assigned_ids: { SCR: "SCR-SAL-008", ... }, tokens_used, decisions } | null }`
+2. Resume progressive generation from the last incomplete section
+3. Pass `last_assigned_ids` values as starting point for ID continuity instructions
+4. After each section completes, call `manage_plan(action="update_section", ...)` to persist progress
+
+**update_section call pattern:**
+```
+manage_plan(action="update_section", workspace_path, plan_id,
+  phase_number=N, section_id="screen-design", phase_status="completed",
+  last_id="SCR-SAL-015", tokens_used=8400)
+```
+This also saves `last_id` to the phase checkpoint automatically.
 
 ## Per-Stage AI Instruction Template
 

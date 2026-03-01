@@ -19,6 +19,20 @@ export interface PlanFeature {
   priority: number;    // 1-based
 }
 
+export interface SectionStatus {
+  id: string;
+  name: string;
+  status: PhaseStatus;
+  last_id?: string;
+  completed_at?: string;
+}
+
+export interface PhaseCheckpoint {
+  last_assigned_ids: Record<string, string>;
+  tokens_used?: number;
+  decisions?: string[];
+}
+
 export interface PlanPhase {
   number: number;
   name: string;
@@ -26,6 +40,8 @@ export interface PlanPhase {
   feature_id?: string;   // omit for shared/validation
   status: PhaseStatus;
   file: string;          // e.g. "phase-01-shared-sections.md"
+  sections?: SectionStatus[];
+  checkpoint?: PhaseCheckpoint;
 }
 
 export interface GenerationPlan {

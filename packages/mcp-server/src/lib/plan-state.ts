@@ -8,7 +8,8 @@ import { parse, stringify } from "yaml"; // stringify used in writePlan body
 import { SekkeiError } from "./errors.js";
 import { renderPhaseFile } from "./plan-phase-template.js";
 import { DEFAULT_WORKSPACE_DIR } from "./constants.js";
-import type { GenerationPlan, PlanPhase, PhaseStatus, PlanFeature, PhaseType } from "../types/plan.js";
+import { filterByFeature } from "./upstream-filter.js";
+import type { GenerationPlan, PlanPhase, PhaseStatus, PlanFeature, PhaseType, SectionStatus, PhaseCheckpoint } from "../types/plan.js";
 import { PLAN_STATUSES } from "../types/plan.js";
 
 // --- Path Helpers ---
@@ -228,6 +229,144 @@ export async function updatePhaseStatus(
   }
 }
 
+// --- Section & Checkpoint Persistence ---
+
+/** Parse YAML frontmatter from a phase file, returning data and body */
+function parsePhaseFrontmatter(raw: string): { data: Record<string, unknown>; body: string } {
+  const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!fmMatch) {
+    return { data: {}, body: raw };
+  }
+  const data = parse(fmMatch[1]) as Record<string, unknown>;
+  return { data, body: fmMatch[2] };
+}
+
+/** Write updated frontmatter back to a phase file, preserving body */
+function rebuildPhaseFile(data: Record<string, unknown>, body: string): string {
+  const fm = stringify(data);
+  return `---\n${fm}---\n${body}`;
+}
+
+/**
+ * Update or create a section status entry in a phase file's YAML frontmatter.
+ * Upserts by sectionId — last write wins.
+ */
+export async function updateSectionStatus(
+  planDir: string,
+  phaseNumber: number,
+  sectionId: string,
+  status: PhaseStatus,
+  metadata?: { name?: string; last_id?: string },
+): Promise<SectionStatus[]> {
+  // Find phase file by reading plan
+  const plan = await readPlan(join(planDir, "plan.md"));
+  const phaseEntry = plan.phases.find(p => p.number === phaseNumber);
+  if (!phaseEntry) {
+    throw new SekkeiError("PLAN_ERROR", `Phase ${phaseNumber} not found in plan`);
+  }
+
+  const phaseFilePath = join(planDir, phaseEntry.file);
+  let raw: string;
+  try {
+    raw = await readFile(phaseFilePath, "utf-8");
+  } catch {
+    throw new SekkeiError("PLAN_ERROR", `Phase file not found: ${phaseEntry.file}`);
+  }
+
+  const { data, body } = parsePhaseFrontmatter(raw);
+  const sections = (data.sections as SectionStatus[] | undefined) ?? [];
+
+  // Upsert section by id
+  const existing = sections.find(s => s.id === sectionId);
+  if (existing) {
+    existing.status = status;
+    if (metadata?.name) existing.name = metadata.name;
+    if (metadata?.last_id) existing.last_id = metadata.last_id;
+    if (status === "completed") existing.completed_at = new Date().toISOString();
+  } else {
+    const newSection: SectionStatus = {
+      id: sectionId,
+      name: metadata?.name ?? sectionId,
+      status,
+      ...(metadata?.last_id ? { last_id: metadata.last_id } : {}),
+      ...(status === "completed" ? { completed_at: new Date().toISOString() } : {}),
+    };
+    sections.push(newSection);
+  }
+
+  data.sections = sections;
+  await writeFile(phaseFilePath, rebuildPhaseFile(data, body), "utf-8");
+  return sections;
+}
+
+/**
+ * Save checkpoint data to a phase file's YAML frontmatter.
+ * Deep-merges — does not overwrite existing fields unless explicitly provided.
+ */
+export async function saveCheckpoint(
+  planDir: string,
+  phaseNumber: number,
+  checkpoint: Partial<PhaseCheckpoint>,
+): Promise<PhaseCheckpoint> {
+  const plan = await readPlan(join(planDir, "plan.md"));
+  const phaseEntry = plan.phases.find(p => p.number === phaseNumber);
+  if (!phaseEntry) {
+    throw new SekkeiError("PLAN_ERROR", `Phase ${phaseNumber} not found in plan`);
+  }
+
+  const phaseFilePath = join(planDir, phaseEntry.file);
+  let raw: string;
+  try {
+    raw = await readFile(phaseFilePath, "utf-8");
+  } catch {
+    throw new SekkeiError("PLAN_ERROR", `Phase file not found: ${phaseEntry.file}`);
+  }
+
+  const { data, body } = parsePhaseFrontmatter(raw);
+  const existing = (data.checkpoint as PhaseCheckpoint | undefined) ?? {
+    last_assigned_ids: {},
+  };
+
+  // Deep-merge
+  const merged: PhaseCheckpoint = {
+    last_assigned_ids: { ...existing.last_assigned_ids, ...checkpoint.last_assigned_ids },
+    ...(checkpoint.tokens_used != null ? { tokens_used: checkpoint.tokens_used } : existing.tokens_used != null ? { tokens_used: existing.tokens_used } : {}),
+    decisions: checkpoint.decisions
+      ? [...(existing.decisions ?? []), ...checkpoint.decisions].slice(-50)
+      : existing.decisions,
+  };
+
+  data.checkpoint = merged;
+  await writeFile(phaseFilePath, rebuildPhaseFile(data, body), "utf-8");
+  return merged;
+}
+
+/**
+ * Read checkpoint data from a phase file's YAML frontmatter.
+ * Returns null if no checkpoint has been saved.
+ */
+export async function getCheckpoint(
+  planDir: string,
+  phaseNumber: number,
+): Promise<PhaseCheckpoint | null> {
+  const plan = await readPlan(join(planDir, "plan.md"));
+  const phaseEntry = plan.phases.find(p => p.number === phaseNumber);
+  if (!phaseEntry) {
+    throw new SekkeiError("PLAN_ERROR", `Phase ${phaseNumber} not found in plan`);
+  }
+
+  const phaseFilePath = join(planDir, phaseEntry.file);
+  let raw: string;
+  try {
+    raw = await readFile(phaseFilePath, "utf-8");
+  } catch {
+    throw new SekkeiError("PLAN_ERROR", `Phase file not found: ${phaseEntry.file}`);
+  }
+
+  const { data } = parsePhaseFrontmatter(raw);
+  return (data.checkpoint as PhaseCheckpoint | undefined) ?? null;
+}
+
 // --- Upstream Assembly ---
 
 /** Read a file and return its content, or a NOT FOUND marker on failure. */
@@ -269,6 +408,7 @@ export async function assembleUpstream(
   docType: string,
   phaseType: PhaseType,
   featureId?: string,
+  featureName?: string,
 ): Promise<string> {
   if (phaseType === "validation") return "";
 
@@ -276,8 +416,15 @@ export async function assembleUpstream(
   const requirementsPath = join(docsBase, "requirements.md");
   const functionsListPath = join(docsBase, "functions-list.md");
 
-  const requirements = await tryReadFile(requirementsPath);
-  const functionsList = await tryReadFile(functionsListPath);
+  let requirements = await tryReadFile(requirementsPath);
+  let functionsList = await tryReadFile(functionsListPath);
+
+  // Phase 1: Filter upstream by feature for per-feature phases
+  if (phaseType === "per-feature" && featureId) {
+    requirements = filterByFeature(requirements, featureId, featureName);
+    functionsList = filterByFeature(functionsList, featureId, featureName);
+  }
+
   const baseUpstream = `${requirements}\n\n${functionsList}`;
 
   if (phaseType === "shared") {

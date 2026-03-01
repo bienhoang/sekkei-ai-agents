@@ -9,6 +9,7 @@ import { logger } from "../lib/logger.js";
 
 export const PLAN_ACTIONS = [
   "create", "status", "list", "execute", "update", "detect", "cancel", "add_feature",
+  "update_section", "get_checkpoint",
 ] as const;
 
 const inputSchema = {
@@ -43,6 +44,16 @@ const inputSchema = {
     priority: z.number().int().min(1).max(50),
   })).max(20).optional()
     .describe("Features to add (for add_feature action)"),
+  section_id: z.string().max(50).optional()
+    .describe("Section ID for update_section action"),
+  section_name: z.string().max(100).optional()
+    .describe("Section display name for update_section action"),
+  last_id: z.string().max(20).optional()
+    .describe("Last assigned ID for section checkpoint"),
+  tokens_used: z.number().int().positive().optional()
+    .describe("Tokens used so far in this phase"),
+  decisions: z.array(z.string().max(200)).max(20).optional()
+    .describe("Generation decisions for checkpoint audit trail"),
 };
 
 export interface PlanArgs {
@@ -66,6 +77,11 @@ export interface PlanArgs {
     complexity: "simple" | "medium" | "complex";
     priority: number;
   }>;
+  section_id?: string;
+  section_name?: string;
+  last_id?: string;
+  tokens_used?: number;
+  decisions?: string[];
 }
 
 export type ToolResult = { content: Array<{ type: "text"; text: string }>; isError?: boolean };

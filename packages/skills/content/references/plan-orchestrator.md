@@ -182,6 +182,22 @@ status: pending
 3. After all phases: final execute response triggers `/sekkei:validate` on manifest automatically
 4. Call `manage_plan(action="status", workspace_path, plan_id)` → display final report (phases completed/skipped/remaining, files generated, validation results)
 
+### Token Budget in Execute Response
+
+The `execute` response now includes a `token_budget` field:
+```json
+{
+  "command": { "tool": "generate_document", "args": {...} },
+  "token_budget": {
+    "estimated_tokens": 18500,
+    "recommended_strategy": "progressive",
+    "entity_counts": { "SCR": 12, "API": 8, "TBL": 6 }
+  }
+}
+```
+Use `recommended_strategy` to decide whether to call `generate_document` directly
+(monolithic) or invoke the progressive generation pattern.
+
 ### Delegation Mapping
 
 | Phase Type | `execute` Response Key | Downstream Call |
@@ -193,3 +209,21 @@ status: pending
 ### Progress Tracking
 
 Progress is persisted server-side via `manage_plan(action="update")` after each phase. No manual file writes needed — `execute` and `update` calls maintain plan state atomically.
+
+## §6 Section Checkpoint Actions
+
+Two actions for tracking progress within a phase (used by progressive generation):
+
+**update_section** — mark a section complete and persist last assigned ID:
+```
+manage_plan(action="update_section", workspace_path, plan_id,
+  phase_number=2, section_id="api-design", section_name="API Design",
+  phase_status="completed", last_id="API-SAL-006", tokens_used=5200)
+```
+
+**get_checkpoint** — retrieve last persisted state for recovery:
+```
+manage_plan(action="get_checkpoint", workspace_path, plan_id, phase_number=2)
+```
+Returns: `{ checkpoint: { last_assigned_ids, tokens_used, decisions } | null }`
+Returns `null` checkpoint when no sections have been completed yet.
