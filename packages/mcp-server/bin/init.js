@@ -6,7 +6,7 @@
  */
 
 import * as p from "@clack/prompts";
-import { stringify } from "yaml";
+import { stringify, parse as parseYaml } from "yaml";
 import { existsSync, writeFileSync, readFileSync, mkdirSync } from "node:fs";
 import { dirname, resolve, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -37,15 +37,26 @@ async function main() {
   const lang = await askLanguage();
   if (p.isCancel(lang)) { p.cancel("Cancelled"); process.exit(0); }
 
-  // 2. Check existing config
+  // 2. Check existing config — offer merge or overwrite
+  let existingChain = null;
   if (existsSync(CONFIG_FILE)) {
-    const overwrite = await p.confirm({
-      message: t(lang, "overwrite"),
-      initialValue: false,
+    const action = await p.select({
+      message: t(lang, "existing_action"),
+      options: [
+        { value: "merge", label: t(lang, "merge_config") },
+        { value: "overwrite", label: t(lang, "overwrite_config") },
+      ],
     });
-    if (p.isCancel(overwrite) || !overwrite) {
+    if (p.isCancel(action)) {
       p.cancel(t(lang, "cancel"));
       process.exit(0);
+    }
+    if (action === "merge") {
+      try {
+        const raw = readFileSync(CONFIG_FILE, "utf-8");
+        const existing = parseYaml(raw);
+        existingChain = existing?.chain ?? null;
+      } catch { /* parse error — treat as fresh */ }
     }
   }
 
@@ -88,7 +99,57 @@ async function main() {
     process.exit(1);
   }
 
-  // 7. Write config YAML
+  // 7. Write config YAML — full v2.0 chain with merge support
+  const defaultChain = {
+    rfp: "",
+    // Requirements phase
+    requirements:         { status: "pending", output: "02-requirements/requirements.md" },
+    nfr:                  { status: "pending", output: "02-requirements/nfr.md" },
+    functions_list:       { status: "pending", output: "04-functions-list/functions-list.md" },
+    project_plan:         { status: "pending", output: "02-requirements/project-plan.md" },
+    // Design phase
+    architecture_design:  { status: "pending", output: "03-system/architecture-design.md" },
+    basic_design:         { status: "pending", output: "03-system/basic-design.md", system_output: "03-system/", features_output: "05-features/" },
+    security_design:      { status: "pending", output: "03-system/security-design.md" },
+    detail_design:        { status: "pending", features_output: "05-features/" },
+    db_design:            { status: "pending", output: "03-system/db-design.md" },
+    screen_design:        { status: "pending", output: "09-ui/screen-design.md" },
+    interface_spec:       { status: "pending", output: "09-ui/interface-spec.md" },
+    report_design:        { status: "pending", output: "03-system/report-design.md" },
+    batch_design:         { status: "pending", output: "03-system/batch-design.md" },
+    sitemap:              { status: "pending", output: "03-system/sitemap.md" },
+    // Test phase
+    test_plan:            { status: "pending", output: "08-test/test-plan.md" },
+    ut_spec:              { status: "pending", output: "08-test/ut-spec.md" },
+    it_spec:              { status: "pending", output: "08-test/it-spec.md" },
+    st_spec:              { status: "pending", output: "08-test/st-spec.md" },
+    uat_spec:             { status: "pending", output: "08-test/uat-spec.md" },
+    test_result_report:   { status: "pending", output: "08-test/test-result-report.md" },
+    // Supplementary
+    operation_design:     { status: "pending", output: "07-operations/" },
+    migration_design:     { status: "pending", output: "06-data/" },
+    crud_matrix:          { status: "pending", output: "03-system/crud-matrix.md" },
+    traceability_matrix:  { status: "pending", output: "03-system/traceability-matrix.md" },
+    glossary:             { status: "pending", output: "10-glossary.md" },
+    test_evidence:        { status: "pending", output: "08-test/test-evidence.md" },
+    meeting_minutes:      { status: "pending", output: "03-system/meeting-minutes.md" },
+    decision_record:      { status: "pending", output: "03-system/decision-record.md" },
+    mockups:              { status: "pending", output: "11-mockups/" },
+  };
+
+  // Merge: preserve existing chain entries, add new ones
+  if (existingChain && typeof existingChain === "object") {
+    // Remove legacy v1 keys
+    delete existingChain.overview;
+    delete existingChain.test_spec;
+    // Overlay existing entries onto defaults (preserves status + output)
+    for (const key of Object.keys(existingChain)) {
+      if (key in defaultChain) {
+        defaultChain[key] = existingChain[key];
+      }
+    }
+  }
+
   const config = {
     project: {
       name: project.name,
@@ -101,18 +162,10 @@ async function main() {
       industry: docOpts.industry !== "none" ? docOpts.industry : undefined,
     },
     output: { directory: outDir },
-    chain: {
-      rfp: "",
-      overview: { status: "pending" },
-      functions_list: { status: "pending" },
-      requirements: { status: "pending" },
-      basic_design: { status: "pending" },
-      detail_design: { status: "pending" },
-      test_spec: { status: "pending" },
-    },
+    chain: defaultChain,
   };
   writeFileSync(CONFIG_FILE, stringify(config), "utf-8");
-  p.log.success(t(lang, "config_written"));
+  p.log.success(existingChain ? t(lang, "config_merged") : t(lang, "config_written"));
 
   // 8. Import industry glossary
   if (config.project.industry) {

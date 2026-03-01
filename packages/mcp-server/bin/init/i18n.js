@@ -13,6 +13,26 @@ const M = {
     "sekkei.config.yaml は既に存在します。上書きしますか？",
     "sekkei.config.yaml đã tồn tại. Ghi đè?",
   ],
+  existing_action: [
+    "sekkei.config.yaml exists. What would you like to do?",
+    "sekkei.config.yaml は既に存在します。どうしますか？",
+    "sekkei.config.yaml đã tồn tại. Bạn muốn làm gì?",
+  ],
+  merge_config: [
+    "Update — add new doc types, keep existing statuses",
+    "更新 — 新しいドキュメントを追加、既存のステータスを保持",
+    "Cập nhật — thêm tài liệu mới, giữ nguyên trạng thái hiện tại",
+  ],
+  overwrite_config: [
+    "Overwrite — reset everything",
+    "上書き — すべてリセット",
+    "Ghi đè — đặt lại tất cả",
+  ],
+  config_merged: [
+    "Updated sekkei.config.yaml (existing statuses preserved)",
+    "sekkei.config.yaml を更新しました（既存ステータスを保持）",
+    "Đã cập nhật sekkei.config.yaml (giữ nguyên trạng thái hiện tại)",
+  ],
   cancel: ["Setup cancelled", "セットアップを中止しました", "Đã hủy cài đặt"],
   setup_done: ["Setup complete!", "設定完了！", "Cài đặt hoàn tất!"],
   config_written: [
