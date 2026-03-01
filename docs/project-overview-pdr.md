@@ -630,17 +630,17 @@ sekkei/
 
 ## Open Questions & Future Considerations
 
-1. **Multilingual Templates** — Should EN/VI templates be auto-generated from JA via translation, or manually created? Current approach is manual (higher quality).
+1. **Multilingual Templates** — EN/VI templates partially complete. Should follow manual approach for quality.
 
-2. **Version Control** — Should Sekkei integrate with Git for version tracking, or delegate to external tools?
+2. **Version Control** — Git integration exists (simple-git). Should expand for auto-commit on doc generation?
 
-3. **Approval Workflows** — Should there be a sign-off mechanism for specs before export?
+3. **Approval Workflows** — Template metadata supports review workflow; Phase C will add UI.
 
-4. **Template Inheritance** — Should templates support inheritance/composition to reduce duplication?
+4. **Real-time Collaboration** — Currently out-of-scope; would require backend + database.
 
-5. **Real-time Collaboration** — Should multiple users be able to edit specs simultaneously (requires backend)?
+5. **AI Model Selection** — Currently Claude. Extensibility planned but not prioritized.
 
-6. **AI Model Selection** — Currently uses Claude; should we support other LLMs (GPT-4, etc.)?
+6. **Screen Mockup Integration** — `/sekkei:mockup` skill command generates HTML wireframes via AI; CSS templates provided.
 
 ## Conclusion
 

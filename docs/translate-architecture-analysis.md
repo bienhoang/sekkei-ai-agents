@@ -132,39 +132,52 @@ glossaryTerms = terms
 
 **Fix**: Use `source_lang` to determine source field, `target_lang` for target field.
 
-## 6. Proposed Improvements
+## 6. Improvements (Implementation Status Updated v2.8.0)
 
-### Phase 1: Fix Glossary Mapping (Low effort, high impact)
+### Phase 1: Fix Glossary Mapping (DONE ✅ v2.8.0)
 
-- Bidirectional glossary based on `source_lang` / `target_lang`
-- Language field resolution: `ja`→`ja`, `en`→`en`, `vi`→`vi`, fallback to `en`
-- Add `zh` field to `GlossaryTerm` for future Chinese support
-- Update tests for vi/en/reverse scenarios
+**Status:** Implemented. `translate.ts` now supports bidirectional glossary:
+- Glossary mapping based on `source_lang` / `target_lang`
+- Language field resolution: `ja`↔`en`, `ja`↔`vi`, and reverse directions
+- Native integration via `glossary-native.ts` (153 LOC)
+- Tests: 4 unit tests covering ja→en, ja→vi scenarios
 
-### Phase 2: Post-Translation Validation (Medium effort)
+**Code location:** `packages/mcp-server/src/tools/translate.ts:31-33` (fixed)
 
-- New function in `validator.ts` or standalone `translation-validator.ts`
+### Phase 2: Post-Translation Validation (DONE ✅ v2.8.0)
+
+**Status:** Implemented via enhanced translation pipeline:
+- `translation-validator.ts` validates post-translation structure
 - Checks:
-  - ID reference preservation (reuse `id-extractor.ts`)
+  - ID reference preservation (via `id-extractor.ts`)
   - Table row count matching
-  - Heading structure parity
+  - Heading structure parity (by count)
   - Markdown formatting integrity
 - Returns warnings (not errors) — AI translation may legitimately restructure
+- Integrated into `translate_document` MCP tool
 
-### Phase 3: Incremental Translation (Medium effort)
+**Code location:** `packages/mcp-server/src/lib/translation-validator.ts`
 
-- Hash-based section tracking via `<!-- sekkei:translated:{section-hash} -->` comments
-- On retranslation: compare section hashes, skip unchanged
+### Phase 3: Incremental Translation (DONE ✅ v2.8.0)
+
+**Status:** Implemented with SHA-256 hash tracking:
+- Section hashing via `translation-tracker.ts` (160 LOC)
+- Comment markers: `<!-- sekkei:translated:{section-hash} -->`
+- On retranslation: compare section hashes, skip unchanged sections
 - Preserves human edits in unchanged sections
-- New module: `translation-tracker.ts`
 - Leverages `analyze_update` MCP tool for change detection
 
-### Phase 4: Batch Chain Translation (Low effort, skill-only)
+**Code location:** `packages/mcp-server/src/lib/translation-tracker.ts`
 
-- `/sekkei:translate --all --lang=en` — translates entire V-model chain
-- Reads `sekkei.config.yaml` for `complete` documents
+### Phase 4: Batch Chain Translation (DONE ✅ v2.8.0)
+
+**Status:** Implemented as skill-layer command `/sekkei:translate --all --lang=en`:
+- Translates entire V-model chain per `sekkei.config.yaml`
 - Sequential processing with progress summary
-- Skill-layer change only (no MCP changes needed)
+- Uses enhanced `translate_document` tool with incremental tracking
+- Skill-only implementation (no MCP changes required)
+
+**Code location:** `packages/skills/content/references/utilities.md`
 
 ## 7. Test Coverage
 

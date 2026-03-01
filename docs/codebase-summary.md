@@ -2,8 +2,8 @@
 
 ## Repository Overview
 
-**Sekkei (設計)** v2.7.2 is a monorepo containing:
-- **@bienhoang/sekkei-mcp-server** (TypeScript/194 source files/~14,500 LOC src + ~13,800 LOC tests) — IPA V-Model compliant specification generation with 27 doc types + 5 quality-scoring libs + Phase A SIer features + Phase B dashboard
+**Sekkei (設計)** v2.8.0 is a monorepo containing:
+- **@bienhoang/sekkei-mcp-server** (TypeScript/101 src files + 56 test files/~15,300 LOC src + ~13,800 LOC tests) — IPA V-Model compliant specification generation with 26 doc types + 5 quality-scoring libs + Phase A SIer features + Phase B dashboard + v2.8.0 token optimization
 - **@bienhoang/sekkei-preview** (Express + React + Tiptap v3) — Live preview with WYSIWYG editor (1,600+ LOC)
 - **@bienhoang/sekkei-dashboard** (React + Express + Recharts + @xyflow/react) — Analytics dashboard with quality metrics, traceability graphs, snapshots (3,600+ LOC, 5 pages)
 - **@bienhoang/sekkei-skills** (Claude Code SKILL.md with 44 sub-commands) — Claude Code skill definition + reference docs for all 27 doc types + workflow commands (2,800+ LOC)
@@ -17,12 +17,12 @@
 ```
 sekkei/
 ├── packages/
-│   ├── mcp-server/                    # @bienhoang/sekkei-mcp-server v2.7.2 (MCP Server, TypeScript)
+│   ├── mcp-server/                    # @bienhoang/sekkei-mcp-server v2.8.0 (MCP Server, TypeScript)
 │   │   ├── src/
 │   │   │   ├── server.ts              # McpServer instance, 15 MCP tool registration
 │   │   │   ├── config.ts              # Env var loading
 │   │   │   ├── index.ts               # CLI exports
-│   │   │   ├── lib/                   # Core business logic (60 files, 9,350+ LOC)
+│   │   │   ├── lib/                   # Core business logic (62 files, 9,826+ LOC)
 │   │   │   │   ├── errors.ts          # SekkeiError class (18 error codes)
 │   │   │   │   ├── logger.ts          # Pino structured logging
 │   │   │   │   ├── validator.ts       # Document validation (content, cross-refs, structure rules)
@@ -33,7 +33,7 @@ sekkei/
 │   │   │   │   ├── python-bridge.ts   # Execute Python CLI via execFile (7 whitelisted actions)
 │   │   │   │   ├── resolve-output-path.ts # Doc type → numbered path mapping (IPA v-model phases)
 │   │   │   │   ├── structure-validator.ts # Validate numbered directories
-│   │   │   │   ├── id-extractor.ts    # Extract F-xxx, REQ-xxx IDs (25 prefixes, IPA v2.7)
+│   │   │   │   ├── id-extractor.ts    # Extract F-xxx, REQ-xxx IDs (25 prefixes, IPA v2.8)
 │   │   │   │   ├── generation-instructions.ts # Build AI prompts
 │   │   │   │   ├── screen-design-instructions.ts # Screen mockup specifics
 │   │   │   │   ├── code-analyzer.ts   # TypeScript AST analysis (v3, 225 LOC)
@@ -45,6 +45,8 @@ sekkei/
 │   │   │   │   ├── google-sheets-exporter.ts # Sheets API export (v3, 186 LOC)
 │   │   │   │   ├── rfp-state-machine.ts # RFP state machine, transitions, file rules, workspace CRUD, phase recovery
 │   │   │   │   ├── glossary-native.ts # In-process glossary management (Phase A, 153 LOC)
+│   │   │   │   ├── translation-validator.ts # Post-translation structure validation (NEW v2.8.0, 160+ LOC)
+│   │   │   │   ├── translation-tracker.ts # Incremental translation via SHA-256 hashing (NEW v2.8.0, 160+ LOC)
 │   │   │   │   ├── confidence-extractor.ts # Extract confidence annotations (Phase A, 59 LOC)
 │   │   │   │   ├── traceability-extractor.ts # Extract source traceability (Phase A, 69 LOC)
 │   │   │   │   ├── impact-analyzer.ts # Spec change impact analysis (Phase A, 114 LOC)
@@ -60,8 +62,8 @@ sekkei/
 │   │   │   │   ├── cr-conflict-detector.ts # Parallel CR conflict detection (50 LOC)
 │   │   │   │   ├── git-committer.ts   # Git commit helper (58 LOC)
 │   │   │   │   ├── upstream-extractor.ts # Extract IDs from upstream docs (server-side, 5-min cache, 139 LOC)
-│   │   │   │   ├── token-budget-estimator.ts # Predict output tokens, recommend generation strategy (NEW v2.8.0)
-│   │   │   │   ├── upstream-filter.ts  # Feature-aware h2 + ID-based content filtering (NEW v2.8.0)
+│   │   │   │   ├── token-budget-estimator.ts # Predict output tokens, recommend generation strategy (NEW v2.8.0, 119 LOC)
+│   │   │   │   ├── upstream-filter.ts  # Feature-aware h2 + ID-based content filtering (NEW v2.8.0, 140 LOC)
 │   │   │   │   ├── coverage-metrics.ts # Traceability matrix % (Phase B)
 │   │   │   │   ├── health-scorer.ts   # Doc health scoring (Phase B)
 │   │   │   │   ├── risk-scorer.ts     # 5-dimension risk assessment (Phase B)
@@ -70,7 +72,7 @@ sekkei/
 │   │   │   │   ├── platform.ts        # Cross-platform utilities
 │   │   │   │   ├── constants.ts       # Shared constants
 │   │   │   │   └── [additional lib modules]
-│   │   │   ├── tools/                 # MCP Tool Handlers (15 tools, 3,666 LOC)
+│   │   │   ├── tools/                 # MCP Tool Handlers (15 tools, 3,860 LOC)
 │   │   │   │   ├── generate.ts        # generate_document tool (+ v3 source_code_path, Phase A confidence/traceability, upstream_paths, post_actions)
 │   │   │   │   ├── validate.ts        # validate_document tool (4 modes + v3 structure rules)
 │   │   │   │   ├── chain-status.ts    # get_chain_status tool
@@ -308,23 +310,32 @@ sekkei/
 
 ## Source Code Metrics
 
-- **MCP Server:** 194 TypeScript files (src + tests)
-  - src/: 58 lib files + 19 tool files + 11 CLI files + type definitions + resources = ~93 TS files
-  - tests/: 56 unit + 1 integration test files
-  - Total LOC: ~14,500 src + ~13,800 tests
+- **MCP Server:** 157 TypeScript files (src + tests)
+  - src/: 62 lib files + 19 tool files + 11 CLI files + 6 type definition files + 3 resource files = 101 TS files
+  - tests/: 56 unit test files + 1 integration test file
+  - Total LOC: ~15,300 src + ~13,800 tests
 - **Preview:** 9 TS+TSX files (~1,600 LOC)
 - **Dashboard:** 20+ TS+TSX files (~3,600 LOC)
 - **Skills:** 1 main SKILL.md + sub-definitions (~2,800 LOC)
 - **Python:** 7 files (~800 LOC)
 
-## Recent Changes (v2.7.2)
+## Recent Changes (v2.8.0)
 
+**Token Optimization (NEW):**
+- Token budget estimator (token-budget-estimator.ts, 119 LOC) — predicts output tokens, recommends strategy (monolithic/progressive/split_required)
+- Smart upstream filtering (upstream-filter.ts, 140 LOC) — h2-heading + ID-based content filtering reduces context 60-75%
+- Enhanced plan state (plan-state.ts) — section-level status tracking, checkpoints for session recovery
+
+**Translation Pipeline (Enhanced):**
+- Bidirectional glossary support (ja↔en, ja↔vi, reverse directions)
+- Post-translation validation (translation-validator.ts, 160+ LOC) — ID preservation, table row count, heading parity
+- Incremental translation via SHA-256 hashing (translation-tracker.ts, 160+ LOC) — skip unchanged sections
+
+**Previous (v2.7.2):**
 - Progressive document generation with task tracking
-- Plan management system for multi-phase orchestration (v2.7.0)
+- Plan management system for multi-phase orchestration
 - Package version summary to doctor/version command
-- Build preview/dashboard during install
 - Vietnamese diacritics enforcement in output language instructions
-- MCP tool name mapping in SKILL.md
 
 ## Dependencies (Key)
 

@@ -1,10 +1,10 @@
 # Split-Mode Generation Protocol
 
-> Code refs: `plan-actions.ts`, `plan-state.ts`, `manifest-schemas.ts`, `plan-phase-template.ts`, `merge-documents.ts`
+> Code refs: `plan-actions.ts`, `plan-state.ts`, `manifest-schemas.ts`, `merge-documents.ts`, token-budget-estimator.ts, upstream-filter.ts
 
 ## Overview
 
-Split-mode generates large documents (basic-design, detail-design, test-specs) as multiple per-feature files instead of one monolithic file. A plan orchestrates phased generation: shared sections first, then per-feature sections, then cross-reference validation.
+Split-mode generates large documents (basic-design, detail-design, test-specs) as multiple per-feature files instead of one monolithic file. The `manage_plan` MCP tool orchestrates phased generation: shared sections first, then per-feature sections, then cross-reference validation. Token budgeting and smart upstream filtering optimize context and token usage.
 
 ## Trigger Conditions
 
@@ -17,7 +17,7 @@ Split-mode generates large documents (basic-design, detail-design, test-specs) a
 
 **Supported doc types:** `basic-design`, `detail-design`, `ut-spec`, `it-spec`
 
-Use `manage_plan(action="detect")` to check all conditions programmatically.
+**Programmatic Check:** Use `manage_plan(action="detect")` MCP tool to check all conditions and get split-mode recommendations.
 
 ## Manifest Schema (`_index.yaml`)
 
@@ -101,8 +101,27 @@ From `plan-actions.ts:34-50`:
    - Read file content from manifest paths
    - Strip per-file YAML frontmatter (`---\n...\n---`)
    - Concatenate with separator comments
-3. Path containment validation: all file paths must resolve within workspace directory (prevents directory traversal via manifest)
-4. Output: single merged markdown document
+3. Path containment validation: all file paths must resolve within workspace directory (prevents directory traversal)
+4. **Token Optimization (v2.8.0):** Smart upstream filtering (via `upstream-filter.ts`) applied per feature during plan execution
+5. Output: single merged markdown document
+
+## Token Budget & Context Optimization (NEW v2.8.0)
+
+**Auto-Budgeting:** When `manage_plan` tool runs, it:
+1. Counts entities (F-xxx, REQ-xxx, etc.) in upstream document
+2. Calls `token-budget-estimator` to predict output tokens
+3. Returns advisory with recommended strategy (monolithic/progressive/split_required)
+
+**Smart Upstream Filtering:**
+- Per-feature phase extraction uses `upstream-filter.ts`
+- H2 heading matching for feature-relevant sections
+- ID-based fallback if no heading matches
+- Typically reduces context 60-75% per feature phase
+
+**Session Recovery (Checkpoints):**
+- Plan YAML stores section-level status and checkpoint data
+- Resume interrupted generations from section granularity
+- New actions: `manage_plan(action="update_section")`, `manage_plan(action="get_checkpoint")`
 
 ## add_feature Flow
 

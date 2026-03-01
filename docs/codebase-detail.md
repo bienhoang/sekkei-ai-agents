@@ -2,7 +2,58 @@
 
 Cross-reference: See [codebase-summary.md](./codebase-summary.md) for repository overview and project structure.
 
-## Phase 3: Intelligence Layer Modules (NEW v3)
+## Generation Optimization (NEW v2.8.0)
+
+### Token Budget Estimation
+
+**File:** `src/lib/token-budget-estimator.ts` (119 LOC)
+
+Predicts output token count from entity counts and recommends generation strategy before execution:
+
+**Estimation Model:**
+```
+estimated_tokens = base_tokens + Σ(entity_count × per_entity_weight)
+```
+
+**Calibration by Document Type:**
+- `requirements`: base 2000, F=500, REQ=300
+- `functions-list`: base 1500, F=300, SCR=150
+- `basic-design`: base 3000, SCR=800, TBL=600, API=500
+- `detail-design`: base 2000, TBL=400, API=1200, CLS=800
+- `test-specs`: base 1500-2000, with per-spec calibration
+
+**Generation Strategies:**
+- `monolithic` (<16K tokens): Single-call generation, fast iteration
+- `progressive` (16K-24K tokens): Multi-stage generation for medium-large docs
+- `split_required` (>24K tokens): Split mode mandatory (per-feature generation)
+
+**Used by:** `generate.ts` (advisory display), `plan-actions.ts` (strategy selection)
+
+### Smart Upstream Content Filtering
+
+**File:** `src/lib/upstream-filter.ts` (140 LOC)
+
+Reduces context size by extracting only feature-relevant upstream content:
+
+**2-Stage Algorithm:**
+1. **Heading-based matching:** Splits markdown by h2 headings, matches against feature ID/name
+2. **ID-based fallback:** Scans for feature-specific F-xxx IDs if no heading matches
+
+**Reduction metrics:** Typically 60-75% context reduction per feature.
+
+**Session Recovery:** Enhanced plan YAML with section-level status:
+```yaml
+phases:
+  - phase_number: 2
+    sections:
+      - section_key: "basic-design-sales"
+        status: "completed"
+        checkpoint: {...}
+```
+
+Allows resuming interrupted generations from section-level granularity.
+
+## Phase 3: Intelligence Layer Modules (v3)
 
 ### Code-Aware Generation
 
@@ -576,7 +627,7 @@ Located in `.changeset/`:
 - pyyaml
 - jinja2 (optional)
 
-## Recent Changes (v2.0 — V-Model Chain Restructure + v2.1 Audit Fixes)
+## Version History & Changes
 
 ### DOC_TYPES Changes (22 types)
 

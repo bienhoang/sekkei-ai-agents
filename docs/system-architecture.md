@@ -153,80 +153,19 @@ Quality Metrics Libraries (in MCP Server):
 
 ## Generation Optimization Subsystems (v2.8.0)
 
-### Token Budget Estimation
+### Token Budget Estimation & Smart Filtering
 
-**Purpose:** Predict output token count from entity counts and recommend generation strategy before execution, preventing truncation and optimizing LLM costs.
+**Token Budget Estimator** (`token-budget-estimator.ts`, 119 LOC):
+- Predicts output tokens: `estimated_tokens = base_tokens + Σ(entity_count × weight)`
+- Calibration per doc type (requirements, functions-list, basic-design, detail-design, test-specs, db-design)
+- Strategies: monolithic (<16K), progressive (16K-24K), split_required (>24K)
+- Used by `generate.ts` (advisory) and `plan-actions.ts` (strategy selection)
 
-**Components:**
-- `token-budget-estimator.ts` — Core estimation engine
-- Used by `generate.ts` (advisory display) and `plan-actions.ts` (strategy selection)
-
-**Estimation Model:**
-Predicts output tokens from entity counts (F-xxx, REQ-xxx, SCR-xxx, TBL-xxx, API-xxx, CLS-xxx):
-```
-estimated_tokens = base_tokens + Σ(entity_count × per_entity_weight)
-```
-
-**Calibration Constants (per doc type):**
-
-| Doc Type | Base | F | REQ | SCR | TBL | API | CLS |
-|----------|------|---|-----|-----|-----|-----|-----|
-| requirements | 2000 | 500 | 300 | - | - | - | - |
-| functions-list | 1500 | 300 | - | 150 | - | - | - |
-| basic-design | 3000 | - | - | 800 | 600 | 500 | - |
-| detail-design | 2000 | - | - | - | 400 | 1200 | 800 |
-| test-specs (UT/IT/ST/UAT) | 1500-2000 | 200 | - | 300-400 | - | 400-800 | 600 |
-| db-design | 2000 | 100 | - | - | 700 | - | - |
-
-**Generation Strategies:**
-
-| Strategy | Token Range | Use Case |
-|----------|-------------|----------|
-| **monolithic** | <16K | Single-call generation, fast iteration |
-| **progressive** | 16K-24K | Multi-stage generation for medium-large docs |
-| **split_required** | >24K | Split mode mandatory (per-feature generation) |
-
-**User-Facing Advisory:**
-When `manage_plan` tool estimates high token budgets, it returns a markdown advisory block recommending strategy and listing entity contribution breakdown.
-
-### Smart Upstream Content Filtering
-
-**Purpose:** Reduce context size by extracting only feature-relevant upstream content when generating per-feature documents in split mode.
-
-**Components:**
-- `upstream-filter.ts` — Content filtering engine
-- Used in `plan-state.ts` when populating upstream context for each feature phase
-
-**Filtering Algorithm (2-stage):**
-
-**Stage 1: Heading-based Matching**
-- Splits markdown by h2 headings (`^## `)
-- Scans section headings for feature ID or name matches
-- Always includes: 改訂履歴, 承認欄, 検印欄, 概要, 目的, scope, etc.
-
-**Stage 2: ID-based Fallback**
-If no h2 heading matches feature:
-- Scans all sections for feature-specific F-xxx IDs
-- Extracts IDs from feature's category heading in functions-list
-- Includes sections containing those IDs
-
-**Reduction Metrics:**
-For a 100KB upstream document with 8 features, typically reduces context by 60-75% per feature, improving generation speed and reducing token costs.
-
-**Session Recovery (Section Checkpoints):**
-Enhanced plan YAML with section-level status:
-```yaml
-phases:
-  - phase_number: 2
-    sections:
-      - section_key: "basic-design-sales"
-        status: "completed"
-        checkpoint: {...}
-      - section_key: "basic-design-billing"
-        status: "in_progress"
-```
-
-Allows resuming interrupted generations from section-level granularity (new `update_section` and `get_checkpoint` actions in `manage_plan` tool).
+**Smart Upstream Content Filtering** (`upstream-filter.ts`, 140 LOC):
+- 2-stage filtering: H2 heading match, then ID-based fallback
+- Reduces context 60-75% per feature in split mode
+- Extracts only feature-relevant sections from upstream document
+- Session recovery via section-level checkpoints in plan YAML
 
 ## Document Chain (V-Model) — v2.7 (IPA Compliant)
 
@@ -785,46 +724,11 @@ features:
 6. Python creates Excel/PDF using openpyxl/weasyprint
 7. Return export result
 
-## Cross-Reference System — v2.7 Expanded
+## Cross-Reference System
 
-### ID Patterns by Document (20 Prefixes)
+**25 ID Prefixes:** F (functions), REQ (requirements), NFR (NFR), ARC (architecture), DB (database), SEC (security), SCR (screen), TBL (table), API (API), CLS (class), OP (operations), MIG (migration), BATCH (batch), RPT (report), SCN (screen design), TST (test-plan), UT/IT/ST/UAT (test-specs), TR (test-result), EV (evidence), MTG (meeting), ADR (decision), IF (interface)
 
-| Doc Type | ID Prefix | Example | Phase |
-|----------|-----------|---------|-------|
-| functions-list | F- | F-001, F-002 | requirements |
-| requirements | REQ- | REQ-001, REQ-002 | requirements |
-| nfr | NFR- | NFR-001, NFR-002 | requirements |
-| basic-design (screen) | SCR- | SCR-001, SCR-002 | design |
-| basic-design (table) | TBL- | TBL-001, TBL-002 | design |
-| architecture-design | ARC- | ARC-001, ARC-002 | design |
-| security-design | SEC- | SEC-001, SEC-002 | design |
-| db-design | DB- | DB-001, DB-002 | design |
-| detail-design (API) | API- | API-001, API-002 | design |
-| detail-design (class) | CLS- | CLS-001, CLS-002 | design |
-| operation-design | OP- | OP-001, OP-002 | supplementary |
-| migration-design | MIG- | MIG-001, MIG-002 | supplementary |
-| batch-design | BATCH- | BATCH-001, BATCH-002 | supplementary |
-| report-design | RPT- | RPT-001, RPT-002 | supplementary |
-| screen-design | SCN- | SCN-001, SCN-002 | supplementary |
-| test-plan | TST- | TST-001, TST-002 | test |
-| ut-spec | UT- | UT-001, UT-002 | test |
-| it-spec | IT- | IT-001, IT-002 | test |
-| st-spec | ST- | ST-001, ST-002 | test |
-| uat-spec | UAT- | UAT-001, UAT-002 | test |
-| test-result-report | TR- | TR-001, TR-002 | test |
-| test-evidence | EV- | EV-001, EV-002 | supplementary |
-| meeting-minutes | MTG- | MTG-001, MTG-002 | supplementary |
-| decision-record | ADR- | ADR-001, ADR-002 | supplementary |
-| interface-spec | IF- | IF-001, IF-002 | supplementary |
-
-### Cross-Reference Validation
-
-When validating document X:
-- Extract all IDs from document X
-- Extract all ID references from document X
-- Load upstream document, extract its IDs
-- Check each reference exists in upstream or X itself
-- Report missing references and orphaned upstream IDs
+**Validation:** Extract IDs from document, load upstream IDs, check references exist, report missing/orphaned.
 
 ## Security & Constraints
 
@@ -845,50 +749,13 @@ When validating document X:
 - Uses `execFile` not `exec` (prevents shell injection)
 - Output size capped at 100 MB
 
-## Testing
+## Testing & Build
 
-### Test Structure
+**Test Structure:** Jest with ESM, 56 unit + 1 integration test. Tests access tools via internal handler.
 
-```
-tests/
-├── unit/
-│   ├── validator.test.ts       # Validation logic
-│   ├── id-extractor.test.ts    # Cross-ref ID extraction
-│   └── ...
-├── integration/
-│   ├── generate.integration.test.ts
-│   └── ...
-└── tmp/                        # Temporary test files (auto-cleaned)
-```
+**Build:** `npm run build` (tsc), `npm run lint` (type check), `npm test` (Jest ESM).
 
-### Test Pattern
-
-Tools accessed via internal handler interface:
-
-```typescript
-const server = ... // McpServer instance
-const handler = (server as any)._registeredTools["tool_name"].handler;
-const result = await handler(args, {});
-```
-
-Use `dirname(fileURLToPath(import.meta.url))` for `__dirname` in ESM.
-
-## Build & Deployment
-
-### Build Steps
-
-```bash
-npm run build    # tsc compile → dist/
-npm run lint     # tsc --noEmit (type check)
-npm test         # Jest with ESM
-```
-
-### Deployment Notes
-
-- Server is an ESM module (all imports use `.js` extensions)
-- Stdin/stdout must be connected (STDIO transport)
-- Stderr reserved for logging (redirect if needed)
-- Python path must be in env or `PATH`
+**Deployment:** ESM module, STDIO transport, stderr for logging, Python 3.8+ required.
 
 ## Error Handling
 
