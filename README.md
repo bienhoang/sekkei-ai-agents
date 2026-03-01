@@ -53,9 +53,9 @@ Additional types: プロジェクト計画書, テスト計画書, 運用設計�
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.7.3 | Core MCP server — document generation, validation, export, CLI |
+| [@bienhoang/sekkei-mcp-server](./packages/mcp-server/) | 2.8.0 | Core MCP server — document generation, validation, export, CLI |
 | [@bienhoang/sekkei-preview](./packages/preview/) | 1.3.4 | Express+React live preview + Tiptap v3 WYSIWYG editor |
-| [@bienhoang/sekkei-skills](./packages/skills/) | 2.7.3 | Claude Code slash commands (`/sekkei:*`) — 44 sub-commands |
+| [@bienhoang/sekkei-skills](./packages/skills/) | 2.8.0 | Claude Code slash commands (`/sekkei:*`) — 44 sub-commands |
 | [@bienhoang/sekkei-dashboard](./packages/dashboard/) | 0.1.1 | Analytics dashboard — chain status, quality metrics, traceability graphs, snapshots |
 
 ## Quick Start
@@ -313,7 +313,7 @@ sekkei/
 ├── install.sh                   # Local install script for Claude Code
 ├── sekkei.config.example.yaml   # Template for project config
 ├── packages/
-│   ├── mcp-server/              # @bienhoang/sekkei-mcp-server (v2.4.4)
+│   ├── mcp-server/              # @bienhoang/sekkei-mcp-server (v2.8.0)
 │   │   ├── src/
 │   │   │   ├── tools/           # 15 MCP tool handlers
 │   │   │   ├── resources/       # Template + RFP instruction resources
