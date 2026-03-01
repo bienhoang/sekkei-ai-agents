@@ -314,7 +314,7 @@ export class SekkeiError extends Error {
 
 ### Error Codes
 
-Use SCREAMING_SNAKE_CASE for error codes (14+ codes):
+Use SCREAMING_SNAKE_CASE for error codes (18 total codes):
 
 ```typescript
 // Core

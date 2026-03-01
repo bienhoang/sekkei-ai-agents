@@ -4,7 +4,7 @@
 
 ### Vision
 
-**Sekkei (設計) v2.6.3** — an AI-powered MCP server that generates comprehensive Japanese software specification documents following the V-model architecture pattern. Includes dashboard analytics with quality metrics, traceability graphs, and snapshot history. SIer psychology-driven features: AI confidence scoring, source traceability, presales RFP lifecycle management, and document import/impact analysis. 5 quality-scoring libraries for risk assessment, health evaluation, and coverage analysis.
+**Sekkei (設計) v2.7.2** — an AI-powered MCP server that generates comprehensive Japanese software specification documents following the V-model architecture pattern. Includes dashboard analytics with quality metrics, traceability graphs, and snapshot history. SIer psychology-driven features: AI confidence scoring, source traceability, presales RFP lifecycle management, progressive document generation with task tracking, and document import/impact analysis. 5 quality-scoring libraries for risk assessment, health evaluation, and coverage analysis.
 
 ### Mission
 
@@ -507,9 +507,9 @@ sekkei/
 
 | Metric | Target | Status | Notes |
 |--------|--------|--------|-------|
-| Document types | 16 | ✅ Complete | Phase A: +5 SIer doc types (EV, MTG, ADR, IF, PG) |
+| Document types | 27 | ✅ Complete | IPA V-Model: requirements (5) + design (10) + test (7) + supplementary (5) |
 | Languages | 3 (ja, en, vi) | ✅ Ja complete | en/vi partial |
-| MCP tools | 12 | ✅ Complete | Phase A: +3 (simulate-impact, import, validate-chain) + 1 RFP |
+| MCP tools | 15 | ✅ Complete | Core (8) + Phase A (3) + RFP (1) + Phase B (2: manage_plan, update_chain_status) |
 | Code analysis | AST-based | ✅ ts-morph | Phase 3 |
 | Staleness detection | Git-based | ✅ Score model | Phase 3 |
 | Structure validation | 7 anti-chaos rules | ✅ 3 presets | Phase 3 |
@@ -576,7 +576,7 @@ sekkei/
 - 🔄 朱書き Diff View (color-coded revisions) — partial, enhanced diff_analyzer.py
 - 📅 Digital approval workflows with timestamp tracking (planned Phase B)
 
-### Phase B: Dashboard & Quality Metrics (IN PROGRESS)
+### Phase B: Dashboard & Quality Metrics (COMPLETE)
 - ✅ Quality metrics library (5 scorers): coverage, health, risk, NFR classification, batch validation
 - ✅ Analytics dashboard (5 pages): overview, chain-status, analytics, changes, features
 - ✅ Traceability visualization: DAG with Recharts + @xyflow/react + dagre
@@ -584,6 +584,7 @@ sekkei/
 - ✅ Snapshot system: historical metric capture per version tag
 - ✅ Workspace scanner: doc inventory + changelog parser
 - ✅ Cached MCP service: efficient metrics retrieval
+- ✅ Progressive document generation with task tracking (v2.7.0)
 - 📅 Approval workflow UI (Phase C)
 
 ### Phase 4: Multilingual & Export (IN PROGRESS)

@@ -153,18 +153,17 @@ async ({ config_path, doc_type }) => {
 All document types defined in `types/documents.ts`:
 
 ```typescript
-// v2.0: 22 types organized by phase
+// v2.7.2: 27 types organized by phase (IPA V-Model compliant)
 export const DOC_TYPES = [
-  // Requirements phase
-  "requirements", "nfr", "functions-list", "project-plan",
-  // Design phase
-  "basic-design", "security-design", "detail-design",
-  // Test phase
-  "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec",
-  // Supplementary
-  "crud-matrix", "traceability-matrix", "operation-design",
-  "migration-design", "sitemap", "test-evidence", "meeting-minutes",
-  "decision-record", "interface-spec", "screen-design"
+  // Requirements phase (5)
+  "requirements", "nfr", "functions-list", "project-plan", "interface-spec",
+  // Design phase (10)
+  "architecture-design", "basic-design", "security-design", "db-design", "detail-design",
+  "operation-design", "migration-design", "screen-design", "report-design", "batch-design",
+  // Test phase (7)
+  "test-plan", "ut-spec", "it-spec", "st-spec", "uat-spec", "test-result-report", "test-evidence",
+  // Supplementary (5)
+  "crud-matrix", "traceability-matrix", "meeting-minutes", "decision-record", "sitemap"
 ] as const;
 
 // Phase grouping (NEW v2.0)
@@ -196,8 +195,12 @@ export const PROJECT_TYPES = [
 ] as const;
 ```
 
-**Removed:** `overview` (merged into requirements phase)
-**Added:** `nfr`, `project-plan`, `security-design`, `test-plan`, `ut-spec`, `it-spec`, `st-spec`, `uat-spec`, `sitemap`
+**Phase A additions (v2.0+):** `nfr`, `project-plan`, `security-design`, `test-plan`, `ut-spec`, `it-spec`, `st-spec`, `uat-spec`, `test-evidence`, `meeting-minutes`, `decision-record`, `interface-spec`, `screen-design`
+
+**Phase B additions (v2.7.0+):** `architecture-design`, `db-design`, `test-result-report`, `batch-design`, `report-design`
+
+**Total:** 27 document types (5 requirements + 10 design + 7 test + 5 supplementary)
+
 **Changed:** Split types now only `basic-design` and `detail-design` (test specs are not split)
 
 ### Feature Config
