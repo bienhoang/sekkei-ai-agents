@@ -218,6 +218,24 @@ const M = {
   section_project: ["Project basics", "プロジェクト基本", "Thông tin dự án"],
   section_stack: ["Tech stack", "技術スタック", "Công nghệ"],
   section_doc: ["Document options", "ドキュメント設定", "Tùy chọn tài liệu"],
+  section_split: ["Split mode", "分割モード", "Chế độ tách file"],
+
+  // Split mode
+  split_enable: [
+    "Enable split mode? (per-feature files instead of monolithic docs)",
+    "分割モードを有効にしますか？（機能別にファイルを分割）",
+    "Bật chế độ tách file? (tạo file riêng cho từng chức năng)",
+  ],
+  split_types: [
+    "Which document types should use split mode?",
+    "どのドキュメントタイプを分割しますか？",
+    "Loại tài liệu nào cần tách file?",
+  ],
+  split_hint: [
+    "Smaller files → better AI generation quality",
+    "ファイルが小さいほど → AI生成品質が向上",
+    "File nhỏ hơn → chất lượng AI tốt hơn",
+  ],
 };
 
 /** Get translated message */

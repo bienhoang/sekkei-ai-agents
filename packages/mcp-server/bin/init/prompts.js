@@ -155,11 +155,65 @@ export async function askDocOptions(lang, presetValue, prev) {
   return { language, keigo, preset, industry, outputDir };
 }
 
+/** Default split sections per document type */
+const SPLIT_DEFAULTS = {
+  "basic-design": {
+    shared: ["system-architecture", "database-design", "external-interface", "non-functional-design"],
+    per_feature: ["overview", "business-flow", "screen-design", "report-design", "functions-list"],
+  },
+  "detail-design": {
+    shared: ["system-architecture", "database-design"],
+    per_feature: ["overview", "module-design", "class-design", "api-detail", "processing-flow"],
+  },
+  "test-spec": {
+    shared: [],
+    per_feature: ["unit-test", "integration-test"],
+  },
+};
+
+/** Split mode — enable and select document types (prev for redo) */
+export async function askSplitMode(lang, prev) {
+  const enable = await p.confirm({
+    message: `${t(lang, "split_enable")}  (${t(lang, "split_hint")})`,
+    initialValue: prev?.enabled ?? false,
+  });
+  if (p.isCancel(enable)) return enable;
+  if (!enable) return { enabled: false, types: [] };
+
+  const types = await p.multiselect({
+    message: t(lang, "split_types"),
+    options: [
+      { value: "basic-design", label: "basic-design (基本設計書)", hint: "recommended" },
+      { value: "detail-design", label: "detail-design (詳細設計書)" },
+      { value: "test-spec", label: "test-spec (テスト仕様書)" },
+    ],
+    required: true,
+    initialValues: prev?.types ?? ["basic-design"],
+  });
+  if (p.isCancel(types)) return types;
+
+  return { enabled: true, types };
+}
+
+/** Build split config object from user selections */
+export function buildSplitConfig(splitOpts) {
+  if (!splitOpts?.enabled || !splitOpts.types?.length) return null;
+  const config = {};
+  for (const type of splitOpts.types) {
+    config[type] = SPLIT_DEFAULTS[type] ?? { shared: [], per_feature: [] };
+  }
+  return config;
+}
+
 /**
  * Show config summary and let user confirm or redo sections.
  * Returns "ok" if confirmed, or the section name to redo.
  */
-export async function showSummary(lang, project, stack, docOpts) {
+export async function showSummary(lang, project, stack, docOpts, splitOpts) {
+  const splitLabel = splitOpts?.enabled
+    ? splitOpts.types.join(", ")
+    : "—";
+
   const lines = [
     `${t(lang, "section_project")}:`,
     `  ${t(lang, "project_name")}: ${project.name}`,
@@ -174,6 +228,9 @@ export async function showSummary(lang, project, stack, docOpts) {
     `  ${t(lang, "preset")}: ${label(lang, PRESETS, docOpts.preset)}`,
     `  ${t(lang, "industry")}: ${label(lang, INDUSTRIES, docOpts.industry)}`,
     `  ${t(lang, "output_dir")}: ${docOpts.outputDir}`,
+    "",
+    `${t(lang, "section_split")}:`,
+    `  ${splitLabel}`,
   ];
 
   p.note(lines.join("\n"), t(lang, "summary_title"));
@@ -185,9 +242,10 @@ export async function showSummary(lang, project, stack, docOpts) {
       { value: "project", label: t(lang, "section_project") },
       { value: "stack", label: t(lang, "section_stack") },
       { value: "doc", label: t(lang, "section_doc") },
+      { value: "split", label: t(lang, "section_split") },
     ],
   });
 
   if (p.isCancel(action)) return "cancel";
-  return action; // "ok" | "project" | "stack" | "doc"
+  return action; // "ok" | "project" | "stack" | "doc" | "split"
 }

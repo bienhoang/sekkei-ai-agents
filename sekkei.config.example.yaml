@@ -33,6 +33,19 @@ output:
 export:
   excel_template: ""   # Optional: path to company .xlsx template (e.g. "./templates/company.xlsx")
 
+# Split mode — per-feature files instead of monolithic documents.
+# Enabled via `sekkei init` or manually. Smaller files → better AI quality.
+# split:
+#   basic-design:
+#     shared: [system-architecture, database-design, external-interface, non-functional-design]
+#     per_feature: [overview, business-flow, screen-design, report-design, functions-list]
+#   detail-design:
+#     shared: [system-architecture, database-design]
+#     per_feature: [overview, module-design, class-design, api-detail, processing-flow]
+#   test-spec:
+#     shared: []
+#     per_feature: [unit-test, integration-test]
+
 # autoCommit: false      # Auto-commit generated documents to git
 # ui_mode: power         # simple (Excel-like) | power (full markdown)
 # learning_mode: false   # Add educational annotations to generated documents
