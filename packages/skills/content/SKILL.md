@@ -60,7 +60,8 @@ All user-facing output (document content, prompts, confirmations) must use `proj
 - `/sekkei:validate @doc` — Validate document completeness and cross-references
 - `/sekkei:status` — Show document chain progress
 - `/sekkei:export @doc --format=xlsx|pdf|docx` — Export document to Excel, PDF, or Word
-- `/sekkei:translate @doc --lang=en` — Translate document with glossary context
+- `/sekkei:translate @doc --lang=en` — Translate document with glossary context (incremental if existing translation found)
+- `/sekkei:translate --all --lang=en` — Batch translate all completed chain documents
 - `/sekkei:glossary [add|list|find|export|import]` — Manage project terminology
 - `/sekkei:change` — Change request lifecycle (impact analysis → approval → propagation → validation)
 - `/sekkei:update @doc` — Detect upstream changes and impacted sections

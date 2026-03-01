@@ -81,30 +81,67 @@ Command workflows for validation, export, translation, and maintenance utilities
 
 1. Read the document to translate
 2. **Check for manifest**: look for `_index.yaml` in output directory
-3. **If manifest exists and doc type is split:**
+3. **Incremental translation check** (monolithic docs):
+   a. Check if existing translation exists at target path (`{doc-type}.{lang}.md`)
+   b. If exists, read existing translated doc
+   c. Use `translation-tracker` to extract hashes from existing translation
+   d. Split source into sections, compare hashes
+   e. Only send **changed sections** to `translate_document` (pass as `content`)
+   f. Also pass original source as `source_content` for validation hints
+   g. Merge: keep unchanged translated sections + newly translated sections
+   h. Insert updated hashes into final output via `insertHashes()`
+   i. If no existing translation, proceed with full translation (step 4/5)
+4. **If manifest exists and doc type is split:**
    a. Load `_index.yaml` via manifest-manager
    b. Get document entry for the specified doc type
    c. Load glossary once from `workspace-docs/glossary.yaml`
    d. Create target directory: `translations/{lang}/`
    e. For each shared file in manifest:
       - Read file content
-      - Call `translate_document` MCP tool
+      - Call `translate_document` MCP tool with `source_content` for validation
       - Use returned context + glossary to translate
       - Save to `translations/{lang}/shared/{filename}`
    f. For each feature file in manifest:
       - Read file content
-      - Call `translate_document` MCP tool
+      - Call `translate_document` MCP tool with `source_content` for validation
       - Translate with feature context
       - Save to `translations/{lang}/features/{feature-id}/{filename}`
    g. Create `translations/{lang}/_index.yaml` mirroring source structure
    h. Update source `_index.yaml` translations[] entry
-4. **If no manifest (monolithic):**
+5. **If no manifest (monolithic):**
    a. If `workspace-docs/glossary.yaml` exists, load glossary path
-   b. Call MCP tool `translate_document` with content, source_lang, target_lang, glossary_path
+   b. Call MCP tool `translate_document` with content, source_lang, target_lang, glossary_path, source_content
    c. Use the returned translation context + glossary terms to translate
    d. Preserve all Markdown formatting, tables, and ID references
    e. Save output to `./workspace-docs/{doc-type}.{target_lang}.md`
-5. Report: files translated, glossary terms applied, output paths
+   f. Insert hash markers via `insertHashes()` for future incremental updates
+6. Report: files translated (full/incremental), glossary terms applied, output paths
+
+## `/sekkei:translate --all --lang=en`
+
+Batch translate all completed documents in the V-model chain.
+
+1. Read `sekkei.config.yaml` → extract `output.directory`
+2. Call `get_chain_status` MCP tool with `config_path`
+3. Extract all doc types with status `complete`
+4. Define V-model order for translation sequence:
+   requirements, nfr, functions-list, project-plan,
+   basic-design, security-design, detail-design,
+   db-design, screen-design, interface-spec, report-design, batch-design,
+   test-plan, ut-spec, it-spec, st-spec, uat-spec
+5. For each doc in order:
+   a. Check if doc has `complete` status
+   b. If not, skip and note: "[SKIP] {doc-type}: not complete, skipping"
+   c. Read doc content from `{output.directory}/{doc-path}`
+   d. Follow existing translate flow (monolithic or split, with incremental if available)
+   e. On success: "[OK] {doc-type}.{lang}.md translated"
+   f. On failure: "[FAIL] {doc-type}: {error}" — continue to next doc
+6. Summary report:
+   - Total docs: {n}
+   - Translated: {n}
+   - Skipped: {n}
+   - Failed: {n}
+   - Output directory: translations/{lang}/
 
 ## `/sekkei:glossary [add|list|find|export|import]`
 
