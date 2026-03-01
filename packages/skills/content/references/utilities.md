@@ -257,10 +257,3 @@ See `references/plan-orchestrator.md` for detailed logic.
 3. Display removal summary
 4. Note: "Package remains installed. Run `npm uninstall -g @bienhoang/sekkei-mcp-server` to fully remove."
 
-## `/sekkei:rebuild`
-
-1. Run CLI: `npx sekkei update`
-2. Display build + copy progress
-3. Show post-update health check
-4. If health check passes: "Update complete. Restart Claude Code to activate."
-5. Use `--skip-build` to skip the build step: `npx sekkei update --skip-build`

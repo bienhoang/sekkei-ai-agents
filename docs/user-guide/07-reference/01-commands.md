@@ -64,7 +64,7 @@
 | 30 | **dashboard** | `/sekkei:dashboard` | `--port <number>` / `--open` | Bảng điều khiển Analytics — chỉ số chất lượng, đồ thị truy xuất, điểm rủi ro (mặc định: port 4002) |
 | 31 | **version** | `/sekkei:version` | `--json` | Version info + MCP server status |
 | 32 | **doctor** | `sekkei doctor` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
-| 33 | **uninstall / rebuild** | `/sekkei:uninstall` / `/sekkei:rebuild` | — | Gỡ cài đặt hoặc rebuild toàn bộ Sekkei |
+| 33 | **uninstall** | `/sekkei:uninstall` | — | Gỡ cài đặt Sekkei khỏi Claude Code |
 
 ---
 

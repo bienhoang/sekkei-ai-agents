@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, basic-design, security-design, detail-design, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, basic-design, security-design, detail-design, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -64,7 +64,6 @@ ALL user-facing output (responses, explanations, status messages, error descript
 - `/sekkei:preview` — Start VitePress docs preview server (`--guide` for user guide)
 - `/sekkei:version` — Show version and environment health check
 - `/sekkei:uninstall` — Remove Sekkei from Claude Code
-- `/sekkei:rebuild` — Rebuild and re-install Sekkei skill + MCP (runs `sekkei update` CLI)
 
 ## Workflow Router
 
@@ -962,16 +961,6 @@ See `references/plan-orchestrator.md` for detailed logic.
 2. If confirmed: run `npx sekkei uninstall --force`
 3. Display removal summary
 4. Note: "Package remains installed. Run `npm uninstall -g @bienhoang/sekkei-mcp-server` to fully remove."
-
-### `/sekkei:rebuild`
-
-> 📌 Respond in `project.language` from `sekkei.config.yaml` (see §Output Language)
-
-1. Run CLI: `npx sekkei update`
-2. Display build + copy progress
-3. Show post-update health check
-4. If health check passes: "Update complete. Restart Claude Code to activate."
-5. Use `--skip-build` to skip the build step: `npx sekkei update --skip-build`
 
 ## Document Chain
 

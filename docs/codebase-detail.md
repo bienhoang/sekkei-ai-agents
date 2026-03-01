@@ -85,7 +85,7 @@ Shared health check module (used by version + update commands):
 - 9 checks: Node.js, Python, Playwright, templates, config, venv, skill, MCP, commands
 
 #### `bin/init.js` & `init/` Submodules (Interactive Setup)
-`npx sekkei init` wizard (replaces old `/sekkei:init` skill command):
+`npx sekkei init` interactive wizard:
 - Entry: bin/init.js (187 LOC)
 - Submodules: init/i18n.js (214 LOC), init/prompts.js (193 LOC), init/options.js (169 LOC), init/deps.js (92 LOC)
 - Multi-language wizard (en/ja/vi), auto-installs Python venv + Playwright, generates `sekkei.config.yaml`

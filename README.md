@@ -251,7 +251,6 @@ Built with citty. Available commands:
 | `/sekkei:preview` | Start Express+React preview server |
 | `/sekkei:version` | Show version + health check |
 | `/sekkei:uninstall` | Remove Sekkei from Claude Code |
-| `/sekkei:rebuild` | Rebuild and re-install skill + MCP |
 | `/sekkei:dashboard` | Open analytics dashboard (quality metrics, traceability, risk) |
 
 ## Platform Setup

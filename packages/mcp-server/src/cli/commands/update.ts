@@ -39,7 +39,6 @@ const SETTINGS = join(CLAUDE_DIR, "settings.json");
 
 /** Sub-command definitions: [name, description, argumentHint] */
 const SUBCMD_DEFS: [string, string, string][] = [
-  ["init", "Initialize Sekkei project config", ""],
   ["functions-list", "Generate 機能一覧 (Function List)", "@input"],
   ["requirements", "Generate 要件定義書 (Requirements)", "@input"],
   ["nfr", "Generate 非機能要件定義書 (NFR)", "@requirements"],
@@ -71,7 +70,6 @@ const SUBCMD_DEFS: [string, string, string][] = [
   ["change", "Change request lifecycle", ""],
   ["plan", "Create generation plan for large documents", "@doc-type"],
   ["implement", "Execute a generation plan phase by phase", "@plan-path"],
-  ["rebuild", "Rebuild and re-install Sekkei skill + MCP", "[--skip-build]"],
   ["doctor", "Check installation health and fix suggestions", ""],
 ];
 

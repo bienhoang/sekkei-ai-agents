@@ -1,6 +1,6 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, architecture-design, basic-design, security-design, detail-design, db-design, report-design, batch-design, screen-design, interface-spec, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, test-result-report, test-evidence, meeting-minutes, decision-record, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, dashboard, plan, implement, version, uninstall, rebuild"
+description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, architecture-design, basic-design, security-design, detail-design, db-design, report-design, batch-design, screen-design, interface-spec, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, test-result-report, test-evidence, meeting-minutes, decision-record, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, dashboard, plan, implement, version, uninstall"
 ---
 
 # Sekkei (設計) Documentation Agent
@@ -71,7 +71,6 @@ All user-facing output (document content, prompts, confirmations) must use `proj
 - `/sekkei:dashboard` — Start analytics dashboard for workspace-docs overview (chain status, analytics, changes, features)
 - `/sekkei:version` — Show version and environment health check
 - `/sekkei:uninstall` — Remove Sekkei from Claude Code
-- `/sekkei:rebuild` — Rebuild and re-install Sekkei skill + MCP (runs `sekkei update` CLI)
 
 ## Workflow Router
 
@@ -130,7 +129,7 @@ Commands: change
 ### Utilities
 
 → Read `references/utilities.md`
-Commands: validate, status, export, translate, glossary, update, diff-visual, preview, dashboard, plan, implement, version, uninstall, rebuild
+Commands: validate, status, export, translate, glossary, update, diff-visual, preview, dashboard, plan, implement, version, uninstall
 
 ## Document Chain
 
@@ -200,7 +199,7 @@ workspace-docs/
 - `references/phase-test.md` — Test phase: test-plan, ut-spec, it-spec, st-spec, uat-spec, test-result-report, test-evidence
 - `references/phase-management.md` — Management: meeting-minutes, decision-record
 - `references/phase-supplementary.md` — Supplementary: matrix, sitemap, operation-design, migration-design
-- `references/utilities.md` — Utilities: validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall, rebuild
+- `references/utilities.md` — Utilities: validate, status, export, translate, glossary, update, diff-visual, preview, plan, implement, version, uninstall
 - `references/rfp-command.md` — RFP entrypoint: UX patterns, progress dashboard, navigation
 - `references/rfp-manager.md` — RFP workspace: file list, status schema, tool actions
 - `references/change-request-command.md` — Change request workflow: impact analysis, propagation, conflict detection
