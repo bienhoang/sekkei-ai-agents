@@ -476,6 +476,12 @@ const LANG_DISPLAY_NAMES: Record<string, string> = {
   vi: "Vietnamese (Tiếng Việt)",
 };
 
+/** Language-specific translation examples for section headings */
+const SECTION_HEADING_EXAMPLES: Record<string, string> = {
+  en: "概要 → Overview, 画面設計 → Screen Design, 要件定義 → Requirements, 機能一覧 → Function List",
+  vi: "概要 → Tổng quan, 画面設計 → Thiết kế Màn hình, 要件定義 → Định nghĩa Yêu cầu, 機能一覧 → Danh sách Chức năng, 基本設計 → Thiết kế Cơ bản, 詳細設計 → Thiết kế Chi tiết, テスト計画 → Kế hoạch Kiểm thử, 非機能要件 → Yêu cầu Phi chức năng, プロジェクト計画 → Kế hoạch Dự án, セキュリティ設計 → Thiết kế Bảo mật",
+};
+
 /**
  * Build output language instruction block.
  * Always injected to ensure explicit output language directive.
@@ -493,17 +499,24 @@ export function buildOutputLanguageInstruction(lang: Language): string {
     ].join("\n");
   }
   const langName = LANG_DISPLAY_NAMES[lang] ?? lang;
-  return [
+  const headingExamples = SECTION_HEADING_EXAMPLES[lang] ?? SECTION_HEADING_EXAMPLES.en;
+  const lines = [
     `## Output Language`,
     ``,
     `Write ALL output content in **${langName}**. You MUST:`,
     `1. Follow the document structure and section order defined in the Japanese template exactly`,
     `2. Write all headings, table headers, body text, and comments in ${langName}`,
-    `3. Translate Japanese section headings (e.g., 概要 → Overview, 画面設計 → Screen Design)`,
+    `3. Translate Japanese section headings (e.g., ${headingExamples})`,
     `4. Keep technical identifiers as-is (e.g., REQ-001, SCR-001, F-001, TBL-001)`,
     `5. Keep cross-reference IDs, status values, and format codes unchanged`,
     `6. Do NOT output any Japanese text in the final document`,
-  ].join("\n");
+  ];
+  if (lang === "vi") {
+    lines.push(
+      `7. Vietnamese text MUST include proper diacritical marks (dấu). CORRECT: "Yêu cầu", "Thiết kế", "Chức năng", "Kiểm thử". WRONG: "Yeu cau", "Thiet ke", "Chuc nang", "Kiem thu". Never strip or omit diacritics.`,
+    );
+  }
+  return lines.join("\n");
 }
 
 /**
