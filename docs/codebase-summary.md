@@ -22,7 +22,7 @@ sekkei/
 │   │   │   ├── server.ts              # McpServer instance, 15 MCP tool registration
 │   │   │   ├── config.ts              # Env var loading
 │   │   │   ├── index.ts               # CLI exports
-│   │   │   ├── lib/                   # Core business logic (58 files, 9,182 LOC)
+│   │   │   ├── lib/                   # Core business logic (60 files, 9,350+ LOC)
 │   │   │   │   ├── errors.ts          # SekkeiError class (18 error codes)
 │   │   │   │   ├── logger.ts          # Pino structured logging
 │   │   │   │   ├── validator.ts       # Document validation (content, cross-refs, structure rules)
@@ -60,6 +60,8 @@ sekkei/
 │   │   │   │   ├── cr-conflict-detector.ts # Parallel CR conflict detection (50 LOC)
 │   │   │   │   ├── git-committer.ts   # Git commit helper (58 LOC)
 │   │   │   │   ├── upstream-extractor.ts # Extract IDs from upstream docs (server-side, 5-min cache, 139 LOC)
+│   │   │   │   ├── token-budget-estimator.ts # Predict output tokens, recommend generation strategy (NEW v2.8.0)
+│   │   │   │   ├── upstream-filter.ts  # Feature-aware h2 + ID-based content filtering (NEW v2.8.0)
 │   │   │   │   ├── coverage-metrics.ts # Traceability matrix % (Phase B)
 │   │   │   │   ├── health-scorer.ts   # Doc health scoring (Phase B)
 │   │   │   │   ├── risk-scorer.ts     # 5-dimension risk assessment (Phase B)
@@ -291,14 +293,18 @@ sekkei/
 
 1. **Change Request Engine** — cr-state-machine (8 states), cr-propagation, cr-conflict-detector, cr-backfill
 2. **Plan Management** — plan-state, plan-actions, plan-phase-template (NEW v2.7.0)
-3. **Quality Metrics** — coverage-metrics, health-scorer, risk-scorer, batch-validator, nfr-classifier (Phase B)
-4. **Staleness Detection** — staleness-detector, doc-staleness, staleness-formatter (v3)
-5. **Code Analysis** — code-analyzer (ts-morph), code-context-formatter (v3)
-6. **Export Engine** — excel-exporter, pdf-exporter (Playwright), docx-exporter, google-sheets-exporter, python-bridge
-7. **Template System** — template-resolver (override→fallback), template-loader, frontmatter-reader
-8. **Changelog Manager** — changelog-manager with version tracking + CR logging
-9. **Keigo Validator** — Japanese honorific validation (199 LOC)
-10. **Cross-ref System** — id-extractor (25 ID prefixes), cross-ref-linker, upstream-extractor
+3. **Generation Optimization** (NEW v2.8.0):
+   - **Token Budget Estimator** — predicts output tokens, recommends strategy (monolithic/progressive/split_required)
+   - **Smart Upstream Filtering** — h2-heading + ID-based filtering reduces context 60-75% per feature
+   - **Session Recovery** — section-level checkpoints in plan YAML for interrupted generation
+4. **Quality Metrics** — coverage-metrics, health-scorer, risk-scorer, batch-validator, nfr-classifier (Phase B)
+5. **Staleness Detection** — staleness-detector, doc-staleness, staleness-formatter (v3)
+6. **Code Analysis** — code-analyzer (ts-morph), code-context-formatter (v3)
+7. **Export Engine** — excel-exporter, pdf-exporter (Playwright), docx-exporter, google-sheets-exporter, python-bridge
+8. **Template System** — template-resolver (override→fallback), template-loader, frontmatter-reader
+9. **Changelog Manager** — changelog-manager with version tracking + CR logging
+10. **Keigo Validator** — Japanese honorific validation (199 LOC)
+11. **Cross-ref System** — id-extractor (25 ID prefixes), cross-ref-linker, upstream-extractor
 
 ## Source Code Metrics
 

@@ -70,6 +70,12 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │  • Google Sheets Exporter → markdown→sheets (v3)       │   │
 │  │  • Upstream Extractor → parse IDs from upstream docs    │   │
 │  │    (server-side 5-min cache, reduces context size)     │   │
+│  ├─────────────────────────────────────────────────────────┤   │
+│  │    Document Generation Optimization (NEW v2.8.0)      │   │
+│  │  • Token Budget Estimator → predicts output tokens     │   │
+│  │    and recommends generation strategy                 │   │
+│  │  • Smart Upstream Filtering → splits markdown by h2   │   │
+│  │    headings, keeps feature-relevant sections only     │   │
 │  └─────────────────────────────────────────────────────────┘   │
 └────────────────┬────────────────────────────────────────────────┘
                  │ execFile (Node.js)
@@ -144,6 +150,83 @@ Quality Metrics Libraries (in MCP Server):
 - **risk-scorer.ts** — 30% trace + 20% nfr + 20% test + 15% freshness + 15% health
 - **batch-validator.ts** — Config-driven multi-doc validation
 - **nfr-classifier.ts** — IPA NFUG categories (Availability, Performance, etc.)
+
+## Generation Optimization Subsystems (v2.8.0)
+
+### Token Budget Estimation
+
+**Purpose:** Predict output token count from entity counts and recommend generation strategy before execution, preventing truncation and optimizing LLM costs.
+
+**Components:**
+- `token-budget-estimator.ts` — Core estimation engine
+- Used by `generate.ts` (advisory display) and `plan-actions.ts` (strategy selection)
+
+**Estimation Model:**
+Predicts output tokens from entity counts (F-xxx, REQ-xxx, SCR-xxx, TBL-xxx, API-xxx, CLS-xxx):
+```
+estimated_tokens = base_tokens + Σ(entity_count × per_entity_weight)
+```
+
+**Calibration Constants (per doc type):**
+
+| Doc Type | Base | F | REQ | SCR | TBL | API | CLS |
+|----------|------|---|-----|-----|-----|-----|-----|
+| requirements | 2000 | 500 | 300 | - | - | - | - |
+| functions-list | 1500 | 300 | - | 150 | - | - | - |
+| basic-design | 3000 | - | - | 800 | 600 | 500 | - |
+| detail-design | 2000 | - | - | - | 400 | 1200 | 800 |
+| test-specs (UT/IT/ST/UAT) | 1500-2000 | 200 | - | 300-400 | - | 400-800 | 600 |
+| db-design | 2000 | 100 | - | - | 700 | - | - |
+
+**Generation Strategies:**
+
+| Strategy | Token Range | Use Case |
+|----------|-------------|----------|
+| **monolithic** | <16K | Single-call generation, fast iteration |
+| **progressive** | 16K-24K | Multi-stage generation for medium-large docs |
+| **split_required** | >24K | Split mode mandatory (per-feature generation) |
+
+**User-Facing Advisory:**
+When `manage_plan` tool estimates high token budgets, it returns a markdown advisory block recommending strategy and listing entity contribution breakdown.
+
+### Smart Upstream Content Filtering
+
+**Purpose:** Reduce context size by extracting only feature-relevant upstream content when generating per-feature documents in split mode.
+
+**Components:**
+- `upstream-filter.ts` — Content filtering engine
+- Used in `plan-state.ts` when populating upstream context for each feature phase
+
+**Filtering Algorithm (2-stage):**
+
+**Stage 1: Heading-based Matching**
+- Splits markdown by h2 headings (`^## `)
+- Scans section headings for feature ID or name matches
+- Always includes: 改訂履歴, 承認欄, 検印欄, 概要, 目的, scope, etc.
+
+**Stage 2: ID-based Fallback**
+If no h2 heading matches feature:
+- Scans all sections for feature-specific F-xxx IDs
+- Extracts IDs from feature's category heading in functions-list
+- Includes sections containing those IDs
+
+**Reduction Metrics:**
+For a 100KB upstream document with 8 features, typically reduces context by 60-75% per feature, improving generation speed and reducing token costs.
+
+**Session Recovery (Section Checkpoints):**
+Enhanced plan YAML with section-level status:
+```yaml
+phases:
+  - phase_number: 2
+    sections:
+      - section_key: "basic-design-sales"
+        status: "completed"
+        checkpoint: {...}
+      - section_key: "basic-design-billing"
+        status: "in_progress"
+```
+
+Allows resuming interrupted generations from section-level granularity (new `update_section` and `get_checkpoint` actions in `manage_plan` tool).
 
 ## Document Chain (V-Model) — v2.7 (IPA Compliant)
 
