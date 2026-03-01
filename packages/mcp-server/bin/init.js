@@ -144,28 +144,20 @@ async function main() {
   // 10. Install dependencies
   await installDeps(lang, { pythonDir: PYTHON_DIR, mcpDir: MCP_DIR, distDir: DIST_DIR }, skipDeps);
 
-  // 11. Auto-register MCP server in Claude Code settings
-  const claudeDir = join(homedir(), ".claude");
-  const settingsPath = join(claudeDir, "settings.json");
+  // 11. Auto-register MCP server via `claude mcp add-json -s user`
   try {
     const isWin = process.platform === "win32";
     const venvPython = resolve(PYTHON_DIR, ".venv", isWin ? "Scripts" : "bin", isWin ? "python.exe" : "python3");
-    const mcpEntry = {
+    const mcpConfig = JSON.stringify({
       command: "node",
       args: [resolve(DIST_DIR, "index.js")],
       env: {
         SEKKEI_TEMPLATE_DIR: resolve(MCP_DIR, "templates"),
         SEKKEI_PYTHON: venvPython,
       },
-    };
-    let settings = {};
-    if (existsSync(settingsPath)) {
-      settings = JSON.parse(readFileSync(settingsPath, "utf-8"));
-    }
-    settings.mcpServers = settings.mcpServers || {};
-    settings.mcpServers.sekkei = mcpEntry;
-    mkdirSync(claudeDir, { recursive: true });
-    writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + "\n", "utf-8");
+    });
+    try { execSync("claude mcp remove sekkei -s user", { stdio: "ignore" }); } catch { /* ok */ }
+    execSync(`claude mcp add-json -s user sekkei '${mcpConfig}'`, { stdio: "pipe" });
     p.log.success(t(lang, "mcp_registered"));
   } catch {
     p.log.warn(t(lang, "mcp_register_fail"));

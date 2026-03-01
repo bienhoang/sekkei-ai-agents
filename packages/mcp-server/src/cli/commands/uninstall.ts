@@ -4,15 +4,15 @@
  */
 import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
+import { execSync } from "node:child_process";
 
 const CLAUDE_DIR = join(homedir(), ".claude");
 const SKILL_DIR = join(CLAUDE_DIR, "skills", "sekkei");
 const CMD_LINK = join(CLAUDE_DIR, "commands", "sekkei.md");
 const CMD_DIR = join(CLAUDE_DIR, "commands", "sekkei");
-const SETTINGS = join(CLAUDE_DIR, "settings.json");
 
 interface RemovalResult {
   target: string;
@@ -29,15 +29,7 @@ function tryRemove(target: string, opts?: { recursive?: boolean }): RemovalResul
 
 function removeMcpEntry(): RemovalResult {
   try {
-    if (!existsSync(SETTINGS)) {
-      return { target: "MCP entry", removed: false };
-    }
-    const settings = JSON.parse(readFileSync(SETTINGS, "utf-8"));
-    if (!settings?.mcpServers?.sekkei) {
-      return { target: "MCP entry", removed: false };
-    }
-    delete settings.mcpServers.sekkei;
-    writeFileSync(SETTINGS, JSON.stringify(settings, null, 2) + "\n");
+    execSync("claude mcp remove sekkei -s user", { stdio: "pipe" });
     return { target: "MCP entry", removed: true };
   } catch {
     return { target: "MCP entry", removed: false };

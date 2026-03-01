@@ -204,35 +204,18 @@ SUBCMD_COUNT=$(ls "$SUBCMD_DIR"/*.md 2>/dev/null | wc -l | tr -d ' ')
 ok "Created $SUBCMD_COUNT sub-commands → /sekkei:*"
 
 # ── 4. Register MCP Server ─────────────────────────────────────────────
-step "Registering MCP server in Claude Code settings"
+step "Registering MCP server via claude mcp add-json"
 
-if [[ ! -f "$SETTINGS_FILE" ]]; then
-  fail "Settings file not found: $SETTINGS_FILE"
-  exit 1
+MCP_JSON="{\"command\":\"node\",\"args\":[\"$MCP_ENTRY\"],\"env\":{\"SEKKEI_TEMPLATE_DIR\":\"$TEMPLATES_DIR\",\"SEKKEI_PYTHON\":\"$PYTHON_DIR/.venv/bin/python3\"}}"
+
+# Remove existing entry first (ignore if not found)
+claude mcp remove sekkei -s user 2>/dev/null || true
+if claude mcp add-json -s user sekkei "$MCP_JSON" 2>/dev/null; then
+  ok "MCP server registered (claude mcp add-json -s user)"
+else
+  fail "Could not register MCP via CLI — 'claude' command not found or failed"
+  warn "Run manually: claude mcp add-json -s user sekkei '$MCP_JSON'"
 fi
-
-# Use node to safely merge JSON (no jq dependency)
-node -e "
-const fs = require('fs');
-const path = require('path');
-const settingsPath = '$SETTINGS_FILE';
-const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
-
-if (!settings.mcpServers) settings.mcpServers = {};
-
-settings.mcpServers.sekkei = {
-  command: 'node',
-  args: ['$MCP_ENTRY'],
-  env: {
-    SEKKEI_TEMPLATE_DIR: '$TEMPLATES_DIR',
-    SEKKEI_PYTHON: '$PYTHON_DIR/.venv/bin/python3'
-  }
-};
-
-fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n');
-"
-
-ok "MCP server registered (command: node $MCP_ENTRY)"
 
 # ── 5. Python Setup (optional) ─────────────────────────────────────────
 if $WITH_PYTHON; then

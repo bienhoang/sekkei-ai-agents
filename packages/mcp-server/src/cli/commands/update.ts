@@ -1,6 +1,6 @@
 /**
  * CLI update command — rebuilds MCP server, re-copies skill files, regenerates stubs,
- * and updates MCP entry in ~/.claude/settings.json.
+ * and updates MCP entry via `claude mcp add-json -s user`.
  */
 import { defineCommand } from "citty";
 import * as p from "@clack/prompts";
@@ -108,17 +108,7 @@ function updateMcpEntry(): void {
   } catch { /* not found — ok */ }
   try {
     execSync(`claude mcp add-json -s user sekkei '${mcpConfig}'`, { stdio: "pipe" });
-  } catch {
-    // Fallback: write to settings.json for non-Claude editors
-    try {
-      if (existsSync(SETTINGS)) {
-        const settings = JSON.parse(readFileSync(SETTINGS, "utf-8"));
-        if (!settings.mcpServers) settings.mcpServers = {};
-        settings.mcpServers.sekkei = JSON.parse(mcpConfig);
-        writeFileSync(SETTINGS, JSON.stringify(settings, null, 2) + "\n");
-      }
-    } catch { /* non-fatal */ }
-  }
+  } catch { /* claude CLI not available — non-fatal */ }
 }
 
 export const updateCommand = defineCommand({
