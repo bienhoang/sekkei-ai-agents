@@ -66,6 +66,8 @@ approver: ""
 
 ## 3. 認証・認可設計 <!-- required -->
 
+<!-- Mermaid: sequenceDiagram authentication and authorization flow -->
+
 ## 4. データ保護 <!-- required -->
 
 ## 5. 通信セキュリティ <!-- required -->
@@ -74,7 +76,11 @@ approver: ""
 
 ## 7. 監査ログ <!-- required -->
 
+<!-- Mermaid: flowchart TD audit log collection and storage flow -->
+
 ## 8. インシデント対応 <!-- required -->
+
+<!-- Mermaid: flowchart TD incident response escalation procedure -->
 
 ## 9. APIセキュリティ <!-- optional -->
 

@@ -68,6 +68,8 @@ approver: ""
 
 ## 2. テスト戦略 <!-- required -->
 
+<!-- Mermaid: flowchart LR test levels progression UT to IT to ST to UAT with entry/exit gates -->
+
 ### 2.1 テスト範囲
 
 <!-- AI: Define test scope. List what is IN scope and OUT of scope. Reference F-xxx from 機能一覧 and REQ-xxx from 要件定義書. -->
@@ -94,6 +96,8 @@ approver: ""
 ## 4. テストスケジュール <!-- optional -->
 
 <!-- AI: Define test schedule aligned with project plan PP-xxx. Include: 各テストレベルの開始・終了予定日, マイルストーン, バッファ期間. Format as table or Gantt reference. -->
+
+<!-- Mermaid: gantt test schedule by level with milestones -->
 
 ## 5. 体制・役割 <!-- optional -->
 

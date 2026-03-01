@@ -69,6 +69,8 @@ approver: ""
 ### 1.2 移行スケジュール
 <!-- AI: Timeline with milestones and go/no-go checkpoints. -->
 
+<!-- Mermaid: gantt migration schedule with milestones and go/no-go checkpoints -->
+
 ## 2. データ移行計画 <!-- required -->
 
 <!-- AI: Document data migration steps.
@@ -91,6 +93,8 @@ approver: ""
 <!-- AI: Step-by-step cutover procedure with timing estimates.
      Include: pre-cutover checks, DNS switch, service restart, post-cutover verification. -->
 
+<!-- Mermaid: flowchart TD system cutover procedure with rollback decision points -->
+
 | 順番 | 作業内容 | 担当者 | 所要時間 | 確認事項 |
 |------|---------|--------|---------|---------|
 <!-- AI: Fill with cutover steps in chronological order -->
@@ -105,6 +109,8 @@ approver: ""
 <!-- AI: Conditions that trigger rollback (e.g., error rate > 5%, data loss detected). -->
 
 ### 4.2 ロールバック手順
+
+<!-- Mermaid: flowchart TD rollback decision and execution flow -->
 
 | 順番 | 作業内容 | 担当者 | 所要時間 | 注意事項 |
 |------|---------|--------|---------|---------|

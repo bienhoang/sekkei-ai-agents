@@ -63,6 +63,8 @@ approver: ""
      Include on-call rotation schedule if applicable.
      Reference NFR-xxx availability requirements. -->
 
+<!-- Mermaid: graph TD operations team structure and escalation path -->
+
 | 役割 | 担当 | 連絡先 | 対応時間帯 |
 |------|------|--------|-----------|
 <!-- AI: Fill with team roles and responsibilities -->
@@ -83,6 +85,8 @@ approver: ""
      Include system metrics (CPU, memory, disk), application metrics (response time, error rate),
      and business metrics (transaction count, queue depth). -->
 
+<!-- Mermaid: flowchart TD monitoring alert detection and notification flow -->
+
 | 監視対象 | メトリクス | 閾値(警告) | 閾値(異常) | 通知先 | 対応手順 |
 |---------|-----------|-----------|-----------|--------|---------|
 <!-- AI: Fill for each monitoring target -->
@@ -93,6 +97,8 @@ approver: ""
      ID format: OP-001, OP-002...
      Include: severity classification, initial response, escalation, recovery steps. -->
 
+<!-- Mermaid: flowchart TD incident response procedure from detection to resolution -->
+
 | OP-ID | 手順名 | 障害レベル | 手順内容 | 担当者 | 想定時間 |
 |-------|--------|-----------|---------|--------|---------|
 | OP-001 | <!-- AI --> | <!-- AI: 重大/警告/軽微 --> | <!-- AI --> | <!-- AI --> | <!-- AI --> |
@@ -101,6 +107,8 @@ approver: ""
 
 <!-- AI: List batch jobs and scheduled tasks.
      Include: execution schedule, dependencies, retry policy, failure notification. -->
+
+<!-- Mermaid: graph LR batch job dependencies and execution order -->
 
 | ジョブID | ジョブ名 | 実行スケジュール | 依存関係 | リトライ回数 | 失敗時対応 |
 |---------|--------|---------------|---------|------------|-----------|

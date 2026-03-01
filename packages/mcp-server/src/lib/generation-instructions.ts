@@ -31,6 +31,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Input >200KB: organize by subsystem (大分類), ≥3 REQ-xxx per subsystem.",
     "",
     "VALIDATION TARGETS: ≥3 REQ-xxx total, ≥1 NFR-xxx per IPA category with numeric 目標値, 検証方法 (UT/IT/ST/UAT) in ≥80% REQ rows, 関連RFP項目 traced for each REQ.",
+    "業務フロー図: include Mermaid flowchart TD for as-is and to-be business process flows.",
   ].join("\n"),
 
   "basic-design": [
@@ -107,6 +108,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "監査ログ: timestamp, user ID, action, resource, IP, result. Retention: exact days. Tamper-proof.",
     "インシデント: S1 (critical,1h) / S2 (high,4h) / S3 (medium,24h) / S4 (low,72h). Escalation chain.",
     "Cross-reference REQ-xxx, NFR-xxx, API-xxx, SCR-xxx, TBL-xxx IDs from upstream.",
+    "Include Mermaid sequenceDiagram for authentication/authorization flow. Include Mermaid flowchart for incident response escalation procedure.",
   ].join("\n"),
 
   "project-plan": [
@@ -125,6 +127,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Test strategy: scope, test levels, test types, risk-based priority.",
     "Environment table: environment name, purpose, configuration, notes.",
     "Cross-reference REQ-xxx, F-xxx, NFR-xxx IDs from upstream.",
+    "Include Mermaid gantt for test schedule by level (UT/IT/ST/UAT). Include Mermaid flowchart LR for test level progression with entry/exit gates.",
   ].join("\n"),
 
   "ut-spec": [
@@ -200,6 +203,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "ジョブ管理: list batch jobs with cron schedule, dependencies, retry policy, failure alert.",
     "Reference F-xxx from functions-list for batch jobs if available.",
     "Cross-reference NFR-xxx, REQ-xxx, API-xxx, TBL-xxx IDs from upstream documents.",
+    "Include Mermaid graph TD for operations team escalation structure. Include Mermaid flowchart for incident response procedure. ジョブ管理: Mermaid graph LR showing job dependencies.",
   ].join("\n"),
 
   "migration-design": [
@@ -216,6 +220,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Cross-reference TBL-xxx, REQ-xxx, and OP-xxx IDs from upstream documents.",
     "Data cutover sequence: list tables in dependency order (FK constraints).",
     "Risk: identify top 3 migration risks with mitigation steps.",
+    "Include Mermaid gantt for migration schedule. Include Mermaid flowchart for cutover procedure and rollback decision flow.",
   ].join("\n"),
 
   "sitemap": [
@@ -303,6 +308,7 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
     "Each interface MUST define both sides' responsibilities (provider SLA, consumer obligations).",
     "Idempotency: state if operations are idempotent and which retry strategies are safe.",
     "Cross-reference API-xxx IDs from basic-design if upstream doc is provided.",
+    "Include Mermaid sequenceDiagram showing request/response interaction between provider and consumer.",
   ].join("\n"),
 
   "architecture-design": [

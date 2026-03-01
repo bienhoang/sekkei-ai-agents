@@ -59,6 +59,8 @@ approver: ""
 
 ## インターフェース概要 <!-- required -->
 
+<!-- Mermaid: sequenceDiagram interface call sequence between provider and consumer -->
+
 | 項目 | 内容 |
 |------|------|
 | IF-ID | IF-001 |

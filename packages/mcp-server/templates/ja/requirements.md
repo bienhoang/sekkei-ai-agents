@@ -75,6 +75,8 @@ approver: ""
 
 ### 2.2 現在の業務フロー
 
+<!-- Mermaid: flowchart TD current (as-is) business flow -->
+
 ### 2.3 課題分析
 
 ### 2.4 改善目標
@@ -93,6 +95,8 @@ approver: ""
 |--------|------|-------------|---------|--------|-------------|--------|------------|---------|------|------------|
 
 #### 3.1.4 業務フロー図
+
+<!-- Mermaid: flowchart TD to-be business process flow with swimlanes -->
 
 ### 3.2 非機能要件
 
