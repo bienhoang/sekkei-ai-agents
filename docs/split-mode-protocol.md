@@ -11,13 +11,13 @@ Split-mode generates large documents (basic-design, detail-design, test-specs) a
 | Condition | Check | Source |
 |-----------|-------|--------|
 | Doc type supports split | `SPLIT_ALLOWED` set | `generate.ts:434` |
-| Functions list exists | `04-functions-list/functions-list.md` file present | `plan-actions.ts:223-239` |
-| Feature count >= 3 | Count `## ` headers in `functions-list.md` | `plan-actions.ts:223-239` |
+| Functions list exists | `04-functions-list/functions-list.md` file present | `plan-actions.ts` |
+| Feature count > 0 | Count `## ` headers in `functions-list.md` | `plan-actions.ts` |
 | No active plan | No pending/in_progress plan for same doc-type | `plan-state.ts:169-195` |
 
 **Supported doc types:** `basic-design`, `detail-design`, `ut-spec`, `it-spec`
 
-**Automatic Activation:** Split mode is automatically detected via `manage_plan(action="detect")`. No config required — per-feature generation activates when functions-list.md exists with 3+ features.
+**Automatic Activation:** Split mode is automatically detected via `manage_plan(action="detect")`. No config required — per-feature generation activates when `functions-list.md` exists and contains any features (`featureCount > 0`).
 
 **Note:** The `split:` configuration block in `sekkei.config.yaml` has been removed. Split mode now uses automatic per-feature detection based on functions-list presence.
 

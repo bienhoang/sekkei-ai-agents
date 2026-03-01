@@ -32,7 +32,7 @@
 
 ### `split` — ~~Tách file lớn~~ DEPRECATED
 
-> **Removed in v2.9.0** — Split mode is now automatic and requires no configuration. When `functions-list.md` contains 3+ features, Sekkei automatically generates per-feature documents for `basic-design`, `detail-design`, and test-specs.
+> **Removed in v2.9.0** — Split mode is now automatic and requires no configuration. When `functions-list.md` contains any features (≥ 1), Sekkei automatically generates per-feature documents for `basic-design`, `detail-design`, and test-specs.
 
 ### Các keys khác
 
@@ -130,4 +130,4 @@ workspace-docs/
 ```
 
 > [!NOTE]
-> **Auto-activation (v2.9.0+):** When `functions-list.md` contains 3+ major features (identified by `## ` headings), Sekkei automatically generates per-feature documents. The thư mục `05-features/` is then populated with subfolders per feature — ví dụ `05-features/employee-management/`, `05-features/payroll/`, mỗi folder có `basic-design.md` và `screen-design.md` riêng. No configuration needed.
+> **Auto-activation (v2.9.0+):** When `functions-list.md` contains any major features (identified by `## ` headings), Sekkei automatically generates per-feature documents. The thư mục `05-features/` is then populated with subfolders per feature — ví dụ `05-features/employee-management/`, `05-features/payroll/`, mỗi folder có `basic-design.md` và `screen-design.md` riêng. No configuration needed.

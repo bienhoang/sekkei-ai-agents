@@ -53,7 +53,7 @@
 - Validator check orphaned IDs (IDs không có nguồn gốc upstream)
 
 ### 2.2 Split-mode cho project lớn (Auto-detected, v2.9.0+)
-- Auto-detect: functions-list.md có 3+ features → activate per-feature generation
+- Auto-detect: functions-list.md có bất kỳ features nào (`featureCount > 0`) → activate per-feature generation
 - Plan orchestration: `manage_plan(action="detect")` tự kiểm tra
 - Mỗi feature gen riêng → giảm AI context, tăng quality
 - No config needed — automatic based on functions list presence
