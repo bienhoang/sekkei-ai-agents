@@ -271,16 +271,18 @@ ERRORS=0
 DASHBOARD_CLI="$SCRIPT_DIR/packages/dashboard/dist/server.js"
 [[ -f "$DASHBOARD_CLI" ]] && ok "sekkei-dashboard CLI: $DASHBOARD_CLI" || warn "sekkei-dashboard CLI not found (dashboard unavailable)"
 
-# Verify MCP server config in settings
+# Verify MCP server config in settings (claude mcp writes to ~/.claude.json or ~/.claude/settings.json)
 node -e "
-const fs = require('fs');
-const s = JSON.parse(fs.readFileSync('$SETTINGS_FILE', 'utf-8'));
-if (s.mcpServers && s.mcpServers.sekkei) {
-  process.exit(0);
-} else {
-  process.exit(1);
+const fs = require('fs'), path = require('path');
+const files = ['$SETTINGS_FILE', path.join('$HOME', '.claude.json')];
+for (const f of files) {
+  try {
+    const s = JSON.parse(fs.readFileSync(f, 'utf-8'));
+    if (s.mcpServers && s.mcpServers.sekkei) process.exit(0);
+  } catch {}
 }
-" && ok "MCP config in settings.json" || { fail "MCP config missing"; ((ERRORS++)); }
+process.exit(1);
+" && ok "MCP config found" || { fail "MCP config missing"; ((ERRORS++)); }
 
 # ── Done ────────────────────────────────────────────────────────────────
 echo ""
