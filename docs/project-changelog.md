@@ -4,6 +4,13 @@ All notable changes to Sekkei are documented here. Follows [Keep a Changelog](ht
 
 ---
 
+## [2.11.2] — 2026-03-02
+
+### Fixed
+- **MCP config verification false negative** — install.sh now checks both `~/.claude/settings.json` and `~/.claude.json` since `claude mcp add-json` writes to the latter
+
+---
+
 ## [2.11.1] — 2026-03-02
 
 ### Fixed
