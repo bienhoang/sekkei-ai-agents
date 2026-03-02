@@ -4,25 +4,31 @@ All notable changes to Sekkei are documented here. Follows [Keep a Changelog](ht
 
 ---
 
-## [2.9.x] — 2026-03-01
+## [2.10.0] — 2026-03-02
+
+### Added
+- **Per-feature auto-detection** — per-feature generation now activates automatically when `functions-list.md` exists with features. No manual config needed.
 
 ### Changed
-- **Per-feature config removed** — `split:` section removed from `sekkei.config.yaml`. Per-feature generation is now fully automatic based on `functions-list.md` existence. No manual configuration needed.
-  - `sekkei init` wizard no longer asks about per-feature generation preferences
-  - `readSplitConfig()` deleted from `plan-actions.ts`; replaced with hardcoded `SHARED_SECTIONS` / `FEATURE_SECTIONS` constants
-  - `handleDetect()` activates per-feature generation when `04-functions-list/functions-list.md` exists and `featureCount > 0` (previous threshold of ≥ 3 removed)
-  - `sekkei.config.example.yaml` per-feature generation block removed
+- **Per-feature config removed** — `split:` section removed from `sekkei.config.yaml`; `readSplitConfig()` replaced with hardcoded `SHARED_SECTIONS` / `FEATURE_SECTIONS` constants
+- **Terminology renamed** — "split mode" renamed to "per-feature" across entire codebase (code, docs, skills, config)
+- **`sekkei init` wizard** — no longer asks about per-feature generation preferences (auto-detected)
 
 ### Fixed
-- **`/sekkei:status` display** — Full MCP response now displayed verbatim with all 6 columns (Document, Chain Status, Dependencies, Lifecycle, Version, Output). Previously AI reformatted into simplified 2-column tables.
-- **Dashboard CLI command** — `sekkei-dashboard` binary corrected to use scoped package name `@bienhoang/sekkei-dashboard`. `npx sekkei-dashboard` previously returned 404 due to incorrect unscoped name.
+- **Mockup prerequisite checks** — `/sekkei:mockup` now aborts with clear message when prerequisite documents missing; removed stale dual-mode references
+- **`/sekkei:status` display** — full MCP response now displayed verbatim with all 6 columns
+- **Dashboard CLI command** — `sekkei-dashboard` binary corrected to use scoped package name `@bienhoang/sekkei-dashboard`
+- **CLI test suite** — removed stale `glossary` subcommand assertion; increased `doctor` test timeout
 
 ---
 
 ## [2.9.0] — 2026-02-28
 
 ### Added
-- Version bump to v2.9.0
+- Token optimization for per-feature generation (smart upstream filtering, 60-75% context reduction)
+- Token budget estimator — predicts output tokens, recommends strategy
+- Session recovery checkpoints for plan management
+- Translation pipeline: SHA-256 hash-based incremental tracking, structural validation
 
 ---
 

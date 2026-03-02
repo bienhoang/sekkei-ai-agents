@@ -4,7 +4,7 @@
 
 ### Vision
 
-**Sekkei (設計) v2.7.2** — an AI-powered MCP server that generates comprehensive Japanese software specification documents following the V-model architecture pattern. Includes dashboard analytics with quality metrics, traceability graphs, and snapshot history. SIer psychology-driven features: AI confidence scoring, source traceability, presales RFP lifecycle management, progressive document generation with task tracking, and document import/impact analysis. 5 quality-scoring libraries for risk assessment, health evaluation, and coverage analysis.
+**Sekkei (設計) v2.10.0** — an AI-powered MCP server that generates comprehensive Japanese software specification documents following the V-model architecture pattern. Includes dashboard analytics with quality metrics, traceability graphs, and snapshot history. SIer psychology-driven features: AI confidence scoring, source traceability, presales RFP lifecycle management, progressive document generation with task tracking, and document import/impact analysis. 5 quality-scoring libraries for risk assessment, health evaluation, and coverage analysis.
 
 ### Mission
 
