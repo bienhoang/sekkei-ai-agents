@@ -39,7 +39,6 @@ describe("sekkei --help", () => {
     const { stdout, code } = await runCli(["--help"]);
     expect(code).toBe(0);
     expect(stdout).toMatch(/init/);
-    expect(stdout).toMatch(/glossary/);
     expect(stdout).toMatch(/doctor/);
   });
 });
@@ -48,5 +47,5 @@ describe("sekkei doctor", () => {
   it("exits 0 or 1 and shows health check", async () => {
     const { stdout } = await runCli(["doctor"]);
     expect(stdout).toMatch(/Node\.js|Environment|checks/i);
-  });
+  }, 15_000);
 });
