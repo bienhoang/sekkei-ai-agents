@@ -80,7 +80,7 @@ Command workflows for the design phase of the V-model document chain.
 1. Read the input (ideally the generated 要件定義書 or requirements summary)
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
 3. **Check functions-list**: verify `{output.directory}/04-functions-list/functions-list.md` exists
-4. **If functions-list exists (split generation):**
+4. **If functions-list exists (per-feature generation):**
    a. Read `functions-list.md` → extract feature groups (大分類)
    b. Create output directories: `shared/`, `features/{feature-id}/`
    c. For each shared section:
@@ -114,7 +114,7 @@ Command workflows for the design phase of the V-model document chain.
 - 6 mandatory sections per screen: 画面レイアウト, 画面項目定義, バリデーション一覧, イベント一覧, 画面遷移, 権限
 - Do NOT add per-screen sections to basic-design.md in per-feature mode — reference screen-design.md instead
 - The Screen Design Document Instructions block is provided by `buildScreenDesignInstruction(featureId, language)` from `generation-instructions.ts` — pass the project language from config
-5. **If functions-list not available (monolithic fallback):**
+5. **If functions-list not available (single-call fallback):**
    a. Call MCP tool `generate_document` with:
       - `doc_type: "basic-design"`, `language` from config
       - `input_content: @input`, `project_type` from config
@@ -225,7 +225,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 1. Confirm basic-design exists: check `chain.basic_design.status == "complete"` in config, or any `features/*/basic-design.md`, or `03-system/basic-design.md` — abort if all fail: "Run `/sekkei:basic-design` first."
 2. **Load upstream (mode-aware):**
    - **Per-feature mode** (functions-list exists): global_upstream = `shared/*.md` + requirements.md + functions-list.md (per-feature upstream assembled in §4 below)
-   - **Monolithic**: upstream_content = basic-design.md + requirements.md + functions-list.md (last two if they exist)
+   - **Single-call**: upstream_content = basic-design.md + requirements.md + functions-list.md (last two if they exist)
 
 **Interview questions (ask before generating):**
 - Programming language and framework?
@@ -246,7 +246,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 1. Read the input (ideally the generated 基本設計書)
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
 3. **Check functions-list**: verify functions-list exists (same check as basic-design §3)
-4. **If functions-list exists (split generation):**
+4. **If functions-list exists (per-feature generation):**
    a. Read `functions-list.md` → extract feature groups (大分類)
    b. Create output directories: `shared/`, `features/{feature-id}/`
    c. For each shared section:
@@ -269,7 +269,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
          - **Stage 4**: Read existing; generate §7 処理フロー + remaining sections → **Append** → TaskUpdate complete
       iii. Update `_index.yaml` manifest entry
    e. Create/update `_index.yaml` manifest via manifest-manager
-5. **If functions-list not available (monolithic fallback):**
+5. **If functions-list not available (single-call fallback):**
    a. Use `upstream_content` prepared in prerequisite check above
    b. Call MCP tool `generate_document` with `doc_type: "detail-design"`, `language` from config (default: "ja"),
       `input_content: @input`, `upstream_content: upstream`. Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
@@ -294,7 +294,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
       Pass existing content → **Append** → TaskUpdate complete
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "detail_design"`:
    - **If per-feature:** `status: "complete"`, `system_output: "03-system/"`, `features_output: "05-features/"`
-   - **If monolithic:** `status: "complete"`, `output: "03-system/detail-design.md"`
+   - **If single-call:** `status: "complete"`, `output: "03-system/detail-design.md"`
 7. TaskUpdate: validate in_progress
 8. Call MCP tool `validate_document` with saved content and `doc_type: "detail-design"`.
    **Post-generation validation (mandatory):** If validation reports errors: fix inline before finalizing. If validation passes: proceed.
@@ -320,7 +320,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
 3. Call MCP tool `generate_document` with `doc_type: "db-design"`, `upstream_content`, `language` from config
 4. **Pre-scan**: Extract TBL-xxx IDs from upstream basic-design content. Group into batches of 3-5 tables.
-5. **Fallback check**: If total TBL-xxx <= 3, generate monolithically (skip to step 12 — single call with all rules, save, then validate).
+5. **Fallback check**: If total TBL-xxx <= 3, use single-call generation (skip to step 12 — single call with all rules, save, then validate).
 6. **Create progress tasks** (follow `references/progressive-generation.md`):
    - TaskCreate: "Generate DB design header + naming" (activeForm: "Generating DB design header")
    - TaskCreate: "Generate ER diagram" (activeForm: "Generating ER diagram")
@@ -345,7 +345,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 11. **Stage N+2 — Summary**: TaskUpdate in_progress →
     Read existing file; generate ONLY: §5 パーティション + §6 移行 + §7 バックアップ →
     Pass existing content → **Append** → TaskUpdate complete
-12. (Monolithic fallback): Follow these rules for single-call generation:
+12. (Single-call fallback): Follow these rules for single-call generation:
     - ID format: `DB-001` for design decisions
     - Expand all TBL-xxx from basic-design with full column definitions
     - Include Mermaid erDiagram
@@ -423,7 +423,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
 3. Call MCP tool `generate_document` with `doc_type: "report-design"`, `upstream_content`, `language` from config
 4. **Pre-scan**: Extract RPT-xxx IDs from upstream basic-design content. Group 1-2 reports per stage.
-5. **Fallback check**: If total RPT-xxx <= 2, generate monolithically (skip to step 12 — single call, save, then validate).
+5. **Fallback check**: If total RPT-xxx <= 2, use single-call generation (skip to step 12 — single call, save, then validate).
 6. **Create progress tasks** (follow `references/progressive-generation.md`):
    - TaskCreate: "Generate report design header + catalog" (activeForm: "Generating report design header")
    - TaskCreate: "Generate report layout {RPT-xxx}" for each batch (activeForm: "Generating report layouts")
@@ -445,7 +445,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 10. **Stage N+2 — Print + Delivery**: TaskUpdate in_progress →
     Read existing file; generate ONLY: §6 印刷・配信設計 →
     Pass existing content → **Append** → TaskUpdate complete
-11. (Monolithic fallback): Use existing RPT-xxx IDs from basic-design, add new as RPT-NNN. Layout per report. Output conditions. Data mapping: RPT field → TBL-xxx source. Cross-reference F-xxx, SCR-xxx, TBL-xxx.
+11. (Single-call fallback): Use existing RPT-xxx IDs from basic-design, add new as RPT-NNN. Layout per report. Output conditions. Data mapping: RPT field → TBL-xxx source. Cross-reference F-xxx, SCR-xxx, TBL-xxx.
 12. Save output to `{output.directory}/03-system/report-design.md` (already done if progressive)
 13. TaskUpdate: validate in_progress
 14. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "report_design"`,
@@ -469,7 +469,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
 3. Call MCP tool `generate_document` with `doc_type: "batch-design"`, `upstream_content`, `language` from config
 4. **Pre-scan**: Extract BATCH-xxx IDs from upstream functions-list (処理分類 = バッチ). Group 1-2 jobs per stage.
-5. **Fallback check**: If total BATCH-xxx <= 2, generate monolithically (skip to step 12 — single call, save, then validate).
+5. **Fallback check**: If total BATCH-xxx <= 2, use single-call generation (skip to step 12 — single call, save, then validate).
 6. **Create progress tasks** (follow `references/progressive-generation.md`):
    - TaskCreate: "Generate batch design header + job list" (activeForm: "Generating batch design header")
    - TaskCreate: "Generate job detail {BATCH-xxx}" for each batch (activeForm: "Generating job details")
@@ -492,7 +492,7 @@ Conditional questions (check `project_type` in sekkei.config.yaml):
 10. **Stage N+2 — Operations Integration**: TaskUpdate in_progress →
     Read existing file; generate ONLY: §7 運用連携 →
     Pass existing content → **Append** → TaskUpdate complete
-11. (Monolithic fallback): ID format: `BATCH-001`. Job list with execution timing, dependencies, retry, timeout. Mermaid flowchart. Error handling per job. Cross-reference F-xxx, TBL-xxx, OP-xxx.
+11. (Single-call fallback): ID format: `BATCH-001`. Job list with execution timing, dependencies, retry, timeout. Mermaid flowchart. Error handling per job. Cross-reference F-xxx, TBL-xxx, OP-xxx.
 12. Save output to `{output.directory}/03-system/batch-design.md` (already done if progressive)
 13. TaskUpdate: validate in_progress
 14. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "batch_design"`,

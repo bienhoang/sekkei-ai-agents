@@ -1,10 +1,10 @@
 /**
  * Tests for test spec generators (ut-spec, it-spec, st-spec, uat-spec).
  *
- * Sub-batch A (system-level only, no split mode): st-spec, uat-spec
- * Sub-batch B (split mode capable): ut-spec, it-spec
+ * Sub-batch A (system-level only, no per-feature generation): st-spec, uat-spec
+ * Sub-batch B (per-feature capable): ut-spec, it-spec
  *
- * Coverage: generation instructions, keigo, output paths, split mode,
+ * Coverage: generation instructions, keigo, output paths, per-feature generation,
  * upstream ID cross-references, source_code_path restrictions, plan detect.
  */
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
@@ -42,7 +42,7 @@ function parseResult(result: { content: Array<{ type: string; text: string }>; i
 }
 
 // ============================================================================
-// Sub-batch A: st-spec and uat-spec (system-level, no split mode)
+// Sub-batch A: st-spec and uat-spec (system-level, no per-feature generation)
 // ============================================================================
 
 describe("generate_document: st-spec", () => {
@@ -124,7 +124,7 @@ describe("generate_document: st-spec", () => {
     expect(text).toContain("08-test/st-spec.md");
   });
 
-  it("rejects split mode (scope param)", async () => {
+  it("rejects per-feature generation (scope param)", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "st-spec",
       input_content: "Test input",
@@ -257,7 +257,7 @@ describe("generate_document: uat-spec", () => {
     expect(text).toContain("08-test/uat-spec.md");
   });
 
-  it("rejects split mode", async () => {
+  it("rejects per-feature generation", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "uat-spec",
       input_content: "Test input",
@@ -315,7 +315,7 @@ describe("generate_document: uat-spec", () => {
 });
 
 // ============================================================================
-// Sub-batch B: ut-spec and it-spec (split mode capable)
+// Sub-batch B: ut-spec and it-spec (per-feature capable)
 // ============================================================================
 
 describe("generate_document: ut-spec", () => {
@@ -394,7 +394,7 @@ describe("generate_document: ut-spec", () => {
     expect(text).toContain("08-test/ut-spec.md");
   });
 
-  it("supports split mode: shared scope", async () => {
+  it("supports per-feature generation: shared scope", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "ut-spec",
       input_content: "Generate shared sections for unit tests",
@@ -403,11 +403,11 @@ describe("generate_document: ut-spec", () => {
 
     expect(result.isError).toBeUndefined();
     const text = result.content[0].text;
-    expect(text).toContain("Split Mode: Shared Sections");
+    expect(text).toContain("Per-Feature: Shared Sections");
     expect(text).toContain("03-system/");
   });
 
-  it("supports split mode: feature scope with feature-scoped IDs", async () => {
+  it("supports per-feature generation: feature scope with feature-scoped IDs", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "ut-spec",
       input_content: "Generate unit tests for sales module",
@@ -417,7 +417,7 @@ describe("generate_document: ut-spec", () => {
 
     expect(result.isError).toBeUndefined();
     const text = result.content[0].text;
-    expect(text).toContain("Split Mode: Feature");
+    expect(text).toContain("Per-Feature: Feature");
     expect(text).toContain("sales-management");
     // Feature-scoped IDs use prefix derived from feature name
     expect(text).toContain("Feature-Scoped ID Rules");
@@ -560,7 +560,7 @@ describe("generate_document: it-spec", () => {
     expect(text).toContain("08-test/it-spec.md");
   });
 
-  it("supports split mode: shared scope", async () => {
+  it("supports per-feature generation: shared scope", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "it-spec",
       input_content: "Generate shared integration test sections",
@@ -569,10 +569,10 @@ describe("generate_document: it-spec", () => {
 
     expect(result.isError).toBeUndefined();
     const text = result.content[0].text;
-    expect(text).toContain("Split Mode: Shared Sections");
+    expect(text).toContain("Per-Feature: Shared Sections");
   });
 
-  it("supports split mode: feature scope with feature-scoped IDs", async () => {
+  it("supports per-feature generation: feature scope with feature-scoped IDs", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "it-spec",
       input_content: "Generate integration tests for inventory module",
@@ -582,7 +582,7 @@ describe("generate_document: it-spec", () => {
 
     expect(result.isError).toBeUndefined();
     const text = result.content[0].text;
-    expect(text).toContain("Split Mode: Feature");
+    expect(text).toContain("Per-Feature: Feature");
     expect(text).toContain("inventory-management");
     expect(text).toContain("Feature-Scoped ID Rules");
     expect(text).toContain("IM"); // prefix from "inventory-management" -> I + M
@@ -802,22 +802,14 @@ describe("handleGenerateDocument: test spec direct handler", () => {
 });
 
 // ============================================================================
-// manage_plan detect: test-spec split mode detection
+// manage_plan detect: test-spec per-feature detection
 // ============================================================================
 
-describe("manage_plan detect: test-spec split mode", () => {
+describe("manage_plan detect: test-spec per-feature", () => {
   let tmpDir: string;
   let configPath: string;
 
-  const CONFIG_YAML = `
-split:
-  basic-design:
-    enabled: true
-  detail-design:
-    enabled: true
-  test-spec:
-    enabled: true
-`;
+  const CONFIG_YAML = ``;
 
   beforeAll(async () => {
     tmpDir = await mkdtemp(join(tmpdir(), "sekkei-testspec-detect-"));
@@ -949,11 +941,7 @@ describe("manage_plan create: test-spec plan", () => {
   let tmpDir: string;
   let configPath: string;
 
-  const CONFIG_YAML = `
-split:
-  test-spec:
-    enabled: true
-`;
+  const CONFIG_YAML = ``;
 
   const FEATURES = [
     { id: "sal", name: "Sales", complexity: "medium" as const, priority: 1 },
@@ -1107,7 +1095,7 @@ describe("test spec: edge cases", () => {
   });
 
   it("ut-spec feature scope without feature_name uses fallback label", async () => {
-    // When scope="feature" but feature_name is omitted, buildSplitInstructions
+    // When scope="feature" but feature_name is omitted, buildPerFeatureInstructions
     // uses "unknown" label and "UNK" prefix as fallback
     const result = await callTool(server, "generate_document", {
       doc_type: "ut-spec",
@@ -1122,7 +1110,7 @@ describe("test spec: edge cases", () => {
     expect(text).toContain("UNK");
   });
 
-  it("ut-spec without scope works as normal generation (non-split)", async () => {
+  it("ut-spec without scope works as normal generation (non-per-feature)", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "ut-spec",
       input_content: "Test input",
@@ -1131,8 +1119,8 @@ describe("test spec: edge cases", () => {
 
     expect(result.isError).toBeUndefined();
     const text = result.content[0].text;
-    // Should NOT contain split mode instructions
-    expect(text).not.toContain("Split Mode");
+    // Should NOT contain per-feature generation instructions
+    expect(text).not.toContain("Per-Feature:");
     // Should contain normal generation instructions
     expect(text).toContain("単体テスト仕様書");
   });

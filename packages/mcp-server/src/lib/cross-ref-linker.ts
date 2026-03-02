@@ -215,7 +215,7 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
   const chain = config.chain;
   if (!chain) return docs;
 
-  // Single-file entries (always monolithic)
+  // Single-file entries (one output file per doc type)
   const singleEntries: [string, { output?: string } | undefined][] = [
     ["functions-list", chain.functions_list],
     ["requirements", chain.requirements],
@@ -244,7 +244,7 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
     }
   }
 
-  // Dual-mode entries: split (system_output + features_output) with single-file fallback
+  // Dual-mode entries: per-feature (system_output + features_output) with single-file fallback
   const dualEntries: [string, { output?: string; system_output?: string; features_output?: string } | undefined][] = [
     ["basic-design", chain.basic_design],
     ["detail-design", chain.detail_design],
@@ -254,7 +254,7 @@ export async function loadChainDocs(configPath: string): Promise<Map<string, str
 
   for (const [docType, entry] of dualEntries) {
     if (!entry) continue;
-    // Try split mode first
+    // Try per-feature mode first
     const parts: string[] = [];
     for (const dirKey of ["system_output", "features_output"] as const) {
       const dirPath = entry[dirKey];

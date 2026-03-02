@@ -100,10 +100,10 @@ approver: ""
 
 ### 5.3 画面レイアウト方針
 
-<!-- SPLIT MODE: When generating in split mode (scope: "feature"), do NOT generate
+<!-- PER-FEATURE: When generating in per-feature mode (scope: "feature"), do NOT generate
      per-screen detail specs in this file. Per-screen specs are generated separately in
      05-features/{feature-name}/detail-design.md.
-     In split mode, section 5 should contain ONLY the 画面一覧 table and 画面遷移図 diagram.
+     In per-feature mode, section 5 should contain ONLY the 画面一覧 table and 画面遷移図 diagram.
      Reference: "詳細は 05-features/{feature-name}/detail-design.md を参照" -->
 
 ## 6. 帳票設計 <!-- optional -->

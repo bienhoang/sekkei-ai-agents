@@ -63,7 +63,7 @@ Bạn hãy copy-paste danh sách kiểm tra tương ứng vào công cụ quản
 - [ ] Rà soát màn hình (SCR): Đảm bảo đầy đủ các giao diện cần thiết theo luồng nghiệp vụ.
 - [ ] Rà soát dữ liệu (TBL): Cấu trúc bảng, khóa chính/ngoại và quan hệ giữa các bảng được thiết kế tối ưu.
 - [ ] Rà soát cổng giao tiếp (API): Đạt chuẩn RESTful và hỗ trợ đầy đủ các thao tác nghiệp vụ.
-- [ ] Kích hoạt chế độ tách file (Split mode) nếu dự án có quy mô lớn.
+- [ ] Xác nhận per-feature generation đã tự động kích hoạt (functions-list.md tồn tại với ít nhất 1 tính năng).
 - [ ] Triển khai song song **セキュリティ設計書**, **詳細設計書** và **データベース設計書**.
 - [ ] Các sơ đồ lớp (CLS) trong Thiết kế chi tiết tham chiếu chính xác đến mã ID của bảng và API.
 - [ ] Các mối đe dọa bảo mật đã được đối soát và ánh xạ vào danh sách OWASP Top 10.

@@ -31,7 +31,7 @@
 | Layer | Files | Vai trò |
 |-------|-------|---------|
 | Skill | `SKILL.md`, `phase-design.md` | Entry point, workflow routing, prerequisite check |
-| MCP Tool | `generate.ts` (452 LOC) | Context assembly, upstream ID injection, split-mode |
+| MCP Tool | `generate.ts` (452 LOC) | Context assembly, upstream ID injection, per-feature mode |
 | Instructions | `generation-instructions.ts` (452 LOC) | Doc-type specific prompts, keigo, bilingual |
 | Template | `templates/ja/basic-design.md` (297 LOC) | 10 sections, YAML frontmatter, AI guidance |
 | Validation | `validator.ts` (500+ LOC) | Section/column/ID check, cross-ref report |
@@ -39,7 +39,7 @@
 | Mockup | `/sekkei:mockup` skill command | Claude AI generates HTML wireframe |
 | Export | `excel/pdf/docx-exporter.ts` | Markdown → Excel/PDF/Word |
 | Change Req | `cr-*.ts` (5 files) | CR lifecycle, impact propagation |
-| Plan | `plan-*.ts` (4 files) | Split-mode phased generation |
+| Plan | `plan-*.ts` (4 files) | Per-feature phased generation |
 | Staleness | `staleness-detector/doc-staleness` | Git-based upstream change detection |
 | Changelog | `changelog-manager.ts` | Revision history preservation + global log |
 
@@ -52,7 +52,7 @@
 - Downstream docs CHỈ được reference SCR/TBL/API từ basic-design
 - Validator check orphaned IDs (IDs không có nguồn gốc upstream)
 
-### 2.2 Split-mode cho project lớn (Auto-detected, v2.9.0+)
+### 2.2 Per-feature generation cho project lớn (Auto-detected, v2.9.0+)
 - Auto-detect: functions-list.md có bất kỳ features nào (`featureCount > 0`) → activate per-feature generation
 - Plan orchestration: `manage_plan(action="detect")` tự kiểm tra
 - Mỗi feature gen riêng → giảm AI context, tăng quality
@@ -66,7 +66,7 @@
 ### 2.4 Multi-format export
 - Dual engine: Node (ExcelJS/Playwright/docx) + Python fallback
 - Diff mode support (朱書き redline)
-- Manifest-based export merge split-mode features
+- Manifest-based export merge per-feature files
 
 ---
 
@@ -91,18 +91,18 @@ const ID_PATTERN = /\b(F|REQ|NFR|SCR|TBL|API|CLS|DD|...)-(\d{1,4})\b/g
 
 ---
 
-### BUG-02: Screen ID collision trong split mode
+### BUG-02: Screen ID collision trong per-feature mode
 
 **Mức độ: High**
 
-Template hướng dẫn: `SCR-001, SCR-002...` (sequential global). Nhưng split mode gen mỗi feature riêng → 2 features có thể cùng tạo SCR-001.
+Template hướng dẫn: `SCR-001, SCR-002...` (sequential global). Nhưng per-feature mode gen mỗi feature riêng → 2 features có thể cùng tạo SCR-001.
 
-- `phase-design.md` có guidance "SCR-SAL-001" cho split mode nhưng template `basic-design.md` không enforce feature prefix
+- `phase-design.md` có guidance "SCR-SAL-001" cho per-feature mode nhưng template `basic-design.md` không enforce feature prefix
 - Validator không check duplicate SCR IDs across features
 - Merge khi export sẽ có 2 SCR-001 khác nhau
 
 **Fix đề xuất:**
-1. Template thêm rule: split mode → `SCR-{FEATURE}-001` format
+1. Template thêm rule: per-feature mode → `SCR-{FEATURE}-001` format
 2. Validator thêm cross-feature duplicate check khi export manifest mode
 
 ---
@@ -149,7 +149,7 @@ Khi `auto_insert_changelog=true` + regenerate:
 2. Increment version
 3. Insert new row
 
-Nhưng nếu 2 regeneration chạy gần nhau (khác feature trong split mode), cả 2 đều read cùng version → cùng increment → duplicate version number.
+Nhưng nếu 2 regeneration chạy gần nhau (khác feature trong per-feature mode), cả 2 đều read cùng version → cùng increment → duplicate version number.
 
 ---
 
@@ -303,9 +303,9 @@ Nhưng nếu 2 regeneration chạy gần nhau (khác feature trong split mode), 
 - Template variants: `basic-design-saas.md`, `basic-design-batch.md` cho complex project types
 - Optional sections tự enable/disable dựa vào upstream content (VD: nếu functions-list có batch functions → auto-enable batch section)
 
-### 5.3 Split mode improvements (Priority: High)
+### 5.3 Per-feature generation improvements (Priority: High)
 
-- Feature-scoped IDs: enforce `SCR-{FEATURE}-xxx` naming khi split mode
+- Feature-scoped IDs: enforce `SCR-{FEATURE}-xxx` naming khi per-feature mode
 - Cross-feature dependency detection: Feature A's screen links to Feature B's API
 - Parallel generation support: multiple features generate simultaneously
 - Merge conflict detection: khi 2 features modify shared sections
@@ -329,7 +329,7 @@ Nhưng nếu 2 regeneration chạy gần nhau (khác feature trong split mode), 
 
 | Risk | Impact | Likelihood | Mitigation |
 |------|--------|------------|------------|
-| SCR ID collision (split mode) | Doc chain broken | High (any split project) | Enforce feature prefix |
+| SCR ID collision (per-feature mode) | Doc chain broken | High (any per-feature project) | Enforce feature prefix |
 | RPT-xxx not tracked | CR propagation misses report changes | Medium | Add to ID_ORIGIN |
 | Large project AI context overflow | Incomplete generation | Medium | Plan orchestration (exists) |
 | Mermaid render failure in PDF | Missing diagrams | Low | Graceful degradation (exists) |
@@ -342,7 +342,7 @@ Nhưng nếu 2 regeneration chạy gần nhau (khác feature trong split mode), 
 
 ### Điểm mạnh
 - Cross-reference system và V-model chain rất solid
-- Split mode + plan orchestration xử lý tốt project lớn
+- Per-feature generation + plan orchestration xử lý tốt project lớn
 - Graceful degradation design tốt
 - Multi-format export pipeline hoàn chỉnh
 
@@ -375,7 +375,7 @@ Nhưng nếu 2 regeneration chạy gần nhau (khác feature trong split mode), 
 | ID | Title | Severity | Status | Notes |
 |----|-------|----------|--------|-------|
 | BUG-01 | RPT-xxx missing from ID_ORIGIN map | Medium | FIXED | Added `RPT: "basic-design"` to ID_ORIGIN in `cross-ref-linker.ts:70` |
-| BUG-02 | SCR ID collision in split mode | High | FIXED | Feature-scoped ID support added: `isOriginOf()` handles `SCR-SAL` → `SCR` prefix extraction (line 120-121) |
+| BUG-02 | SCR ID collision in per-feature mode | High | FIXED | Feature-scoped ID support added: `isOriginOf()` handles `SCR-SAL` → `SCR` prefix extraction (line 120-121) |
 | BUG-03 | Completeness rules too loose | Low-Medium | FIXED | Added `validateApiUniqueness()` (lines 489-513) and `validateDiagramConsistency()` with cross-ref checks |
 | BUG-04 | Staleness score formula bias | Low | FIXED | Added test file filter in `staleness-detector.ts:168-176` — excludes `.test.ts`, `__tests__/`, `test/` folders |
 | BUG-05 | Changelog auto-insert race condition | Low | FIXED | Added dedup protection in `changelog-manager.ts:148` — checks existing version before inserting |
@@ -386,7 +386,7 @@ Nhưng nếu 2 regeneration chạy gần nhau (khác feature trong split mode), 
 |----|-------|----------|--------|-------|
 | IMP-01 | Advanced validation rules | High | FIXED | Implemented: cross-diagram consistency (line 469-484), API uniqueness (line 489-513), upstream coverage warning (line 558-564) |
 | IMP-02 | Template intelligence / conditional sections | Medium | PARTIAL | Project type support (microservice, hybrid, event-driven, ai-ml) added to `types/documents.ts:76` |
-| IMP-03 | Split mode feature-scoped IDs | High | FIXED | Feature-scoped ID extraction in `isOriginOf()` — `SCR-SAL-001` parsed as base `SCR` prefix |
+| IMP-03 | Per-feature feature-scoped IDs | High | FIXED | Feature-scoped ID extraction in `isOriginOf()` — `SCR-SAL-001` parsed as base `SCR` prefix |
 | IMP-04 | Export quality enhancements | Medium | FIXED | Excel: conditional formatting (line 77), PDF: auto TOC generation (line 52), page breaks (line 72 `page-break-before`) |
 | IMP-05 | Mermaid diagram validation | Low | FIXED | `mermaid-validator.ts` created (2224 bytes) — syntax check, diagram complexity validation |
 

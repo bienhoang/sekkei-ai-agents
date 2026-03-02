@@ -1,6 +1,6 @@
 /**
  * Generation Plan entity types for multi-phase document generation.
- * Tracks plan status, phases, and features for split-mode generation.
+ * Tracks plan status, phases, and features for per-feature generation.
  */
 
 export const PLAN_STATUSES = ["pending", "in_progress", "completed", "cancelled"] as const;
@@ -51,7 +51,6 @@ export interface GenerationPlan {
   status: PlanStatus;
   features: PlanFeature[];
   feature_count: number;
-  split_mode: boolean;
   created: string;        // ISO date
   updated: string;        // ISO date
   phases: PlanPhase[];

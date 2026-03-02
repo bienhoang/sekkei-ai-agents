@@ -1,6 +1,6 @@
 // ── Constants ──
 
-export const SPLIT_DOC_TYPES = ['basic-design', 'detail-design', 'ut-spec', 'it-spec', 'st-spec'] as const
+export const PER_FEATURE_DOC_TYPES = ['basic-design', 'detail-design', 'ut-spec', 'it-spec', 'st-spec'] as const
 
 // ── Config types (from sekkei.config.yaml) ──
 
@@ -17,7 +17,6 @@ export interface ProjectConfig {
   }
   chain: Record<string, ChainConfigEntry>
   rfp?: string
-  split_mode?: boolean
 }
 
 export interface ChainConfigEntry {
@@ -136,7 +135,7 @@ export interface OverviewData {
   activeCRs: number
   chainEntries: ChainEntry[]
   recentChangelog: ChangelogEntry[]
-  splitMode: boolean
+  perFeatureMode: boolean
 }
 
 export interface ChainData {
@@ -144,7 +143,7 @@ export interface ChainData {
   rfp: string | null
   groups: ChainGroup[]
   features: FeatureDocStatus[]
-  splitMode: boolean
+  perFeatureMode: boolean
 }
 
 export interface AnalyticsData {
@@ -173,7 +172,7 @@ export interface FeatureProgress {
 }
 
 export interface FeaturesData {
-  splitMode: boolean
+  perFeatureMode: boolean
   features: FeatureProgress[]
   docTypes: string[]
 }

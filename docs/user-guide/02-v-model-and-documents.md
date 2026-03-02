@@ -101,7 +101,7 @@ flowchart TD
   *Ví dụ:* Phân loại lớn (大分類) "従業員管理" (Quản lý nhân viên) → Phân loại vừa (中分類) "基本情報管理" (Quản lý thông tin cơ bản) → Chức năng cụ thể (小機能) "社員情報登録" (Đăng ký thông tin nhân viên - F-001), "社員情報更新" (Cập nhật thông tin nhân viên - F-002).
 
 > [!TIP]
-> Nếu danh sách chức năng có từ 3 nhóm Phan loại lớn (大分類) trở lên, Sekkei sẽ gợi ý sử dụng **chế độ tách file (split mode)** để quản lý tài liệu theo từng nhóm tính năng thay vì một file duy nhất.
+> Khi danh sách chức năng có bất kỳ tính năng nào (大分類), Sekkei tự động kích hoạt **chế độ per-feature** để tạo tài liệu riêng cho từng nhóm tính năng — không cần cấu hình.
 
 ---
 
@@ -352,7 +352,7 @@ Ngoài 18 tài liệu cốt lõi, Sekkei hỗ trợ thêm các tài liệu tùy 
 | **翻訳 (Biên dịch)** | `/sekkei:translate` | Hỗ trợ dịch nhanh các tài liệu sang tiếng Anh hoặc tiếng Việt. |
 
 > [!NOTE]
-> **Tài liệu thiết kế màn hình (画面設計書)** có thể được tự động tạo ra khi kích hoạt **chế độ tách file (split mode)** trong giai đoạn Thiết kế cơ bản, hoặc khởi tạo riêng bằng `/sekkei:screen-design`.
+> **Tài liệu thiết kế màn hình (画面設計書)** được tự động tạo ra trong **chế độ per-feature** (khi functions-list.md tồn tại), hoặc có thể khởi tạo riêng bằng `/sekkei:screen-design`.
 
 ---
 

@@ -1,4 +1,6 @@
 import { Router } from 'express'
+import { existsSync } from 'node:fs'
+import { join } from 'node:path'
 import type { ServiceContext, OverviewData } from '../types.js'
 import { getChainEntries, getChainStats } from '../services/config-reader.js'
 
@@ -35,7 +37,7 @@ export function createOverviewRouter(ctx: ServiceContext): Router {
         activeCRs,
         chainEntries,
         recentChangelog,
-        splitMode: config.split_mode ?? false,
+        perFeatureMode: existsSync(join(ctx.docsRoot, '05-features')) || existsSync(join(ctx.docsRoot, '_index.yaml')),
       }
 
       res.json(data)

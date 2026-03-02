@@ -67,7 +67,7 @@ describe("mergeFromManifest", () => {
       version: "1.0", project: "Test", language: "ja",
       documents: {
         "basic-design": {
-          type: "split",
+          type: "per-feature",
           status: "complete",
           shared: [
             { file: "03-system/arch.md", section: "system-architecture", title: "アーキ" },
@@ -98,7 +98,7 @@ describe("mergeFromManifest", () => {
       version: "1.0", project: "Test", language: "ja",
       documents: {
         "basic-design": {
-          type: "split",
+          type: "per-feature",
           status: "complete",
           shared: [
             { file: "03-system/arch.md", section: "system-architecture", title: "アーキ" },

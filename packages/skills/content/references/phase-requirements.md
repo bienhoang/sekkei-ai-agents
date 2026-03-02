@@ -120,7 +120,7 @@ Prepend this YAML block to the input_content before calling generate_document.
 2. If `sekkei.config.yaml` exists, load project metadata
 3. Read upstream requirements output file from chain config. Call MCP tool `generate_document` with `doc_type: "functions-list"`, `upstream_content` (requirements content), and `language` from `sekkei.config.yaml project.language` (default: "ja"). Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
 4. **Pre-scan upstream content**: Analyze the requirements document to identify distinct 大分類 (major category) groups. List each group name.
-5. **Fallback check**: If <= 2 大分類 groups detected, generate monolithically (single call as before — skip to step 12).
+5. **Fallback check**: If <= 2 大分類 groups detected, use single-call generation (single call as before — skip to step 12).
 6. **Create progress tasks** (follow `references/progressive-generation.md` Step 3):
    - TaskCreate: "Generate functions-list header" (activeForm: "Generating header sections")
    - TaskCreate: "Generate {大分類名} functions" for each group (activeForm: "Generating {大分類名} functions")
@@ -150,7 +150,7 @@ Prepend this YAML block to the input_content before calling generate_document.
    - Generate ONLY: 集計 section (function counts per 大分類, total)
    - **Append** to functions-list.md
    - TaskUpdate: mark summary task complete
-10. (If monolithic fallback from step 5): Use the returned template + AI instructions to generate the full 機能一覧:
+10. (If single-call fallback from step 5): Use the returned template + AI instructions to generate the full 機能一覧:
     - 3-tier hierarchy: 大分類 → 中分類 → 小機能
     - ID format: `F-001` (sequential). For per-feature generation with custom prefixes, use subsystem prefix (e.g., SAL-001)
     - 処理分類: 入力 / 照会 / 帳票 / バッチ / API / イベント / スケジューラ / Webhook

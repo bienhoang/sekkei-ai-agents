@@ -7,32 +7,32 @@ describe("token-budget-estimator", () => {
       const result = estimateOutputTokens("basic-design", { SCR: 10, TBL: 5, API: 3 });
       // base(3000) + SCR(10*800=8000) + TBL(5*600=3000) + API(3*500=1500) = 15500
       expect(result.estimated_tokens).toBeGreaterThan(8000);
-      expect(result.recommended_strategy).toBe("monolithic");
+      expect(result.recommended_strategy).toBe("single-call");
     });
 
-    it("basic-design with 40 screens recommends split_required", () => {
+    it("basic-design with 40 screens recommends plan_required", () => {
       const result = estimateOutputTokens("basic-design", { SCR: 40 });
       // base(3000) + SCR(40*800=32000) = 35000 > 24000
-      expect(result.recommended_strategy).toBe("split_required");
+      expect(result.recommended_strategy).toBe("plan_required");
     });
 
-    it("detail-design with 5 APIs recommends monolithic", () => {
+    it("detail-design with 5 APIs recommends single-call", () => {
       const result = estimateOutputTokens("detail-design", { API: 5 });
       // base(2000) + API(5*1200=6000) = 8000 < 16000
-      expect(result.recommended_strategy).toBe("monolithic");
+      expect(result.recommended_strategy).toBe("single-call");
     });
 
     it("unknown doc type uses default calibration without throwing", () => {
       const result = estimateOutputTokens("unknown-doc", { SCR: 5, API: 3 });
       // default base(2000) + SCR(5*200=1000) + API(3*200=600) = 3600
       expect(result.estimated_tokens).toBe(3600);
-      expect(result.recommended_strategy).toBe("monolithic");
+      expect(result.recommended_strategy).toBe("single-call");
     });
 
     it("zero entities returns base tokens only", () => {
       const result = estimateOutputTokens("basic-design", {});
       expect(result.estimated_tokens).toBe(3000);
-      expect(result.recommended_strategy).toBe("monolithic");
+      expect(result.recommended_strategy).toBe("single-call");
     });
 
     it("progressive threshold: 16K-24K range", () => {
@@ -78,14 +78,14 @@ describe("token-budget-estimator", () => {
       expect(advisory).toContain("| TBL |");
     });
 
-    it("shows split_required warning for large docs", () => {
+    it("shows plan_required warning for large docs", () => {
       const result = estimateOutputTokens("basic-design", { SCR: 40 });
       const advisory = formatAdvisory(result);
-      expect(advisory).toContain("split_required");
+      expect(advisory).toContain("plan_required");
       expect(advisory).toContain("exceeds safe output limit");
     });
 
-    it("shows monolithic message for small docs", () => {
+    it("shows single-call message for small docs", () => {
       const result = estimateOutputTokens("basic-design", { SCR: 5 });
       const advisory = formatAdvisory(result);
       expect(advisory).toContain("single-call generation");

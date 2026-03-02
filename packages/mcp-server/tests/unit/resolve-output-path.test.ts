@@ -42,7 +42,7 @@ describe("resolveOutputPath", () => {
       .toBe("05-features/user-management/detail-design.md");
   });
 
-  it("returns 03-system/detail-design.md for detail-design monolithic", () => {
+  it("returns 03-system/detail-design.md for detail-design default", () => {
     expect(resolveOutputPath("detail-design")).toBe("03-system/detail-design.md");
   });
 
@@ -93,11 +93,11 @@ describe("resolveOutputPath", () => {
     expect(resolveOutputPath("traceability-matrix")).toBe("08-test/traceability-matrix.md");
   });
 
-  it("returns 03-system/basic-design.md for basic-design monolithic (no scope)", () => {
+  it("returns 03-system/basic-design.md for basic-design default (no scope)", () => {
     expect(resolveOutputPath("basic-design")).toBe("03-system/basic-design.md");
   });
 
-  it("returns monolithic default for basic-design feature without feature name", () => {
+  it("returns default path for basic-design feature without feature name", () => {
     expect(resolveOutputPath("basic-design", "feature")).toBe("03-system/basic-design.md");
   });
 });

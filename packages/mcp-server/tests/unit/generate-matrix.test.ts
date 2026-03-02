@@ -92,7 +92,7 @@ describe("generate_document: crud-matrix", () => {
     expect(text).toContain("Input Content");
   });
 
-  it("does not enforce split mode for crud-matrix (not in SPLIT_ALLOWED)", async () => {
+  it("does not allow per-feature generation for crud-matrix (not in PER_FEATURE_ALLOWED)", async () => {
     const result = await handleGenerateDocument({
       doc_type: "crud-matrix",
       input_content: "Generate CRUD matrix",
@@ -100,9 +100,9 @@ describe("generate_document: crud-matrix", () => {
       templateDir: TEMPLATE_DIR,
     });
 
-    // crud-matrix is not in SPLIT_ALLOWED set, so scope param should error
+    // crud-matrix is not in PER_FEATURE_ALLOWED set, so scope param should error
     expect(result.isError).toBe(true);
-    expect(result.content[0].text).toContain("Split mode");
+    expect(result.content[0].text).toContain("Per-feature generation");
     expect(result.content[0].text).toContain("not supported");
   });
 });
@@ -150,7 +150,7 @@ describe("generate_document: traceability-matrix", () => {
     expect(text).not.toContain("Upstream Cross-Reference Checklist");
   });
 
-  it("rejects split mode for traceability-matrix", async () => {
+  it("rejects per-feature generation for traceability-matrix", async () => {
     const result = await handleGenerateDocument({
       doc_type: "traceability-matrix",
       input_content: "Generate matrix",

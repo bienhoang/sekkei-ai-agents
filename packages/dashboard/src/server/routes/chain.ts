@@ -1,4 +1,6 @@
 import { Router } from 'express'
+import { existsSync } from 'node:fs'
+import { join } from 'node:path'
 import type { ServiceContext, ChainData, ChainGroup } from '../types.js'
 import { getChainEntries } from '../services/config-reader.js'
 
@@ -32,7 +34,10 @@ export function createChainRouter(ctx: ServiceContext): Router {
       }
 
       let features: Awaited<ReturnType<typeof ctx.workspaceScanner.scanFeatures>> = []
-      if (config.split_mode) {
+      const featuresDir = join(ctx.docsRoot, '05-features')
+      const indexFile = join(ctx.docsRoot, '_index.yaml')
+      const perFeatureMode = existsSync(featuresDir) || existsSync(indexFile)
+      if (perFeatureMode) {
         features = await ctx.workspaceScanner.scanFeatures(ctx.docsRoot, config)
       }
 
@@ -45,7 +50,7 @@ export function createChainRouter(ctx: ServiceContext): Router {
           featureName: f.name,
           status: d.status,
         }))),
-        splitMode: config.split_mode ?? false,
+        perFeatureMode,
       }
 
       res.json(data)

@@ -34,14 +34,14 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 
 **Includes:**
 - Architecture diagrams (MCP server, document chain, output structure)
-- V-model document chain with split document support
+- V-model document chain with per-feature document support
 - Numbered output structure rules (01-rfp through 10-glossary)
 - 15 MCP tools and their responsibilities
 - Dashboard architecture (5 pages, 7 routes, quality metrics pipeline)
 - Phase 3 Intelligence Layer: code-analyzer, staleness-detector, structure-rules, google-sheets-exporter
 - CLI commands including new `watch` command for continuous monitoring
 - Core libraries (validator, resolver, manifest-manager, python-bridge, etc.)
-- Manifest structure for split documents
+- Manifest structure for per-feature documents
 - Cross-reference ID patterns and validation
 - Data flow diagrams for generation, validation, and export
 - Security constraints and input limits
@@ -74,7 +74,7 @@ Welcome to the Sekkei documentation suite. This directory contains comprehensive
 
 **Includes:**
 - Vision & mission (AI-powered specification automation)
-- Core value propositions (V-model chain, traceability, split documents, code-awareness, staleness detection)
+- Core value propositions (V-model chain, traceability, per-feature documents, code-awareness, staleness detection)
 - V-model document sequence (RFP → Requirements → ... → Glossary)
 - Numbered output directory structure (01-rfp through 10-glossary)
 - 15 MCP tools with descriptions (8 core + 3 Phase A + 1 RFP + 3 CR/Plan)
@@ -159,8 +159,8 @@ Documents are organized with numbered prefixes (01-10) for clarity:
 10-glossary.md              (terminology)
 ```
 
-### Split Documents
-Large documents are split into:
+### Per-Feature Documents
+Large documents are generated as:
 - **Shared sections** (system-wide architecture, database design)
 - **Feature sections** (one per feature in 05-features/)
 
@@ -182,7 +182,7 @@ Documents link together via ID patterns:
 ### Validation Modes
 The validate tool supports 4 modes (Phase 3+):
 - **Content**: Check sections, IDs, tables in a single file
-- **Manifest**: Validate split documents via _index.yaml
+- **Manifest**: Validate per-feature documents via _index.yaml
 - **Structure**: Check numbered directory layout
 - **Structure Rules** (v3): Anti-chaos validation with 7 rules, 3 presets (enterprise/standard/agile)
 
@@ -335,7 +335,7 @@ When updating documentation:
 - **v1.0** (2026-02-21) — Phase 3: Intelligence Layer
   - Code-aware generation (ts-morph), staleness detection, anti-chaos rules, Google Sheets export
   - CLI watch command
-- **v0.9** (2026-02-18) — Phase 2: Numbered structure, split docs
+- **v0.9** (2026-02-18) — Phase 2: Numbered structure, per-feature docs
 - **v0.1** (2025-11-01) — Phase 1: Core V-model chain
 
 ---

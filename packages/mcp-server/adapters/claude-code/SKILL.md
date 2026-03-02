@@ -59,7 +59,7 @@ ALL user-facing output (responses, explanations, status messages, error descript
 - `/sekkei:glossary [add|list|find|export|import]` — Manage project terminology
 - `/sekkei:update @doc` — Detect upstream changes and impacted sections
 - `/sekkei:diff-visual @before @after` — Generate color-coded revision Excel (朱書き)
-- `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in split mode)
+- `/sekkei:plan @doc-type` — Create generation plan for large documents (auto-triggered in per-feature mode)
 - `/sekkei:implement @plan-path` — Execute a generation plan phase by phase
 - `/sekkei:preview` — Start VitePress docs preview server (`--guide` for user guide)
 - `/sekkei:version` — Show version and environment health check
@@ -134,33 +134,19 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 8. **Count 大分類 feature groups** from the generated `functions-list.md`:
    - Scan for distinct values in the 大分類 column of the 機能一覧 table
    - Derive a short feature ID for each (2–5 uppercase letters, e.g., "AUTH", "SALES", "REPORT")
-9. **If count >= 3**, prompt the user:
-   > "Detected {N} feature groups: {list}. Enable split mode? Split generates separate files per feature for basic-design, detail-design, and test-spec. Recommended for projects with 3+ features. [Y/n]"
-10. **If user confirms split:**
-    a. Uncomment/rewrite the `split:` block in `sekkei.config.yaml` with defaults:
-       ```yaml
-       split:
-         basic-design:
-           shared: [system-architecture, database-design, external-interface, non-functional-design, technology-rationale]
-           per_feature: [overview, business-flow, screen-design, report-design, functions-list]
-         detail-design:
-           shared: [system-architecture, database-design]
-           per_feature: [overview, module-design, class-design, api-detail, processing-flow]
-         test-spec:
-           shared: []
-           per_feature: [unit-test, integration-test, system-test, acceptance-test]
-       ```
-    b. Create directories: `{output_dir}/features/{feature-id}/` for each detected 大分類
-    c. Write `{output_dir}/_index.yaml` manifest with detected features:
-       ```yaml
-       version: "1"
-       project: "{project_name}"
-       language: "{project_language}"
-       documents: {}
-       ```
-       Then for each feature, add an entry to the manifest's feature list.
-    d. Confirm: "Split mode enabled. Created {N} feature directories. Run `/sekkei:basic-design` to generate split documents."
-11. **If user declines split (or count < 3):** proceed without changes. Monolithic flow remains default.
+9. **If count >= 3**, per-feature generation is automatically enabled. Inform the user:
+   > "Detected {N} feature groups: {list}. Per-feature generation will be used automatically — separate files will be generated per feature for basic-design, detail-design, and test-spec."
+10. Create directories: `{output_dir}/features/{feature-id}/` for each detected 大分類
+11. Write `{output_dir}/_index.yaml` manifest with detected features:
+    ```yaml
+    version: "1"
+    project: "{project_name}"
+    language: "{project_language}"
+    documents: {}
+    ```
+    Then for each feature, add an entry to the manifest's feature list.
+12. Confirm: "Per-feature generation enabled. Created {N} feature directories. Run `/sekkei:basic-design` to generate per-feature documents."
+13. **If count < 3:** proceed without per-feature generation. Single-call flow remains default.
 
 ### `/sekkei:requirements @input`
 
@@ -195,26 +181,25 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 - Authentication method? (OAuth, SAML, custom)
 
 0. **Plan trigger check** (see `references/plan-orchestrator.md` §1):
-   - Read `sekkei.config.yaml` → check `split.basic-design` exists
-   - Count 大分類 features from `functions-list.md`
-   - If split enabled AND features >= 3 AND no active plan for `basic-design` in `workspace-docs/plans/`:
-     → Ask: "Detected {N} features in split mode. Create a generation plan first? [Y/n]"
+   - Check if `functions-list.md` exists and count 大分類 features
+   - If per-feature mode (functions-list.md exists with >= 3 features) AND no active plan for `basic-design` in `workspace-docs/plans/`:
+     → Ask: "Detected {N} features in per-feature mode. Create a generation plan first? [Y/n]"
      → If Y: run `/sekkei:plan basic-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
 1. Read the input (ideally the generated 要件定義書 or requirements summary)
 2. If `sekkei.config.yaml` exists, load project metadata
-3. **Check for split config**: read `sekkei.config.yaml` → `split.basic-design`
-4. **If split enabled:**
+3. **Check for per-feature mode**: check if `functions-list.md` exists in `{output.directory}/`
+4. **If per-feature mode (functions-list.md exists):**
    a. Read `functions-list.md` → extract feature groups (大分類)
    b. Create output directories: `shared/`, `features/{feature-id}/`
-   c. For each shared section in split config:
+   c. For each shared section (system-architecture, database-design, external-interface, non-functional-design, technology-rationale):
       - Call `generate_document` with `scope: "shared"`
       - Save to `shared/{section-name}.md`
    d. For each feature from functions-list:
       i. Generate feature basic-design:
          - Call `generate_document(doc_type: "basic-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: {feature_input})`
          - Save output to `features/{feature-id}/basic-design.md`
-      ii. Generate per-feature screen-design (split mode only):
+      ii. Generate per-feature screen-design (per-feature mode only):
          - Construct screen_input = Screen Design Document Instructions (see below) + "\n\n## Feature Requirements\n" + {feature_input}
          - Call `generate_document(doc_type: "basic-design", scope: "feature", feature_id: "{ID}", language: from config, input_content: screen_input)`
          - Save output to `features/{feature-id}/screen-design.md`
@@ -229,13 +214,13 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
       iv. Update `_index.yaml` manifest entry for this feature to list both basic-design.md and screen-design.md files
    e. Create/update `_index.yaml` manifest via manifest-manager
 
-**Screen Design Rules (split mode only):**
+**Screen Design Rules (per-feature mode only):**
 - Screen IDs use format SCR-{FEATURE_ID}-{seq} (e.g., SCR-AUTH-001)
 - Each screen-design.md covers ALL screens for that feature
 - 6 mandatory sections per screen: 画面レイアウト, 画面項目定義, バリデーション一覧, イベント一覧, 画面遷移, 権限
-- Do NOT add per-screen sections to basic-design.md in split mode — reference screen-design.md instead
+- Do NOT add per-screen sections to basic-design.md in per-feature mode — reference screen-design.md instead
 - The Screen Design Document Instructions block is provided by `buildScreenDesignInstruction(featureId, language)` from `generation-instructions.ts` — pass the project language from config
-5. **If not split (default):**
+5. **If no per-feature mode (single-call):**
    a. Call MCP tool `generate_document` with `doc_type: "basic-design"`, `language` from config (default: "ja"), and input. Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
    b. Use the returned template + AI instructions to generate the 基本設計書
    c. Follow these rules strictly:
@@ -255,18 +240,18 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 **Prerequisite check (MUST run before interview):**
 1. Check basic-design exists (3-tier check):
    a. If `sekkei.config.yaml` exists → check `chain.basic_design.status == "complete"` (preferred)
-   b. Else if split config active → check at least one `{output.directory}/features/*/basic-design.md` exists
+   b. Else if per-feature mode active → check at least one `{output.directory}/features/*/basic-design.md` exists
    c. Else → check `{output.directory}/03-system/basic-design.md` exists
    - If ALL checks fail → ABORT: "Basic design not found. Run `/sekkei:basic-design` first."
 2. **Load upstream (mode-aware):**
-   a. Read `sekkei.config.yaml` → check `split.detail-design` exists
-   b. **If split mode:**
+   a. Check if `{output.directory}/functions-list.md` exists → determines per-feature mode
+   b. **If per-feature mode (functions-list.md exists):**
       - Read ALL `{output.directory}/shared/*.md` → shared_content
       - Read `{output.directory}/02-requirements/requirements.md` → req_content (if exists)
       - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
       - global_upstream = shared_content + "\n\n" + req_content + "\n\n" + fl_content
       - (Per-feature upstream assembled in §4 below)
-   c. **If monolithic:**
+   c. **If single-call:**
       - Read `{output.directory}/03-system/basic-design.md` → bd_content
       - Read `{output.directory}/02-requirements/requirements.md` → req_content (if exists)
       - Read `{output.directory}/04-functions-list/functions-list.md` → fl_content (if exists)
@@ -279,19 +264,18 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 - Error handling strategy?
 
 0. **Plan trigger check** (see `references/plan-orchestrator.md` §1):
-   - Read `sekkei.config.yaml` → check `split.detail-design` exists
-   - Count 大分類 features from `functions-list.md`
-   - If split enabled AND features >= 3 AND no active plan for `detail-design` in `workspace-docs/plans/`:
-     → Ask: "Detected {N} features in split mode. Create a generation plan first? [Y/n]"
+   - Check if `functions-list.md` exists and count 大分類 features
+   - If per-feature mode (functions-list.md exists with >= 3 features) AND no active plan for `detail-design` in `workspace-docs/plans/`:
+     → Ask: "Detected {N} features in per-feature mode. Create a generation plan first? [Y/n]"
      → If Y: run `/sekkei:plan detail-design` → run `/sekkei:implement @{returned-plan-path}`
      → If N: continue with step 1 below
 1. Read the input (ideally the generated 基本設計書)
 2. If `sekkei.config.yaml` exists, load project metadata — get `output.directory` and `language`
-3. **Check for split config**: read `sekkei.config.yaml` → `split.detail-design`
-4. **If split enabled:**
+3. **Check for per-feature mode**: check if `functions-list.md` exists in `{output.directory}/`
+4. **If per-feature mode (functions-list.md exists):**
    a. Read `functions-list.md` → extract feature groups (大分類)
    b. Create output directories: `shared/`, `features/{feature-id}/`
-   c. For each shared section in `split.detail-design.shared` config:
+   c. For each shared section (system-architecture, database-design):
       - Call `generate_document` with `doc_type: "detail-design"`, `scope: "shared"`, `upstream_content: global_upstream`
       - Save to `shared/{section-name}.md`
    d. For each feature from functions-list:
@@ -304,7 +288,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
          - Save output to `features/{feature-id}/detail-design.md`
       iii. Update `_index.yaml` manifest entry
    e. Create/update `_index.yaml` manifest via manifest-manager
-5. **If not split (default):**
+5. **If no per-feature mode (single-call):**
    a. Use `upstream_content` prepared in prerequisite check above
    b. Call MCP tool `generate_document` with `doc_type: "detail-design"`, `language` from config (default: "ja"),
       `input_content: @input`, `upstream_content: upstream`. Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
@@ -320,8 +304,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
       - Cross-reference SCR-xxx, TBL-xxx, API-xxx IDs from 基本設計書
    e. Save output to `{output.directory}/03-system/detail-design.md`
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "detail_design"`:
-   - **If split mode:** `status: "complete"`, `system_output: "03-system/"`, `features_output: "05-features/"`
-   - **If monolithic:** `status: "complete"`, `output: "03-system/detail-design.md"`
+   - **If per-feature mode:** `status: "complete"`, `system_output: "03-system/"`, `features_output: "05-features/"`
+   - **If single-call:** `status: "complete"`, `output: "03-system/detail-design.md"`
 7. Call MCP tool `validate_document` with saved content and `doc_type: "detail-design"`.
    Show results as non-blocking.
 8. Suggest next steps:
@@ -453,7 +437,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.detail_design.status` != "complete" → **ABORT**. Tell user:
    > "Detail design not complete. Run `/sekkei:detail-design` first."
-3. Read detail-design content from `chain.detail_design.output` (or `system_output` + `features_output` if split)
+3. Read detail-design content from `chain.detail_design.output` (or `system_output` + `features_output` if per-feature mode)
 4. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
 5. Concatenate as `upstream_content` (detail-design + test-plan if available)
 
@@ -487,7 +471,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.basic_design.status` != "complete" → **ABORT**. Tell user:
    > "Basic design not complete. Run `/sekkei:basic-design` first."
-3. Read basic-design content from `chain.basic_design.output` (or `system_output` + `features_output` if split)
+3. Read basic-design content from `chain.basic_design.output` (or `system_output` + `features_output` if per-feature mode)
 4. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
 5. Concatenate as `upstream_content` (basic-design + test-plan if available)
 
@@ -519,7 +503,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 1. Call MCP tool `get_chain_status` with `config_path` — read full chain
 2. If `chain.basic_design.status` != "complete" → **ABORT**. Tell user:
    > "Basic design not complete. Run `/sekkei:basic-design` first."
-3. Read basic-design content from `chain.basic_design.output` (or `system_output` + `features_output` if split)
+3. Read basic-design content from `chain.basic_design.output` (or `system_output` + `features_output` if per-feature mode)
 4. If `chain.functions_list.status` == "complete" → also read functions-list content
 5. If `chain.test_plan.status` == "complete" → also read test-plan content (optional — provides test strategy context)
 6. Concatenate as `upstream_content` (basic-design + functions-list + test-plan, in order of availability)
@@ -537,7 +521,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    - Cross-reference SCR-xxx, TBL-xxx, F-xxx IDs from upstream
    - Cross-reference TP-xxx IDs from テスト計画書 (if loaded)
    - Include E2E scenarios, performance targets (numeric), and security test cases
-   - System-level only — no per-feature split
+   - System-level only — no per-feature generation
 5. Save output to `{output.directory}/08-test/st-spec.md`
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "st_spec"`,
    `status: "complete"`, `output: "08-test/st-spec.md"`
@@ -570,7 +554,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    - Cross-reference REQ-xxx and NFR-xxx IDs from upstream
    - Cross-reference TP-xxx IDs from テスト計画書 (if loaded)
    - Business scenario-based test cases (not technical)
-   - System-level only — no per-feature split
+   - System-level only — no per-feature generation
 5. Save output to `{output.directory}/08-test/uat-spec.md`
 6. Call MCP tool `update_chain_status` with `config_path`, `doc_type: "uat_spec"`,
    `status: "complete"`, `output: "08-test/uat-spec.md"`
@@ -739,7 +723,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 1. **Load config**: Read `sekkei.config.yaml` → extract `output.directory` (default: `workspace-docs`)
 2. **Resolve doc path**: `{output.directory}/{doc-type-dir}/{doc-type}.md`
-   - Check for split mode: look for `_index.yaml` in `{output.directory}/{doc-type-dir}/`
+   - Check for per-feature mode: look for `_index.yaml` in `{output.directory}/{doc-type-dir}/`
 3. **Determine upstream doc type** from V-model chain:
    - requirements → (no upstream, skip cross-ref)
    - functions-list → requirements
@@ -751,10 +735,10 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    - st-spec → basic-design + functions-list
    - uat-spec → requirements
 4. **Auto-load upstream**: Read upstream doc(s) from `{output.directory}/` → concatenate as `upstream_content`
-5. **If split mode (manifest exists):**
+5. **If per-feature mode (manifest exists):**
    a. Call `validate_document` with `manifest_path` + `upstream_content`
    b. Display per-file validation + aggregate cross-ref report
-6. **If monolithic:**
+6. **If single-call:**
    a. Read doc content
    b. Call `validate_document` with `content`, `doc_type`, `upstream_content`
 7. Display: section completeness, cross-ref coverage %, missing/orphaned IDs, missing columns
@@ -783,11 +767,11 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 1. Read the document or identify doc type
 2. Determine format from `--format` flag (default: xlsx)
 3. **Check for manifest**: look for `_index.yaml` in output directory
-4. **If manifest exists for this doc type (type=split):**
+4. **If manifest exists for this doc type (type=per-feature):**
    a. Ask user: "Export merged document or per-feature?"
    b. If merged: Call `export_document` with `source: "manifest"`, `manifest_path`
    c. If per-feature: Ask which feature → call with `feature_id`
-5. **If no manifest (monolithic):**
+5. **If no manifest (single-call):**
    a. Read file, call `export_document` with `source: "file"`, content
 6. Report: file path, file size, export status
 7. For xlsx: IPA 4-sheet structure (表紙, 更新履歴, 目次, 本文) with JP formatting
@@ -800,7 +784,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 
 1. Read the document to translate
 2. **Check for manifest**: look for `_index.yaml` in output directory
-3. **If manifest exists and doc type is split:**
+3. **If manifest exists and doc type is per-feature:**
    a. Load `_index.yaml` via manifest-manager
    b. Get document entry for the specified doc type
    c. Load glossary once from `workspace-docs/glossary.yaml`
@@ -817,7 +801,7 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
       - Save to `translations/{lang}/features/{feature-id}/{filename}`
    g. Create `translations/{lang}/_index.yaml` mirroring source structure
    h. Update source `_index.yaml` translations[] entry
-4. **If no manifest (monolithic):**
+4. **If no manifest (single-call):**
    a. If `workspace-docs/glossary.yaml` exists, load glossary path
    b. Call MCP tool `translate_document` with content, source_lang, target_lang, glossary_path
    c. Use the returned translation context + glossary terms to translate
@@ -912,12 +896,12 @@ Plan large document generation with user survey and phased execution strategy.
 See `references/plan-orchestrator.md` for detailed logic.
 
 1. Determine doc-type from `@doc-type` argument or current chain status (next incomplete doc)
-2. Load `sekkei.config.yaml` → verify split config exists for this doc-type
+2. Verify `functions-list.md` exists in `{output.directory}/` (per-feature mode is auto-detected from this file)
 3. Read `functions-list.md` → extract 大分類 feature groups with IDs
 4. **Survey Round 1 — Scope**: Present features via `AskUserQuestion` (multiSelect). User selects features to include and sets priority order.
 5. **Survey Round 2 — Detail**: For each selected feature, ask via `AskUserQuestion`: complexity (simple/medium/complex), special requirements, external dependencies, custom instructions.
 6. **Generate plan**: Create `workspace-docs/plans/YYYYMMDD-{doc-type}-generation/` directory with:
-   - `plan.md` — YAML frontmatter (title, doc_type, status, features, feature_count, split_mode, created, phases) + overview + phases table
+   - `plan.md` — YAML frontmatter (title, doc_type, status, features, feature_count, per_feature_mode, created, phases) + overview + phases table
    - Phase files per mapping in `references/plan-orchestrator.md` §4
 7. Display plan summary table → ask user to review
 8. Report: "Plan created at `workspace-docs/plans/YYYYMMDD-{doc-type}-generation/`. Run `/sekkei:implement @{plan-path}` to execute."
@@ -982,16 +966,16 @@ RFP (/sekkei:rfp)
                           └─► UAT Spec (/sekkei:uat-spec)    ← requirements + nfr + test-plan
 ```
 
-## Split Mode
+## Per-Feature Generation
 
-When `sekkei.config.yaml` contains a `split` section, generation commands (basic-design, detail-design, test-spec) produce per-feature files instead of monolithic documents.
+When `functions-list.md` exists in the output directory, generation commands (basic-design, detail-design, test-spec) automatically produce per-feature files instead of single-call documents. No config block needed — detection is automatic.
 
 **Structure:**
 ```
 workspace-docs/
 ├── _index.yaml          # Manifest (auto-generated)
-├── functions-list.md    # Always monolithic
-├── requirements.md      # Always monolithic
+├── functions-list.md    # Always single-call
+├── requirements.md      # Always single-call
 ├── shared/              # Shared sections (architecture, DB, etc.)
 │   ├── architecture.md
 │   └── database.md

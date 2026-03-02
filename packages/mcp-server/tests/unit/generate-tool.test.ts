@@ -2,7 +2,7 @@
  * Tests for generate_document tool — focused on the 3 simple generators
  * (project-plan, test-plan, migration-design) and shared pipeline features.
  *
- * These doc types share the core generation pipeline without split mode:
+ * These doc types share the core generation pipeline without per-feature generation:
  *   generate_document → update_chain_status → validate_document
  */
 import { describe, it, expect, beforeAll } from "@jest/globals";
@@ -83,7 +83,7 @@ describe("generate_document: project-plan", () => {
     expect(text).toContain("02-requirements/project-plan.md");
   });
 
-  it("rejects split mode (scope param)", async () => {
+  it("rejects per-feature generation (scope param)", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "project-plan",
       input_content: "Test input",
@@ -164,7 +164,7 @@ describe("generate_document: test-plan", () => {
     expect(text).toContain("08-test/test-plan.md");
   });
 
-  it("rejects split mode", async () => {
+  it("rejects per-feature generation", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "test-plan",
       input_content: "Test input",
@@ -224,7 +224,7 @@ describe("generate_document: migration-design", () => {
     expect(text).toContain("06-data/migration-design.md");
   });
 
-  it("rejects split mode", async () => {
+  it("rejects per-feature generation", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "migration-design",
       input_content: "Test input",

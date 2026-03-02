@@ -161,8 +161,8 @@ export interface ChainEntry {
   output?: string;
 }
 
-/** Chain entry for split docs (basic-design, detail-design) */
-export interface SplitChainEntry {
+/** Chain entry for per-feature documents (basic-design, detail-design) */
+export interface PerFeatureChainEntry {
   status: "pending" | "in-progress" | "complete";
   system_output?: string;   // path prefix for 03-system/
   features_output?: string; // path prefix for 05-features/
@@ -218,9 +218,9 @@ export interface ProjectConfig {
     project_plan?: ChainEntry;
     // Design phase
     architecture_design?: ChainEntry;
-    basic_design: SplitChainEntry;
+    basic_design: PerFeatureChainEntry;
     security_design?: ChainEntry;
-    detail_design: SplitChainEntry;
+    detail_design: PerFeatureChainEntry;
     db_design?: ChainEntry;
     report_design?: ChainEntry;
     batch_design?: ChainEntry;
@@ -276,10 +276,10 @@ export interface RfpFileInventory {
   files: Record<string, { exists: boolean; size: number }>;
 }
 
-// --- Manifest Types (Document Splitting) ---
+// --- Manifest Types (Per-Feature Document) ---
 
-export const SPLIT_DOC_TYPES = ["basic-design", "detail-design"] as const;
-export type SplitDocType = (typeof SPLIT_DOC_TYPES)[number];
+export const PER_FEATURE_DOC_TYPES = ["basic-design", "detail-design"] as const;
+export type PerFeatureDocType = (typeof PER_FEATURE_DOC_TYPES)[number];
 
 export const SHARED_SECTIONS = [
   "system-architecture", "database-design", "external-interface",
@@ -305,15 +305,15 @@ export interface ManifestFeatureEntry {
   file: string;
 }
 
-export interface SplitDocument {
-  type: "split";
+export interface PerFeatureDocument {
+  type: "per-feature";
   status: ChainEntry["status"];
   shared: ManifestSharedEntry[];
   features: ManifestFeatureEntry[];
   merge_order: ("shared" | "features")[];
 }
 
-export type ManifestDocument = SplitDocument;
+export type ManifestDocument = PerFeatureDocument;
 
 export interface Manifest {
   version: string;

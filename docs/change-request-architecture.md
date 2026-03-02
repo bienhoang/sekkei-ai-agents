@@ -423,5 +423,5 @@ COMPLETE ── cr-actions.ts
 
 ## Unresolved Questions
 
-1. **Split doc handling** — For dual-mode docs (system_output + features_output), propagation treats them as one unit but regeneration may need to target specific files
+1. **Per-feature doc handling** — For dual-mode docs (system_output + features_output), propagation treats them as one unit but regeneration may need to target specific files
 2. **Partial validation semantics** — When `partial=true`, `instructed`/`pending` steps remain in place but CR transitions to VALIDATED. Should these be auto-skipped?

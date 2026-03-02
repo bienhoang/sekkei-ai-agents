@@ -8,7 +8,7 @@ import {
   validateCrossRefs,
   validateTableStructure,
   validateDocument,
-  validateSplitDocument,
+  validatePerFeatureDocument,
   validateChangelogPreservation,
   validateContentDepth,
 } from "../../src/lib/validator.js";
@@ -245,7 +245,7 @@ describe("validateChangelogPreservation", () => {
   });
 });
 
-describe("validateSplitDocument", () => {
+describe("validatePerFeatureDocument", () => {
   let tmpDir: string;
   let manifestPath: string;
 
@@ -255,7 +255,7 @@ describe("validateSplitDocument", () => {
     }
   });
 
-  async function setupSplitFixture(opts: {
+  async function setupPerFeatureFixture(opts: {
     sharedContent: string;
     featureContent: string;
   }): Promise<{ manifestPath: string; manifest: import("../../src/types/documents.js").Manifest }> {
@@ -275,7 +275,7 @@ describe("validateSplitDocument", () => {
       language: "ja",
       documents: {
         "basic-design": {
-          type: "split",
+          type: "per-feature",
           status: "in-progress",
           shared: [{ file: sharedFile, section: "system-architecture", title: "システム構成" }],
           features: [{ name: "sales-management", display: "Sales", file: featureFile }],
@@ -289,13 +289,13 @@ describe("validateSplitDocument", () => {
     return { manifestPath, manifest };
   }
 
-  it("validates split document with valid shared + feature files", async () => {
-    const { manifestPath, manifest } = await setupSplitFixture({
+  it("validates per-feature document with valid shared + feature files", async () => {
+    const { manifestPath, manifest } = await setupPerFeatureFixture({
       sharedContent: "## システム構成\n\nArchitecture overview.\n\n| 版数 | 日付 | 変更内容 | 変更者 |\n| 画面ID | 説明 |\n| テーブルID | 説明 |\n| API | 説明 |",
       featureContent: "## 概要\n\nFeature overview.\n\n## 業務フロー\n\nFlow.\n\n## 画面設計\n\nUI.\n\n| 画面ID | 説明 |\n| テーブルID | 説明 |\n| API | 説明 |",
     });
 
-    const result = await validateSplitDocument(manifestPath, manifest, "basic-design");
+    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design");
     expect(result.per_file).toHaveLength(2);
     // Shared file has the required heading, feature file has all required sections
     const sharedFileResult = result.per_file[0];
@@ -306,12 +306,12 @@ describe("validateSplitDocument", () => {
   });
 
   it("reports missing heading in shared file", async () => {
-    const { manifestPath, manifest } = await setupSplitFixture({
+    const { manifestPath, manifest } = await setupPerFeatureFixture({
       sharedContent: "## 概要\n\nNo architecture heading here.",
       featureContent: "## 概要\n\n## 業務フロー\n\n## 画面設計\n\n| 画面ID | 説明 |\n| テーブルID | 説明 |\n| API | 説明 |",
     });
 
-    const result = await validateSplitDocument(manifestPath, manifest, "basic-design");
+    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design");
     const sharedFileResult = result.per_file[0];
     expect(sharedFileResult.issues.length).toBeGreaterThan(0);
     expect(sharedFileResult.issues[0].type).toBe("missing_section");
@@ -320,19 +320,19 @@ describe("validateSplitDocument", () => {
   });
 
   it("reports missing required sections in feature file", async () => {
-    const { manifestPath, manifest } = await setupSplitFixture({
+    const { manifestPath, manifest } = await setupPerFeatureFixture({
       sharedContent: "## システム構成\n\nArch.\n\n| 画面ID | 説明 |\n| テーブルID | 説明 |\n| API | 説明 |",
       featureContent: "## 概要\n\nOnly overview, missing 業務フロー and 画面設計.",
     });
 
-    const result = await validateSplitDocument(manifestPath, manifest, "basic-design");
+    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design");
     const featureFileResult = result.per_file[1];
     expect(featureFileResult.issues.length).toBeGreaterThan(0);
     expect(featureFileResult.issues.some(i => i.message.includes("業務フロー"))).toBe(true);
     expect(result.valid).toBe(false);
   });
 
-  it("throws SekkeiError when docType is not split", async () => {
+  it("throws SekkeiError when docType has no per-feature document entry", async () => {
     tmpDir = await mkdtemp(join(tmpdir(), "sekkei-validator-test-"));
     const manifest: import("../../src/types/documents.js").Manifest = {
       version: "1.0",
@@ -344,7 +344,7 @@ describe("validateSplitDocument", () => {
     await writeFile(manifestPath, stringifyYaml(manifest), "utf-8");
 
     await expect(
-      validateSplitDocument(manifestPath, manifest, "basic-design")
-    ).rejects.toThrow("not a split document");
+      validatePerFeatureDocument(manifestPath, manifest, "basic-design")
+    ).rejects.toThrow("not a per-feature document");
   });
 });

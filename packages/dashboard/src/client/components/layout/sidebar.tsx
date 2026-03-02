@@ -16,8 +16,8 @@ const NAV_ITEMS: NavItem[] = [
 ]
 
 export function Sidebar() {
-  const { data } = useApi<{ splitMode: boolean }>('/api/features')
-  const showFeatures = data?.splitMode ?? false
+  const { data } = useApi<{ perFeatureMode: boolean }>('/api/features')
+  const showFeatures = data?.perFeatureMode ?? false
 
   return (
     <aside className="w-56 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface)] flex flex-col">

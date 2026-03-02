@@ -25,7 +25,7 @@ interface ChainGroup {
 interface ChainData {
   project: { name: string }
   groups: ChainGroup[]
-  splitMode: boolean
+  perFeatureMode: boolean
 }
 
 const STATUS_BADGE: Record<string, string> = {

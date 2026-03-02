@@ -121,9 +121,9 @@ Required column sets: `["クラスID"]` and `["エラーコード"]`
 ### Keigo
 - Style: `simple` → `である調` (validator enforces no `ですます`)
 
-## 7. Split Mode Support
+## 7. Per-Feature Generation Support
 
-detail-design supports split generation (generate.ts:385):
+detail-design supports per-feature generation (generate.ts:385):
 
 | Scope | Output Path | ID Scoping |
 |-------|------------|------------|
@@ -166,18 +166,18 @@ Feature section validation headings (validator.ts:589): `["概要", "モジュ�
 
 **Fix:** Add both to REQUIRED_SECTIONS.
 
-## BUG-03: Split Mode CLS/DD IDs Have No Feature Prefix — Collision Risk
+## BUG-03: Per-Feature CLS/DD IDs Have No Feature Prefix — Collision Risk
 
 **Location:** `generate.ts:414-418`
 
-Split mode generates feature-prefixed SCR/RPT IDs (`SCR-SAL-001`) but CLS/DD IDs remain unprefixed. When multiple features generate detail-designs:
+Per-feature generation produces feature-prefixed SCR/RPT IDs (`SCR-SAL-001`) but CLS/DD IDs remain unprefixed. When multiple features generate detail-designs:
 - Feature A: CLS-001, CLS-002
 - Feature B: CLS-001, CLS-002 (collision!)
 
-**Impact:** Cross-feature duplicate CLS IDs break ut-spec traceability. The duplicate check in `validateSplitDocument` (validator.ts:653-674) only checks SCR/RPT — not CLS/DD.
+**Impact:** Cross-feature duplicate CLS IDs break ut-spec traceability. The duplicate check in `validatePerFeatureDocument` (validator.ts:653-674) only checks SCR/RPT — not CLS/DD.
 
 **Fix:**
-1. Add CLS/DD to split ID scoping instructions: `CLS-{PREFIX}-001`
+1. Add CLS/DD to per-feature ID scoping instructions: `CLS-{PREFIX}-001`
 2. Add CLS/DD to cross-feature duplicate check regex in validator.ts:657-658
 
 ## BUG-04: Upstream ID Type Derivation Includes Irrelevant Prefixes
@@ -307,7 +307,7 @@ Currently UT-xxx can only trace to CLS-xxx (class level), not specific methods. 
 "detail-design": ["概要", "モジュール設計", "画面設計詳細"],
 ```
 
-Only 3 headings required for feature files. Missing: クラス設計, API詳細仕様, 処理フロー — which are core per-feature sections.
+Only 3 headings required for per-feature files. Missing: クラス設計, API詳細仕様, 処理フロー — which are core per-feature sections.
 
 **Fix:** Add at least `"クラス設計"` to feature section headings.
 
@@ -358,7 +358,7 @@ For batch projects, `PROJECT_TYPE_INSTRUCTIONS` adds batch-specific guidance but
 ## Recommended Action Order
 
 1. **Quick fixes (P1, low effort):** BUG-01 + BUG-02 — fix instruction text and required sections
-2. **Split mode fix (P1):** BUG-03 — add CLS/DD feature prefix + duplicate check
+2. **Per-feature fix (P1):** BUG-03 — add CLS/DD feature prefix + duplicate check
 3. **Project-type expansion (P1):** GAP-01 — add detail-design instructions for saas, microservice, mobile at minimum
 4. **Chain fixes (P2):** GAP-05 + GAP-10 — add screen-design and it-spec chain links
 5. **Validation hardening (P2):** GAP-02 + GAP-09 + BUG-04 — diagram validation + feature headings + upstream override
@@ -372,7 +372,7 @@ For batch projects, `PROJECT_TYPE_INSTRUCTIONS` adds batch-specific guidance but
 |----|------|----------|-------------|--------|
 | BUG-01 | Bug | Instructions | "10-section" text misleads AI (template has 14) | done |
 | BUG-02 | Bug | Validation | セキュリティ実装 + パフォーマンス考慮 missing from REQUIRED_SECTIONS | done |
-| BUG-03 | Bug | Split Mode | CLS/DD IDs no feature prefix → collision in multi-feature | done |
+| BUG-03 | Bug | Per-Feature | CLS/DD IDs no feature prefix → collision in multi-feature | done |
 | BUG-04 | Bug | Cross-Ref | Upstream ID derivation includes irrelevant PP/TP prefixes | done |
 | GAP-01 | Enhancement | Instructions | Only batch has project-type detail-design instructions (10/11 missing) | done |
 | GAP-02 | Enhancement | Validation | No Mermaid classDiagram validation for detail-design | done |
@@ -396,5 +396,5 @@ For batch projects, `PROJECT_TYPE_INSTRUCTIONS` adds batch-specific guidance but
 
 1. Should MTD-xxx (method ID) be a first-class ID prefix, or is CLS-xxx granularity sufficient for most projects?
 2. Should detail-design have variant templates per project-type (like batch), or keep one template with conditional AI instructions?
-3. How should cross-feature CLS references work in split mode? (e.g., Feature B's class extends Feature A's base class)
+3. How should cross-feature CLS references work in per-feature mode? (e.g., Feature B's class extends Feature A's base class)
 4. Should code analysis support be prioritized for Java given the SIer target audience?

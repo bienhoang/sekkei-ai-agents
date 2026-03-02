@@ -54,7 +54,6 @@ export async function readPlan(planFilePath: string): Promise<GenerationPlan> {
     status: status as GenerationPlan["status"],
     features: (data.features as PlanFeature[]) ?? [],
     feature_count: (data.feature_count as number) ?? 0,
-    split_mode: (data.split_mode as boolean) ?? true,
     created: (data.created as string) ?? "",
     updated: (data.updated as string) ?? "",
     phases: (data.phases as PlanPhase[]) ?? [],
@@ -70,7 +69,6 @@ export async function writePlan(planDir: string, plan: GenerationPlan): Promise<
     status: plan.status,
     features: plan.features,
     feature_count: plan.feature_count,
-    split_mode: plan.split_mode,
     created: plan.created,
     updated: plan.updated,
     phases: plan.phases,
@@ -89,7 +87,6 @@ export async function writePlan(planDir: string, plan: GenerationPlan): Promise<
     "## Overview",
     `- **Doc type:** ${plan.doc_type}`,
     `- **Features:** ${plan.feature_count} selected`,
-    "- **Split mode:** enabled",
     `- **Created:** ${plan.created}`,
     "",
     "## Phases",
@@ -101,7 +98,7 @@ export async function writePlan(planDir: string, plan: GenerationPlan): Promise<
     "## Dependencies",
     "- functions-list.md (upstream)",
     "- requirements.md (upstream)",
-    "- sekkei.config.yaml (split config)",
+    "- sekkei.config.yaml (project config)",
   ].join("\n");
 
   await writeFile(join(planDir, "plan.md"), `---\n${frontmatter}---\n\n${body}\n`, "utf-8");
@@ -135,10 +132,10 @@ export async function writePhaseFile(
   planDir: string,
   phase: PlanPhase,
   docType: string,
-  splitConfig: Record<string, string[]>,
+  sectionConfig: Record<string, string[]>,
   feature?: PlanFeature,
 ): Promise<void> {
-  const content = renderPhaseFile(phase, docType, splitConfig, feature);
+  const content = renderPhaseFile(phase, docType, sectionConfig, feature);
   await writeFile(join(planDir, phase.file), content, "utf-8");
 }
 

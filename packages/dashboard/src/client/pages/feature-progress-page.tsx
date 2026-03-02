@@ -12,7 +12,7 @@ interface FeatureProgress {
 }
 
 interface FeaturesData {
-  splitMode: boolean
+  perFeatureMode: boolean
   features: FeatureProgress[]
   docTypes: string[]
 }
@@ -31,12 +31,12 @@ export function FeatureProgressPage() {
   if (error) return <AlertCard type="error" message="Failed to load features" detail={error} />
   if (!data) return null
 
-  if (!data.splitMode) {
+  if (!data.perFeatureMode) {
     return (
       <AlertCard
         type="info"
-        message="Feature progress is only available in split mode."
-        detail="Create features via /sekkei:plan to enable split mode."
+        message="Feature progress is only available in per-feature mode."
+        detail="Create features via /sekkei:plan to enable per-feature generation."
       />
     )
   }

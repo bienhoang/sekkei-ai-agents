@@ -14,7 +14,7 @@ Enable development teams to rapidly generate, manage, and export specification d
 
 1. **V-Model Chain Automation** — Documents are generated sequentially, each leveraging previous ones as context
 2. **Traceability Matrix** — Cross-reference IDs (F-xxx, REQ-xxx, etc.) link all documents together
-3. **Split Document Management** — Large documents automatically split into system-wide + per-feature sections
+3. **Per-Feature Document Management** — Large documents automatically generated as system-wide + per-feature sections
 4. **Export Flexibility** — Generate Excel, PDF, and raw Markdown from unified specification
 5. **Multilingual Support** — Translate specs to English and Vietnamese while maintaining structure
 6. **Keigo Levels** — Configurable politeness levels in Japanese (丁寧語, 謙譲語, simple)
@@ -32,12 +32,12 @@ Enable development teams to rapidly generate, manage, and export specification d
    ↓
 3. Functions List (機能一覧) — feature catalog (from Requirements)
    ↓
-4. Basic Design (基本設計書) — architectural design [SPLIT]
+4. Basic Design (基本設計書) — architectural design [PER-FEATURE]
    ├── System-wide sections (03-system/)
    ├── Security Design (03-system/security-design.md)
    └── Per-feature sections (05-features/)
    ↓
-5. Detail Design (詳細設計書) — implementation details [SPLIT by feature]
+5. Detail Design (詳細設計書) — implementation details [PER-FEATURE]
    └── Per-feature sections (05-features/)
    ↓
 6. Test Plan (テスト計画書)
@@ -80,7 +80,7 @@ output/
 │   └── project-plan.md                 # Project plan
 ├── 04-functions-list.md                # Feature/function list
 ├── 10-glossary.md                      # Terminology glossary
-├── 03-system/                          # System design (split)
+├── 03-system/                          # System design (per-feature)
 │   ├── index.md                        # Navigation
 │   ├── system-architecture.md
 │   ├── database-design.md
@@ -88,7 +88,7 @@ output/
 │   ├── non-functional-design.md
 │   ├── technology-rationale.md
 │   └── crud-matrix.md
-├── 05-features/                        # Per-feature specs (split)
+├── 05-features/                        # Per-feature specs
 │   ├── index.md                        # Feature list
 │   ├── sales-management/               # Feature: kebab-case name
 │   │   ├── index.md
@@ -113,7 +113,7 @@ output/
 │   └── traceability-matrix.md
 ├── 09-ui/                              # UI/screen design
 │   └── [screen mockups]
-└── _index.yaml                         # Manifest (metadata for split docs)
+└── _index.yaml                         # Manifest (metadata for per-feature docs)
 ```
 
 ## Key Features
@@ -207,7 +207,7 @@ Reads `sekkei.config.yaml` and returns:
 
 **Tool:** `export_document`
 
-- Merges split document files in correct order
+- Merges per-feature document files in correct order
 - Exports to Excel (openpyxl) or PDF (WeasyPrint)
 - Preserves table structure and cross-references
 - Supports batch export (all documents in chain)
@@ -355,7 +355,7 @@ features:
 ```
 
 **Manifest** (`_index.yaml`):
-Tracks split document structure (shared sections + per-feature files).
+Tracks per-feature document structure (shared sections + per-feature files).
 
 ### Python Bridge
 
@@ -378,7 +378,7 @@ Exports via Python CLI (openpyxl, WeasyPrint):
 | FR-002 | Support V-model document chain | ✅ Complete |
 | FR-003 | Validate document completeness & structure | ✅ Complete |
 | FR-004 | Track cross-reference IDs across documents | ✅ Complete |
-| FR-005 | Split large docs (basic-design, detail-design, test-spec) | ✅ Complete |
+| FR-005 | Per-feature generation for large docs (basic-design, detail-design, test-spec) | ✅ Complete |
 | FR-006 | Support per-feature specification sections | ✅ Complete |
 | FR-007 | Export to Excel and PDF | ✅ Complete |
 | FR-008 | Translate specifications to EN / VI | ✅ Complete |
@@ -538,7 +538,7 @@ sekkei/
 ### Phase 1: Core V-Model (COMPLETE)
 - ✅ RFP → Requirements → Functions List
 - ✅ Requirements specification (requirements, nfr, project-plan)
-- ✅ Basic Design with split support (+ security-design)
+- ✅ Basic Design with per-feature generation support (+ security-design)
 - ✅ Detail Design per-feature
 - ✅ Test Plan + UT/IT/ST/UAT Spec (5 test doc types)
 - ✅ Template system with overrides
@@ -549,7 +549,7 @@ sekkei/
 ### Phase 2: Enhanced Automation (COMPLETE)
 - ✅ Numbered directory structure
 - ✅ Structure validation (03-system/, 05-features/ etc.)
-- ✅ Manifest-based split doc tracking
+- ✅ Manifest-based per-feature doc tracking
 - ✅ Per-feature specification index
 - ✅ Kebab-case feature folder enforcement
 - ✅ Chain status dashboard
@@ -644,7 +644,7 @@ sekkei/
 
 ## Conclusion
 
-Sekkei v2.0 with the numbered output structure and structure validation provides a comprehensive, maintainable framework for Japanese software specifications. The V-model chain ensures traceability from RFP through testing, while split documents enable scalability for large projects with many features.
+Sekkei v2.0 with the numbered output structure and structure validation provides a comprehensive, maintainable framework for Japanese software specifications. The V-model chain ensures traceability from RFP through testing, while per-feature documents enable scalability for large projects with many features.
 
 The system is production-ready for:
 - Mid-to-large software projects (5-50 person teams)

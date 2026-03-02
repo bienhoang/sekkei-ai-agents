@@ -4,7 +4,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { DOC_TYPES } from "../types/documents.js";
-import { validateDocument, validateSplitDocument } from "../lib/validator.js";
+import { validateDocument, validatePerFeatureDocument } from "../lib/validator.js";
 import { readManifest } from "../lib/manifest-manager.js";
 import { validateNumberedStructure } from "../lib/structure-validator.js";
 import { logger } from "../lib/logger.js";
@@ -16,7 +16,7 @@ const inputSchema = {
   upstream_content: z.string().max(500_000).optional().describe("Upstream document content for cross-reference checking"),
   manifest_path: z.string().max(500).optional()
     .refine((p) => !p || /\.ya?ml$/i.test(p), { message: "Must be .yaml/.yml" })
-    .describe("Path to _index.yaml for split document validation"),
+    .describe("Path to _index.yaml for per-feature document validation"),
   structure_path: z.string().max(500).optional()
     .refine((p) => !p || !p.includes(".."), { message: "Path must not contain .." })
     .describe("Output directory path for numbered structure validation"),
@@ -139,10 +139,10 @@ export async function handleValidateDocument(
       };
     }
     const manifest = await readManifest(manifest_path);
-    const result = await validateSplitDocument(manifest_path, manifest, doc_type as Parameters<typeof validateSplitDocument>[2], upstream_content);
+    const result = await validatePerFeatureDocument(manifest_path, manifest, doc_type as Parameters<typeof validatePerFeatureDocument>[2], upstream_content);
 
     const lines: string[] = [
-      `# Split Validation Result`,
+      `# Per-Feature Validation Result`,
       ``,
       `**Document Type:** ${doc_type}`,
       `**Files Validated:** ${result.per_file.length}`,

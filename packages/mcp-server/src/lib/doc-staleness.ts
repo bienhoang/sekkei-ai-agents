@@ -64,7 +64,7 @@ export async function loadChainDocPaths(configPath: string): Promise<Map<string,
     if (entry.output) {
       paths.set(docType, resolve(base, entry.output));
     } else if (entry.system_output) {
-      // For split docs, store system_output as path; features_output handled in checkChainStaleness
+      // For per-feature documents, store system_output as path; features_output handled in checkChainStaleness
       paths.set(docType, resolve(base, entry.system_output));
       // Store features_output path too if present (keyed with suffix)
       if (entry.features_output) {
@@ -129,7 +129,7 @@ export async function checkChainStaleness(configPath: string): Promise<Staleness
         const path = docPaths.get(docType);
         if (!path) { dateCache.set(docType, null); return; }
 
-        // For split-docs, fetch both paths in parallel and take max
+        // For per-feature docs, fetch both paths in parallel and take max
         const featPath = docPaths.get(`${docType}:features`);
         const [date, featDate] = await Promise.all([
           gitLastModified(repoRoot, path),
@@ -186,7 +186,7 @@ export async function checkDocStaleness(configPath: string, docType: string): Pr
     const downPath = docPaths.get(docType);
     if (!downPath) return [];
 
-    // Fetch downstream date (with split-doc handling) and all upstream dates in parallel
+    // Fetch downstream date (with per-feature doc handling) and all upstream dates in parallel
     const featPath = docPaths.get(`${docType}:features`);
     const upstreamDocTypes = relevantPairs.map(([up]) => up).filter((up) => docPaths.has(up));
 

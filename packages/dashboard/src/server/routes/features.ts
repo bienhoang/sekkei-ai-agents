@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { existsSync } from 'node:fs'
 import { join } from 'node:path'
-import { SPLIT_DOC_TYPES } from '../types.js'
+import { PER_FEATURE_DOC_TYPES } from '../types.js'
 import type { ServiceContext, FeaturesData } from '../types.js'
 
 export function createFeaturesRouter(ctx: ServiceContext): Router {
@@ -11,21 +11,21 @@ export function createFeaturesRouter(ctx: ServiceContext): Router {
     try {
       const config = await ctx.configReader.readConfig(ctx.configPath)
 
-      // Check split mode
+      // Check per-feature mode (auto-detected from features dir or index file)
       const featuresDir = join(ctx.docsRoot, '05-features')
       const indexFile = join(ctx.docsRoot, '_index.yaml')
-      const splitMode = config.split_mode ?? (existsSync(featuresDir) || existsSync(indexFile))
+      const perFeatureMode = existsSync(featuresDir) || existsSync(indexFile)
 
-      if (!splitMode) {
-        return res.json({ splitMode: false, features: [], docTypes: [] } satisfies FeaturesData)
+      if (!perFeatureMode) {
+        return res.json({ perFeatureMode: false, features: [], docTypes: [] } satisfies FeaturesData)
       }
 
       const features = await ctx.workspaceScanner.scanFeatures(ctx.docsRoot, config)
 
       const data: FeaturesData = {
-        splitMode: true,
+        perFeatureMode: true,
         features,
-        docTypes: [...SPLIT_DOC_TYPES],
+        docTypes: [...PER_FEATURE_DOC_TYPES],
       }
 
       res.json(data)

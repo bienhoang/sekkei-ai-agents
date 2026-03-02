@@ -13,12 +13,12 @@ const CMD_MAP: Record<string, string> = {
 
 function buildScopeLines(
   phase: PlanPhase,
-  splitConfig: Record<string, string[]>,
+  sectionConfig: Record<string, string[]>,
   feature?: PlanFeature,
 ): string[] {
   const lines: string[] = [];
   if (phase.type === "shared") {
-    const sections = splitConfig["shared"] ?? [];
+    const sections = sectionConfig["shared"] ?? [];
     lines.push(`- Sections: ${sections.join(", ")}`);
   } else if (phase.type === "per-feature" && feature) {
     lines.push(`- Feature: ${feature.id} — ${feature.name}`);
@@ -39,7 +39,7 @@ function buildScopeParam(phase: PlanPhase): string {
 export function renderPhaseFile(
   phase: PlanPhase,
   docType: string,
-  splitConfig: Record<string, string[]>,
+  sectionConfig: Record<string, string[]>,
   feature?: PlanFeature,
 ): string {
   const fm = stringify({
@@ -55,7 +55,7 @@ export function renderPhaseFile(
     : `/${CMD_MAP[docType] ?? `sekkei:${docType}`}`;
 
   const scopeParam = buildScopeParam(phase);
-  const scopeLines = buildScopeLines(phase, splitConfig, feature);
+  const scopeLines = buildScopeLines(phase, sectionConfig, feature);
 
   const body = [
     `# Phase ${phase.number}: ${phase.name}`,

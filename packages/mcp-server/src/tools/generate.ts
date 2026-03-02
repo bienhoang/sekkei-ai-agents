@@ -52,9 +52,9 @@ const inputSchema = {
   project_type: z.enum(PROJECT_TYPES).optional()
     .describe("Project type for conditional section instructions"),
   feature_name: z.string().regex(/^[a-z][a-z0-9-]{1,49}$/).optional()
-    .describe("Feature folder name (kebab-case) for split generation"),
+    .describe("Feature folder name (kebab-case) for per-feature generation"),
   scope: z.enum(["shared", "feature"]).optional()
-    .describe("Split scope: shared system sections or feature-specific sections"),
+    .describe("Per-feature scope: shared system sections or feature-specific sections"),
   output_path: z.string().max(500).optional()
     .describe("Suggested output path; auto-derived from doc_type if omitted"),
   config_path: z.string().max(500).optional()
@@ -144,12 +144,12 @@ function buildUpstreamIdsBlock(content: string): string {
   ].join("\n");
 }
 
-/** Doc types that support split generation (scope param) */
-const SPLIT_ALLOWED: ReadonlySet<DocType> = new Set([
+/** Doc types that support per-feature generation (scope param) */
+const PER_FEATURE_ALLOWED: ReadonlySet<DocType> = new Set([
   "basic-design", "detail-design", "ut-spec", "it-spec",
 ]);
 
-function buildSplitInstructions(
+function buildPerFeatureInstructions(
   docType: DocType, scope: "shared" | "feature",
   featureName?: string
 ): string {
@@ -158,7 +158,7 @@ function buildSplitInstructions(
     return [
       base,
       "",
-      "## Split Mode: Shared Sections (03-system/)",
+      "## Per-Feature: Shared Sections (03-system/)",
       "Generate ONLY system-wide shared sections.",
       "Focus: system-architecture, database-design, external-interface, non-functional, technology.",
       "Each section → separate file in 03-system/. Do NOT include feature-specific content.",
@@ -169,7 +169,7 @@ function buildSplitInstructions(
   return [
     base,
     "",
-    `## Split Mode: Feature "${label}" (05-features/${featureName}/)`,
+    `## Per-Feature: Feature "${label}" (05-features/${featureName}/)`,
     `Generate ONLY sections specific to feature "${label}".`,
     "Focus: business-flow, screen-design, report-design, scoped functions.",
     "Reference 03-system/ sections by cross-reference only — do not duplicate.",
@@ -238,9 +238,9 @@ export async function handleGenerateDocument(
     existing_content, auto_insert_changelog, change_description,
     append_mode, input_sources, post_actions, template_mode,
     templateDir: tDir, overrideDir } = args;
-  if (scope && !SPLIT_ALLOWED.has(doc_type)) {
+  if (scope && !PER_FEATURE_ALLOWED.has(doc_type)) {
     return {
-      content: [{ type: "text" as const, text: `Split mode (scope) not supported for ${doc_type}. Supported: ${[...SPLIT_ALLOWED].join(", ")}` }],
+      content: [{ type: "text" as const, text: `Per-feature generation (scope) not supported for ${doc_type}. Supported: ${[...PER_FEATURE_ALLOWED].join(", ")}` }],
       isError: true,
     };
   }
@@ -334,7 +334,7 @@ export async function handleGenerateDocument(
     }
 
     const instructions = scope
-      ? buildSplitInstructions(doc_type, scope, feature_name)
+      ? buildPerFeatureInstructions(doc_type, scope, feature_name)
       : GENERATION_INSTRUCTIONS[doc_type];
     const name = project_name ?? "Unnamed Project";
 

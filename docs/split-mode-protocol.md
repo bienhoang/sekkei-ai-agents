@@ -1,25 +1,25 @@
-# Split-Mode Generation Protocol
+# Per-Feature Generation Protocol
 
 > Code refs: `plan-actions.ts`, `plan-state.ts`, `manifest-schemas.ts`, `merge-documents.ts`, token-budget-estimator.ts, upstream-filter.ts
 
 ## Overview
 
-Split-mode generates large documents (basic-design, detail-design, test-specs) as multiple per-feature files instead of one monolithic file. The `manage_plan` MCP tool orchestrates phased generation: shared sections first, then per-feature sections, then cross-reference validation. Token budgeting and smart upstream filtering optimize context and token usage.
+Per-feature generation produces large documents (basic-design, detail-design, test-specs) as multiple per-feature files instead of one single-call file. The `manage_plan` MCP tool orchestrates phased generation: shared sections first, then per-feature sections, then cross-reference validation. Token budgeting and smart upstream filtering optimize context and token usage.
 
 ## Trigger Conditions
 
 | Condition | Check | Source |
 |-----------|-------|--------|
-| Doc type supports split | `SPLIT_ALLOWED` set | `generate.ts:434` |
+| Doc type supports per-feature | `SPLIT_ALLOWED` set | `generate.ts:434` |
 | Functions list exists | `04-functions-list/functions-list.md` file present | `plan-actions.ts` |
 | Feature count > 0 | Count `## ` headers in `functions-list.md` | `plan-actions.ts` |
 | No active plan | No pending/in_progress plan for same doc-type | `plan-state.ts:169-195` |
 
 **Supported doc types:** `basic-design`, `detail-design`, `ut-spec`, `it-spec`
 
-**Automatic Activation:** Split mode is automatically detected via `manage_plan(action="detect")`. No config required — per-feature generation activates when `functions-list.md` exists and contains any features (`featureCount > 0`).
+**Automatic Activation:** Per-feature generation is automatically detected via `manage_plan(action="detect")`. No config required — per-feature generation activates when `functions-list.md` exists and contains any features (`featureCount > 0`).
 
-**Note:** The `split:` configuration block in `sekkei.config.yaml` has been removed. Split mode now uses automatic per-feature detection based on functions-list presence.
+**Note:** The `split:` configuration block in `sekkei.config.yaml` has been removed. Per-feature generation now uses automatic detection based on functions-list presence.
 
 ## Manifest Schema (`_index.yaml`)
 
@@ -32,14 +32,14 @@ Validated by Zod schemas in `manifest-schemas.ts`.
 | `version` | string | default `"1.0"` | Schema version |
 | `project` | string (max 200) | yes | Project name |
 | `language` | enum `ja\|en\|vi` | yes | Output language |
-| `documents` | Record<string, SplitDocument> | yes | Per-doc-type split config |
+| `documents` | Record<string, PerFeatureDocument> | yes | Per-doc-type per-feature config |
 | `translations` | array | no | Translation manifests |
 
-### SplitDocumentSchema
+### PerFeatureDocumentSchema
 
 | Field | Type | Default | Description |
 |-------|------|---------|-------------|
-| `type` | `"split"` | — | Always "split" |
+| `type` | `"per-feature"` | — | Always "per-feature" |
 | `status` | `pending\|in-progress\|complete` | — | Generation status |
 | `shared` | SharedEntry[] | — | System-wide sections |
 | `features` | FeatureEntry[] | — | Per-feature files |
@@ -112,7 +112,7 @@ From `plan-actions.ts:34-50`:
 **Auto-Budgeting:** When `manage_plan` tool runs, it:
 1. Counts entities (F-xxx, REQ-xxx, etc.) in upstream document
 2. Calls `token-budget-estimator` to predict output tokens
-3. Returns advisory with recommended strategy (monolithic/progressive/split_required)
+3. Returns advisory with recommended strategy (single-call/progressive/plan_required)
 
 **Smart Upstream Filtering:**
 - Per-feature phase extraction uses `upstream-filter.ts`
@@ -190,7 +190,7 @@ project: "EC Site"
 language: ja
 documents:
   detail-design:
-    type: split
+    type: per-feature
     status: in-progress
     shared:
       - file: "03-system/detail-design.md"

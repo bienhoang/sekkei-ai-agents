@@ -1,6 +1,6 @@
 # Translate Architecture Analysis
 
-> How `/sekkei:translate` works: flow, glossary integration, split-doc handling, output storage, and proposed improvements.
+> How `/sekkei:translate` works: flow, glossary integration, per-feature doc handling, output storage, and proposed improvements.
 
 ## 1. Architecture Overview
 
@@ -9,9 +9,9 @@
   │
   ├─ Skill Layer (utilities.md) ─── orchestration
   │   ├─ Read source document
-  │   ├─ Check for _index.yaml manifest (split vs monolithic)
+  │   ├─ Check for _index.yaml manifest (per-feature vs single-call)
   │   ├─ Load glossary from workspace-docs/glossary.yaml
-  │   └─ Loop: call MCP tool per file (split) or once (monolithic)
+  │   └─ Loop: call MCP tool per file (per-feature) or once (single-call)
   │
   ├─ MCP Tool (translate_document) ─── context preparation
   │   ├─ Load glossary YAML if path provided
@@ -25,8 +25,8 @@
   │   └─ Output translated content
   │
   └─ Skill Layer ─── save output
-      ├─ Monolithic: workspace-docs/{doc-type}.{target_lang}.md
-      └─ Split: translations/{lang}/shared/ + features/{id}/
+      ├─ Single-call: workspace-docs/{doc-type}.{target_lang}.md
+      └─ Per-feature: translations/{lang}/shared/ + features/{id}/
 ```
 
 **Key design decision**: MCP tool is deterministic (no AI). Translation is done by Claude at the skill layer. This keeps MCP server free of LLM dependencies.
@@ -36,9 +36,9 @@
 | Component | Path | LOC | Role |
 |-----------|------|-----|------|
 | MCP Tool | `packages/mcp-server/src/tools/translate.ts` | 76 | Prepare translation context + glossary |
-| Skill Flow | `packages/skills/content/references/utilities.md` | — | Orchestration steps for both monolithic + split |
+| Skill Flow | `packages/skills/content/references/utilities.md` | — | Orchestration steps for both single-call + per-feature |
 | Glossary Loader | `packages/mcp-server/src/lib/glossary-native.ts` | 155 | Load/save/search/export/import glossary terms |
-| Manifest Manager | `packages/mcp-server/src/lib/manifest-manager.ts` | 144 | Split doc manifest CRUD + translation manifest creation |
+| Manifest Manager | `packages/mcp-server/src/lib/manifest-manager.ts` | 144 | Per-feature document manifest CRUD + translation manifest creation |
 | Types | `packages/mcp-server/src/types/documents.ts` | — | `Manifest.translations[]`, `GlossaryTerm` |
 | Manifest Schema | `packages/mcp-server/src/types/manifest-schemas.ts` | — | Zod validation for `translations[].lang/manifest` |
 | Tests | `packages/mcp-server/tests/unit/translate-tool.test.ts` | 65 | 4 basic tests |
@@ -70,7 +70,7 @@ GlossaryTerm { ja: string, en: string, vi?: string, context?: string }
 
 Currently outputs: `{ja} → {en} ({context})` — **ignores target language and `vi` field**.
 
-## 4. Split Document Translation
+## 4. Per-Feature Document Translation
 
 ### Flow
 
@@ -192,6 +192,6 @@ glossaryTerms = terms
 
 - Glossary with Vietnamese terms (BUG-1 scenario)
 - Reverse translation (en→ja)
-- Split document translation manifest creation
+- Per-feature document translation manifest creation
 - Large document handling (near 500K limit)
 - Post-translation validation (Phase 2)

@@ -4,7 +4,7 @@ import type { PlanPhase, PlanFeature } from "../../src/types/plan.js";
 
 // --- Fixtures ---
 
-const SPLIT_CONFIG = {
+const SECTION_CONFIG = {
   shared: ["system-architecture", "database-design"],
   feature: ["module-design", "class-design"],
 };
@@ -46,7 +46,7 @@ const FEATURE: PlanFeature = {
 describe("plan-phase-template", () => {
   describe("renderPhaseFile", () => {
     it("renders shared phase with YAML frontmatter", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("---");
       expect(result).toContain("phase: 1");
       expect(result).toContain("name: Shared Sections");
@@ -55,53 +55,53 @@ describe("plan-phase-template", () => {
     });
 
     it("renders shared phase without feature_id", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).not.toContain("feature_id");
     });
 
     it("renders shared phase with correct scope sections", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("system-architecture, database-design");
     });
 
     it("renders shared phase with correct generation command", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("/sekkei:basic-design");
       expect(result).toContain('scope: "shared"');
     });
 
     it("renders per-feature phase with feature_id in frontmatter", () => {
-      const result = renderPhaseFile(FEATURE_PHASE, "basic-design", SPLIT_CONFIG, FEATURE);
+      const result = renderPhaseFile(FEATURE_PHASE, "basic-design", SECTION_CONFIG, FEATURE);
       expect(result).toContain("feature_id: sal");
     });
 
     it("renders per-feature phase with feature details in scope", () => {
-      const result = renderPhaseFile(FEATURE_PHASE, "basic-design", SPLIT_CONFIG, FEATURE);
+      const result = renderPhaseFile(FEATURE_PHASE, "basic-design", SECTION_CONFIG, FEATURE);
       expect(result).toContain("Feature: sal");
       expect(result).toContain("Sales Management");
       expect(result).toContain("complexity=medium");
     });
 
     it("renders per-feature phase with correct scope param", () => {
-      const result = renderPhaseFile(FEATURE_PHASE, "basic-design", SPLIT_CONFIG, FEATURE);
+      const result = renderPhaseFile(FEATURE_PHASE, "basic-design", SECTION_CONFIG, FEATURE);
       expect(result).toContain('scope: "feature"');
       expect(result).toContain('feature_id: "sal"');
     });
 
     it("renders validation phase with correct command", () => {
-      const result = renderPhaseFile(VALIDATION_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(VALIDATION_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("/sekkei:validate");
       expect(result).toContain("manifest path");
     });
 
     it("renders validation phase scope as 'all generated files'", () => {
-      const result = renderPhaseFile(VALIDATION_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(VALIDATION_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("all generated files");
     });
 
     it("includes TODO checklist in all phase types", () => {
       for (const phase of [SHARED_PHASE, FEATURE_PHASE, VALIDATION_PHASE]) {
-        const result = renderPhaseFile(phase, "basic-design", SPLIT_CONFIG, FEATURE);
+        const result = renderPhaseFile(phase, "basic-design", SECTION_CONFIG, FEATURE);
         expect(result).toContain("## TODO");
         expect(result).toContain("- [ ] Generate document");
         expect(result).toContain("- [ ] Review output");
@@ -110,30 +110,30 @@ describe("plan-phase-template", () => {
     });
 
     it("includes success criteria in all phase types", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("## Success Criteria");
       expect(result).toContain("Cross-reference IDs valid");
     });
 
     it("uses correct command for detail-design doc type", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "detail-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "detail-design", SECTION_CONFIG);
       expect(result).toContain("/sekkei:detail-design");
     });
 
     it("uses correct command for test-spec doc type", () => {
       const testPhase: PlanPhase = { ...FEATURE_PHASE, type: "per-feature" };
-      const result = renderPhaseFile(testPhase, "test-spec", SPLIT_CONFIG, FEATURE);
+      const result = renderPhaseFile(testPhase, "test-spec", SECTION_CONFIG, FEATURE);
       expect(result).toContain("/sekkei:test-spec");
     });
 
     it("falls back to sekkei:{docType} for unknown doc types", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "unknown-type", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "unknown-type", SECTION_CONFIG);
       expect(result).toContain("/sekkei:unknown-type");
     });
 
     it("renders per-feature phase without feature arg gracefully", () => {
       // No feature passed — should not crash, just omit feature lines
-      const result = renderPhaseFile(FEATURE_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(FEATURE_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("phase: 2");
       expect(result).toContain("feature_id: sal");
       // No "Feature: sal" scope line since no feature object
@@ -141,18 +141,18 @@ describe("plan-phase-template", () => {
     });
 
     it("renders phase heading with correct number and name", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("# Phase 1: Shared Sections");
     });
 
     it("renders generation command section", () => {
-      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      const result = renderPhaseFile(SHARED_PHASE, "basic-design", SECTION_CONFIG);
       expect(result).toContain("## Generation Command");
     });
 
-    it("handles empty split config gracefully", () => {
-      const emptySplit = { shared: [], feature: [] };
-      const result = renderPhaseFile(SHARED_PHASE, "basic-design", emptySplit);
+    it("handles empty section config gracefully", () => {
+      const emptyConfig = { shared: [], feature: [] };
+      const result = renderPhaseFile(SHARED_PHASE, "basic-design", emptyConfig);
       expect(result).toContain("Sections: ");
       expect(result).not.toContain("undefined");
     });

@@ -1,6 +1,6 @@
 /**
  * Document merge logic for manifest-based export.
- * Reads split files, strips per-file frontmatter, concatenates with separators.
+ * Reads per-feature files, strips per-file frontmatter, concatenates with separators.
  */
 import { readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";

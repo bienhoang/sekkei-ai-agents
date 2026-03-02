@@ -102,13 +102,7 @@ Rà soát kỹ các thành phần:
 - **TBL-xxx**: Cấu trúc bảng dữ liệu có tối ưu không?
 - **API-xxx**: Các cổng giao tiếp đã tuân thủ chuẩn RESTful chưa?
 
-Với quy mô hơn 20 tính năng, Dev Lead kích hoạt chế độ tách file (Split Mode) trong file cấu hình để quản lý dễ dàng hơn.
-```yaml
-# sekkei.config.yaml
-output:
-  split: true
-  split_by: module
-```
+Với quy mô hơn 20 tính năng, per-feature generation đã tự động kích hoạt khi `functions-list.md` tồn tại — Dev Lead không cần cấu hình gì thêm.
 
 **Ngày 9–10: Thiết kế Bảo mật, Chi tiết và Cơ sở Dữ liệu**
 

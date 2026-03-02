@@ -175,13 +175,13 @@ describe("generate_document tool", () => {
     expect(result.content[0].text).toContain("05-features/sales-management/basic-design.md");
   });
 
-  it("generate_document without split params returns monolithic behavior with output path", async () => {
+  it("generate_document without scope returns default output path", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "basic-design",
       input_content: "Test input",
       project_name: "Test",
     });
-    expect(result.content[0].text).not.toContain("Split Mode");
+    expect(result.content[0].text).not.toContain("Per-Feature:");
     expect(result.content[0].text).toContain("Output Path");
     expect(result.content[0].text).toContain("03-system/basic-design.md");
   });
@@ -200,7 +200,7 @@ describe("generate_document tool", () => {
   });
 });
 
-describe("generate_document split mode guard", () => {
+describe("generate_document per-feature guard", () => {
   let server: McpServer;
 
   beforeAll(() => {
@@ -313,7 +313,7 @@ describe("export_document tool — manifest merge mode", () => {
       "language: ja",
       "documents:",
       "  basic-design:",
-      "    type: split",
+      "    type: per-feature",
       "    status: complete",
       "    shared:",
       "      - file: 03-system/arch.md",

@@ -24,7 +24,6 @@ export async function readConfig(configPath: string): Promise<ProjectConfig> {
       output: parsed.output ?? DEFAULT_CONFIG.output,
       chain: parsed.chain ?? {},
       rfp: parsed.rfp,
-      split_mode: parsed.split_mode,
     }
   } catch {
     return DEFAULT_CONFIG

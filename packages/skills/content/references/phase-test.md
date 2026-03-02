@@ -18,7 +18,7 @@ Before generating test specs (ut-spec, it-spec), check for per-feature generatio
    - If Generate Normally: continue below
 5. If `should_trigger=false`: continue with normal generation below
 
-Note: st-spec and uat-spec are system-level only (no per-feature split) — skip detect for these.
+Note: st-spec and uat-spec are system-level only (no per-feature generation) — skip detect for these.
 
 ---
 
@@ -72,7 +72,7 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 
 **Prerequisite check (MUST run before interview):**
 1. Read `chain.detail_design.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Run `/sekkei:detail-design` first."
-2. Read upstream from `chain.detail_design.output` (or `system_output` + `features_output` if split); also load test-plan if `chain.test_plan.status == "complete"`
+2. Read upstream from `chain.detail_design.output` (or `system_output` + `features_output` if per-feature); also load test-plan if `chain.test_plan.status == "complete"`
 3. Concatenate as `upstream_content` (detail-design + test-plan if available) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
@@ -84,7 +84,7 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
 3. Call MCP tool `generate_document` with `doc_type: "ut-spec"`, `upstream_content` (detail-design + test-plan), and `language` from config
 4. **Pre-scan**: Extract CLS-xxx module IDs from upstream detail-design. Group into batches of 2-3 modules.
-5. **Fallback check**: If total CLS-xxx <= 2, generate monolithically (skip to step 11 — single call with all rules, save, then validate).
+5. **Fallback check**: If total CLS-xxx <= 2, use single-call generation (skip to step 11 — single call with all rules, save, then validate).
 6. **Create progress tasks** (follow `references/progressive-generation.md`):
    - TaskCreate: "Generate UT spec header + test design" (activeForm: "Generating UT spec header")
    - TaskCreate: "Generate test cases for {CLS-xxx..CLS-yyy}" for each batch (activeForm: "Generating test cases for {module names}")
@@ -107,7 +107,7 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 10. **Stage N+2 — Defect Report**: TaskUpdate in_progress →
     Generate ONLY: §4 デフェクト報告 (skeleton template, minimal content) →
     **Append** → TaskUpdate complete
-11. (Monolithic fallback): Follow these rules for single-call generation:
+11. (Single-call fallback): Follow these rules for single-call generation:
     - ID format: `UT-001`. Cross-reference CLS-xxx, DD-xxx, TP-xxx
     - Minimum 5 test cases per module. テスト観点: 正常系 / 異常系 / 境界値
 12. Save output (already done if progressive):
@@ -125,7 +125,7 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 
 **Prerequisite check (MUST run before interview):**
 1. Read `chain.basic_design.status` from `sekkei.config.yaml` — abort if not `"complete"`: "Run `/sekkei:basic-design` first."
-2. Read upstream from `chain.basic_design.output` (or split outputs); also load test-plan if `chain.test_plan.status == "complete"`
+2. Read upstream from `chain.basic_design.output` (or per-feature outputs); also load test-plan if `chain.test_plan.status == "complete"`
 3. Concatenate as `upstream_content` (basic-design + test-plan if available) and pass to `generate_document`
 
 **Interview questions (ask before generating):**
@@ -136,7 +136,7 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
 3. Call MCP tool `generate_document` with `doc_type: "it-spec"`, `upstream_content` (basic-design + test-plan), and `language` from config
 4. **Pre-scan**: Extract API-xxx IDs from upstream basic-design. Group by subsystem/module (2-4 APIs per stage).
-5. **Fallback check**: If total API groups <= 2, generate monolithically (skip to step 10 — single call with all rules, save, then validate).
+5. **Fallback check**: If total API groups <= 2, use single-call generation (skip to step 10 — single call with all rules, save, then validate).
 6. **Create progress tasks** (follow `references/progressive-generation.md`):
    - TaskCreate: "Generate IT spec header + interface list" (activeForm: "Generating IT spec header")
    - TaskCreate: "Generate integration tests for {API group}" for each group (activeForm: "Generating integration tests")
@@ -154,7 +154,7 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 9. **Stage N+1 — Traceability**: TaskUpdate in_progress →
    Read full file; generate ONLY: §3 トレーサビリティ →
    **Append** → TaskUpdate complete
-10. (Monolithic fallback): ID format: `IT-001`. Cross-reference API-xxx, SCR-xxx, TBL-xxx, TP-xxx. Verify interface contracts.
+10. (Single-call fallback): ID format: `IT-001`. Cross-reference API-xxx, SCR-xxx, TBL-xxx, TP-xxx. Verify interface contracts.
 11. Save output (already done if progressive):
     - Default: `{output.directory}/08-test/it-spec.md`
     - Feature scope: `{output.directory}/05-features/{name}/it-spec.md`
@@ -189,7 +189,7 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 5. **Stage 1 — Header + Scenario List**: TaskUpdate in_progress →
    Generate ONLY: YAML frontmatter + admin + §1 E2Eシナリオ一覧 (ST-xxx IDs) →
    ID format: `ST-001`. Cross-reference SCR-xxx, TBL-xxx, F-xxx from upstream →
-   System-level only — no per-feature split →
+   System-level only — no per-feature generation →
    **Write** to `{output.directory}/08-test/st-spec.md` → TaskUpdate complete
 6. **Stage 2 — E2E Test Cases**: TaskUpdate in_progress →
    Read existing file; generate ONLY: §2 E2Eテストケース (scenario-based, largest section) →
@@ -231,7 +231,7 @@ Note: st-spec and uat-spec are system-level only (no per-feature split) — skip
 5. **Stage 1 — Header + Scenario List**: TaskUpdate in_progress →
    Generate ONLY: YAML frontmatter + admin + §1 受入テスト方針 + ビジネスシナリオ一覧 →
    ID format: `UAT-001`. Cross-reference REQ-xxx and NFR-xxx from upstream →
-   System-level only — no per-feature split →
+   System-level only — no per-feature generation →
    **Write** to `{output.directory}/08-test/uat-spec.md` → TaskUpdate complete
 6. **Stage 2 — Acceptance Test Cases**: TaskUpdate in_progress →
    Read existing file; generate ONLY: §2 受入テストケース (UAT-xxx, business-scenario-based) →

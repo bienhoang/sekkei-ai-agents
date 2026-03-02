@@ -675,23 +675,23 @@ const FEATURE_SECTION_HEADINGS: Partial<Record<DocType, string[]>> = {
   "it-spec": ["結合テストケース"],
 };
 
-export interface SplitValidationResult {
+export interface PerFeatureValidationResult {
   valid: boolean;
   per_file: { file: string; issues: ValidationIssue[] }[];
   aggregate_issues: ValidationIssue[];
   cross_ref_report?: CrossRefReport;
 }
 
-export async function validateSplitDocument(
+export async function validatePerFeatureDocument(
   manifestPath: string,
   manifest: Manifest,
   docType: DocType,
   upstreamContent?: string
-): Promise<SplitValidationResult> {
+): Promise<PerFeatureValidationResult> {
   const baseDir = dirname(manifestPath);
   const doc = manifest.documents[docType];
-  if (!doc || doc.type !== "split") {
-    throw new SekkeiError("MANIFEST_ERROR", `${docType} is not a split document`);
+  if (!doc || doc.type !== "per-feature") {
+    throw new SekkeiError("MANIFEST_ERROR", `${docType} is not a per-feature document`);
   }
 
   const perFile: { file: string; issues: ValidationIssue[] }[] = [];

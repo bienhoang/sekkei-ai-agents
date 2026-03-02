@@ -110,7 +110,7 @@ async function handleCreate(args: PlanArgs): Promise<ToolResult> {
     return err("features array is required for create");
   }
 
-  const splitConfig = {
+  const sectionConfig = {
     shared: SHARED_SECTIONS[doc_type] ?? [],
     feature: FEATURE_SECTIONS[doc_type] ?? [],
   };
@@ -142,7 +142,6 @@ async function handleCreate(args: PlanArgs): Promise<ToolResult> {
     status: "pending",
     features: planFeatures,
     feature_count: planFeatures.length,
-    split_mode: true,
     created: now,
     updated: now,
     phases,
@@ -156,7 +155,7 @@ async function handleCreate(args: PlanArgs): Promise<ToolResult> {
 
   for (const phase of phases) {
     const feature = phase.feature_id ? featureMap.get(phase.feature_id) : undefined;
-    await writePhaseFile(planDir, phase, doc_type, splitConfig, feature);
+    await writePhaseFile(planDir, phase, doc_type, sectionConfig, feature);
   }
 
   return ok(JSON.stringify({
@@ -223,7 +222,7 @@ async function handleDetect(args: PlanArgs): Promise<ToolResult> {
   if (!hasFunctionsList) {
     return ok(JSON.stringify({
       should_trigger: false,
-      reason: "functions-list.md not found — monolithic generation",
+      reason: "functions-list.md not found — single-call generation",
       feature_count: 0,
       has_active_plan: false,
     }, null, 2));
@@ -502,8 +501,8 @@ async function handleAddFeature(args: PlanArgs): Promise<ToolResult> {
   plan.feature_count = plan.features.length;
   plan.updated = new Date().toISOString().slice(0, 10);
 
-  // Build split config for phase file generation
-  const splitConfig = {
+  // Build section config for phase file generation
+  const sectionConfig = {
     shared: SHARED_SECTIONS[plan.doc_type] ?? [],
     feature: FEATURE_SECTIONS[plan.doc_type] ?? [],
   };
@@ -511,7 +510,7 @@ async function handleAddFeature(args: PlanArgs): Promise<ToolResult> {
   // Write new phase files
   for (const phase of newPhases) {
     const feature = newPlanFeatures.find(f => f.id === phase.feature_id);
-    await writePhaseFile(planDir, phase, plan.doc_type, splitConfig, feature);
+    await writePhaseFile(planDir, phase, plan.doc_type, sectionConfig, feature);
   }
 
   // Persist updated plan

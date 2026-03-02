@@ -2,7 +2,7 @@ import { readdir, readFile, stat } from 'node:fs/promises'
 import { join, basename } from 'node:path'
 import { existsSync } from 'node:fs'
 import { parse as parseYaml } from 'yaml'
-import { SPLIT_DOC_TYPES } from '../types.js'
+import { PER_FEATURE_DOC_TYPES } from '../types.js'
 import type { CRSummary, PlanSummary, FeatureProgress, ProjectConfig } from '../types.js'
 
 export function findSekkeiDir(docsRoot: string): string | null {
@@ -111,7 +111,7 @@ export async function scanFeatures(docsRoot: string, config: ProjectConfig): Pro
       const docs: FeatureProgress['docs'] = []
       let completedCount = 0
 
-      for (const docType of SPLIT_DOC_TYPES) {
+      for (const docType of PER_FEATURE_DOC_TYPES) {
         const docFile = join(featureDir, `${docType}.md`)
         if (existsSync(docFile)) {
           try {

@@ -30,9 +30,7 @@
 |-----|------|---------|-------|
 | `export.excel_template` | string | — | Đường dẫn đến file Excel template của công ty (optional) — dùng khi khách hàng yêu cầu format riêng |
 
-### `split` — ~~Tách file lớn~~ DEPRECATED
-
-> **Removed in v2.9.0** — Split mode is now automatic and requires no configuration. When `functions-list.md` contains any features (≥ 1), Sekkei automatically generates per-feature documents for `basic-design`, `detail-design`, and test-specs.
+> **Note (v2.9.0+):** Per-feature generation is now automatic and requires no configuration. When `functions-list.md` contains any features (≥ 1), Sekkei automatically generates per-feature documents for `basic-design`, `detail-design`, and test-specs.
 
 ### Các keys khác
 

@@ -13,7 +13,7 @@ import {
   addTranslation,
   createTranslationManifest,
 } from "../../src/lib/manifest-manager.js";
-import type { Manifest, SplitDocument, ManifestDocument } from "../../src/types/documents.js";
+import type { Manifest, PerFeatureDocument, ManifestDocument } from "../../src/types/documents.js";
 
 let tmpDir: string;
 
@@ -60,18 +60,18 @@ describe("readManifest error handling", () => {
 });
 
 describe("addDocument", () => {
-  it("adds a split document entry", async () => {
+  it("adds a per-feature document entry", async () => {
     const path = await createManifest(tmpDir, "Proj", "ja");
     await addDocument(path, "basic-design", {
-      type: "split",
+      type: "per-feature",
       status: "in-progress",
       shared: [{ file: "03-system/arch.md", section: "system-architecture", title: "システム構成" }],
       features: [{ name: "sales-management", display: "販売管理", file: "05-features/sales-management/basic-design.md" }],
       merge_order: ["shared", "features"],
     });
     const manifest = await readManifest(path);
-    const doc = manifest.documents["basic-design"] as SplitDocument;
-    expect(doc.type).toBe("split");
+    const doc = manifest.documents["basic-design"] as PerFeatureDocument;
+    expect(doc.type).toBe("per-feature");
     expect(doc.shared).toHaveLength(1);
     expect(doc.features).toHaveLength(1);
     expect(doc.features[0].name).toBe("sales-management");
@@ -79,10 +79,10 @@ describe("addDocument", () => {
 });
 
 describe("addFeature", () => {
-  it("appends a feature to a split document", async () => {
+  it("appends a feature to a per-feature document", async () => {
     const path = await createManifest(tmpDir, "Proj", "ja");
     await addDocument(path, "basic-design", {
-      type: "split",
+      type: "per-feature",
       status: "in-progress",
       shared: [],
       features: [{ name: "sales-management", display: "販売管理", file: "05-features/sales-management/bd.md" }],
@@ -90,7 +90,7 @@ describe("addFeature", () => {
     });
     await addFeature(path, "basic-design", { name: "accounting", display: "会計", file: "05-features/accounting/bd.md" });
     const manifest = await readManifest(path);
-    const doc = manifest.documents["basic-design"] as SplitDocument;
+    const doc = manifest.documents["basic-design"] as PerFeatureDocument;
     expect(doc.features).toHaveLength(2);
     expect(doc.features[1].name).toBe("accounting");
   });
@@ -98,7 +98,7 @@ describe("addFeature", () => {
   it("updates existing feature by name", async () => {
     const path = await createManifest(tmpDir, "Proj", "ja");
     await addDocument(path, "basic-design", {
-      type: "split",
+      type: "per-feature",
       status: "in-progress",
       shared: [],
       features: [{ name: "sales-management", display: "旧名", file: "old.md" }],
@@ -106,7 +106,7 @@ describe("addFeature", () => {
     });
     await addFeature(path, "basic-design", { name: "sales-management", display: "新名", file: "new.md" });
     const manifest = await readManifest(path);
-    const doc = manifest.documents["basic-design"] as SplitDocument;
+    const doc = manifest.documents["basic-design"] as PerFeatureDocument;
     expect(doc.features).toHaveLength(1);
     expect(doc.features[0].display).toBe("新名");
   });
@@ -126,7 +126,7 @@ describe("getMergeOrder", () => {
       language: "ja",
       documents: {
         "basic-design": {
-          type: "split",
+          type: "per-feature",
           status: "complete",
           shared: [
             { file: "03-system/arch.md", section: "system-architecture", title: "アーキ" },
@@ -154,7 +154,7 @@ describe("getMergeOrder", () => {
       language: "ja",
       documents: {
         "basic-design": {
-          type: "split",
+          type: "per-feature",
           status: "complete",
           shared: [
             { file: "03-system/index.md", section: "index", title: "Index" },
@@ -177,14 +177,14 @@ describe("getMergeOrder", () => {
 });
 
 describe("getFeatureFiles", () => {
-  it("returns feature file paths for split doc", () => {
+  it("returns feature file paths for per-feature document", () => {
     const manifest: Manifest = {
       version: "1.0",
       project: "X",
       language: "ja",
       documents: {
         "basic-design": {
-          type: "split",
+          type: "per-feature",
           status: "complete",
           shared: [{ file: "03-system/a.md", section: "x", title: "X" }],
           features: [
@@ -229,7 +229,7 @@ describe("createTranslationManifest", () => {
       language: "ja",
       documents: {
         "basic-design": {
-          type: "split",
+          type: "per-feature",
           status: "complete",
           shared: [{ file: "03-system/a.md", section: "x", title: "X" }],
           features: [{ name: "sales-management", display: "販売管理", file: "05-features/sales-management/bd.md" }],

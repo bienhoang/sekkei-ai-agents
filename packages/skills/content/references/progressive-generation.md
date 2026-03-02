@@ -1,6 +1,6 @@
 # Progressive Document Generation Pattern
 
-Reusable pattern for generating documents in stages instead of a single monolithic call.
+Reusable pattern for generating documents in stages instead of a single-call generation.
 All `/sekkei:*` flows reference this document for consistent progressive behavior.
 
 ## When to Use Progressive Mode
@@ -10,7 +10,7 @@ Use progressive generation when a document has **3+ content sections**. Benefits
 - TaskCreate/TaskUpdate provides visual progress in Claude Code UI
 - ID continuity maintained via `existing_content` passing between stages
 
-**Fallback:** If pre-scan finds **<= 2 content sections**, skip progressive mode and generate monolithically (single call, no tasks created).
+**Fallback:** If pre-scan finds **<= 2 content sections**, skip progressive mode and use single-call generation (single call, no tasks created).
 
 ## Token Budget Advisory
 
@@ -19,9 +19,9 @@ read the `recommended_strategy` value before deciding how to generate:
 
 | Strategy | Meaning | Action |
 |----------|---------|--------|
-| `monolithic` | Estimated < 16K tokens | Generate in single call (skip progressive) |
+| `single_call` | Estimated < 16K tokens | Generate in single call (skip progressive) |
 | `progressive` | Estimated 16K-24K tokens | Use progressive stages (default behavior) |
-| `split_required` | Estimated > 24K tokens | Must use manage_plan per-feature mode — do NOT attempt monolithic |
+| `plan_required` | Estimated > 24K tokens | Must use manage_plan per-feature mode — do NOT attempt single-call |
 
 The advisory also includes `entity_counts` (e.g. `{ SCR: 12, API: 8 }`) and
 `sections_breakdown` — use these to size per-section batches in Step 1 pre-scan.
@@ -62,7 +62,7 @@ For **fixed** doc types: skip pre-scan, use hardcoded stage boundaries from each
 
 If pre-scan finds **<= 2 content sections** (dynamic types only):
 - Skip progressive mode entirely
-- Generate monolithically (single `generate_document` call)
+- Use single-call generation (single `generate_document` call)
 - Do NOT create TaskCreate entries
 - Proceed directly to post-gen validation
 

@@ -166,14 +166,14 @@ Management (standalone):
 
 ## Per-Feature Generation
 
-When `functions-list.md` exists, basic-design and detail-design commands automatically produce per-feature files instead of monolithic documents. No configuration needed.
+When `functions-list.md` exists, basic-design and detail-design commands automatically produce per-feature files instead of single-call documents. No configuration needed.
 
 **Structure:**
 ```
 workspace-docs/
 ├── _index.yaml          # Manifest (auto-generated)
-├── functions-list.md    # Always monolithic
-├── requirements.md      # Always monolithic
+├── functions-list.md    # Always single-call
+├── requirements.md      # Always single-call
 ├── shared/              # Shared sections (architecture, DB, etc.)
 │   ├── architecture.md
 │   └── database.md

@@ -23,9 +23,9 @@ estimated_tokens = base_tokens + Σ(entity_count × per_entity_weight)
 - `test-specs`: base 1500-2000, with per-spec calibration
 
 **Generation Strategies:**
-- `monolithic` (<16K tokens): Single-call generation, fast iteration
+- `single-call` (<16K tokens): Single-call generation, fast iteration
 - `progressive` (16K-24K tokens): Multi-stage generation for medium-large docs
-- `split_required` (>24K tokens): Split mode mandatory (per-feature generation)
+- `plan_required` (>24K tokens): Per-feature generation mandatory (automatic when functions-list exists)
 
 **Used by:** `generate.ts` (advisory display), `plan-actions.ts` (strategy selection)
 
@@ -192,8 +192,8 @@ Shared health check module (used by version + update commands):
 
 ### Staleness Detection Enhancement
 
-**Split-document staleness fix:**
-- `checkDocStaleness` now detects split-mode docs via `features_output` presence
+**Per-feature document staleness fix:**
+- `checkDocStaleness` now detects per-feature docs via `features_output` presence
 - Correctly identifies stale basic-design and detail-design variants
 - Applied to both `checkChainStaleness` and `checkDocStaleness` paths
 
@@ -218,18 +218,18 @@ Shared health check module (used by version + update commands):
 - Configures logging to stderr
 
 ### `src/lib/manifest-manager.ts`
-Manages split document metadata in `_index.yaml`:
+Manages per-feature document metadata in `_index.yaml`:
 - `readManifest()` — Parse and validate manifest
 - `writeManifest()` — Write manifest to disk
 - `addDocument()` — Add/update document entry
-- `addFeature()` — Add feature to split document
+- `addFeature()` — Add feature to per-feature document
 - `getMergeOrder()` — Get ordered file list for export
 - `createTranslationManifest()` — Create translation variant
 
 ### `src/lib/validator.ts`
 Document validation engine:
 - `validateDocument()` — Content validation (sections, IDs, tables)
-- `validateSplitDocument()` — Manifest-based validation (per-file + aggregate)
+- `validatePerFeatureDocument()` — Manifest-based validation (per-file + aggregate)
 - `extractIds()` — Extract cross-reference IDs
 - Validation modes: content, manifest, structure
 
@@ -399,9 +399,9 @@ export interface ProjectConfig {
     requirements: ChainEntry;
     nfr: ChainEntry;
     project_plan: ChainEntry;
-    basic_design: SplitChainEntry;
+    basic_design: PerFeatureChainEntry;
     security_design: ChainEntry;
-    detail_design: SplitChainEntry;
+    detail_design: PerFeatureChainEntry;
     test_plan: ChainEntry;
     ut_spec?: ChainEntry;
     it_spec?: ChainEntry;
@@ -421,8 +421,8 @@ export interface ManifestFeatureEntry {
   file: string;    // path to generated file
 }
 
-export interface SplitDocument {
-  type: "split";
+export interface PerFeatureDocument {
+  type: "per-feature";
   status: "pending" | "in-progress" | "complete";
   shared: ManifestSharedEntry[];
   features: ManifestFeatureEntry[];
@@ -711,9 +711,9 @@ RFP → requirements → nfr/functions-list/project-plan/interface-spec
 10-glossary.md (glossary — standalone)
 ```
 
-### Split Document Types (UPDATED)
+### Per-Feature Document Types (UPDATED)
 
-Only `basic-design` and `detail-design` are split (feature-based).
+Only `basic-design` and `detail-design` use per-feature generation (feature-based).
 Other doc types are single-file (may be grouped in directories).
 
 ### Cross-Reference ID Validation (UPDATED)

@@ -35,7 +35,7 @@ Giao diện gồm **thanh điều hướng bên trái (Sidebar)** và **vùng n�
 | Chain Status | `/chain` | Trạng thái chuỗi tài liệu V-Model |
 | Analytics | `/analytics` | Phân tích chất lượng chuyên sâu |
 | Change History | `/changes` | Lịch sử thay đổi và Change Request |
-| Features | `/features` | Tiến độ theo tính năng (chỉ hiện khi bật split mode) |
+| Features | `/features` | Tiến độ theo tính năng (chỉ hiện khi có per-feature generation) |
 
 ---
 
@@ -232,7 +232,7 @@ Bảng liệt kê chi tiết các thay đổi: Ngày, Tài liệu, Phiên bản,
 ## 7. Màn hình Features — Tiến độ theo tính năng
 
 > [!NOTE]
-> Màn hình này **hiển thị khi functions-list.md có 3+ tính năng**. Split mode tự động kích hoạt để tạo tài liệu riêng biệt cho từng tính năng (feature) — không cần cấu hình.
+> Màn hình này **hiển thị khi functions-list.md có ít nhất 1 tính năng**. Per-feature generation tự động kích hoạt để tạo tài liệu riêng biệt cho từng tính năng — không cần cấu hình.
 
 ### 7.1 Thẻ thống kê
 
@@ -284,7 +284,7 @@ Dữ liệu snapshot được sử dụng bởi các biểu đồ xu hướng (t
 | Health Score | 健全性スコア | Điểm sức khỏe cấu trúc tài liệu |
 | Risk Score | リスクスコア | Điểm rủi ro tổng hợp 5 yếu tố |
 | NFR | 非機能要件 | Yêu cầu phi chức năng (hiệu năng, bảo mật, ...) |
-| Split Mode | 分割モード | Chế độ tạo tài liệu riêng theo tính năng |
+| Per-feature mode | 機能別生成モード | Chế độ tạo tài liệu theo tính năng (tự động) |
 
 ---
 

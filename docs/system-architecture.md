@@ -60,7 +60,7 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │  • Validator          → schema & cross-reference checks│   │
 │  │  • RFP State Machine  → phase transitions, workspace   │   │
 │  │  • Template Loader    → loads & resolves overrides     │   │
-│  │  • Manifest Manager   → CRUD split doc metadata        │   │
+│  │  • Manifest Manager   → CRUD per-feature doc metadata   │   │
 │  │  • Python Bridge      → calls Python CLI (JSON env)    │   │
 │  │  • Resolver           → maps doc_type → output paths   │   │
 │  │  • Structure Validator → validates numbered directories│   │
@@ -158,12 +158,12 @@ Quality Metrics Libraries (in MCP Server):
 **Token Budget Estimator** (`token-budget-estimator.ts`, 119 LOC):
 - Predicts output tokens: `estimated_tokens = base_tokens + Σ(entity_count × weight)`
 - Calibration per doc type (requirements, functions-list, basic-design, detail-design, test-specs, db-design)
-- Strategies: monolithic (<16K), progressive (16K-24K), split_required (>24K)
+- Strategies: single-call (<16K), progressive (16K-24K), plan_required (>24K)
 - Used by `generate.ts` (advisory) and `plan-actions.ts` (strategy selection)
 
 **Smart Upstream Content Filtering** (`upstream-filter.ts`, 140 LOC):
 - 2-stage filtering: H2 heading match, then ID-based fallback
-- Reduces context 60-75% per feature in split mode
+- Reduces context 60-75% per feature in per-feature mode
 - Extracts only feature-relevant sections from upstream document
 - Session recovery via section-level checkpoints in plan YAML
 
@@ -183,10 +183,10 @@ Requirements Phase (要件定義)
   ↓
 Design Phase (設計)
   ├─→ Architecture Design (アーキテクチャ設計) [IPA v-model layer]
-  ├─→ Basic Design (基本設計書) — Split: system + features
+  ├─→ Basic Design (基本設計書) — Per-feature: system + features
   ├─→ Security Design (セキュリティ設計書)
   ├─→ DB Design (データベース設計) [IPA v-model layer]
-  ├─→ Detail Design (詳細設計書) — Per-feature, split
+  ├─→ Detail Design (詳細設計書) — Per-feature generation
   ├─→ Operation Design (運用設計書)
   ├─→ Migration Design (移行設計書)
   └─→ Screen Design (画面設計書)
@@ -290,11 +290,11 @@ project-output/
 - Files follow `NN-name.md` format (NN = 01-10)
 - Feature folders use kebab-case (e.g., `sales-management`, not `SALES`)
 - Each numbered directory has `index.md` for navigation
-- Split documents reference files via manifest (`_index.yaml`)
+- Per-feature documents reference files via manifest (`_index.yaml`)
 
 ## Document Types & Templates — v2.7 (IPA V-Model Compliant)
 
-| Type | File | Phase | Split? | Output Path | ID Prefix | Scope |
+| Type | File | Phase | Per-Feature? | Output Path | ID Prefix | Scope |
 |------|------|-------|--------|-------------|-----------|-------|
 | requirements | `ja/requirements.md` | requirements | No | `02-requirements/requirements.md` | REQ- | Project-level |
 | nfr | `ja/nfr.md` | requirements | No | `02-requirements/nfr.md` | NFR- | Non-functional (IPA grades) |
@@ -324,7 +324,7 @@ project-output/
 | interface-spec | `ja/interface-spec.md` | supplementary | No | `interface-spec.md` | IF- | Multi-vendor interfaces |
 | sitemap | `ja/sitemap.md` | supplementary | No | `sitemap.md` | - | Site structure |
 
-**Split Document Types:** `basic-design` and `detail-design` support feature-level splitting. Others are single-file in directories or standalone.
+**Per-Feature Document Types:** `basic-design` and `detail-design` support per-feature generation. Others are single-file in directories or standalone.
 
 **IPA Compliance Changes (v2.7):**
 - Added `architecture-design` — explicit high-level design phase per IPA V-Model
@@ -353,14 +353,14 @@ project-output/
 - Output: template + AI generation instructions
 - Loads template via resolver (override → default fallback)
 - Calls `resolveOutputPath()` to suggest file paths per phase
-- Updates manifest for split documents
+- Updates manifest for per-feature documents
 - Dynamically imports code-analyzer for source code analysis
 - Phase A: Injects confidence/traceability annotations
 - v2.0: Suggests phase-aligned paths; validates doc_type against 22 types
 
 #### validate.ts (238 LOC)
 - **Content mode:** Checks document completeness, cross-references
-- **Manifest mode:** Validates split document structure
+- **Manifest mode:** Validates per-feature document structure
 - **Structure mode:** Checks numbered directory layout per v2.0 format
 - **Structure rules mode:** Anti-chaos validation with 7 rules, 3 presets
 - v2.0: Validates test specs symmetric to upstream (UT/IT→detail-design, ST→basic+detail, UAT→requirements)
@@ -507,14 +507,14 @@ CJK font support for PDF export (53 LOC):
 ### 5. Existing Core Libraries (`src/lib/`)
 
 #### manifest-manager.ts
-Records split document structure in `_index.yaml`:
+Records per-feature document structure in `_index.yaml`:
 ```yaml
 version: "1.0"
 project: "ProjectName"
 language: "ja"
 documents:
   basic-design:
-    type: "split"
+    type: "per-feature"
     status: "in-progress"
     shared:
       - file: "03-system/system-architecture.md"
@@ -609,10 +609,10 @@ Central type definitions:
 - `DocType` enum (functions-list, requirements, nfr, basic-design, detail-design, test-plan, ut-spec, etc.)
 - `ProjectConfig` — mirrors sekkei.config.yaml structure
   - **v3 additions:** `feature_file_map` (staleness), `google` (sheets config), `backlog` (future)
-- `SplitDocument` — manifest entry for split docs
+- `PerFeatureDocument` — manifest entry for per-feature docs
 - `ManifestFeatureEntry` — has `name` (kebab-case), `display` (human label), `file` path
 - `ChainEntry` — status + output path for single-file docs
-- `SplitChainEntry` — status + separate outputs for system/features/global
+- `PerFeatureChainEntry` — status + separate outputs for system/features/global
 - **v3 types:** `CodeContext`, `StalenessReport`, `StructureRuleConfig`, `GoogleSheetsConfig`
 
 #### manifest-schemas.ts
@@ -692,7 +692,7 @@ features:
    - Template content
    - Generation instructions
    - Suggested output path
-7. **Manifest Update** (if split) → adds entry to `_index.yaml`
+7. **Manifest Update** (if per-feature) → adds entry to `_index.yaml`
 
 ### Document Validation Flow
 

@@ -1,9 +1,9 @@
 /**
  * Token budget estimation for document generation.
- * Predicts output size from entity counts to advise monolithic vs progressive strategy.
+ * Predicts output size from entity counts to advise single-call vs progressive strategy.
  */
 
-export type Strategy = "monolithic" | "progressive" | "split_required";
+export type Strategy = "single-call" | "progressive" | "plan_required";
 
 export interface SectionEstimate {
   prefix: string;
@@ -71,11 +71,11 @@ export function estimateOutputTokens(
   // Determine strategy
   let recommended_strategy: Strategy;
   if (estimated < PROGRESSIVE_THRESHOLD) {
-    recommended_strategy = "monolithic";
+    recommended_strategy = "single-call";
   } else if (estimated <= SPLIT_THRESHOLD) {
     recommended_strategy = "progressive";
   } else {
-    recommended_strategy = "split_required";
+    recommended_strategy = "plan_required";
   }
 
   return {
@@ -107,12 +107,12 @@ export function formatAdvisory(result: EstimationResult): string {
     lines.push("");
   }
 
-  if (result.recommended_strategy === "monolithic") {
+  if (result.recommended_strategy === "single-call") {
     lines.push("Document is small enough for single-call generation.");
   } else if (result.recommended_strategy === "progressive") {
     lines.push("Consider progressive generation (multiple stages) to avoid truncation.");
   } else {
-    lines.push("**Document exceeds safe output limit.** Use split mode (manage_plan) to generate in separate phases.");
+    lines.push("**Document exceeds safe output limit.** Use manage_plan to generate in separate phases.");
   }
 
   return lines.join("\n");

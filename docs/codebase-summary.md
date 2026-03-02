@@ -27,7 +27,7 @@ sekkei/
 │   │   │   │   ├── logger.ts          # Pino structured logging
 │   │   │   │   ├── validator.ts       # Document validation (content, cross-refs, structure rules)
 │   │   │   │   ├── manifest-manager.ts # Manifest CRUD (_index.yaml)
-│   │   │   │   ├── merge-documents.ts # Assemble split docs for export
+│   │   │   │   ├── merge-documents.ts # Assemble per-feature docs for export
 │   │   │   │   ├── template-loader.ts # Load templates from disk
 │   │   │   │   ├── template-resolver.ts # Override dir logic
 │   │   │   │   ├── python-bridge.ts   # Execute Python CLI via execFile (7 whitelisted actions)
@@ -203,12 +203,12 @@ sekkei/
 ├── packages/mcp-server/templates/     # IPA V-Model Compliant Templates (27 MD + 15 YAML glossaries + 7 RFP flows)
 │   ├── ja/                            # Japanese templates (27 IPA-compliant files)
 │   │   ├── architecture-design.md     # 方式設計書 (IPA architectural layer, ARC-)
-│   │   ├── basic-design.md            # 基本設計書 (split, SCR-/TBL-)
+│   │   ├── basic-design.md            # 基本設計書 (per-feature, SCR-/TBL-)
 │   │   ├── batch-design.md            # バッチ処理設計書 (IPA operational, BATCH-)
 │   │   ├── crud-matrix.md             # CRUD matrix
 │   │   ├── db-design.md               # データベース設計書 (IPA layer, DB-)
 │   │   ├── decision-record.md         # 設計決定記録 ADRs (ADR-)
-│   │   ├── detail-design.md           # 詳細設計書 (split by feature, API-/CLS-)
+│   │   ├── detail-design.md           # 詳細設計書 (per-feature generation, API-/CLS-)
 │   │   ├── functions-list.md          # 機能一覧 (F-)
 │   │   ├── interface-spec.md          # IF仕様書 (IF-)
 │   │   ├── it-spec.md                 # 結合テスト仕様書 (IT-)
@@ -296,7 +296,7 @@ sekkei/
 1. **Change Request Engine** — cr-state-machine (8 states), cr-propagation, cr-conflict-detector, cr-backfill
 2. **Plan Management** — plan-state, plan-actions, plan-phase-template (NEW v2.7.0)
 3. **Generation Optimization** (NEW v2.8.0):
-   - **Token Budget Estimator** — predicts output tokens, recommends strategy (monolithic/progressive/split_required)
+   - **Token Budget Estimator** — predicts output tokens, recommends strategy (single-call/progressive/plan_required)
    - **Smart Upstream Filtering** — h2-heading + ID-based filtering reduces context 60-75% per feature
    - **Session Recovery** — section-level checkpoints in plan YAML for interrupted generation
 4. **Quality Metrics** — coverage-metrics, health-scorer, risk-scorer, batch-validator, nfr-classifier (Phase B)
@@ -322,7 +322,7 @@ sekkei/
 ## Recent Changes (v2.8.0)
 
 **Token Optimization (NEW):**
-- Token budget estimator (token-budget-estimator.ts, 119 LOC) — predicts output tokens, recommends strategy (monolithic/progressive/split_required)
+- Token budget estimator (token-budget-estimator.ts, 119 LOC) — predicts output tokens, recommends strategy (single-call/progressive/plan_required)
 - Smart upstream filtering (upstream-filter.ts, 140 LOC) — h2-heading + ID-based content filtering reduces context 60-75%
 - Enhanced plan state (plan-state.ts) — section-level status tracking, checkpoints for session recovery
 

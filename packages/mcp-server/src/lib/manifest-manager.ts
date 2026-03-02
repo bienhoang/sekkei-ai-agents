@@ -6,7 +6,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 import { ManifestSchema } from "../types/manifest-schemas.js";
-import type { Manifest, ManifestDocument, ManifestFeatureEntry, SplitDocument, Language } from "../types/documents.js";
+import type { Manifest, ManifestDocument, ManifestFeatureEntry, PerFeatureDocument, Language } from "../types/documents.js";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
 
@@ -64,7 +64,7 @@ export async function addDocument(
   await writeManifest(manifestPath, manifest);
 }
 
-/** Append a feature to a split document */
+/** Append a feature to a per-feature document */
 export async function addFeature(
   manifestPath: string, docType: string, feature: ManifestFeatureEntry
 ): Promise<void> {

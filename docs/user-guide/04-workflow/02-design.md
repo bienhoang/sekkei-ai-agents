@@ -97,21 +97,12 @@ flowchart TD
 - `TBL-001`  employees (社員マスタ - Danh mục nhân viên)
 - `API-001`  GET  /api/employees/{id}
 
-### Chế độ tách file (Split mode)
+### Tạo tài liệu theo tính năng (Per-Feature Generation)
 
-Với các dự án có quy mô từ 15 chức năng trở lên, khuyến khích sử dụng chế độ tách file để tránh tạo ra một tài liệu duy nhất quá dài và khó kiểm duyệt:
-
-```yaml
-# Cấu hình trong file sekkei.config.yaml
-split:
-  basic-design: true
-  detail-design: true
-```
-
-Khi kích hoạt chế độ này, Sekkei sẽ tự động phân tách tài liệu theo từng nhóm tính năng (ví dụ: quản lý nhân viên, chấm công, tính lương).
+Per-feature generation tự động kích hoạt khi `functions-list.md` tồn tại và có ít nhất 1 tính năng — không cần cấu hình. Sekkei tự phân tách tài liệu theo từng nhóm tính năng (ví dụ: quản lý nhân viên, chấm công, tính lương).
 
 > [!NOTE]
-> Chế độ tách file cũng sẽ tự động khởi tạo **画面設計書 (Tài liệu thiết kế màn hình)** cho từng màn hình cụ thể — bao gồm chi tiết layout, quy tắc xác thực, xử lý sự kiện và luồng chuyển đổi màn hình.
+> Per-feature generation cũng sẽ tự động khởi tạo **画面設計書 (Tài liệu thiết kế màn hình)** cho từng màn hình cụ thể — bao gồm chi tiết layout, quy tắc xác thực, xử lý sự kiện và luồng chuyển đổi màn hình.
 
 ---
 
@@ -174,7 +165,7 @@ Sekkei sẽ tự động trích xuất các yêu cầu phi chức năng (NFR-xxx
 
 ## 9. Thiết kế Màn hình — 画面設計書
 
-**Định nghĩa:** Chi tiết layout, xác thực, sự kiện và luồng chuyển đổi cho từng màn hình. Có thể tạo tự động trong split mode hoặc tạo riêng bằng lệnh:
+**Định nghĩa:** Chi tiết layout, xác thực, sự kiện và luồng chuyển đổi cho từng màn hình. Được tạo tự động trong per-feature mode hoặc tạo riêng bằng lệnh:
 
 ```
 /sekkei:screen-design @basic-design.md
@@ -229,7 +220,7 @@ Sau khi hoàn thành Thiết kế cơ bản (hoặc Thiết kế màn hình riê
 
 **Quy trình hoạt động:**
 
-1. Đọc định nghĩa màn hình từ `screen-design.md` (split mode) hoặc `basic-design.md` (monolithic mode)
+1. Đọc định nghĩa màn hình từ `screen-design.md` (per-feature mode) hoặc `basic-design.md` (single-call mode)
 2. Đọc `functions-list.md` để tạo menu sidebar điều hướng
 3. Tạo file HTML cho mỗi màn hình sử dụng template admin-shell (header, sidebar, content area)
 4. Đánh số annotation (1, 2, 3...) cho các phần tử tương tác — mapping với bảng 画面項目定義
@@ -238,7 +229,7 @@ Sau khi hoàn thành Thiết kế cơ bản (hoặc Thiết kế màn hình riê
 
 **Kết quả:**
 - HTML files: `{output.directory}/11-mockups/{function-id}-{screen-name}.html`
-- Screenshots: `features/{id}/assets/images/` (split) hoặc `03-system/assets/images/` (monolithic)
+- Screenshots: `features/{id}/assets/images/` (per-feature) hoặc `03-system/assets/images/` (single-call)
 
 **Quy trình sử dụng điển hình:**
 
@@ -261,7 +252,7 @@ Sau khi hoàn thành Thiết kế cơ bản (hoặc Thiết kế màn hình riê
 ## Lưu ý thường gặp
 
 - Đảm bảo mọi `SCR-xxx` trong Thiết kế cơ bản đều có `CLS-xxx` tương ứng trong Thiết kế chi tiết.
-- Nếu sử dụng chế độ tách file (split mode), kiểm tra rằng tham chiếu chéo giữa các file con vẫn nhất quán.
+- Nếu sử dụng per-feature generation, kiểm tra rằng tham chiếu chéo giữa các file con vẫn nhất quán.
 - Thông tin bảo mật nhạy cảm (mật khẩu, khóa API) không được xuất hiện trực tiếp trong tài liệu thiết kế.
 
 ---

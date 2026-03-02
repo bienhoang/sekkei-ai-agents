@@ -42,7 +42,7 @@ const VALIDATION_PHASE: PlanPhase = {
   file: "phase-final-validation.md",
 };
 
-const SPLIT_CONFIG = {
+const SECTION_CONFIG = {
   shared: ["system-architecture", "database-design"],
   feature: ["module-design", "class-design"],
 };
@@ -54,7 +54,6 @@ function makePlan(overrides: Partial<GenerationPlan> = {}): GenerationPlan {
     status: "pending",
     features: FEATURES,
     feature_count: 2,
-    split_mode: true,
     created: "2026-02-24",
     updated: "2026-02-24",
     phases: [SHARED_PHASE, FEATURE_PHASE, VALIDATION_PHASE],
@@ -132,7 +131,7 @@ describe("plan-state", () => {
       // Use an isolated tmp dir so the invalid file doesn't pollute listPlans scans
       const isolatedDir = await mkdtemp(join(tmpdir(), "sekkei-invalid-plan-"));
       try {
-        const content = `---\nstatus: INVALID\ndoc_type: basic-design\nfeature_count: 0\nsplit_mode: true\ncreated: ""\nupdated: ""\nfeatures: []\nphases: []\n---\n# Plan\n`;
+        const content = `---\nstatus: INVALID\ndoc_type: basic-design\nfeature_count: 0\ncreated: ""\nupdated: ""\nfeatures: []\nphases: []\n---\n# Plan\n`;
         await writeFile(join(isolatedDir, "plan.md"), content, "utf-8");
         let caught: unknown;
         try {
@@ -218,7 +217,7 @@ describe("plan-state", () => {
     it("creates phase file with correct YAML frontmatter", async () => {
       const planDir = join(plansDir, "phases-test");
       await mkdir(planDir, { recursive: true });
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
       const phase = await readPhase(join(planDir, "phase-01-shared-sections.md"));
       expect(phase.type).toBe("shared");
       expect(phase.status).toBe("pending");
@@ -228,7 +227,7 @@ describe("plan-state", () => {
     it("includes feature_id for per-feature phases", async () => {
       const planDir = join(plansDir, "phases-feature-test");
       await mkdir(planDir, { recursive: true });
-      await writePhaseFile(planDir, FEATURE_PHASE, "basic-design", SPLIT_CONFIG, FEATURES[0]);
+      await writePhaseFile(planDir, FEATURE_PHASE, "basic-design", SECTION_CONFIG, FEATURES[0]);
       const raw = await readFile(join(planDir, "phase-02-sal.md"), "utf-8");
       expect(raw).toContain("feature_id: sal");
     });
@@ -236,7 +235,7 @@ describe("plan-state", () => {
     it("omits feature_id for shared/validation phases", async () => {
       const planDir = join(plansDir, "phases-shared-nofid");
       await mkdir(planDir, { recursive: true });
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
       const raw = await readFile(join(planDir, "phase-01-shared-sections.md"), "utf-8");
       expect(raw).not.toContain("feature_id");
     });
@@ -273,7 +272,7 @@ describe("plan-state", () => {
     it("reads validation phase file correctly", async () => {
       const planDir = join(plansDir, "phases-validation-test");
       await mkdir(planDir, { recursive: true });
-      await writePhaseFile(planDir, VALIDATION_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, VALIDATION_PHASE, "basic-design", SECTION_CONFIG);
       const phase = await readPhase(join(planDir, "phase-final-validation.md"));
       expect(phase.type).toBe("validation");
       expect(phase.status).toBe("pending");
@@ -398,7 +397,7 @@ describe("plan-state", () => {
         ],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
       await updatePhaseStatus(planDir, 1, "completed");
       const updated = await readPlan(join(planDir, "plan.md"));
       expect(updated.phases[0].status).toBe("completed");
@@ -410,7 +409,7 @@ describe("plan-state", () => {
       const singlePhase: PlanPhase = { ...VALIDATION_PHASE, number: 1, file: "phase-final-validation.md" };
       const plan = makePlan({ phases: [singlePhase] });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, singlePhase, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, singlePhase, "basic-design", SECTION_CONFIG);
       await updatePhaseStatus(planDir, 1, "completed");
       const updated = await readPlan(join(planDir, "plan.md"));
       expect(updated.status).toBe("completed");
@@ -437,7 +436,7 @@ describe("plan-state", () => {
         phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
       await updatePhaseStatus(planDir, 1, "completed");
       const raw = await readFile(join(planDir, "phase-01-shared-sections.md"), "utf-8");
       expect(raw).toContain("status: completed");
@@ -454,7 +453,7 @@ describe("plan-state", () => {
         ],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
       await updatePhaseStatus(planDir, 1, "completed");
       const updated = await readPlan(join(planDir, "plan.md"));
       expect(updated.status).not.toBe("completed");
@@ -467,8 +466,8 @@ describe("plan-state", () => {
       const p2: PlanPhase = { ...FEATURE_PHASE, number: 2 };
       const plan = makePlan({ phases: [p1, p2] });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, p1, "basic-design", SPLIT_CONFIG);
-      await writePhaseFile(planDir, p2, "basic-design", SPLIT_CONFIG, FEATURES[0]);
+      await writePhaseFile(planDir, p1, "basic-design", SECTION_CONFIG);
+      await writePhaseFile(planDir, p2, "basic-design", SECTION_CONFIG, FEATURES[0]);
       await updatePhaseStatus(planDir, 1, "completed");
       await updatePhaseStatus(planDir, 2, "skipped");
       const updated = await readPlan(join(planDir, "plan.md"));
@@ -480,7 +479,7 @@ describe("plan-state", () => {
       await mkdir(planDir, { recursive: true });
       const plan = makePlan({ updated: "2025-01-01" });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
       await updatePhaseStatus(planDir, 1, "completed");
       const updated = await readPlan(join(planDir, "plan.md"));
       expect(updated.updated).not.toBe("2025-01-01");
@@ -561,7 +560,7 @@ describe("plan-state", () => {
         phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
 
       const sections = await updateSectionStatus(planDir, 1, "screen-design", "in_progress", { name: "Screen Design" });
       expect(sections).toHaveLength(1);
@@ -577,7 +576,7 @@ describe("plan-state", () => {
         phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
 
       await updateSectionStatus(planDir, 1, "header", "in_progress", { name: "Header" });
       const sections = await updateSectionStatus(planDir, 1, "header", "completed");
@@ -591,7 +590,7 @@ describe("plan-state", () => {
         phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
 
       const sections = await updateSectionStatus(planDir, 1, "api-design", "completed", { name: "API Design" });
       expect(sections[0].completed_at).toBeDefined();
@@ -608,7 +607,7 @@ describe("plan-state", () => {
         phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
 
       const result = await saveCheckpoint(planDir, 1, {
         last_assigned_ids: { SCR: "SCR-SAL-008" },
@@ -625,7 +624,7 @@ describe("plan-state", () => {
         phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
 
       await saveCheckpoint(planDir, 1, {
         last_assigned_ids: { SCR: "SCR-SAL-005" },
@@ -649,7 +648,7 @@ describe("plan-state", () => {
         phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
 
       const result = await getCheckpoint(planDir, 1);
       expect(result).toBeNull();
@@ -662,7 +661,7 @@ describe("plan-state", () => {
         phases: [{ ...SHARED_PHASE }, { ...FEATURE_PHASE }, { ...VALIDATION_PHASE }],
       });
       await writePlan(planDir, plan);
-      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SPLIT_CONFIG);
+      await writePhaseFile(planDir, SHARED_PHASE, "basic-design", SECTION_CONFIG);
 
       await saveCheckpoint(planDir, 1, {
         last_assigned_ids: { TBL: "TBL-003" },

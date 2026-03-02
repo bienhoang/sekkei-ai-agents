@@ -80,7 +80,7 @@
 | Mức lịch sự tiếng Nhật | 敬語レベル | Keigo Level |
 | Phân tích ảnh hưởng thay đổi | 変更影響分析 | Change Impact Analysis |
 | Ma trận truy vết | トレーサビリティ | Traceability Matrix |
-| Chế độ tách file | スプリットモード | Split Mode |
+| Tạo tài liệu theo tính năng | 機能別生成 | Per-feature generation |
 | Điểm vào / điểm ra kiểm thử | 入口基準 / 出口基準 | Entry Criteria / Exit Criteria |
 | Yêu cầu kỹ thuật | 技術要件 | Technical Requirements |
 

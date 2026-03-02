@@ -72,7 +72,6 @@ doc_type: "{doc-type}"
 status: pending          # pending → in_progress → completed
 features: [{id, name, complexity, priority}]
 feature_count: N
-split_mode: true
 created: "YYYY-MM-DD"
 phases:
   - {number: 1, name: "Shared Sections", status: pending, file: "phase-01-shared-sections.md"}  # omit for test-spec (no shared phase)
@@ -196,7 +195,7 @@ The `execute` response now includes a `token_budget` field:
 }
 ```
 Use `recommended_strategy` to decide whether to call `generate_document` directly
-(monolithic) or invoke the progressive generation pattern.
+(single-call) or invoke the progressive generation pattern.
 
 ### Delegation Mapping
 

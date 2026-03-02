@@ -23,7 +23,7 @@ Command workflows for validation, export, translation, and maintenance utilities
 5. **If per-feature mode (manifest exists):**
    a. Call `validate_document` with `manifest_path` + `upstream_content`
    b. Display per-file validation + aggregate cross-ref report
-6. **If monolithic:**
+6. **If single-call:**
    a. Read doc content
    b. Call `validate_document` with `content`, `doc_type`, `upstream_content`
 7. Display: section completeness, cross-ref coverage %, missing/orphaned IDs, missing columns
@@ -69,7 +69,7 @@ Command workflows for validation, export, translation, and maintenance utilities
    a. Ask user: "Export merged document or per-feature?"
    b. If merged: Call `export_document` with `source: "manifest"`, `manifest_path`
    c. If per-feature: Ask which feature → call with `feature_id`
-5. **If no manifest (monolithic):**
+5. **If no manifest (single-call):**
    a. Read file, call `export_document` with `source: "file"`, content
 6. Report: file path, file size, export status
 7. For xlsx: IPA 4-sheet structure (表紙, 更新履歴, 目次, 本文) with JP formatting
@@ -80,7 +80,7 @@ Command workflows for validation, export, translation, and maintenance utilities
 
 1. Read the document to translate
 2. **Check for manifest**: look for `_index.yaml` in output directory
-3. **Incremental translation check** (monolithic docs):
+3. **Incremental translation check** (single-call docs):
    a. Check if existing translation exists at target path (`{doc-type}.{lang}.md`)
    b. If exists, read existing translated doc
    c. Use `translation-tracker` to extract hashes from existing translation
@@ -107,7 +107,7 @@ Command workflows for validation, export, translation, and maintenance utilities
       - Save to `translations/{lang}/features/{feature-id}/{filename}`
    g. Create `translations/{lang}/_index.yaml` mirroring source structure
    h. Update source `_index.yaml` translations[] entry
-5. **If no manifest (monolithic):**
+5. **If no manifest (single-call):**
    a. If `workspace-docs/glossary.yaml` exists, load glossary path
    b. Call MCP tool `translate_document` with content, source_lang, target_lang, glossary_path, source_content
    c. Use the returned translation context + glossary terms to translate
@@ -132,7 +132,7 @@ Batch translate all completed documents in the V-model chain.
    a. Check if doc has `complete` status
    b. If not, skip and note: "[SKIP] {doc-type}: not complete, skipping"
    c. Read doc content from `{output.directory}/{doc-path}`
-   d. Follow existing translate flow (monolithic or split, with incremental if available)
+   d. Follow existing translate flow (per-feature or single-call, with incremental if available)
    e. On success: "[OK] {doc-type}.{lang}.md translated"
    f. On failure: "[FAIL] {doc-type}: {error}" — continue to next doc
 6. Summary report:

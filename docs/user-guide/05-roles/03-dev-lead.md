@@ -12,7 +12,7 @@ Dev Lead tiếp nhận các yêu cầu đã được BA xác thực và chịu t
 - Khởi tạo Thiết kế cơ bản dựa trên danh sách yêu cầu và chức năng hiện có.
 - Thẩm định các thành phần do AI khởi tạo: SCR-xxx (Thiết kế màn hình), TBL-xxx (Cấu trúc bảng), API-xxx (Các cổng giao tiếp).
 - Triển khai song song Thiết kế bảo mật và Thiết kế chi tiết sau khi bản Thiết kế cơ bản đã hoàn thiện.
-- Thiết lập chế độ tách file (Split Mode) để quản lý hiệu quả các dự án quy mô lớn (> 20 tính năng).
+- Chế độ per-feature tự động kích hoạt khi functions-list.md tồn tại — không cần cấu hình.
 - Sử dụng công cụ lập kế hoạch thực hiện (`/sekkei:plan` & `/sekkei:implement`).
 
 ---
@@ -39,17 +39,11 @@ Bạn bắt đầu bằng việc kiểm tra trạng thái phê duyệt của BA 
 
 ---
 
-## 4. Chế độ tách file (Split Mode) cho dự án lớn
+## 4. Tạo tài liệu theo tính năng (Per-Feature Generation)
 
-Đối với các dự án có quy mô hơn 20 tính năng, việc lưu trữ tất cả thiết kế trong một file duy nhất sẽ gây khó khăn cho việc quản lý. Bạn nên kích hoạt chế độ tách file trong `sekkei.config.yaml`:
+Đối với các dự án có nhiều tính năng, Sekkei tự động tạo tài liệu riêng biệt cho từng tính năng khi `functions-list.md` tồn tại — không cần cấu hình. Per-feature generation kích hoạt tự động qua `manage_plan(action="detect")` khi `featureCount > 0`.
 
-```yaml
-output:
-  split: true
-  split_by: feature   # Tách theo tính năng, module hoặc lớp kiến trúc
-```
-
-Khi được kích hoạt, Sekkei sẽ tự động phân tách tài liệu thành các file riêng biệt (như SCR-auth.md, TBL-schema.md...) mà vẫn đảm bảo mọi liên kết mã ID giữa các file luôn nhất quán và chính xác.
+Sekkei sẽ tự động phân tách tài liệu thành các file riêng biệt cho mỗi feature (như `05-features/sales-mgmt/basic-design.md`...) mà vẫn đảm bảo mọi liên kết mã ID giữa các file luôn nhất quán và chính xác.
 
 ---
 
@@ -69,6 +63,6 @@ Khi được kích hoạt, Sekkei sẽ tự động phân tách tài liệu thà
 - [ ] API-xxx: Các cổng giao tiếp RESTful hỗ trợ đầy đủ các thao tác CRUD cần thiết.
 - [ ] Thiết kế bảo mật: Các rủi ro tiềm tàng đã được đối soát với danh sách OWASP Top 10.
 - [ ] Thiết kế chi tiết: Các đối tượng logic (CLS-xxx) tham chiếu đúng mã ID từ bản Thiết kế cơ bản.
-- [ ] Đã kích hoạt Split Mode nếu quy mô dự án vượt ngưỡng thông thường.
+- [ ] Xác nhận per-feature generation đã kích hoạt tự động (khi functions-list.md tồn tại).
 - [ ] Lệnh `/sekkei:validate @basic-design` chạy thành công, không có lỗi hệ thống.
 - [ ] Bàn giao: Bản Thiết kế cơ bản và Thiết kế chi tiết đã sẵn sàng cho giai đoạn Kiểm thử.

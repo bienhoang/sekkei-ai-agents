@@ -81,7 +81,7 @@ So sanh voi cac doc types khac:
 
 | Doc Type | Instruction Lines | Sections Covered |
 |----------|------------------|------------------|
-| basic-design | 15+ lines | 10 sections, split-mode, mockup |
+| basic-design | 15+ lines | 10 sections, per-feature mode, mockup |
 | detail-design | 12+ lines | class design, error handling, API spec |
 | **security-design** | **7 lines** | **7 sections (but only surface-level)** |
 | requirements | 10+ lines | functional + non-functional |
@@ -202,21 +202,21 @@ SEC-ID | 対策項目 | 対策内容 | 対象 | 優先度 | 備考
 
 ---
 
-### BUG-06: Khong co split mode support
+### BUG-06: Khong co per-feature generation support
 
 **Muc do: Low**
 
-Security-design la monolithic only — khong ho tro split mode nhu basic-design hay detail-design.
+Security-design la single-call only — khong ho tro per-feature generation nhu basic-design hay detail-design.
 
 Voi project lon (50+ screens, 20+ APIs), security document co the dai 50+ pages. AI context window se gap gioi han.
 
-Tuy nhien, split mode cho security doc la debatable — security can duoc nhìn tong the, khong nen chia theo feature vi security controls thuong cross-cutting.
+Tuy nhien, per-feature generation cho security doc la debatable — security can duoc nhìn tong the, khong nen chia theo feature vi security controls thuong cross-cutting.
 
-**De xuat:** Thay vi split by feature, co the split by security domain:
-- Split 1: Authentication & Authorization
-- Split 2: Data Protection & Encryption
-- Split 3: Network & API Security
-- Split 4: Audit & Incident Response
+**De xuat:** Thay vi per-feature generation, co the divide by security domain:
+- Section 1: Authentication & Authorization
+- Section 2: Data Protection & Encryption
+- Section 3: Network & API Security
+- Section 4: Audit & Incident Response
 
 ---
 
@@ -438,7 +438,7 @@ Security-design phu thuoc upstream nhieu, nhung staleness detection hien tai gen
 3. **BUG-03**: Zero PROJECT_TYPE_INSTRUCTIONS cho security-design (ALL project types)
 4. **BUG-04**: Interview questions khong adapt theo project_type
 5. **BUG-05**: SEC-ID table validation qua don gian (chi check 2/6 columns)
-6. **BUG-06**: Khong co split mode (debatable — security la cross-cutting)
+6. **BUG-06**: Khong co per-feature generation (debatable — security la cross-cutting)
 
 ### Cases chua cover (8 cases)
 1. API Security (rate limiting, CORS, API gateway)
@@ -466,7 +466,7 @@ Security-design phu thuoc upstream nhieu, nhung staleness detection hien tai gen
 | BUG-03 | No PROJECT_TYPE_INSTRUCTIONS for security-design | High | DONE | 8 project types covered |
 | BUG-04 | Interview questions not project-type-aware | Medium | DONE | 5 base + 6 conditional questions |
 | BUG-05 | SEC-ID table validation too simple (2/6 columns) | Medium | DONE | Now checks 4 columns |
-| BUG-06 | No split mode support | Low | WONTFIX | Security is cross-cutting |
+| BUG-06 | No per-feature generation support | Low | WONTFIX | Security is cross-cutting |
 
 ### Improvements
 

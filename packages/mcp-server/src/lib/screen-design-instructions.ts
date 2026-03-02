@@ -1,5 +1,5 @@
 /**
- * Screen design generation instructions for split-mode basic-design.
+ * Screen design generation instructions for per-feature basic-design.
  * Extracted from generation-instructions.ts to stay under 200 LOC limit.
  */
 
@@ -95,7 +95,7 @@ export function buildInlineYamlLayoutHint(): string {
 }
 
 /**
- * Build screen design generation instruction for split-mode basic-design.
+ * Build screen design generation instruction for per-feature basic-design.
  * Instructs AI to generate a dedicated screen-design.md with 6 standard sections.
  * Called by SKILL.md; prepended to input_content for the generation call.
  */

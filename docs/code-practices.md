@@ -186,9 +186,9 @@ export const PHASE_MAP: Record<DocType, Phase> = {
   // ... supplementary types
 };
 
-export const SPLIT_DOC_TYPES = [
+export const PER_FEATURE_DOC_TYPES = [
   "basic-design", "detail-design"
-] as const; // v2.0: Only 2 split types (removed test-spec split)
+] as const; // v2.0: Only 2 per-feature types (removed test-spec per-feature generation)
 
 export const PROJECT_TYPES = [
   "web", "mobile", "api", "desktop", "lp", "internal-system", "saas", "batch"
@@ -201,7 +201,7 @@ export const PROJECT_TYPES = [
 
 **Total:** 27 document types (5 requirements + 10 design + 7 test + 5 supplementary)
 
-**Changed:** Split types now only `basic-design` and `detail-design` (test specs are not split)
+**Changed:** Per-feature generation now only for `basic-design` and `detail-design` (test specs are not per-feature)
 
 ### Feature Config
 
@@ -219,7 +219,7 @@ export interface FeatureConfig {
 
 ### Manifest Files (`_index.yaml`)
 
-Located at output root, tracks split document structure:
+Located at output root, tracks per-feature document structure:
 
 ```yaml
 version: "1.0"
@@ -227,7 +227,7 @@ project: "ProjectName"
 language: "ja"
 documents:
   basic-design:
-    type: "split"
+    type: "per-feature"
     status: "in-progress"
     shared:
       - file: "03-system/system-architecture.md"
@@ -278,9 +278,9 @@ export interface ProjectConfig {
     functions_list: ChainEntry;
     project_plan?: ChainEntry;
     // Design phase
-    basic_design: SplitChainEntry;
+    basic_design: PerFeatureChainEntry;
     security_design?: ChainEntry;
-    detail_design: SplitChainEntry;
+    detail_design: PerFeatureChainEntry;
     // Test phase
     test_plan?: ChainEntry;
     ut_spec?: ChainEntry;
@@ -306,8 +306,8 @@ export interface ChainEntry {
   output?: string;
 }
 
-// Split documents
-export interface SplitChainEntry {
+// Per-feature documents
+export interface PerFeatureChainEntry {
   status: "pending" | "in-progress" | "complete";
   system_output?: string;   // path to shared content
   features_output?: string; // path prefix for features

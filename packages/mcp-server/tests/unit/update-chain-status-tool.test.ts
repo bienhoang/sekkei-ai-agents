@@ -97,7 +97,7 @@ describe("handleUpdateChainStatus", () => {
     expect(result.content[0].text).toContain("No chain section");
   });
 
-  it("returns error for unknown doc_type", async () => {
+  it("auto-creates entry for unknown doc_type", async () => {
     configPath = await freshConfig();
     const result = await handleUpdateChainStatus({
       config_path: configPath,
@@ -105,8 +105,9 @@ describe("handleUpdateChainStatus", () => {
       status: "complete",
     });
 
-    expect(result.isError).toBe(true);
-    expect(result.content[0].text).toContain("not found in chain");
+    expect(result.isError).toBeUndefined();
+    expect(result.content[0].text).toContain("nonexistent_doc");
+    expect(result.content[0].text).toContain("complete");
   });
 
   it("returns error for oversized config", async () => {

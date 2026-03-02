@@ -232,7 +232,7 @@ describe("manage_change_request tool", () => {
       propagateDir = await mkdtemp(join(tmpdir(), "sekkei-propagate-"));
       // Minimal sekkei.config.yaml — no chain entries, so loadChainDocs returns empty map
       propagateCfg = join(propagateDir, "sekkei.config.yaml");
-      await writeFile(propagateCfg, "split: {}\n", "utf-8");
+      await writeFile(propagateCfg, "{}\n", "utf-8");
     });
 
     afterAll(async () => {
@@ -322,7 +322,7 @@ describe("manage_change_request tool", () => {
       validateDir = await mkdtemp(join(tmpdir(), "sekkei-validate-"));
       validateCfg = join(validateDir, "sekkei.config.yaml");
       // Minimal config with no chain entries — validateChain returns 0 issues
-      await writeFile(validateCfg, "split: {}\n", "utf-8");
+      await writeFile(validateCfg, "{}\n", "utf-8");
     });
 
     afterAll(async () => {

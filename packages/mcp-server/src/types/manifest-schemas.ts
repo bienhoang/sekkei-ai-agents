@@ -17,15 +17,15 @@ export const ManifestFeatureEntrySchema = z.object({
   file: z.string().max(500),
 });
 
-export const SplitDocumentSchema = z.object({
-  type: z.literal("split"),
+export const PerFeatureDocumentSchema = z.object({
+  type: z.literal("per-feature"),
   status: z.enum(["pending", "in-progress", "complete"]),
   shared: z.array(ManifestSharedEntrySchema),
   features: z.array(ManifestFeatureEntrySchema),
   merge_order: z.array(z.enum(["shared", "features"])).default(["shared", "features"]),
 });
 
-export const ManifestDocumentSchema = SplitDocumentSchema;
+export const ManifestDocumentSchema = PerFeatureDocumentSchema;
 
 export const ManifestSchema = z.object({
   version: z.string().default("1.0"),

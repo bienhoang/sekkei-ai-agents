@@ -14,15 +14,7 @@ const FEATURES = [
   { id: "rep", name: "Reports", complexity: "complex" as const, priority: 3 },
 ];
 
-const CONFIG_YAML = `
-split:
-  basic-design:
-    enabled: true
-  detail-design:
-    enabled: true
-  test-spec:
-    enabled: true
-`;
+const CONFIG_YAML = ``;
 
 // --- Helpers ---
 
@@ -143,21 +135,21 @@ describe("manage_plan tool", () => {
       expect(result.isError).toBe(true);
     });
 
-    it("succeeds without split config (hardcoded defaults)", async () => {
-      const noSplitDir = await mkdtemp(join(tmpdir(), "sekkei-nosplit-"));
-      const noSplitConfig = join(noSplitDir, "no-split.yaml");
-      await writeFile(noSplitConfig, "project: {}", "utf-8");
+    it("succeeds without section config (hardcoded defaults)", async () => {
+      const minimalDir = await mkdtemp(join(tmpdir(), "sekkei-minimal-"));
+      const minimalConfig = join(minimalDir, "minimal.yaml");
+      await writeFile(minimalConfig, "project: {}", "utf-8");
       try {
         const result = await call({
           action: "create",
-          workspace_path: noSplitDir,
-          config_path: noSplitConfig,
+          workspace_path: minimalDir,
+          config_path: minimalConfig,
           doc_type: "detail-design",
           features: FEATURES,
         });
         expect(result.isError).toBeUndefined();
       } finally {
-        await rm(noSplitDir, { recursive: true, force: true });
+        await rm(minimalDir, { recursive: true, force: true });
       }
     });
 

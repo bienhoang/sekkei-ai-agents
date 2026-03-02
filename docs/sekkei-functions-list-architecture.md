@@ -47,8 +47,8 @@ User runs /sekkei:functions-list @input
 │  POST-GENERATION                            │
 │  1. update_chain_status (functions_list)     │
 │  2. validate_document                       │
-│  3. Count 大分類 → split mode prompt (≥3)   │
-│  4. If split: create feature dirs + manifest│
+│  3. Count 大分類 → per-feature prompt (≥3)  │
+│  4. If per-feature: create feature dirs + manifest│
 └─────────────────────────────────────────────┘
 ```
 
@@ -74,7 +74,7 @@ User runs /sekkei:functions-list @input
 | File | Role |
 |------|------|
 | `packages/skills/content/SKILL.md` | Command registration: `/sekkei:functions-list @input` |
-| `packages/skills/content/references/phase-requirements.md` | 12-step workflow with interview, generation, validation, split-mode |
+| `packages/skills/content/references/phase-requirements.md` | 12-step workflow with interview, generation, validation, per-feature mode |
 | `packages/skills/content/references/doc-standards.md` | Column format spec, ID prefix table |
 | `packages/skills/content/references/v-model-guide.md` | REQ→F→SCR traceability chain |
 
@@ -87,8 +87,8 @@ User runs /sekkei:functions-list @input
 6. Call `update_chain_status`
 7. Call `validate_document`
 8. Count 大分類 groups
-9. If ≥3: prompt split mode
-10-12. If split confirmed: create dirs, write `_index.yaml` manifest
+9. If ≥3: prompt per-feature mode
+10-12. If per-feature confirmed: create dirs, write `_index.yaml` manifest
 
 ### Layer 2: MCP Tool Handler
 
@@ -141,7 +141,7 @@ User runs /sekkei:functions-list @input
 
 1. **Well-defined chain position** — clear upstream (requirements) and 8 downstream consumers
 2. **Embedded AI comments in template** — generation rules live with the template, not scattered
-3. **Split-mode detection** — automatic prompt when ≥3 feature groups detected
+3. **Per-feature detection** — automatic prompt when ≥3 feature groups detected
 4. **Cross-reference extraction** — `extractAllIds()` constrains downstream docs to valid IDs
 5. **Keigo enforcement** — per-project-type keigo level prevents style mixing
 6. **Staleness propagation** — F-xxx changes automatically flag dependent docs
@@ -217,7 +217,7 @@ User runs /sekkei:functions-list @input
 
 **Gap:** Template generates a flat table. At 100+ rows:
 - Markdown table becomes unreadable
-- Split mode only creates per-feature *directories*, doesn't split the functions-list itself
+- Per-feature mode only creates per-feature *directories*, doesn't split the functions-list itself
 - No pagination, sub-tables, or section-per-大分類 support
 
 **Impact:** Enterprise projects with 5+ subsystems produce a single 200+ row table that's impractical to review.
@@ -389,7 +389,7 @@ Enhance 集計 section with:
 | Completeness (F-xxx) | `completeness-checker.test.ts` | Partial — only checks F-xxx regex |
 | Cross-ref graph | `cross-ref-linker.test.ts` | OK — orphaned F-xxx detection |
 | Staleness | `staleness-detector.test.ts` | OK — F-xxx change propagation |
-| Plan split detection | `plan-tool.test.ts` | OK — ≥3 headers triggers split |
+| Plan per-feature detection | `plan-tool.test.ts` | OK — ≥3 headers triggers per-feature |
 | Upstream assembly | `plan-state.test.ts` | OK — includes functions-list |
 
 **Gaps:**
@@ -407,7 +407,7 @@ packages/mcp-server/
 ├── templates/ja/functions-list.md          # Template (11-col table)
 ├── src/
 │   ├── tools/generate.ts                   # Tool handler
-│   ├── tools/plan-actions.ts               # Split mode detection
+│   ├── tools/plan-actions.ts               # Per-feature detection
 │   ├── lib/
 │   │   ├── generation-instructions.ts:11   # AI instructions (8 lines)
 │   │   ├── validator.ts:39                 # Required sections
@@ -426,7 +426,7 @@ packages/mcp-server/
 │   ├── completeness-checker.test.ts        # F-xxx depth tests
 │   ├── cross-ref-linker.test.ts            # Chain pair tests
 │   ├── staleness-detector.test.ts          # Staleness propagation
-│   ├── plan-tool.test.ts                   # Split mode detection
+│   ├── plan-tool.test.ts                   # Per-feature detection
 │   └── plan-state.test.ts                  # Upstream assembly
 packages/skills/
 ├── content/SKILL.md                        # Command registration
@@ -443,7 +443,7 @@ packages/skills/
 
 ## 9. Unresolved Questions
 
-1. **Should custom ID prefixes be first-class?** Current design treats SAL-001 as "OTHER". If we want split-mode features to have their own prefix, the completeness rule, staleness detector, and cross-ref linker all need updates.
+1. **Should custom ID prefixes be first-class?** Current design treats SAL-001 as "OTHER". If we want per-feature generation features to have their own prefix, the completeness rule, staleness detector, and cross-ref linker all need updates.
 
 2. **What about functions-list versioning?** When a change request adds functions, the current system regenerates the entire document. Should we support incremental updates (append-only) to preserve human review approvals on existing rows?
 

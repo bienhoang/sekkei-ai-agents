@@ -7,11 +7,11 @@ All notable changes to Sekkei are documented here. Follows [Keep a Changelog](ht
 ## [2.9.x] — 2026-03-01
 
 ### Changed
-- **Split config removed** — `split:` section removed from `sekkei.config.yaml`. Per-feature generation is now fully automatic based on `functions-list.md` existence. No manual configuration needed.
-  - `sekkei init` wizard no longer asks about split mode preferences
+- **Per-feature config removed** — `split:` section removed from `sekkei.config.yaml`. Per-feature generation is now fully automatic based on `functions-list.md` existence. No manual configuration needed.
+  - `sekkei init` wizard no longer asks about per-feature generation preferences
   - `readSplitConfig()` deleted from `plan-actions.ts`; replaced with hardcoded `SHARED_SECTIONS` / `FEATURE_SECTIONS` constants
   - `handleDetect()` activates per-feature generation when `04-functions-list/functions-list.md` exists and `featureCount > 0` (previous threshold of ≥ 3 removed)
-  - `sekkei.config.example.yaml` `split:` block removed
+  - `sekkei.config.example.yaml` per-feature generation block removed
 
 ### Fixed
 - **`/sekkei:status` display** — Full MCP response now displayed verbatim with all 6 columns (Document, Chain Status, Dependencies, Lifecycle, Version, Output). Previously AI reformatted into simplified 2-column tables.
@@ -29,8 +29,8 @@ All notable changes to Sekkei are documented here. Follows [Keep a Changelog](ht
 ## [2.8.0] — 2026-02-25
 
 ### Added
-- Token optimization for split-mode generation (smart upstream filtering via `upstream-filter.ts`, 60-75% context reduction per feature)
-- Token budget estimator (`token-budget-estimator.ts`) — predicts output tokens, recommends strategy (monolithic/progressive/split_required)
+- Token optimization for per-feature generation (smart upstream filtering via `upstream-filter.ts`, 60-75% context reduction per feature)
+- Token budget estimator (`token-budget-estimator.ts`) — predicts output tokens, recommends strategy (single-call/progressive/plan_required)
 - Session recovery checkpoints: `manage_plan(action="update_section")` and `manage_plan(action="get_checkpoint")`
 - Translation pipeline improvements: SHA-256 hash-based incremental tracking for delta-only retranslation, post-translation structural validation
 

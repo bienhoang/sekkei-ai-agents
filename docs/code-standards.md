@@ -22,7 +22,7 @@ src/
 │   ├── resolve-output-path.ts # Doc type → path mapping
 │   ├── structure-validator.ts  # Numbered dir validation
 │   ├── id-extractor.ts     # Cross-reference ID extraction
-│   ├── merge-documents.ts  # Split doc assembly
+│   ├── merge-documents.ts  # Per-feature doc assembly
 │   ├── generation-instructions.ts # AI prompt building
 │   └── screen-design-instructions.ts # Screen design specific
 ├── tools/                 # MCP tool handlers (12 tools)
