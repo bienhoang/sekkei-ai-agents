@@ -4,6 +4,15 @@ All notable changes to Sekkei are documented here. Follows [Keep a Changelog](ht
 
 ---
 
+## [2.11.0] — 2026-03-02
+
+### Added
+- **Semantic versioning system** — `manage_version` MCP tool for version bumps, release management, Git tagging, and release notes generation
+- **Version display on exports** — PDF, Excel, and DOCX exports now show document version from frontmatter
+- **Frontmatter version parsing** — `frontmatter-parser.ts` extracts version metadata from document headers
+
+---
+
 ## [2.10.0] — 2026-03-02
 
 ### Added
