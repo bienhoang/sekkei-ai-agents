@@ -4,6 +4,13 @@ All notable changes to Sekkei are documented here. Follows [Keep a Changelog](ht
 
 ---
 
+## [2.11.1] — 2026-03-02
+
+### Fixed
+- **install.sh unbound variable** — replaced undefined `$SEKKEI_HOME` with `$SCRIPT_DIR` for dashboard CLI path (line 271 crash with `set -u`)
+
+---
+
 ## [2.11.0] — 2026-03-02
 
 ### Added
