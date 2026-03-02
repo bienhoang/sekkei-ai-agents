@@ -152,7 +152,7 @@ node bin/install.js --skip-python            # Skip Python export setup
 ### MCP Server
 
 - **Transport**: STDIO (stdout reserved for JSON-RPC, logs to stderr)
-- **15 MCP Tools**: `generate_document`, `get_template`, `validate_document`, `get_chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`, `simulate_change_impact`, `import_document`, `manage_rfp_workspace`, `manage_change_request`, `update_chain_status`, `manage_plan`
+- **16 MCP Tools**: `generate_document`, `get_template`, `validate_document`, `get_chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`, `simulate_change_impact`, `import_document`, `manage_rfp_workspace`, `manage_change_request`, `update_chain_status`, `manage_plan`, `manage_version`
 - **MCP Resources**: `templates://` for doc templates, `rfp://` for RFP workflow instructions
 - **27 Templates**: Japanese (ja) with YAML frontmatter, 検印欄 (review stamps) — override with `SEKKEI_TEMPLATE_OVERRIDE_DIR`
 - **Python Bridge**: `execFile`-based (no shell injection) for Excel/PDF/DOCX export via `SEKKEI_INPUT` env var
@@ -183,7 +183,7 @@ Built with citty. Available commands:
 
 ## Slash Commands (Claude Code)
 
-44 sub-commands covering the full V-model workflow:
+45 sub-commands covering the full V-model workflow:
 
 **Requirements Phase**
 
@@ -248,7 +248,8 @@ Built with citty. Available commands:
 | `/sekkei:plan @doc-type` | Create generation plan for large docs |
 | `/sekkei:implement @plan-path` | Execute generation plan phase by phase |
 | `/sekkei:preview` | Start Express+React preview server |
-| `/sekkei:version` | Show version + health check |
+| `/sekkei:version [show\|bump]` | Display or bump semantic version |
+| `/sekkei:release` | Create release with Git tagging and release notes |
 | `/sekkei:uninstall` | Remove Sekkei from Claude Code |
 | `/sekkei:dashboard` | Open analytics dashboard (quality metrics, traceability, risk) |
 

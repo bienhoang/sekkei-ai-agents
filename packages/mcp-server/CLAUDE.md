@@ -27,7 +27,7 @@ Sekkei is an MCP server that generates Japanese software specification documents
 MCP Client (Claude/Cursor/Copilot)
   → STDIO transport
     → McpServer (server.ts)
-      → Tools (15 handlers in tools/index.ts)
+      → Tools (16 handlers in tools/index.ts)
       → Resources (template URIs + RFP instructions in resources/)
         → Template Loader (lib/template-loader.ts)
           → Template Resolver (lib/template-resolver.ts) — override dir → default fallback
@@ -56,6 +56,7 @@ Each document type has: a Markdown template (`templates/ja/`, 22 templates), gen
 
 - **Change Requests** (`tools/change-request.ts`, `tools/cr-actions.ts`, `lib/cr-state-machine.ts`, `lib/cr-propagation.ts`, `lib/cr-conflict-detector.ts`) — track and propagate spec changes across the chain
 - **Plan Management** (`tools/plan.ts`, `tools/plan-actions.ts`, `lib/plan-state.ts`) — orchestrate multi-phase document generation
+- **Version Management** (`tools/version.ts`, `tools/version-actions.ts`, `lib/version-manager.ts`) — semantic versioning, release management, Git tagging, release notes generation
 - **Staleness Detection** (`lib/staleness-detector.ts`, `lib/doc-staleness.ts`, `lib/staleness-formatter.ts`) — detect outdated downstream docs
 - **Changelog** (`lib/changelog-manager.ts`) — global changelog with version extraction and propagation logging
 - **Translation Pipeline** (`tools/translate.ts`, `lib/translation-validator.ts`, `lib/translation-tracker.ts`) — bidirectional glossary mapping (ja↔en↔vi), post-translation structural validation (ID preservation, table rows, heading count), and SHA-256 hash-based incremental tracking for delta-only retranslation

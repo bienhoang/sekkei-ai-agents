@@ -7,6 +7,11 @@ import { marked } from "marked";
 import { ensureFonts } from "./font-manager.js";
 import { browserPool } from "./browser-pool.js";
 import { logger } from "./logger.js";
+import { parseFrontmatter } from "./frontmatter-parser.js";
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
 
 export interface PdfExportInput {
   content: string;
@@ -88,15 +93,33 @@ export async function exportToPdf(input: PdfExportInput): Promise<PdfExportResul
     throw new Error("output_path must not contain path traversal");
   }
 
-  const bodyHtml = await marked(content, { gfm: true, breaks: false });
+  const { meta, body } = parseFrontmatter(content);
+  const bodyHtml = await marked(body, { gfm: true, breaks: false });
   const fontPaths = await ensureFonts();
 
-  const titleMatch = content.match(/^#\s+(.+)$/m);
-  const title = titleMatch?.[1] ?? project_name ?? "Document";
+  const titleRaw = String(meta["title"] ?? body.match(/^#\s+(.+)$/m)?.[1] ?? project_name ?? "Document");
+  const versionRaw = String(meta["version"] ?? "1.0.0");
+  const dateRaw = String(meta["date"] ?? new Date().toISOString().slice(0, 10));
+  const statusRaw = String(meta["status"] ?? "draft");
 
-  const tocEntries = extractToc(content);
+  const title = escapeHtml(titleRaw);
+  const version = escapeHtml(versionRaw);
+  const date = escapeHtml(dateRaw);
+  const status = escapeHtml(statusRaw);
+  const safeProjectName = escapeHtml(project_name ?? "");
+
+  const coverHtml = `<div style="page-break-after:always;text-align:center;padding-top:200px;">` +
+    `<h1 style="font-size:24pt;">${title}</h1>` +
+    `<p style="font-size:14pt;margin-top:40px;">${safeProjectName}</p>` +
+    `<table style="margin:60px auto;font-size:12pt;border-collapse:collapse;">` +
+    `<tr><td style="padding:4px 16px;text-align:right;font-weight:bold;">Version:</td><td style="padding:4px 16px;">${version}</td></tr>` +
+    `<tr><td style="padding:4px 16px;text-align:right;font-weight:bold;">Date:</td><td style="padding:4px 16px;">${date}</td></tr>` +
+    `<tr><td style="padding:4px 16px;text-align:right;font-weight:bold;">Status:</td><td style="padding:4px 16px;">${status}</td></tr>` +
+    `</table></div>`;
+
+  const tocEntries = extractToc(body);
   const tocHtml = buildTocHtml(tocEntries);
-  const html = buildHtmlPage(tocHtml + bodyHtml, fontPaths);
+  const html = buildHtmlPage(coverHtml + tocHtml + bodyHtml, fontPaths);
 
   const browser = await browserPool.acquire();
   try {
@@ -110,9 +133,11 @@ export async function exportToPdf(input: PdfExportInput): Promise<PdfExportResul
       margin: { top: "25mm", bottom: "25mm", left: "30mm", right: "20mm" },
       printBackground: true,
       displayHeaderFooter: true,
-      headerTemplate: `<div style="font-size:9px;width:100%;text-align:center;color:#555;padding:0 30mm">${title}</div>`,
-      footerTemplate: `<div style="font-size:9px;width:100%;text-align:right;padding-right:20mm;color:#555">` +
-        `<span class="pageNumber"></span> / <span class="totalPages"></span></div>`,
+      headerTemplate: `<div style="font-size:9px;width:100%;padding:0 30mm;display:flex;justify-content:space-between;color:#555">` +
+        `<span>${title}</span><span>v${version}</span></div>`,
+      footerTemplate: `<div style="font-size:9px;width:100%;padding:0 20mm;display:flex;justify-content:space-between;color:#555">` +
+        `<span>v${version} | ${date}</span><span>${status}</span>` +
+        `<span><span class="pageNumber"></span> / <span class="totalPages"></span></span></div>`,
     });
 
     await writeFile(output_path, pdfBuffer);

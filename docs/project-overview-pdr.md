@@ -297,7 +297,30 @@ Reads `sekkei.config.yaml` and returns:
 
 **Extended ID Prefixes:** F, REQ, NFR, ARC, DB, SEC, SCR, TBL, API, CLS, OP, MIG, BATCH, RPT, SCN, TST, UT, IT, ST, UAT, TR, EV, MTG, ADR, IF (25 total prefixes)
 
-### 12. Lifecycle Management (CLI Commands)
+### 12. Semantic Versioning & Release Management (NEW v2.9.0)
+
+**Tool:** `manage_version`
+
+Automated semantic versioning and release lifecycle management:
+- **SemVer Support** — Major.Minor.Patch versioning per IPA V-Model phases
+- **Release Tracking** — `sekkei.releases.yaml` stores version history + metadata
+- **4 Release Actions:**
+  - `bump` — Increment version (major/minor/patch)
+  - `query` — List releases and version history
+  - `release` — Create release with Git annotated tag + RELEASE-NOTES-{tag}.md
+  - `history` — View release changelog
+- **Export Integration** — Version displayed on PDF cover page, Excel header/footer
+- **CLI Commands:**
+  - `/sekkei:version [show|bump]` — Display or bump project version
+  - `/sekkei:release` — Interactive release workflow (creates Git tags + release notes)
+
+**Key Features:**
+- Automatic version bumping in documentation frontmatter (YAML)
+- Git annotated tag creation on release
+- Release notes auto-generation from changelog
+- Version history tracking in single source-of-truth file
+
+### 13. Lifecycle Management (CLI Commands)
 
 **New with lifecycle commands:**
 - `sekkei version` — Show Sekkei version + environment health check (`--json` flag)

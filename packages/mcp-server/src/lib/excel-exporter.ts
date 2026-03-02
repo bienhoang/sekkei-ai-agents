@@ -3,10 +3,10 @@
  * If template_path is provided, delegates to excel-template-filler instead.
  */
 import ExcelJS from "exceljs";
-import { parse as parseYaml } from "yaml";
 import { stat } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fillTemplate } from "./excel-template-filler.js";
+import { parseFrontmatter } from "./frontmatter-parser.js";
 
 export interface ExcelExportInput {
   content: string;
@@ -20,19 +20,6 @@ export interface ExcelExportInput {
 export interface ExcelExportResult {
   file_path: string;
   file_size: number;
-}
-
-const FRONTMATTER_RE = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
-
-function parseFrontmatter(content: string): { meta: Record<string, unknown>; body: string } {
-  const m = content.match(FRONTMATTER_RE);
-  if (!m) return { meta: {}, body: content };
-  try {
-    const meta = (parseYaml(m[1]) ?? {}) as Record<string, unknown>;
-    return { meta, body: m[2] };
-  } catch {
-    return { meta: {}, body: m[2] };
-  }
 }
 
 function truncateSheetName(name: string): string {
@@ -119,6 +106,7 @@ function addCoverSheet(wb: ExcelJS.Workbook, meta: Record<string, unknown>, proj
     ["Project", projectName],
     ["Version", version],
     ["Date", date],
+    ["Status", String(meta["status"] ?? "draft")],
   ];
 
   rows.forEach(([label, value]) => {

@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-**Sekkei (設計)** v2.8.0 is a monorepo containing:
+**Sekkei (設計)** v2.10.0 is a monorepo containing:
 - **@bienhoang/sekkei-mcp-server** (TypeScript/101 src files + 56 test files/~15,300 LOC src + ~13,800 LOC tests) — IPA V-Model compliant specification generation with 26 doc types + 5 quality-scoring libs + Phase A SIer features + Phase B dashboard + v2.8.0 token optimization
 - **@bienhoang/sekkei-preview** (Express + React + Tiptap v3) — Live preview with WYSIWYG editor (1,600+ LOC)
 - **@bienhoang/sekkei-dashboard** (React + Express + Recharts + @xyflow/react) — Analytics dashboard with quality metrics, traceability graphs, snapshots (3,600+ LOC, 5 pages)
@@ -64,6 +64,8 @@ sekkei/
 │   │   │   │   ├── upstream-extractor.ts # Extract IDs from upstream docs (server-side, 5-min cache, 139 LOC)
 │   │   │   │   ├── token-budget-estimator.ts # Predict output tokens, recommend generation strategy (NEW v2.8.0, 119 LOC)
 │   │   │   │   ├── upstream-filter.ts  # Feature-aware h2 + ID-based content filtering (NEW v2.8.0, 140 LOC)
+│   │   │   │   ├── version-manager.ts # Semantic versioning, release tracking, Git tagging (NEW v2.9.0)
+│   │   │   │   ├── frontmatter-parser.ts # Shared YAML frontmatter parsing (NEW v2.9.0, extracted from excel-exporter)
 │   │   │   │   ├── coverage-metrics.ts # Traceability matrix % (Phase B)
 │   │   │   │   ├── health-scorer.ts   # Doc health scoring (Phase B)
 │   │   │   │   ├── risk-scorer.ts     # 5-dimension risk assessment (Phase B)
@@ -72,7 +74,7 @@ sekkei/
 │   │   │   │   ├── platform.ts        # Cross-platform utilities
 │   │   │   │   ├── constants.ts       # Shared constants
 │   │   │   │   └── [additional lib modules]
-│   │   │   ├── tools/                 # MCP Tool Handlers (15 tools, 3,860 LOC)
+│   │   │   ├── tools/                 # MCP Tool Handlers (16 tools, 3,860+ LOC)
 │   │   │   │   ├── generate.ts        # generate_document tool (+ v3 source_code_path, Phase A confidence/traceability, upstream_paths, post_actions)
 │   │   │   │   ├── validate.ts        # validate_document tool (4 modes + v3 structure rules)
 │   │   │   │   ├── chain-status.ts    # get_chain_status tool
@@ -89,10 +91,13 @@ sekkei/
 │   │   │   │   ├── cr-actions.ts      # CR action handlers (9 actions)
 │   │   │   │   ├── plan.ts            # manage_plan tool (NEW v2.7.0)
 │   │   │   │   ├── plan-actions.ts    # Plan action handlers (NEW v2.7.0)
+│   │   │   │   ├── version.ts         # manage_version tool (NEW v2.9.0)
+│   │   │   │   ├── version-actions.ts # Version action handlers (NEW v2.9.0)
 │   │   │   │   └── index.ts           # Tool registration
 │   │   │   ├── types/                 # Type Definitions
 │   │   │   │   ├── documents.ts       # Core domain types (DocType, ProjectConfig, etc.)
 │   │   │   │   ├── change-request.ts  # CR entity types, status enum, propagation types
+│   │   │   │   ├── version.ts         # Version and release types (NEW v2.9.0)
 │   │   │   │   └── manifest-schemas.ts # Zod validation schemas
 │   │   │   ├── cli/                   # CLI Commands
 │   │   │   │   ├── commands/
@@ -247,7 +252,7 @@ sekkei/
 └── sekkei.config.example.yaml         # Example project config
 ```
 
-## MCP Tools (15 Total)
+## MCP Tools (16 Total)
 
 | # | Tool | Category | Status | Features |
 |---|------|----------|--------|----------|
@@ -255,7 +260,7 @@ sekkei/
 | 2 | get_template | Core | v2.7.2 | Template resolution, override support, all 27 types |
 | 3 | validate_document | Core | v2.7.2 | 4 modes: content, manifest, structure, structure-rules (v3) |
 | 4 | get_chain_status | Core | v2.7.2 | Progress tracking, phase-based grouping |
-| 5 | export_document | Core | v2.7.2 | Excel, PDF, DOCX, Google Sheets (v3), read_only mode (Phase A) |
+| 5 | export_document | Core | v2.7.2 | Excel, PDF, DOCX, Google Sheets (v3), read_only mode (Phase A), version display (v2.9+) |
 | 6 | translate_document | Core | v2.7.2 | EN/VI translation with glossary context |
 | 7 | manage_glossary | Core | v2.7.2 | CRUD operations, native glossary integration (Phase A) |
 | 8 | analyze_update | Core | v2.7.2 | Diff analysis, staleness detection (v3), enhanced diffs (Phase A) |
@@ -266,6 +271,7 @@ sekkei/
 | 13 | manage_change_request | Phase A | v2.7.2 | CR state machine (8 states), propagation |
 | 14 | manage_plan | Phase B | v2.7.0+ | Multi-phase document generation orchestration (NEW) |
 | 15 | update_chain_status | Phase B | v2.7.0+ | CR propagation actions, atomic updates |
+| 16 | manage_version | Version | v2.9.0+ | Semantic versioning (bump, query, release, history), Git tags, release notes, version display on exports (NEW) |
 
 ## Document Types (27 Total)
 
@@ -281,7 +287,7 @@ sekkei/
 
 | Metric | Count | Notes |
 |--------|-------|-------|
-| MCP Tools | 15 | Core (8) + Phase A (3) + RFP (1) + Phase B (2) + update_chain_status |
+| MCP Tools | 16 | Core (8) + Phase A (3) + RFP (1) + Phase B (2) + Version (1) |
 | Document Types | 27 | IPA V-Model compliant, all with templates |
 | Cross-ref ID Prefixes | 25 | F, REQ, NFR, ARC, DB, SEC, SCR, TBL, API, CLS, OP, MIG, BATCH, RPT, SCN, TST, UT, IT, ST, UAT, TR, EV, MTG, ADR, IF |
 | Quality Metrics Scorers | 5 | Coverage, health, risk (5-dimension), batch validator, NFR classifier |
@@ -295,18 +301,19 @@ sekkei/
 
 1. **Change Request Engine** — cr-state-machine (8 states), cr-propagation, cr-conflict-detector, cr-backfill
 2. **Plan Management** — plan-state, plan-actions, plan-phase-template (NEW v2.7.0)
-3. **Generation Optimization** (NEW v2.8.0):
+3. **Version Management** (NEW v2.9.0) — version-manager, manage_version tool, sekkei.releases.yaml, semantic versioning (major.minor.patch), Git tagging, release notes generation
+4. **Generation Optimization** (NEW v2.8.0):
    - **Token Budget Estimator** — predicts output tokens, recommends strategy (single-call/progressive/plan_required)
    - **Smart Upstream Filtering** — h2-heading + ID-based filtering reduces context 60-75% per feature
    - **Session Recovery** — section-level checkpoints in plan YAML for interrupted generation
-4. **Quality Metrics** — coverage-metrics, health-scorer, risk-scorer, batch-validator, nfr-classifier (Phase B)
-5. **Staleness Detection** — staleness-detector, doc-staleness, staleness-formatter (v3)
-6. **Code Analysis** — code-analyzer (ts-morph), code-context-formatter (v3)
-7. **Export Engine** — excel-exporter, pdf-exporter (Playwright), docx-exporter, google-sheets-exporter, python-bridge
-8. **Template System** — template-resolver (override→fallback), template-loader, frontmatter-reader
-9. **Changelog Manager** — changelog-manager with version tracking + CR logging
-10. **Keigo Validator** — Japanese honorific validation (199 LOC)
-11. **Cross-ref System** — id-extractor (25 ID prefixes), cross-ref-linker, upstream-extractor
+5. **Quality Metrics** — coverage-metrics, health-scorer, risk-scorer, batch-validator, nfr-classifier (Phase B)
+6. **Staleness Detection** — staleness-detector, doc-staleness, staleness-formatter (v3)
+7. **Code Analysis** — code-analyzer (ts-morph), code-context-formatter (v3)
+8. **Export Engine** — excel-exporter, pdf-exporter (Playwright), docx-exporter, google-sheets-exporter, python-bridge; version display on cover page + header/footer
+9. **Template System** — template-resolver (override→fallback), template-loader, frontmatter-parser (extracted from excel-exporter)
+10. **Changelog Manager** — changelog-manager with version tracking + CR logging
+11. **Keigo Validator** — Japanese honorific validation (199 LOC)
+12. **Cross-ref System** — id-extractor (25 ID prefixes), cross-ref-linker, upstream-extractor
 
 ## Source Code Metrics
 

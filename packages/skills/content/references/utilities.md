@@ -281,10 +281,38 @@ See `references/plan-orchestrator.md` for detailed logic.
 
 ## `/sekkei:version`
 
-1. Run CLI: `npx sekkei version` (or `node <path>/dist/cli/main.js version`)
-2. Display the health check output to the user
-3. If any items show ✗, suggest remediation steps
-4. For JSON output: `npx sekkei version --json`
+### Default (show)
+1. Call MCP tool `manage_version(action="query", workspace_path=".")`
+2. Display version table with columns: Document, Tracked Version, Actual Version, Match
+3. Run CLI health check: `npx sekkei version`
+4. If any items show failure, suggest remediation steps
+
+### Bump
+Usage: `/sekkei:version bump <doc_type> <major|minor|patch> "<reason>"`
+
+1. Confirm with user: "Bump {doc_type} by {bump_type}? Current version: {current}"
+2. Call MCP tool `manage_version(action="bump", workspace_path=".", doc_type="{doc_type}", bump_type="{bump_type}", reason="{reason}")`
+3. Display result: "{doc_type}: {old} → {new} ({reason})"
+
+## `/sekkei:release`
+
+Interactive release workflow:
+
+1. Call MCP tool `manage_version(action="query", workspace_path=".")` — display current version table
+2. Ask user: "Review versions above. Enter release tag (e.g. v2026.03-R1):"
+3. Ask user: "Enter release description:"
+4. Confirm: "Create release {tag} with {N} documents? This will:
+   - Snapshot all current doc versions
+   - Create git tag: {tag}
+   - Generate RELEASE-NOTES-{tag}.md
+   [Proceed / Cancel]"
+5. If Proceed: call MCP tool `manage_version(action="release", workspace_path=".", tag="{tag}", description="{description}")`
+6. Display result:
+   - Tag: {tag}
+   - Documents: {version table from snapshot}
+   - Release notes: {notes_file path}
+   - Git tagged: {yes/no}
+7. If git tagged: remind user to push tag: `git push origin {tag}`
 
 ## `/sekkei:uninstall`
 

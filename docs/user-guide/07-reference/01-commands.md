@@ -1,6 +1,6 @@
 # Tham Chiếu Lệnh — Quick Reference
 
-> Lookup nhanh tất cả 44 lệnh (slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
+> Lookup nhanh tất cả 45 lệnh (slash commands + CLI). Xem thứ tự prerequisite trước khi chạy.
 
 ---
 
@@ -46,7 +46,7 @@
 
 ---
 
-## Section 3: Lệnh Tiện Ích (16 lệnh)
+## Section 3: Lệnh Tiện Ích (17 lệnh)
 
 | # | Lệnh | Syntax | Options / Subcommands | Mục đích |
 |---|------|--------|-----------------------|----------|
@@ -62,10 +62,11 @@
 | 38 | **implement** | `/sekkei:implement @plan-path` | — | Thực thi plan từng phase, tạo tài liệu theo thứ tự |
 | 39 | **preview** | `/sekkei:preview` | `--docs` / `--guide` / `--port <number>` / `--no-open` / `--help` | Khởi động Express preview server tại localhost:4983 |
 | 40 | **dashboard** | `/sekkei:dashboard` | `--port <number>` / `--open` | Bảng điều khiển Analytics — chỉ số chất lượng, đồ thị truy xuất, điểm rủi ro (mặc định: port 4002) |
-| 41 | **version** | `/sekkei:version` hoặc `sekkei -v` | `--json` | Version info + MCP server status |
-| 42 | **doctor** | `sekkei doctor` hoặc `sekkei -d` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
-| 43 | **update (CLI)** | `sekkei update` hoặc `sekkei -u` | `--skip-build` | Rebuild và re-install Sekkei skill + MCP |
-| 44 | **uninstall** | `/sekkei:uninstall` | — | Gỡ cài đặt Sekkei khỏi Claude Code |
+| 41 | **version** | `/sekkei:version [show\|bump]` | `show` — hiển thị phiên bản hiện tại; `bump` — nâng phiên bản tài liệu | Quản lý semantic versioning, xem lịch sử release, truy vấn phiên bản |
+| 42 | **release** | `/sekkei:release` | `--notes` — tạo release notes; `--tag` — tạo Git tag | Tạo release, đánh phiên bản, tạo Git annotated tags, sinh RELEASE-NOTES-{tag}.md |
+| 43 | **doctor** | `sekkei doctor` hoặc `sekkei -d` | `--json` | Health check toàn diện — MCP, templates, skill, Python, commands, fix suggestions |
+| 44 | **update (CLI)** | `sekkei update` hoặc `sekkei -u` | `--skip-build` | Rebuild và re-install Sekkei skill + MCP |
+| 45 | **uninstall** | `/sekkei:uninstall` | — | Gỡ cài đặt Sekkei khỏi Claude Code |
 
 ---
 

@@ -25,7 +25,7 @@ src/
 │   ├── merge-documents.ts  # Per-feature doc assembly
 │   ├── generation-instructions.ts # AI prompt building
 │   └── screen-design-instructions.ts # Screen design specific
-├── tools/                 # MCP tool handlers (12 tools)
+├── tools/                 # MCP tool handlers (16 tools)
 │   ├── generate.ts        # generate_document tool (v3 + Phase A)
 │   ├── validate.ts        # validate_document tool (4 modes)
 │   ├── chain-status.ts    # get_chain_status tool
@@ -37,7 +37,13 @@ src/
 │   ├── simulate-impact.ts # simulate_change_impact tool (Phase A)
 │   ├── import-document.ts # import_document tool (Phase A)
 │   ├── validate-chain.ts  # validate_chain tool (Phase A)
-│   └── rfp-workspace.ts   # manage_rfp_workspace tool
+│   ├── rfp-workspace.ts   # manage_rfp_workspace tool
+│   ├── change-request.ts  # manage_change_request tool (CR state machine)
+│   ├── cr-actions.ts      # CR action handlers
+│   ├── plan.ts            # manage_plan tool (multi-phase orchestration)
+│   ├── plan-actions.ts    # Plan action handlers
+│   ├── version.ts         # manage_version tool (semantic versioning)
+│   └── version-actions.ts # Version action handlers
 ├── types/                 # Type definitions
 │   ├── documents.ts       # Core domain types
 │   ├── manifest-schemas.ts # Zod validation schemas

@@ -8,7 +8,7 @@ MCP Server for generating Japanese software specification documents (設計書) 
 
 ## Features
 
-- **15 MCP tools** — generate, validate, chain-validate, export, translate, glossary, RFP workspace, change requests, plan management, and more
+- **16 MCP tools** — generate, validate, chain-validate, export, translate, glossary, RFP workspace, change requests, plan management, version management, and more
 - **V-model chain** — branching document chain with phase-grouped types (requirements, design, test, supplementary)
 - **27 document templates** — IPA V-Model compliant with 検印欄 (review stamps): requirements, NFR, architecture/basic/detail/security/db design, report/batch design, screen/interface spec, test-plan, UT/IT/ST/UAT spec, test-result-report, test-evidence, and more
 - **Quality metrics** — coverage scoring, health scoring, risk assessment (5-dimension weighted), NFR classification (IPA NFUG)
@@ -106,6 +106,7 @@ cp adapters/copilot/copilot-instructions.md .github/
 | `manage_change_request` | Change request lifecycle — create, approve, propagate, rollback |
 | `update_chain_status` | Update document chain status in config |
 | `manage_plan` | Multi-phase document generation plan orchestration |
+| `manage_version` | Semantic versioning, release management, Git tagging, release notes |
 
 ## MCP Resources
 

@@ -13,10 +13,18 @@ import {
   TextRun,
   WidthType,
   BorderStyle,
+  AlignmentType,
+  Header,
+  Footer,
+  PageNumber,
+  PageBreak,
+  TabStopType,
+  TabStopPosition,
 } from "docx";
 import { marked, type Token } from "marked";
 import { writeFile, stat } from "node:fs/promises";
 import { SekkeiError } from "./errors.js";
+import { parseFrontmatter } from "./frontmatter-parser.js";
 
 // marked v17 exposes Token as a tagged union — define minimal shapes locally
 type MHeading   = Token & { depth: number; text: string };
@@ -168,18 +176,72 @@ function blockToElements(block: DocxBlock): Array<Paragraph | Table> {
 
 // ─── Document builder ────────────────────────────────────────────────────────
 
-export function buildDocxDocument(blocks: DocxBlock[]): Document {
-  const children: Array<Paragraph | Table> = blocks.flatMap(blockToElements);
+interface DocxMeta {
+  title: string;
+  version: string;
+  date: string;
+  status: string;
+  projectName: string;
+}
+
+function buildCoverChildren(meta: DocxMeta): Paragraph[] {
+  return [
+    new Paragraph({ text: "", spacing: { before: 4000 } }),
+    new Paragraph({ text: meta.title, heading: HeadingLevel.TITLE, alignment: AlignmentType.CENTER }),
+    new Paragraph({ text: meta.projectName, alignment: AlignmentType.CENTER, spacing: { before: 400 } }),
+    new Paragraph({ text: `Version: ${meta.version}`, alignment: AlignmentType.CENTER, spacing: { before: 800 } }),
+    new Paragraph({ text: `Date: ${meta.date}`, alignment: AlignmentType.CENTER }),
+    new Paragraph({ text: `Status: ${meta.status}`, alignment: AlignmentType.CENTER }),
+    new Paragraph({ children: [new PageBreak()] }),
+  ];
+}
+
+export function buildDocxDocument(blocks: DocxBlock[], meta?: DocxMeta): Document {
+  const contentChildren: Array<Paragraph | Table> = blocks.flatMap(blockToElements);
+  const coverChildren = meta ? buildCoverChildren(meta) : [];
+
+  const sectionProps: Record<string, unknown> = {
+    page: {
+      size: { width: 11906, height: 16838 }, // A4 in twips
+      margin: { top: 720, bottom: 720, left: 900, right: 720 },
+    },
+  };
+
+  if (meta) {
+    Object.assign(sectionProps, {
+      headers: {
+        default: new Header({
+          children: [new Paragraph({
+            tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+            children: [
+              new TextRun({ text: meta.title, size: 16 }),
+              new TextRun({ text: `\tv${meta.version}`, size: 16 }),
+            ],
+          })],
+        }),
+      },
+      footers: {
+        default: new Footer({
+          children: [new Paragraph({
+            tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+            children: [
+              new TextRun({ text: `v${meta.version} | ${meta.date}`, size: 16 }),
+              new TextRun({ text: "\t" }),
+              new TextRun({ children: [PageNumber.CURRENT], size: 16 }),
+              new TextRun({ text: " / ", size: 16 }),
+              new TextRun({ children: [PageNumber.TOTAL_PAGES], size: 16 }),
+            ],
+          })],
+        }),
+      },
+    });
+  }
+
   return new Document({
     styles: { default: { document: { run: { font: "Noto Sans JP", size: 20 } } } },
     sections: [{
-      properties: {
-        page: {
-          size: { width: 11906, height: 16838 }, // A4 in twips
-          margin: { top: 720, bottom: 720, left: 900, right: 720 },
-        },
-      },
-      children,
+      properties: sectionProps,
+      children: [...coverChildren, ...contentChildren],
     }],
   });
 }
@@ -194,8 +256,18 @@ export async function exportToDocx(input: DocxExportInput): Promise<DocxExportRe
   }
 
   try {
-    const blocks = parseMarkdownToBlocks(content);
-    const doc = buildDocxDocument(blocks);
+    const { meta, body } = parseFrontmatter(content);
+    const blocks = parseMarkdownToBlocks(body);
+
+    const title = String(meta["title"] ?? body.match(/^#\s+(.+)$/m)?.[1] ?? input.project_name ?? "Document");
+    const docMeta: DocxMeta = {
+      title,
+      version: String(meta["version"] ?? "1.0.0"),
+      date: String(meta["date"] ?? new Date().toISOString().slice(0, 10)),
+      status: String(meta["status"] ?? "draft"),
+      projectName: input.project_name ?? String(meta["project"] ?? ""),
+    };
+    const doc = buildDocxDocument(blocks, docMeta);
     const buffer = await Packer.toBuffer(doc);
     await writeFile(output_path, buffer);
     const { size } = await stat(output_path);

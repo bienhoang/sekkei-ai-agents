@@ -21,7 +21,8 @@ export type SekkeiErrorCode =
   | "RFP_WORKSPACE_ERROR"
   | "RFP_PHASE_ERROR"
   | "CHANGE_REQUEST_ERROR"
-  | "PLAN_ERROR";
+  | "PLAN_ERROR"
+  | "VERSION_ERROR";
 
 export class SekkeiError extends Error {
   constructor(

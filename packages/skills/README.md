@@ -91,6 +91,8 @@ cp -r packages/skills/content/ ~/.claude/skills/sekkei/
 | `/sekkei:change @doc` | Change request lifecycle (create, approve, propagate) |
 | `/sekkei:mockup` | Generate HTML screen mockups with screenshots |
 | `/sekkei:sitemap` | Generate サイトマップ (System Structure Map) |
+| `/sekkei:version [show\|bump]` | Display or bump semantic version |
+| `/sekkei:release` | Create release with Git tagging and release notes |
 
 ## Workflow Example
 

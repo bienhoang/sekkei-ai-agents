@@ -47,7 +47,7 @@ Each document's output becomes the next document's input. Cross-reference IDs (F
 
 ### MCP Server (TypeScript)
 
-STDIO transport — **stdout is reserved for JSON-RPC only; all logs go to stderr (fd 2) via pino**. 15 MCP tools registered in `tools/index.ts`: `generate_document`, `get_template`, `validate_document`, `chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`, `simulate_change_impact`, `import_document`, `manage_rfp_workspace`, `manage_change_request`, `update_chain_status`, `manage_plan`.
+STDIO transport — **stdout is reserved for JSON-RPC only; all logs go to stderr (fd 2) via pino**. 16 MCP tools registered in `tools/index.ts`: `generate_document`, `get_template`, `validate_document`, `chain_status`, `export_document`, `translate_document`, `manage_glossary`, `analyze_update`, `validate_chain`, `simulate_change_impact`, `import_document`, `manage_rfp_workspace`, `manage_change_request`, `update_chain_status`, `manage_plan`, `manage_version`.
 
 ### Dual Export Engine
 
@@ -63,6 +63,7 @@ Templates at `templates/{lang}/{doc-type}.md` (relative to `packages/mcp-server/
 
 - **Change Requests** (`tools/change-request.ts`, `tools/cr-actions.ts`, `lib/cr-state-machine.ts`, `lib/cr-propagation.ts`) — track and propagate specification changes across the document chain
 - **Plan Management** (`tools/plan.ts`, `tools/plan-actions.ts`, `lib/plan-state.ts`) — orchestrate multi-phase document generation
+- **Version Management** (`tools/version.ts`, `tools/version-actions.ts`, `lib/version-manager.ts`, `lib/frontmatter-parser.ts`) — semantic versioning, release management, Git tagging, release notes generation, version display on PDF/Excel/DOCX
 - **Staleness Detection** (`lib/staleness-detector.ts`, `lib/doc-staleness.ts`) — detect when downstream docs are outdated relative to upstream changes
 - **Translation Pipeline** (`tools/translate.ts`, `lib/translation-validator.ts`, `lib/translation-tracker.ts`) — bidirectional glossary mapping (ja↔en↔vi), post-translation structural validation (ID preservation, table rows, heading count), and SHA-256 hash-based incremental tracking for delta-only retranslation
 - **Mockup System** — replaced by AI-gen-HTML via `/sekkei:mockup` skill command; 9 shell CSS files at `templates/wireframe/*-shell.css` (admin, auth, error, onboarding, public, email, print, blank, mobile)

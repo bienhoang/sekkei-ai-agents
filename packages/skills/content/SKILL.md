@@ -70,7 +70,8 @@ All user-facing output (document content, prompts, confirmations) must use `proj
 - `/sekkei:implement @plan-path` — Execute a generation plan phase by phase
 - `/sekkei:preview` — Start Express+React docs preview with WYSIWYG editor (`--guide` for readonly user guide)
 - `/sekkei:dashboard` — Start analytics dashboard for workspace-docs overview (chain status, analytics, changes, features)
-- `/sekkei:version` — Show version and environment health check
+- `/sekkei:version [show|bump]` — Show version info and environment health, or bump document versions
+- `/sekkei:release` — Create a versioned release: snapshot versions, git tag, release notes
 - `/sekkei:uninstall` — Remove Sekkei from Claude Code
 
 ## Workflow Router

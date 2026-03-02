@@ -23,7 +23,7 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │  • Logs to stderr (fd 2) via Pino                       │  │
 │  └──────────────────────────────────────────────────────────┘  │
 │  ┌─────────────────────────────────────────────────────────┐   │
-│  │              Tool Handlers (15 MCP Tools)               │   │
+│  │              Tool Handlers (16 MCP Tools)               │   │
 │  │  1. generate_document      → generates spec docs        │   │
 │  │  2. get_template           → returns template content   │   │
 │  │  3. validate_document      → checks completeness & refs │   │
@@ -39,6 +39,7 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │ 13. manage_change_request  → CR state machine           │   │
 │  │ 14. manage_plan            → multi-phase planning       │   │
 │  │ 15. update_chain_status    → CR propagation actions     │   │
+│  │ 16. manage_version         → semantic versioning (NEW)  │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │  ┌─────────────────────────────────────────────────────────┐   │
 │  │    Quality Metrics Libraries (Phase B Dashboard)        │   │
@@ -76,6 +77,16 @@ Sekkei is an AI-powered MCP server that generates Japanese software specificatio
 │  │    and recommends generation strategy                 │   │
 │  │  • Smart Upstream Filtering → splits markdown by h2   │   │
 │  │    headings, keeps feature-relevant sections only     │   │
+│  ├─────────────────────────────────────────────────────────┤   │
+│  │      Version Management Subsystem (NEW v2.9.0)        │   │
+│  │  • version-manager.ts → semantic versioning (SemVer)  │   │
+│  │  • sekkei.releases.yaml → version + release storage   │   │
+│  │  • manage_version tool → 4 actions: bump, query,      │   │
+│  │    release, history                                   │   │
+│  │  • Git tagging → annotated tags on release            │   │
+│  │  • Release notes generation → RELEASE-NOTES-{tag}.md  │   │
+│  │  • Export integration → version on PDF/Excel/DOCX     │   │
+│  │    (cover page, header, footer)                       │   │
 │  └─────────────────────────────────────────────────────────┘   │
 └────────────────┬────────────────────────────────────────────────┘
                  │ execFile (Node.js)
