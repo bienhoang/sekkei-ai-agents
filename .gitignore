@@ -18,6 +18,7 @@ packages/mcp-server/plans/
 packages/skills/plans/
 packages/preview/plans/
 packages/mcp-server/tests/fixturesagents
+docs/
 
 # Tool-only Sekkei agent consumption artifacts (validate_chain emit_agent_index)
 .sekkei-agent/
