@@ -26,7 +26,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # npm install (not ci) so each runner resolves its own platform-native
+        # optional deps (rollup/esbuild binaries); works around npm/cli#4828.
+        # legacy-peer-deps: tiptap-markdown peers @tiptap/core ^2 while the app uses ^3.
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Cache turbo
         uses: actions/cache@v4
