@@ -44,18 +44,26 @@ function extractToc(content: string): TocEntry[] {
   return entries;
 }
 
-function buildTocHtml(entries: TocEntry[]): string {
+/** TOC heading label per language */
+const TOC_LABEL: Record<string, string> = {
+  vi: "Mục lục",
+  ja: "目次",
+  en: "Table of Contents",
+};
+
+function buildTocHtml(entries: TocEntry[], docLang = "vi"): string {
   if (entries.length === 0) return "";
+  const label = TOC_LABEL[docLang] ?? TOC_LABEL.vi;
   const items = entries.map(e => {
     const indent = e.level === 1 ? "" : "margin-left:16px;";
     return `<li style="${indent}"><a href="#${e.id}" style="text-decoration:none;color:#333;">${e.text}</a></li>`;
   });
-  return `<div style="page-break-after:always;"><h2 style="border-bottom:2px solid #333;">目次</h2><ul style="list-style:none;padding:0;">${items.join("")}</ul></div>`;
+  return `<div style="page-break-after:always;"><h2 style="border-bottom:2px solid #333;">${label}</h2><ul style="list-style:none;padding:0;">${items.join("")}</ul></div>`;
 }
 
-function buildHtmlPage(bodyHtml: string, fontPaths: { regular: string; bold: string }): string {
+function buildHtmlPage(bodyHtml: string, fontPaths: { regular: string; bold: string }, docLang = "vi"): string {
   return `<!DOCTYPE html>
-<html lang="ja">
+<html lang="${docLang}">
 <head>
   <meta charset="UTF-8">
   <style>
@@ -101,6 +109,8 @@ export async function exportToPdf(input: PdfExportInput): Promise<PdfExportResul
   const versionRaw = String(meta["version"] ?? "1.0.0");
   const dateRaw = String(meta["date"] ?? new Date().toISOString().slice(0, 10));
   const statusRaw = String(meta["status"] ?? "draft");
+  // Use language from frontmatter for html lang attribute and TOC label; default vi (Vietnamese-primary)
+  const docLang = String(meta["language"] ?? "vi");
 
   const title = escapeHtml(titleRaw);
   const version = escapeHtml(versionRaw);
@@ -118,8 +128,8 @@ export async function exportToPdf(input: PdfExportInput): Promise<PdfExportResul
     `</table></div>`;
 
   const tocEntries = extractToc(body);
-  const tocHtml = buildTocHtml(tocEntries);
-  const html = buildHtmlPage(coverHtml + tocHtml + bodyHtml, fontPaths);
+  const tocHtml = buildTocHtml(tocEntries, docLang);
+  const html = buildHtmlPage(coverHtml + tocHtml + bodyHtml, fontPaths, docLang);
 
   const browser = await browserPool.acquire();
   try {

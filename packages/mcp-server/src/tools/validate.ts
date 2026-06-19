@@ -89,7 +89,7 @@ export async function handleValidateDocument(
     let templateSections: string[] = [];
     try {
       const cfg = loadConfig();
-      const template = await loadTemplate(cfg.templateDir, doc_type as Parameters<typeof loadTemplate>[1], "ja");
+      const template = await loadTemplate(cfg.templateDir, doc_type as Parameters<typeof loadTemplate>[1], "vi");
       templateSections = template.metadata.sections ?? [];
     } catch {
       logger.warn("Could not load template for structure rules — using empty sections");
@@ -194,7 +194,13 @@ export async function handleValidateDocument(
     };
   }
 
-  const result = validateDocument(content, doc_type as Parameters<typeof validateDocument>[1], upstream_content, { check_completeness });
+  // Derive document language from frontmatter; default "vi" when absent
+  const { parseFrontmatter } = await import("../lib/frontmatter-parser.js");
+  const { resolveLang } = await import("../lib/validator-section-maps.js");
+  const { meta } = parseFrontmatter(content);
+  const lang = resolveLang(typeof meta.language === "string" ? meta.language : undefined);
+
+  const result = validateDocument(content, doc_type as Parameters<typeof validateDocument>[1], upstream_content, { check_completeness }, lang);
 
   const lines: string[] = [
     `# Validation Result`,

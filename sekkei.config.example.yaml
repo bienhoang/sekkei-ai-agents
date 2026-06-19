@@ -22,7 +22,7 @@ project:
     - React
     - PostgreSQL
   team_size: 5
-  language: ja     # Output language: ja (Japanese) | en (English) | vi (Vietnamese)
+  language: vi     # Output language: vi (Vietnamese) | en (English) | ja (Japanese)
   keigo: 丁寧語    # 丁寧語 | 謙譲語 | simple
   industry: ""     # Optional: finance | medical | manufacturing | real-estate
   # preset: standard  # Optional: enterprise | standard | agile

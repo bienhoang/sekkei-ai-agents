@@ -187,14 +187,14 @@ function checkPlaywright(): HealthItem {
 
 function checkTemplateDir(): HealthItem {
   const templatesDir = resolve(PKG_ROOT, "templates");
-  const jaDir = join(templatesDir, "ja");
+  const viDir = join(templatesDir, "vi");
   try {
-    if (!existsSync(jaDir)) {
-      return { name: "Templates", status: "fail", detail: "ja/ directory missing" };
+    if (!existsSync(viDir)) {
+      return { name: "Templates", status: "fail", detail: "vi/ directory missing" };
     }
-    const mdFiles = readdirSync(jaDir).filter((f) => f.endsWith(".md"));
+    const mdFiles = readdirSync(viDir).filter((f) => f.endsWith(".md"));
     if (mdFiles.length === 0) {
-      return { name: "Templates", status: "fail", detail: "no .md files in ja/" };
+      return { name: "Templates", status: "fail", detail: "no .md files in vi/" };
     }
     return { name: "Templates", status: "ok", detail: templatesDir };
   } catch {

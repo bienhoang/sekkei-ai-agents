@@ -60,7 +60,7 @@ function templatePath(baseDir: string, docType: DocType, language: Language): st
 export async function loadTemplate(
   baseDir: string,
   docType: DocType,
-  language: Language = "ja",
+  language: Language = "vi",
   overrideDir?: string,
   preset?: Preset
 ): Promise<TemplateData> {

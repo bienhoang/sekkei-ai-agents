@@ -10,7 +10,7 @@ import { logger } from "../lib/logger.js";
 
 const inputSchema = {
   content: z.string().max(500_000).describe("Document content to translate"),
-  source_lang: z.string().regex(/^[a-z]{2,3}(-[A-Z]{2})?$/).default("ja").describe("Source language code"),
+  source_lang: z.string().regex(/^[a-z]{2,3}(-[A-Z]{2})?$/).default("vi").describe("Source language code"),
   target_lang: z.string().regex(/^[a-z]{2,3}(-[A-Z]{2})?$/).describe("Target language code (e.g. en, vi, zh)"),
   glossary_path: z.string().optional().describe("Path to glossary.yaml for consistent terminology"),
   source_content: z.string().max(500_000).optional().describe("Original source document for post-translation validation"),

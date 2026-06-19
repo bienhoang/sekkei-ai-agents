@@ -24,7 +24,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "technology rationale",
-      test: (c: string) => /技術選定|選定理由|代替案/.test(c),
+      test: (c: string) => /技術選定|選定理由|代替案|Lựa chọn công nghệ|Lý do lựa chọn|Phương án thay thế/.test(c),
       message: "方式設計書: 技術選定の理由が必要です",
     },
   ],
@@ -73,7 +73,8 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => {
         // Extract NFR table rows (lines containing NFR-xxx)
         const nfrRows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
-        const vaguePattern = /高速|十分|適切|高い|良好/;
+        // ja vague terms + vi equivalents: nhanh/đủ/phù hợp/cao/tốt
+        const vaguePattern = /高速|十分|適切|高い|良好|nhanh|đủ|phù hợp|cao|tốt/;
         return !nfrRows.some((row) => vaguePattern.test(row));
       },
       message: "要件定義書: NFR目標値に曖昧な表現があります（高速・十分・適切・高い・良好は数値に置換してください）",
@@ -83,8 +84,8 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => {
         const nfrRows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
         if (nfrRows.length === 0) return true; // no NFR rows to check
-        // At least 80% of NFR rows should contain a numeric target
-        const withNumbers = nfrRows.filter((row) => /\d+(\.\d+)?(ms|%|秒|時間|件|人|日|回)/.test(row));
+        // At least 80% of NFR rows should contain a numeric target (ja + vi units)
+        const withNumbers = nfrRows.filter((row) => /\d+(\.\d+)?(ms|%|秒|時間|件|人|日|回|giây|giờ|cái|người|ngày|lần)/.test(row));
         return withNumbers.length >= nfrRows.length * 0.8;
       },
       message: "要件定義書: NFR目標値に数値が不足しています（例: 99.9%, 2秒以内, 1000件）",
@@ -111,7 +112,8 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       check: "NFR vague terms",
       test: (c: string) => {
         const rows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
-        return !rows.some((r) => /高速|十分|適切|高い|良好/.test(r));
+        // ja vague terms + vi equivalents: nhanh/đủ/phù hợp/cao/tốt
+        return !rows.some((r) => /高速|十分|適切|高い|良好|nhanh|đủ|phù hợp|cao|tốt/.test(r));
       },
       message: "非機能要件定義書: 目標値に曖昧な表現があります（数値に置換してください）",
     },
@@ -120,7 +122,8 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => {
         const rows = c.split("\n").filter((l) => /NFR-\d{3}/.test(l));
         if (rows.length === 0) return true;
-        return rows.filter((r) => /\d+(\.\d+)?(ms|%|秒|時間|件|人|日|回)/.test(r)).length >= rows.length * 0.8;
+        // ja + vi units
+        return rows.filter((r) => /\d+(\.\d+)?(ms|%|秒|時間|件|人|日|回|giây|giờ|cái|người|ngày|lần)/.test(r)).length >= rows.length * 0.8;
       },
       message: "非機能要件定義書: 目標値に数値が不足しています（例: 99.9%, 2秒以内, 1000件）",
     },
@@ -133,7 +136,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "auth mechanism",
-      test: (c: string) => /認証|OAuth|JWT|SAML|SSO|多要素認証|MFA/.test(c),
+      test: (c: string) => /認証|Xác thực|OAuth|JWT|SAML|SSO|多要素認証|MFA/.test(c),
       message: "セキュリティ設計書: 認証方式の記載が必要です（OAuth, JWT, SAML等）",
     },
     {
@@ -172,12 +175,12 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "test method presence",
-      test: (c: string) => /正常系|異常系|境界値|同値分割/.test(c),
+      test: (c: string) => /正常系|Trường hợp bình thường|異常系|Trường hợp bất thường|境界値|Giá trị biên|同値分割|Phân hoạch tương đương/.test(c),
       message: "単体テスト仕様書: テスト技法の記載が必要です（正常系/異常系/境界値等）",
     },
     {
       check: "expected result",
-      test: (c: string) => /期待結果|期待値|expected|想定結果/.test(c),
+      test: (c: string) => /期待結果|Kết quả mong đợi|期待値|Giá trị mong đợi|expected|想定結果|Kết quả dự kiến/.test(c),
       message: "単体テスト仕様書: 期待結果の記載が必要です",
     },
   ],
@@ -189,28 +192,28 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "interface scope",
-      test: (c: string) => /API-|インターフェース|連携|外部接続|内部連携/.test(c),
+      test: (c: string) => /API-|インターフェース|Giao diện ngoài|連携|Liên kết|外部接続|Kết nối ngoài|内部連携|Liên kết nội bộ/.test(c),
       message: "結合テスト仕様書: テスト対象のインターフェースの記載が必要です",
     },
     {
       check: "integration pattern",
-      test: (c: string) => /正常系|異常系|タイムアウト|リトライ/.test(c),
+      test: (c: string) => /正常系|Trường hợp bình thường|異常系|Trường hợp bất thường|タイムアウト|Timeout|リトライ|Thử lại/.test(c),
       message: "結合テスト仕様書: 結合テストパターンの記載が必要です（正常系/異常系/タイムアウト等）",
     },
     {
       check: "risk level",
-      test: (c: string) => /リスクレベル/.test(c) && /(高|中|低|High|Medium|Low)/.test(c),
+      test: (c: string) => /リスクレベル|Mức rủi ro/.test(c) && /(高|中|低|High|Medium|Low|Cao|Trung bình|Thấp)/.test(c),
       message: "結合テスト仕様書: 各テストケースにリスクレベル(高/中/低)の記載が必要です",
     },
     {
       check: "priority",
-      test: (c: string) => /優先度/.test(c),
+      test: (c: string) => /優先度|Độ ưu tiên/.test(c),
       message: "結合テスト仕様書: 優先度(高/中/低)の記載が必要です",
     },
     {
       check: "coverage variety",
       test: (c: string) =>
-        [/正常系/, /異常系/, /境界値/, /エッジ/].filter((re) => re.test(c)).length >= 2,
+        [/正常系|Trường hợp bình thường/, /異常系|Trường hợp bất thường/, /境界値|Giá trị biên/, /エッジ/].filter((re) => re.test(c)).length >= 2,
       message:
         "結合テスト仕様書: テスト網羅性(正常系/異常系/境界値/エッジ)が2種類以上必要です",
     },
@@ -221,7 +224,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       // IT-/API- IDs only carry 3 digits, so the row ID alone never satisfies this.
       check: "concrete test data",
       test: (c: string) => {
-        if (!/テストデータ/.test(c)) return false;
+        if (!/テストデータ|Dữ liệu kiểm thử/.test(c)) return false;
         const caseRows = c.split("\n").filter((l) => /IT-\d{3}/.test(l));
         if (caseRows.length === 0) return true; // IT-case count rule handles the empty case
         return caseRows.some((l) => /@/.test(l) || /\d{4}/.test(l));
@@ -238,12 +241,12 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "scenario coverage",
-      test: (c: string) => /シナリオ|業務フロー|ユースケース|利用者/.test(c),
+      test: (c: string) => /シナリオ|業務フロー|ユースケース|利用者|Kịch bản|Luồng nghiệp vụ|Ca sử dụng|Người dùng/.test(c),
       message: "システムテスト仕様書: テストシナリオの記載が必要です",
     },
     {
       check: "system-level scope",
-      test: (c: string) => /性能|セキュリティ|可用性|負荷|regression/.test(c),
+      test: (c: string) => /性能|セキュリティ|可用性|負荷|regression|Hiệu năng|Bảo mật|Tính sẵn sàng|Tải/.test(c),
       message: "システムテスト仕様書: システムレベルのテスト観点が必要です（性能/セキュリティ/可用性等）",
     },
   ],
@@ -255,12 +258,12 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "acceptance criteria linkage",
-      test: (c: string) => /REQ-|受入基準|acceptance|要件/.test(c),
+      test: (c: string) => /REQ-|受入基準|acceptance|要件|Tiêu chí chấp nhận|Yêu cầu/.test(c),
       message: "受入テスト仕様書: 受入基準と要件への紐づけが必要です",
     },
     {
       check: "user scenario",
-      test: (c: string) => /利用者|エンドユーザー|業務シナリオ|操作手順/.test(c),
+      test: (c: string) => /利用者|エンドユーザー|業務シナリオ|操作手順|Người dùng|Người dùng cuối|Kịch bản nghiệp vụ|Quy trình thao tác/.test(c),
       message: "受入テスト仕様書: 利用者視点のテストシナリオが必要です",
     },
   ],
@@ -273,7 +276,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     {
       check: "processing type enum",
       test: (c) => {
-        const rows = c.match(/\|\s*(入力|照会|帳票|バッチ|API|イベント|スケジューラ|Webhook)\s*\|/g);
+        const rows = c.match(/\|\s*(入力|照会|帳票|バッチ|API|イベント|スケジューラ|Webhook|Nhập liệu|Tra cứu|Biểu mẫu|Batch|Sự kiện|Lập lịch)\s*\|/g);
         return rows !== null && rows.length > 0;
       },
       message: "機能一覧: 処理分類は有効な値が必要です",
@@ -304,7 +307,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "priority enum",
-      test: (c) => /\|\s*(高|中|低)\s*\|/.test(c),
+      test: (c) => /\|\s*(高|中|低|Cao|Trung bình|Thấp)\s*\|/.test(c),
       message: "機能一覧: 優先度は高/中/低が必要です",
     },
   ],
@@ -321,7 +324,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "phase structure",
-      test: (c: string) => /要件定義|基本設計|詳細設計|テスト|移行|運用/.test(c),
+      test: (c: string) => /要件定義|基本設計|詳細設計|テスト|移行|運用|Định nghĩa yêu cầu|Thiết kế cơ bản|Thiết kế chi tiết|Kiểm thử|Chuyển đổi|Vận hành/.test(c),
       message: "プロジェクト計画書: 開発フェーズの記載が必要です",
     },
   ],
@@ -333,12 +336,12 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "scope document reference",
-      test: (c: string) => /要件定義書|基本設計書|機能一覧|REQ-|F-/.test(c),
+      test: (c: string) => /要件定義書|基本設計書|機能一覧|REQ-|F-|Định nghĩa yêu cầu|Thiết kế cơ bản|Danh sách chức năng/.test(c),
       message: "テスト計画書: テスト対象の仕様書への参照が必要です",
     },
     {
       check: "coverage metric",
-      test: (c: string) => /カバレッジ|網羅率|網羅|coverage/.test(c),
+      test: (c: string) => /カバレッジ|網羅率|網羅|coverage|Độ bao phủ|Tỷ lệ bao phủ/.test(c),
       message: "テスト計画書: テストカバレッジの目標値が必要です",
     },
   ],
@@ -350,12 +353,12 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "pass rate",
-      test: (c: string) => /合格率|pass\s*rate/i.test(c),
+      test: (c: string) => /合格率|pass\s*rate|Tỷ lệ đạt/i.test(c),
       message: "テスト結果報告書: テスト合格率の記載が必要です",
     },
     {
       check: "quality judgment",
-      test: (c: string) => /品質判定|総合判定|go\/no-go|合否判定/i.test(c),
+      test: (c: string) => /品質判定|総合判定|go\/no-go|合否判定|Đánh giá chất lượng|Đánh giá tổng hợp|Đánh giá đạt/i.test(c),
       message: "テスト結果報告書: 品質判定（go/no-go）の記載が必要です",
     },
   ],
@@ -384,7 +387,7 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "output format",
-      test: (c: string) => /PDF|Excel|CSV|帳票/.test(c),
+      test: (c: string) => /PDF|Excel|CSV|帳票|Biểu mẫu/.test(c),
       message: "帳票設計書: 出力形式（PDF/Excel/CSV）の記載が必要です",
     },
   ],
@@ -396,12 +399,12 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "schedule entry",
-      test: (c: string) => /cron|スケジュール|実行タイミング|定期実行/.test(c),
+      test: (c: string) => /cron|スケジュール|実行タイミング|定期実行|Lịch|Thời điểm thực thi|Thực thi định kỳ/.test(c),
       message: "バッチ処理設計書: スケジュール定義が必要です",
     },
     {
       check: "error handling",
-      test: (c: string) => /リトライ|タイムアウト|エラー|異常終了/.test(c),
+      test: (c: string) => /リトライ|タイムアウト|エラー|異常終了|Thử lại|Timeout|Lỗi|Kết thúc bất thường/.test(c),
       message: "バッチ処理設計書: エラーハンドリング方針が必要です",
     },
   ],
@@ -430,7 +433,8 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => {
         const slaRows = c.split("\n").filter(l => /\|\s*(稼働率|応答時間|SLA|RTO|RPO)/.test(l));
         if (slaRows.length === 0) return false;
-        return slaRows.some(row => /\d+(\.\d+)?[%秒ms時間分]/.test(row));
+        // ja + vi time/rate units
+        return slaRows.some(row => /\d+(\.\d+)?[%秒ms時間分]|\d+(\.\d+)?(giây|giờ|phút)/.test(row));
       },
       message: "運用設計書: SLA定義に数値目標が必要です（例: 99.9%, 30秒以内）",
     },
@@ -438,7 +442,8 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       check: "SLA vague terms",
       test: (c: string) => {
         const slaRows = c.split("\n").filter(l => /\|\s*(稼働率|応答|SLA|RTO|RPO|目標値)/.test(l));
-        const vaguePattern = /高い|十分|適切|良好|高速/;
+        // ja vague terms + vi equivalents
+        const vaguePattern = /高い|十分|適切|良好|高速|nhanh|đủ|phù hợp|cao|tốt/;
         return !slaRows.some(row => vaguePattern.test(row));
       },
       message: "運用設計書: SLA目標値に曖昧な表現があります（高い・十分・適切・良好・高速は数値に置換してください）",
@@ -451,15 +456,15 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     {
       check: "monitoring threshold",
       test: (c: string) => {
-        const hasMonitorTable = /\|\s*(監視対象|メトリクス)/.test(c);
-        const hasThreshold = /\|\s*閾値/.test(c);
+        const hasMonitorTable = /\|\s*(監視対象|メトリクス|Đối tượng giám sát|Chỉ số|Metric)/.test(c);
+        const hasThreshold = /\|\s*(閾値|Ngưỡng)/.test(c);
         return hasMonitorTable && hasThreshold;
       },
       message: "運用設計書: 監視・アラート定義に閾値付きメトリクスが必要です",
     },
     {
       check: "job schedule entry",
-      test: (c: string) => /\|\s*(ジョブID|ジョブ名)/.test(c),
+      test: (c: string) => /\|\s*(ジョブID|ジョブ名|ID job|Tên job)/.test(c),
       message: "運用設計書: ジョブ管理にジョブエントリが必要です",
     },
     {
@@ -476,12 +481,12 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
     },
     {
       check: "source system reference",
-      test: (c: string) => /移行元|既存システム|旧システム|現行システム/.test(c),
+      test: (c: string) => /移行元|既存システム|旧システム|現行システム|Hệ thống nguồn|Hệ thống hiện tại|Hệ thống cũ/.test(c),
       message: "移行設計書: 移行元システムの記載が必要です",
     },
     {
       check: "data volume estimate",
-      test: (c: string) => /\d+[万千百]?件|\d+[KMGT]B/.test(c),
+      test: (c: string) => /\d+[万千百]?件|\d+[KMGT]B|\d+\s*(bản ghi|dòng|record)/i.test(c),
       message: "移行設計書: データ量の見積もりが必要です（件数またはサイズ）",
     },
   ],

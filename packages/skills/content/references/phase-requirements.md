@@ -39,7 +39,7 @@ Prepend this YAML block to the input_content before calling generate_document.
    - If combined input exceeds 400KB, warn: 'Input is very large (>400KB). Consider summarizing or splitting by subsystem for better results.' Proceed if user confirms.
 2. If @input provided, merge with RFP content as additional context
 3. If `sekkei.config.yaml` exists, load project metadata and `project_type`
-4. Call MCP tool `generate_document` with `doc_type: "requirements"`, input content, `project_type`, and `language` from config (default: "ja"). Pass `input_lang` if input not Japanese.
+4. Call MCP tool `generate_document` with `doc_type: "requirements"`, input content, `project_type`, and `language` from config (default: "vi"). Pass `input_lang` if input is not Vietnamese.
 5. **Create progress tasks** (follow `references/progressive-generation.md`):
    - TaskCreate: "Generate requirements admin + overview" (activeForm: "Generating admin + overview")
    - TaskCreate: "Generate functional requirements (§3.1)" (activeForm: "Generating functional requirements")
@@ -118,7 +118,7 @@ Prepend this YAML block to the input_content before calling generate_document.
 
 1. Read the upstream 要件定義書 (requirements) or input content
 2. If `sekkei.config.yaml` exists, load project metadata
-3. Read upstream requirements output file from chain config. Call MCP tool `generate_document` with `doc_type: "functions-list"`, `upstream_content` (requirements content), and `language` from `sekkei.config.yaml project.language` (default: "ja"). Pass `input_lang: "en"` or `input_lang: "vi"` if input is not Japanese.
+3. Read upstream requirements output file from chain config. Call MCP tool `generate_document` with `doc_type: "functions-list"`, `upstream_content` (requirements content), and `language` from `sekkei.config.yaml project.language` (default: "vi"). Pass `input_lang: "en"` or `input_lang: "ja"` if input is not Vietnamese.
 4. **Pre-scan upstream content**: Analyze the requirements document to identify distinct 大分類 (major category) groups. List each group name.
 5. **Fallback check**: If <= 2 大分類 groups detected, use single-call generation (single call as before — skip to step 12).
 6. **Create progress tasks** (follow `references/progressive-generation.md` Step 3):

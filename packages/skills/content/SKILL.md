@@ -1,11 +1,11 @@
 ---
 name: sekkei
-description: "Generate Japanese specification documents (設計書) following V-model chain. Commands: rfp, requirements, functions-list, nfr, project-plan, architecture-design, basic-design, security-design, detail-design, db-design, report-design, batch-design, screen-design, interface-spec, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, test-result-report, test-evidence, meeting-minutes, decision-record, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, dashboard, plan, implement, version, uninstall"
+description: "Generate software specification documents (設計書) in project language (default: Vietnamese); Japanese output via translate_document. Commands: rfp, requirements, functions-list, nfr, project-plan, architecture-design, basic-design, security-design, detail-design, db-design, report-design, batch-design, screen-design, interface-spec, mockup, test-plan, ut-spec, it-spec, st-spec, uat-spec, test-result-report, test-evidence, meeting-minutes, decision-record, matrix, sitemap, operation-design, migration-design, change, validate, status, export, translate, glossary, update, diff-visual, preview, dashboard, plan, implement, version, uninstall"
 ---
 
 # Sekkei (設計) Documentation Agent
 
-Generate Japanese software specification documents following the V-model document chain.
+Generate software specification documents following the V-model document chain. Default output language is **Vietnamese** (`vi`); Japanese documents are produced via `/sekkei:translate --lang=ja`.
 
 ## MCP Tools
 
@@ -15,7 +15,7 @@ Tools: `generate_document`, `validate_document`, `update_chain_status`, `get_cha
 
 ## Output Language
 
-All user-facing output (document content, prompts, confirmations) must use `project.language` from `sekkei.config.yaml`. Default: `"ja"` (Japanese). Override per call with the `language` parameter on `generate_document`.
+All user-facing output (document content, prompts, confirmations) must use `project.language` from `sekkei.config.yaml`. Default: `"vi"` (Vietnamese). Japanese output is produced by running `/sekkei:translate --lang=ja` after generation. Override per call with the `language` parameter on `generate_document`.
 
 ## Document Generation Commands
 

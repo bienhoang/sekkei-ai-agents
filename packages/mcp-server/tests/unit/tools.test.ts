@@ -37,33 +37,33 @@ describe("get_template tool", () => {
     expect((server as any)._registeredTools["get_template"]).toBeDefined();
   });
 
-  it("returns functions-list template content", async () => {
+  it("returns functions-list template content (vi default)", async () => {
     const result = await callTool(server, "get_template", {
       doc_type: "functions-list",
-      language: "ja",
+      language: "vi",
     });
 
     expect(result.isError).toBeUndefined();
-    expect(result.content[0].text).toContain("機能一覧");
+    expect(result.content[0].text).toContain("Danh sách chức năng");
   });
 
-  it("returns basic-design template content", async () => {
+  it("returns basic-design template content (vi default)", async () => {
     const result = await callTool(server, "get_template", {
       doc_type: "basic-design",
-      language: "ja",
+      language: "vi",
     });
 
-    expect(result.content[0].text).toContain("基本設計書");
+    expect(result.content[0].text).toContain("Tài liệu Thiết kế Cơ bản");
   });
 
-  it("falls back to ja template for en language (no en/ template dir)", async () => {
+  it("falls back to vi template for en language (no en/ template dir)", async () => {
     const result = await callTool(server, "get_template", {
       doc_type: "functions-list",
       language: "en",
     });
 
     expect(result.isError).toBeUndefined();
-    expect(result.content[0].text).toContain("機能一覧");
+    expect(result.content[0].text).toContain("Danh sách chức năng");
   });
 });
 
@@ -135,8 +135,9 @@ describe("generate_document tool", () => {
 
     const text = result.content[0].text;
     expect(text).toContain("detail-design");
-    expect(text).toContain("詳細設計書");
-    expect(text).toContain("クラス設計");
+    expect(text).toContain("詳細設計書"); // present in AI instructions regardless of template language
+    // vi template uses "Thiết kế lớp" (クラス設計 equivalent); ja template falls back to vi/
+    expect(text).toContain("Thiết kế lớp");
   });
 
   it("returns generation context for ut-spec", async () => {

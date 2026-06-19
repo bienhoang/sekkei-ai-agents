@@ -400,7 +400,8 @@ describe("generate_document: output language", () => {
     const text = result.content[0].text;
     expect(text).toContain("Output Language");
     expect(text).toContain("English");
-    expect(text).toContain("Translate Japanese section headings");
+    // vi is now the primary template base; en instruction says to translate from Vietnamese
+    expect(text).toContain("Translate Vietnamese template section headings");
   });
 
   it("includes Vietnamese output language instruction when language=vi", async () => {
@@ -436,15 +437,28 @@ describe("generate_document: bilingual input", () => {
     expect(text).toContain("English");
   });
 
-  it("omits bilingual instructions when input_lang is ja", async () => {
+  it("omits bilingual instructions when input_lang is vi (vi is the default baseline)", async () => {
+    const result = await callTool(server, "generate_document", {
+      doc_type: "test-plan",
+      input_content: "Tạo kế hoạch kiểm thử",
+      input_lang: "vi",
+      language: "vi",
+    });
+
+    // vi is the canonical primary language — no translation instructions needed
+    expect(result.content[0].text).not.toContain("Input Language Instructions");
+  });
+
+  it("includes bilingual instructions when input_lang is ja (ja is now a foreign input relative to vi baseline)", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "test-plan",
       input_content: "テスト計画を作成",
       input_lang: "ja",
-      language: "ja",
+      language: "vi",
     });
 
-    expect(result.content[0].text).not.toContain("Input Language Instructions");
+    expect(result.content[0].text).toContain("Input Language Instructions");
+    expect(result.content[0].text).toContain("Japanese");
   });
 
   it("omits bilingual instructions when input_lang not provided", async () => {
