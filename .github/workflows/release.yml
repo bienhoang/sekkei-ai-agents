@@ -27,10 +27,15 @@ jobs:
           scope: '@bienhoang'
 
       - name: Install dependencies
-        # npm install (not ci) so the runner resolves its own platform-native
-        # optional deps (rollup/esbuild binaries); works around npm/cli#4828.
+        # Drop the lockfile so the runner resolves its own platform-native optional
+        # deps (rollup/esbuild binaries). A committed lockfile only carries the
+        # lock-generating platform's binaries, so npm ci/install on other OSes omit
+        # them and rollup fails — this is npm/cli#4828, whose documented workaround is
+        # to reinstall without the lockfile.
         # legacy-peer-deps: tiptap-markdown peers @tiptap/core ^2 while the app uses ^3.
-        run: npm install --legacy-peer-deps --no-audit --no-fund
+        run: |
+          rm -f package-lock.json
+          npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Cache turbo
         uses: actions/cache@v4
