@@ -538,6 +538,48 @@ describe("generate_document: it-spec", () => {
     expect(text).toContain("data flow");
   });
 
+  it("emits enriched functional test-case structure (16-column table)", async () => {
+    const result = await callTool(server, "generate_document", {
+      doc_type: "it-spec",
+      input_content: "Generate enriched integration test spec",
+      language: "ja",
+    });
+
+    const text = result.content[0].text;
+    // New columns
+    expect(text).toContain("モジュール/サブモジュール");
+    expect(text).toContain("テストケース名");
+    expect(text).toContain("テストデータ");
+    expect(text).toContain("期待結果");
+    expect(text).toContain("優先度");
+    expect(text).toContain("リスクレベル");
+  });
+
+  it("requires risk assessment, coverage variety, and test-design techniques", async () => {
+    const result = await callTool(server, "generate_document", {
+      doc_type: "it-spec",
+      input_content: "Generate risk-based integration tests",
+      language: "ja",
+    });
+
+    const text = result.content[0].text;
+    // Risk-based volume
+    expect(text).toContain("リスク");
+    expect(text).toMatch(/高.*中.*低|高\/中\/低/);
+    // Coverage variety
+    expect(text).toContain("正常系");
+    expect(text).toContain("異常系");
+    expect(text).toContain("境界値");
+    expect(text).toContain("エッジ");
+    // Test-design techniques
+    expect(text).toContain("同値分割");
+    expect(text).toContain("境界値分析");
+    expect(text).toContain("デシジョンテーブル");
+    expect(text).toContain("状態遷移");
+    // Concrete test data rule
+    expect(text).toContain("具体");
+  });
+
   it("uses default keigo: simple (である調)", async () => {
     const result = await callTool(server, "generate_document", {
       doc_type: "it-spec",
@@ -658,10 +700,16 @@ describe("test spec: shared pipeline features", () => {
     registerGenerateDocumentTool(server, TEMPLATE_DIR);
   });
 
-  it("all 4 test specs include 12-column table instruction", async () => {
-    const docTypes = ["ut-spec", "it-spec", "st-spec", "uat-spec"] as const;
+  it("test specs include the expected table-structure instruction", async () => {
+    // ut/st/uat share the 12-column table; it-spec uses the enriched 16-column table.
+    const expected: Record<string, string> = {
+      "ut-spec": "12-column table",
+      "st-spec": "12-column table",
+      "uat-spec": "12-column table",
+      "it-spec": "16-column table",
+    };
 
-    for (const docType of docTypes) {
+    for (const [docType, marker] of Object.entries(expected)) {
       const result = await callTool(server, "generate_document", {
         doc_type: docType,
         input_content: "Test input",
@@ -669,7 +717,7 @@ describe("test spec: shared pipeline features", () => {
       });
 
       const text = result.content[0].text;
-      expect(text).toContain("12-column table");
+      expect(text).toContain(marker);
     }
   });
 
