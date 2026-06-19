@@ -4,14 +4,18 @@
  */
 import type { NfrCategory } from "../types/documents.js";
 
-/** IPA NFUG categories with Japanese heading patterns and English labels */
+/**
+ * IPA NFUG categories with heading patterns for ja and vi.
+ * Each pattern matches either language's heading so classification works
+ * regardless of the document's primary language.
+ */
 const NFR_CATEGORIES: { pattern: RegExp; category: string; categoryEn: string }[] = [
-  { pattern: /可用性/, category: "可用性", categoryEn: "Availability" },
-  { pattern: /性能[・\s]*拡張性/, category: "性能・拡張性", categoryEn: "Performance/Scalability" },
-  { pattern: /運用[・\s]*保守性/, category: "運用・保守性", categoryEn: "Operability/Maintainability" },
-  { pattern: /移行性/, category: "移行性", categoryEn: "Migration" },
-  { pattern: /セキュリティ/, category: "セキュリティ", categoryEn: "Security" },
-  { pattern: /システム環境[・\s]*エコロジー|システム環境/, category: "システム環境・エコロジー", categoryEn: "System Environment" },
+  { pattern: /可用性|Tính sẵn sàng/, category: "可用性", categoryEn: "Availability" },
+  { pattern: /性能[・\s]*拡張性|Hiệu năng[・\s]*Khả năng mở rộng/, category: "性能・拡張性", categoryEn: "Performance/Scalability" },
+  { pattern: /運用[・\s]*保守性|Vận hành[・\s]*Bảo trì/, category: "運用・保守性", categoryEn: "Operability/Maintainability" },
+  { pattern: /移行性|Tính chuyển đổi/, category: "移行性", categoryEn: "Migration" },
+  { pattern: /セキュリティ|Bảo mật/, category: "セキュリティ", categoryEn: "Security" },
+  { pattern: /システム環境[・\s]*エコロジー|システム環境|Môi trường hệ thống[・\s]*sinh thái|Môi trường hệ thống/, category: "システム環境・エコロジー", categoryEn: "System Environment" },
 ];
 
 const NFR_ID_PATTERN = /NFR-\d{1,4}/g;

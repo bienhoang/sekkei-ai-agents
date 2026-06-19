@@ -170,7 +170,7 @@ describe("validateContentDepth — functions-list", () => {
     expect(issues.some((i) => i.message.includes("REQ-xxx"))).toBe(true);
   });
 
-  it("validates required columns now include 処理分類 and 優先度 (7 columns)", () => {
+  it("validates required columns now include 処理分類 and 優先度 (7 columns) — ja", () => {
     // Use validateDocument's table structure check (not content depth)
     const content = [
       "# 機能一覧",
@@ -183,8 +183,8 @@ describe("validateContentDepth — functions-list", () => {
       "## 機能一覧",
       "| 大分類 | 中分類 | 機能ID | 機能名 | 関連要件ID |",
     ].join("\n");
-    // Missing 処理分類 and 優先度 → should flag missing columns
-    const result = validateDocument(content, "functions-list");
+    // Missing 処理分類 and 優先度 → should flag missing columns (ja lang)
+    const result = validateDocument(content, "functions-list", undefined, undefined, "ja");
     const colIssues = result.issues.filter((i) => i.type === "missing_column");
     expect(colIssues.some((i) => i.message.includes("処理分類") || i.message.includes("優先度"))).toBe(true);
   });
@@ -364,8 +364,8 @@ describe("validateContentDepth — sitemap", () => {
 // validateDocument — integration: check_completeness flag behaviour
 // ---------------------------------------------------------------------------
 
-/** Minimal valid functions-list content (passes section + table checks) */
-const VALID_FUNCTIONS_LIST = [
+/** Minimal valid functions-list in Japanese (passes section + table checks with lang="ja") */
+const VALID_FUNCTIONS_LIST_JA = [
   "# 機能一覧",
   "## 改訂履歴",
   "| 版数 | 日付 | 変更内容 | 変更者 |",
@@ -378,37 +378,51 @@ const VALID_FUNCTIONS_LIST = [
   "| 1 | 商品管理 | 商品登録 | SAL-001 | 商品登録 | 新規 | REQ-001 | 入力 | 高 | 中 | |",
 ].join("\n");
 
+/** Minimal valid functions-list in Vietnamese (passes section + table checks with default lang="vi") */
+const VALID_FUNCTIONS_LIST_VI = [
+  "# Danh sách chức năng",
+  "## Lịch sử sửa đổi",
+  "| Phiên bản | Ngày | Nội dung thay đổi | Người thay đổi |",
+  "| 1.0 | 2026-01-01 | Tạo ban đầu | Kiểm tra |",
+  "## Phê duyệt",
+  "## Nơi phân phối",
+  "## Thuật ngữ",
+  "## Danh sách chức năng",
+  "| STT | Phân loại lớn | Phân loại vừa | ID chức năng | Tên chức năng | Tổng quan | ID yêu cầu liên quan | Phân loại xử lý | Độ ưu tiên | Độ phức tạp | Ghi chú |",
+  "| 1 | Quản lý sản phẩm | Đăng ký sản phẩm | SAL-001 | Đăng ký sản phẩm | Mới | REQ-001 | Nhập liệu | Cao | Trung | |",
+].join("\n");
+
 describe("validateDocument — backward compatibility (no check_completeness flag)", () => {
-  it("does not return completeness issues when flag is absent", () => {
+  it("does not return completeness issues when flag is absent (ja)", () => {
     // functions-list without F-xxx rows — would fail completeness check
-    const result = validateDocument(VALID_FUNCTIONS_LIST, "functions-list");
+    const result = validateDocument(VALID_FUNCTIONS_LIST_JA, "functions-list", undefined, undefined, "ja");
     const completenessIssues = result.issues.filter((i) => i.type === "completeness");
     expect(completenessIssues).toHaveLength(0);
   });
 
-  it("does not return completeness issues when flag is false", () => {
-    const result = validateDocument(VALID_FUNCTIONS_LIST, "functions-list", undefined, { check_completeness: false });
+  it("does not return completeness issues when flag is false (vi)", () => {
+    const result = validateDocument(VALID_FUNCTIONS_LIST_VI, "functions-list", undefined, { check_completeness: false }, "vi");
     const completenessIssues = result.issues.filter((i) => i.type === "completeness");
     expect(completenessIssues).toHaveLength(0);
   });
 });
 
 describe("validateDocument — check_completeness: true", () => {
-  it("returns completeness warning for functions-list missing F-xxx rows", () => {
-    const result = validateDocument(VALID_FUNCTIONS_LIST, "functions-list", undefined, { check_completeness: true });
+  it("returns completeness warning for functions-list missing F-xxx rows (ja)", () => {
+    const result = validateDocument(VALID_FUNCTIONS_LIST_JA, "functions-list", undefined, { check_completeness: true }, "ja");
     const completenessIssues = result.issues.filter((i) => i.type === "completeness");
     expect(completenessIssues.length).toBeGreaterThan(0);
     expect(completenessIssues[0].severity).toBe("warning");
   });
 
-  it("valid field remains true when only completeness warnings (no errors)", () => {
-    // VALID_FUNCTIONS_LIST passes all section/table checks but lacks F-xxx
-    const result = validateDocument(VALID_FUNCTIONS_LIST, "functions-list", undefined, { check_completeness: true });
+  it("valid field remains true when only completeness warnings (no errors) (ja)", () => {
+    // VALID_FUNCTIONS_LIST_JA passes all section/table checks (lang=ja) but lacks F-xxx
+    const result = validateDocument(VALID_FUNCTIONS_LIST_JA, "functions-list", undefined, { check_completeness: true }, "ja");
     // All completeness issues are warnings — valid should still be true
     expect(result.valid).toBe(true);
   });
 
-  it("returns no completeness issues for functions-list with sufficient F-xxx rows", () => {
+  it("returns no completeness issues for functions-list with sufficient F-xxx rows (ja)", () => {
     const content = [
       "# 機能一覧",
       "## 改訂履歴",
@@ -425,8 +439,20 @@ describe("validateDocument — check_completeness: true", () => {
       "| 4 | 帳票管理 | 帳票出力 | F-004 | 帳票出力 | 出力 | REQ-004 | 帳票 | 中 | 低 | |",
       "| 5 | バッチ処理 | データ連携 | F-005 | データ連携 | 連携 | REQ-005 | バッチ | 低 | 低 | |",
     ].join("\n");
-    const result = validateDocument(content, "functions-list", undefined, { check_completeness: true });
+    const result = validateDocument(content, "functions-list", undefined, { check_completeness: true }, "ja");
     const completenessIssues = result.issues.filter((i) => i.type === "completeness");
     expect(completenessIssues).toHaveLength(0);
+  });
+
+  it("returns no missing_section/missing_column issues for a well-formed vi functions-list", () => {
+    // validateContentDepth checks ID patterns (language-agnostic) not headings
+    // so we verify structural+table validation pass for vi, not full completeness
+    const content = VALID_FUNCTIONS_LIST_VI;
+    const result = validateDocument(content, "functions-list", undefined, undefined, "vi");
+    const structureIssues = result.issues.filter(
+      (i) => i.type === "missing_section" || i.type === "missing_column"
+    );
+    expect(structureIssues).toHaveLength(0);
+    expect(result.valid).toBe(true);
   });
 });

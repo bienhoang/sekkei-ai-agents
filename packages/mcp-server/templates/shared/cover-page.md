@@ -1,28 +1,28 @@
 ---
 type: shared
 name: cover-page
-language: ja
+language: vi
 ---
 
-# 表紙
+# Trang bìa
 
-<!-- AI: Fill in project metadata. This is the shared cover page for all document types. -->
+<!-- AI: Điền thông tin metadata dự án. Đây là trang bìa dùng chung cho tất cả loại tài liệu. -->
 
-| 項目 | 内容 |
-|------|------|
-| ドキュメントタイトル | <!-- AI: document title based on doc_type --> |
-| プロジェクト名 | <!-- AI: from project config --> |
-| システム名 | <!-- AI: from project config --> |
-| バージョン | 1.0 |
-| 作成日 | <!-- AI: YYYY-MM-DD --> |
-| 作成者 | <!-- AI: author name --> |
-| 承認者 | <!-- AI: approver name or TBD --> |
-| ステータス | ドラフト |
+| Hạng mục | Nội dung |
+|---------|---------|
+| Tiêu đề tài liệu | <!-- AI: tiêu đề tài liệu dựa trên doc_type --> |
+| Tên dự án | <!-- AI: từ cấu hình dự án --> |
+| Tên hệ thống | <!-- AI: từ cấu hình dự án --> |
+| Phiên bản | 1.0 |
+| Ngày tạo | <!-- AI: YYYY-MM-DD --> |
+| Người tạo | <!-- AI: tên tác giả --> |
+| Người phê duyệt | <!-- AI: tên người phê duyệt hoặc TBD --> |
+| Trạng thái | Bản nháp |
 
-## 承認欄
+## Phê duyệt
 
-| 役割 | 氏名 | 日付 | 署名 |
-|------|------|------|------|
-| 作成者 | | | |
-| レビュアー | | | |
-| 承認者 | | | |
+| Vai trò | Họ tên | Ngày | Chữ ký |
+|---------|--------|------|--------|
+| Người tạo | | | |
+| Người review | | | |
+| Người phê duyệt | | | |

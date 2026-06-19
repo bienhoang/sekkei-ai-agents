@@ -1,19 +1,19 @@
-# {機能名} — 設計ドキュメント一覧
+# {Tên chức năng} — Danh sách Tài liệu Thiết kế
 
-<!-- AI: When regenerating this index after a feature document is created/updated,
-     update the status column. Use ✅ for complete, 🔄 for in-progress, ⏳ for pending.
-     Do NOT modify other feature folders. Keigo: ですます調. -->
+<!-- AI: Khi tái tạo index này sau khi một tài liệu chức năng được tạo/cập nhật,
+     cập nhật cột trạng thái. Dùng ✅ cho hoàn thành, 🔄 cho đang thực hiện, ⏳ cho chờ xử lý.
+     KHÔNG sửa đổi các thư mục chức năng khác. -->
 
-## ドキュメント一覧
+## Danh sách tài liệu
 
-| ドキュメント | 内容 | ステータス |
-|------------|------|----------|
-| [basic-design.md](./basic-design.md) | 基本設計書 | ⏳ 未生成 |
-| [detail-design.md](./detail-design.md) | 詳細設計書 | ⏳ 未生成 |
-| [test-spec.md](./test-spec.md) | テスト仕様書 | ⏳ 未生成 |
+| Tài liệu | Nội dung | Trạng thái |
+|---------|---------|-----------|
+| [basic-design.md](./basic-design.md) | Tài liệu Thiết kế Cơ bản | ⏳ Chưa tạo |
+| [detail-design.md](./detail-design.md) | Tài liệu Thiết kế Chi tiết | ⏳ Chưa tạo |
+| [test-spec.md](./test-spec.md) | Tài liệu Đặc tả Kiểm thử | ⏳ Chưa tạo |
 
-## 関連ドキュメント
+## Tài liệu liên quan
 
-- [システム設計](../../03-system/index.md)
-- [機能一覧](../../04-functions-list/functions-list.md)
-- [テスト計画](../../08-test/index.md)
+- [Thiết kế hệ thống](../../03-system/index.md)
+- [Danh sách chức năng](../../04-functions-list/functions-list.md)
+- [Kế hoạch kiểm thử](../../08-test/index.md)

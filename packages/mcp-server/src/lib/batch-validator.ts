@@ -8,6 +8,8 @@ import { parse as parseYaml } from "yaml";
 import type { ProjectConfig, HealthScore } from "../types/documents.js";
 import type { ValidationResult } from "./validator.js";
 import { validateDocument } from "./validator.js";
+import { parseFrontmatter } from "./frontmatter-parser.js";
+import { resolveLang } from "./validator-section-maps.js";
 import { computeHealthScore } from "./health-scorer.js";
 import { SekkeiError } from "./errors.js";
 import { logger } from "./logger.js";
@@ -70,7 +72,10 @@ export async function validateAllDocuments(configPath: string): Promise<BatchVal
     }
 
     try {
-      const result = validateDocument(content, docType as Parameters<typeof validateDocument>[1]);
+      // Derive language from frontmatter; default "vi" when absent
+      const { meta } = parseFrontmatter(content);
+      const lang = resolveLang(typeof meta.language === "string" ? meta.language : undefined);
+      const result = validateDocument(content, docType as Parameters<typeof validateDocument>[1], undefined, undefined, lang);
       results.push({ docType, result });
     } catch (err) {
       logger.warn({ docType, err }, "Batch validate: validation threw, recording as invalid");

@@ -13,50 +13,67 @@ import {
   validateContentDepth,
 } from "../../src/lib/validator.js";
 
-/** Structural section block included in all valid test documents */
+/** Structural section block in Japanese (for lang="ja" tests) */
 const STRUCTURAL = "## 改訂履歴\n| 版数 | 日付 | 変更内容 | 変更者 |\n## 承認欄\n## 配布先\n## 用語集\n";
 
+/** Structural section block in Vietnamese (for default lang="vi" tests) */
+const STRUCTURAL_VI = "## Lịch sử sửa đổi\n| Phiên bản | Ngày | Nội dung thay đổi | Người thay đổi |\n## Phê duyệt\n## Nơi phân phối\n## Thuật ngữ\n";
+
 describe("validateCompleteness", () => {
-  it("passes when all sections present for functions-list", () => {
+  it("passes when all sections present for functions-list (ja)", () => {
     const content = STRUCTURAL + "# 機能一覧\n\n| No. | 大分類 |";
-    const issues = validateCompleteness(content, "functions-list");
+    const issues = validateCompleteness(content, "functions-list", "ja");
     expect(issues).toHaveLength(0);
   });
 
-  it("detects missing sections for requirements", () => {
+  it("passes when all sections present for functions-list (vi)", () => {
+    const content = STRUCTURAL_VI + "# Danh sách chức năng\n\n| STT | Phân loại lớn |";
+    const issues = validateCompleteness(content, "functions-list", "vi");
+    expect(issues).toHaveLength(0);
+  });
+
+  it("detects missing sections for requirements (ja)", () => {
     const content = STRUCTURAL + "# 要件定義書\n\n## 概要\nSome overview.";
-    const issues = validateCompleteness(content, "requirements");
+    const issues = validateCompleteness(content, "requirements", "ja");
     const missing = issues.map((i) => i.message);
     expect(missing.some((m) => m.includes("機能要件"))).toBe(true);
     expect(missing.some((m) => m.includes("非機能要件"))).toBe(true);
   });
 
-  it("passes for detail-design with all sections", () => {
+  it("passes for detail-design with all sections (ja)", () => {
     const content = [
       STRUCTURAL,
       "## 概要", "## モジュール設計", "## クラス設計", "## 画面設計詳細",
       "## DB詳細設計", "## API詳細仕様", "## 処理フロー", "## エラーハンドリング",
       "## セキュリティ実装", "## パフォーマンス考慮",
     ].join("\n\n");
-    const issues = validateCompleteness(content, "detail-design");
+    const issues = validateCompleteness(content, "detail-design", "ja");
     expect(issues).toHaveLength(0);
   });
 
-  it("detects missing sections for ut-spec", () => {
+  it("detects missing sections for ut-spec (ja)", () => {
     const content = STRUCTURAL + "## テスト設計\n\nSome content.";
-    const issues = validateCompleteness(content, "ut-spec");
+    const issues = validateCompleteness(content, "ut-spec", "ja");
     expect(issues.length).toBeGreaterThan(0);
     expect(issues.some((i) => i.message.includes("単体テストケース"))).toBe(true);
   });
 
-  it("detects missing structural section (承認欄)", () => {
+  it("detects missing structural section (承認欄) (ja)", () => {
     const content = "## 改訂履歴\n## 配布先\n## 用語集\n# 機能一覧";
-    const issues = validateCompleteness(content, "functions-list");
+    const issues = validateCompleteness(content, "functions-list", "ja");
     expect(issues.some((i) => i.message.includes("承認欄"))).toBe(true);
+  });
+
+  it("detects missing structural section (Phê duyệt) for vi", () => {
+    const content = "## Lịch sử sửa đổi\n## Nơi phân phối\n## Thuật ngữ\n# Danh sách chức năng";
+    const issues = validateCompleteness(content, "functions-list", "vi");
+    expect(issues.some((i) => i.message.includes("Phê duyệt"))).toBe(true);
   });
 });
 
 describe("validateContentDepth - NFR numeric targets", () => {
+  // validateContentDepth is language-agnostic (checks ID patterns, not headings)
+  // so Japanese fixture content is fine here without lang param
   const STRUCTURAL_NFR =
     "---\ndoc_type: requirements\nversion: \"1.0\"\n---\n" +
     "## 改訂履歴\n| 版数 | 日付 | 変更内容 | 変更者 |\n|------|------|----------|--------|\n| 1.0 | 2026-01-01 | 初版 | Author |\n" +
@@ -135,28 +152,35 @@ describe("validateCrossRefs", () => {
 });
 
 describe("validateTableStructure", () => {
-  it("passes when required columns present", () => {
+  it("passes when required columns present (ja)", () => {
     const content = "| 版数 | 日付 | 変更内容 | 変更者 |\n| 大分類 | 中分類 | 機能ID | 機能名 | 関連要件ID | 処理分類 | 優先度 |";
-    const issues = validateTableStructure(content, "functions-list");
+    const issues = validateTableStructure(content, "functions-list", "ja");
+    expect(issues).toHaveLength(0);
+  });
+
+  it("passes when required columns present (vi)", () => {
+    const content = "| Phiên bản | Ngày | Nội dung thay đổi | Người thay đổi |\n| Phân loại lớn | Phân loại vừa | ID chức năng | Tên chức năng | ID yêu cầu liên quan | Phân loại xử lý | Độ ưu tiên |";
+    const issues = validateTableStructure(content, "functions-list", "vi");
     expect(issues).toHaveLength(0);
   });
 
   it("detects missing table columns", () => {
     const content = "| 名前 | 説明 |";
+    // No lang — defaults to "vi", so Japanese columns are indeed missing
     const issues = validateTableStructure(content, "functions-list");
     expect(issues.length).toBeGreaterThan(0);
     expect(issues[0].type).toBe("missing_column");
   });
 
-  it("validates ut-spec columns", () => {
+  it("validates ut-spec columns (ja)", () => {
     const content = "| 版数 | 日付 | 変更内容 | 変更者 |\n| テストケースID | テスト対象 | テスト手順 |";
-    const issues = validateTableStructure(content, "ut-spec");
+    const issues = validateTableStructure(content, "ut-spec", "ja");
     expect(issues).toHaveLength(0);
   });
 });
 
 describe("validateDocument (integration)", () => {
-  it("returns valid for well-formed functions-list", () => {
+  it("returns valid for well-formed functions-list (ja)", () => {
     const content = [
       "# 機能一覧",
       "## 改訂履歴",
@@ -169,79 +193,112 @@ describe("validateDocument (integration)", () => {
       "| No. | 大分類 | 中分類 | 機能ID | 機能名 | 概要 | 関連要件ID | 処理分類 | 優先度 | 難易度 | 備考 |",
       "| 1 | 商品管理 | 商品登録 | F-001 | 商品登録 | 新規商品を登録する | REQ-001 | 入力 | 高 | 中 | |",
     ].join("\n");
-    const result = validateDocument(content, "functions-list");
+    const result = validateDocument(content, "functions-list", undefined, undefined, "ja");
     expect(result.valid).toBe(true);
     expect(result.issues).toHaveLength(0);
   });
 
-  it("returns issues with cross-ref report when upstream provided", () => {
+  it("returns valid for well-formed functions-list (vi)", () => {
+    const content = [
+      "# Danh sách chức năng",
+      "## Lịch sử sửa đổi",
+      "| Phiên bản | Ngày | Nội dung thay đổi | Người thay đổi |",
+      "| 1.0 | 2026-01-01 | Tạo ban đầu | Kiểm tra |",
+      "## Phê duyệt",
+      "## Nơi phân phối",
+      "## Thuật ngữ",
+      "",
+      "| STT | Phân loại lớn | Phân loại vừa | ID chức năng | Tên chức năng | Tổng quan | ID yêu cầu liên quan | Phân loại xử lý | Độ ưu tiên |",
+      "| 1 | Quản lý sản phẩm | Đăng ký sản phẩm | F-001 | Đăng ký sản phẩm | Đăng ký mới | REQ-001 | Nhập liệu | Cao |",
+    ].join("\n");
+    const result = validateDocument(content, "functions-list", undefined, undefined, "vi");
+    expect(result.valid).toBe(true);
+    expect(result.issues).toHaveLength(0);
+  });
+
+  it("returns issues with cross-ref report when upstream provided (ja)", () => {
     const upstream = "REQ-001, REQ-002, REQ-003";
     const current = STRUCTURAL + "## 概要\n## システム構成\n## 業務フロー\n## 画面設計\n## DB設計\n## 外部インターフェース\n| 画面ID | x |\n| テーブルID | x |\n| API | x |\nReferences REQ-001.";
-    const result = validateDocument(current, "basic-design", upstream);
+    const result = validateDocument(current, "basic-design", upstream, undefined, "ja");
     expect(result.cross_ref_report).toBeDefined();
     expect(result.cross_ref_report!.missing).toContain("REQ-002");
   });
 });
 
 describe("validateChangelogPreservation", () => {
-  const makeDoc = (rows: string[]) =>
+  // Japanese-language fixtures — pass lang="ja" so the ja revision heading is used
+  const makeDocJa = (rows: string[]) =>
     `# Doc\n## 改訂履歴\n| 版数 | 日付 | 変更内容 | 変更者 |\n|------|------|----------|--------|\n${rows.join("\n")}\n## 承認欄\n`;
 
-  it("returns no issues when all rows preserved + 1 new", () => {
-    const prev = makeDoc(["| 1.0 | 2026-01-01 | Initial | Author |"]);
-    const next = makeDoc([
+  // Vietnamese-language fixtures — default lang="vi"
+  const makeDocVi = (rows: string[]) =>
+    `# Doc\n## Lịch sử sửa đổi\n| Phiên bản | Ngày | Nội dung thay đổi | Người thay đổi |\n|------|------|----------|--------|\n${rows.join("\n")}\n## Phê duyệt\n`;
+
+  it("returns no issues when all rows preserved + 1 new (ja)", () => {
+    const prev = makeDocJa(["| 1.0 | 2026-01-01 | Initial | Author |"]);
+    const next = makeDocJa([
       "| 1.0 | 2026-01-01 | Initial | Author |",
       "| 1.1 | 2026-02-24 | Updated | |",
     ]);
-    const issues = validateChangelogPreservation(prev, next);
+    const issues = validateChangelogPreservation(prev, next, "ja");
     expect(issues).toHaveLength(0);
   });
 
-  it("returns error when rows missing", () => {
-    const prev = makeDoc([
+  it("returns error when rows missing (ja)", () => {
+    const prev = makeDocJa([
       "| 1.0 | 2026-01-01 | Initial | Author |",
       "| 1.1 | 2026-01-15 | Update | Author |",
     ]);
-    const next = makeDoc(["| 1.1 | 2026-01-15 | Update | Author |"]);
-    const issues = validateChangelogPreservation(prev, next);
+    const next = makeDocJa(["| 1.1 | 2026-01-15 | Update | Author |"]);
+    const issues = validateChangelogPreservation(prev, next, "ja");
     expect(issues.some(i => i.severity === "error")).toBe(true);
   });
 
-  it("returns error when row count decreased", () => {
-    const prev = makeDoc([
+  it("returns error when row count decreased (ja)", () => {
+    const prev = makeDocJa([
       "| 1.0 | 2026-01-01 | A | X |",
       "| 1.1 | 2026-01-15 | B | Y |",
     ]);
-    const next = makeDoc(["| 1.2 | 2026-02-24 | C | Z |"]);
-    const issues = validateChangelogPreservation(prev, next);
+    const next = makeDocJa(["| 1.2 | 2026-02-24 | C | Z |"]);
+    const issues = validateChangelogPreservation(prev, next, "ja");
     expect(issues.some(i => i.message.includes("decreased"))).toBe(true);
   });
 
-  it("returns empty when previous has no changelog", () => {
+  it("returns empty when previous has no changelog (ja)", () => {
     const prev = "# Doc\n## 承認欄\n";
-    const next = makeDoc(["| 1.0 | 2026-02-24 | New | |"]);
-    expect(validateChangelogPreservation(prev, next)).toHaveLength(0);
+    const next = makeDocJa(["| 1.0 | 2026-02-24 | New | |"]);
+    expect(validateChangelogPreservation(prev, next, "ja")).toHaveLength(0);
   });
 
-  it("returns warning when more than 1 new row", () => {
-    const prev = makeDoc(["| 1.0 | 2026-01-01 | A | X |"]);
-    const next = makeDoc([
+  it("returns warning when more than 1 new row (ja)", () => {
+    const prev = makeDocJa(["| 1.0 | 2026-01-01 | A | X |"]);
+    const next = makeDocJa([
       "| 1.0 | 2026-01-01 | A | X |",
       "| 1.1 | 2026-02-01 | B | Y |",
       "| 1.2 | 2026-02-24 | C | Z |",
     ]);
-    const issues = validateChangelogPreservation(prev, next);
+    const issues = validateChangelogPreservation(prev, next, "ja");
     expect(issues.some(i => i.severity === "warning")).toBe(true);
   });
 
-  it("handles whitespace differences gracefully", () => {
-    const prev = makeDoc(["| 1.0 | 2026-01-01 | Initial | Author |"]);
-    const next = makeDoc([
+  it("handles whitespace differences gracefully (ja)", () => {
+    const prev = makeDocJa(["| 1.0 | 2026-01-01 | Initial | Author |"]);
+    const next = makeDocJa([
       "|  1.0  |  2026-01-01  |  Initial  |  Author  |",
       "| 1.1 | 2026-02-24 | Updated | |",
     ]);
-    const issues = validateChangelogPreservation(prev, next);
+    const issues = validateChangelogPreservation(prev, next, "ja");
     expect(issues.filter(i => i.severity === "error")).toHaveLength(0);
+  });
+
+  it("returns no issues when all rows preserved + 1 new (vi)", () => {
+    const prev = makeDocVi(["| 1.0 | 2026-01-01 | Initial | Author |"]);
+    const next = makeDocVi([
+      "| 1.0 | 2026-01-01 | Initial | Author |",
+      "| 1.1 | 2026-02-24 | Updated | |",
+    ]);
+    const issues = validateChangelogPreservation(prev, next, "vi");
+    expect(issues).toHaveLength(0);
   });
 });
 
@@ -289,13 +346,13 @@ describe("validatePerFeatureDocument", () => {
     return { manifestPath, manifest };
   }
 
-  it("validates per-feature document with valid shared + feature files", async () => {
+  it("validates per-feature document with valid shared + feature files (ja)", async () => {
     const { manifestPath, manifest } = await setupPerFeatureFixture({
       sharedContent: "## システム構成\n\nArchitecture overview.\n\n| 版数 | 日付 | 変更内容 | 変更者 |\n| 画面ID | 説明 |\n| テーブルID | 説明 |\n| API | 説明 |",
       featureContent: "## 概要\n\nFeature overview.\n\n## 業務フロー\n\nFlow.\n\n## 画面設計\n\nUI.\n\n| 画面ID | 説明 |\n| テーブルID | 説明 |\n| API | 説明 |",
     });
 
-    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design");
+    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design", undefined, "ja");
     expect(result.per_file).toHaveLength(2);
     // Shared file has the required heading, feature file has all required sections
     const sharedFileResult = result.per_file[0];
@@ -305,13 +362,13 @@ describe("validatePerFeatureDocument", () => {
     expect(result.valid).toBe(true);
   });
 
-  it("reports missing heading in shared file", async () => {
+  it("reports missing heading in shared file (ja)", async () => {
     const { manifestPath, manifest } = await setupPerFeatureFixture({
       sharedContent: "## 概要\n\nNo architecture heading here.",
       featureContent: "## 概要\n\n## 業務フロー\n\n## 画面設計\n\n| 画面ID | 説明 |\n| テーブルID | 説明 |\n| API | 説明 |",
     });
 
-    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design");
+    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design", undefined, "ja");
     const sharedFileResult = result.per_file[0];
     expect(sharedFileResult.issues.length).toBeGreaterThan(0);
     expect(sharedFileResult.issues[0].type).toBe("missing_section");
@@ -319,13 +376,13 @@ describe("validatePerFeatureDocument", () => {
     expect(result.valid).toBe(false);
   });
 
-  it("reports missing required sections in feature file", async () => {
+  it("reports missing required sections in feature file (ja)", async () => {
     const { manifestPath, manifest } = await setupPerFeatureFixture({
       sharedContent: "## システム構成\n\nArch.\n\n| 画面ID | 説明 |\n| テーブルID | 説明 |\n| API | 説明 |",
       featureContent: "## 概要\n\nOnly overview, missing 業務フロー and 画面設計.",
     });
 
-    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design");
+    const result = await validatePerFeatureDocument(manifestPath, manifest, "basic-design", undefined, "ja");
     const featureFileResult = result.per_file[1];
     expect(featureFileResult.issues.length).toBeGreaterThan(0);
     expect(featureFileResult.issues.some(i => i.message.includes("業務フロー"))).toBe(true);
