@@ -1,4 +1,4 @@
-import { resolve, normalize } from 'node:path'
+import { resolve, normalize, sep } from 'node:path'
 import { realpathSync } from 'node:fs'
 
 /**
@@ -27,7 +27,9 @@ export function safePath(userPath: string, root: string): string {
 
   const abs = resolve(rootReal, normalized)
 
-  if (abs !== rootReal && !abs.startsWith(rootReal + '/')) {
+  // Use the OS path separator for the containment check — on Windows the
+  // separator is '\', so a hardcoded '/' would reject every legitimate path.
+  if (abs !== rootReal && !abs.startsWith(rootReal + sep)) {
     throw new Error('Path traversal detected')
   }
 
