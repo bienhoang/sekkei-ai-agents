@@ -1,11 +1,11 @@
-# {Section Title}
+# {Tiêu đề mục}
 
-<!-- AI: When generating content for this section, replace this placeholder with the
-     section index. List all documents in this folder with brief descriptions.
-     Use a Markdown table or bullet list. Keigo: Use ですます調. -->
+<!-- AI: Khi tạo nội dung cho mục này, thay thế placeholder này bằng
+     index mục. Liệt kê tất cả tài liệu trong thư mục này kèm mô tả ngắn.
+     Dùng bảng Markdown hoặc danh sách dấu đầu dòng. -->
 
-> このセクションはまだ生成されていません。
+> Mục này chưa được tạo.
 
-| ファイル | 内容 |
-|--------|------|
-| (生成後に自動更新されます) | — |
+| Tệp | Nội dung |
+|-----|---------|
+| (sẽ tự động cập nhật sau khi tạo) | — |

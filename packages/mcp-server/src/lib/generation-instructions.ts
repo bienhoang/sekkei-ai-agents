@@ -484,55 +484,61 @@ export function buildKeigoInstruction(level: KeigoLevel): string {
 /** Language display names for bilingual and output language instruction blocks */
 const LANG_DISPLAY_NAMES: Record<string, string> = {
   en: "English",
+  ja: "Japanese (日本語)",
   vi: "Vietnamese (Tiếng Việt)",
 };
 
-/** Language-specific translation examples for section headings */
+/**
+ * Translation examples: Vietnamese heading → target language.
+ * Since the structural skeleton is now the Vietnamese template, examples show vi→target.
+ */
 const SECTION_HEADING_EXAMPLES: Record<string, string> = {
-  en: "概要 → Overview, 画面設計 → Screen Design, 要件定義 → Requirements, 機能一覧 → Function List",
-  vi: "概要 → Tổng quan, 画面設計 → Thiết kế Màn hình, 要件定義 → Định nghĩa Yêu cầu, 機能一覧 → Danh sách Chức năng, 基本設計 → Thiết kế Cơ bản, 詳細設計 → Thiết kế Chi tiết, テスト計画 → Kế hoạch Kiểm thử, 非機能要件 → Yêu cầu Phi chức năng, プロジェクト計画 → Kế hoạch Dự án, セキュリティ設計 → Thiết kế Bảo mật",
+  en: "Tổng quan → Overview, Thiết kế màn hình → Screen Design, Yêu cầu chức năng → Functional Requirements, Danh sách chức năng → Function List, Thiết kế cơ bản → Basic Design, Kiểm thử tích hợp → Integration Test",
+  ja: "Tổng quan → 概要, Thiết kế màn hình → 画面設計, Yêu cầu chức năng → 機能要件, Danh sách chức năng → 機能一覧, Thiết kế cơ bản → 基本設計, Kiểm thử tích hợp → 結合テスト",
+  // vi headings are already correct in the Vietnamese template — no translation step needed
 };
 
 /**
  * Build output language instruction block.
  * Always injected to ensure explicit output language directive.
+ *
+ * The structural skeleton for all generation is the Vietnamese template (templates/vi/).
+ * - vi output: headings already correct in the template — only diacritics rule needed.
+ * - ja/en output: translate Vietnamese template headings to the target language.
  */
 export function buildOutputLanguageInstruction(lang: Language): string {
-  if (lang === "ja") {
+  if (lang === "vi") {
     return [
       `## Output Language`,
       ``,
-      `Write ALL output content in **Japanese (日本語)**. You MUST:`,
-      `1. Follow the document structure and section order defined in the template`,
-      `2. Write all headings, table headers, body text in formal Japanese`,
-      `3. Keep technical identifiers as-is (e.g., REQ-001, SCR-001, F-001)`,
-      `4. Write exclusively in Japanese — do not mix in English or other languages except for technical terms`,
+      `Write ALL output content in **Vietnamese (Tiếng Việt)**. You MUST:`,
+      `1. Follow the document structure and section order defined in the Vietnamese template exactly`,
+      `2. Write all headings, table headers, and body text in Vietnamese — headings are already provided in Vietnamese by the template`,
+      `3. Keep technical identifiers as-is (e.g., REQ-001, SCR-001, F-001, TBL-001)`,
+      `4. Keep cross-reference IDs, status values, and format codes unchanged`,
+      `5. Do NOT output Japanese text in the final document`,
+      `6. Vietnamese text MUST include proper diacritical marks (dấu). CORRECT: "Yêu cầu", "Thiết kế", "Chức năng", "Kiểm thử". WRONG: "Yeu cau", "Thiet ke", "Chuc nang", "Kiem thu". Never strip or omit diacritics.`,
     ].join("\n");
   }
+  // ja and en: translate FROM Vietnamese template headings into the target language
   const langName = LANG_DISPLAY_NAMES[lang] ?? lang;
   const headingExamples = SECTION_HEADING_EXAMPLES[lang] ?? SECTION_HEADING_EXAMPLES.en;
-  const lines = [
+  return [
     `## Output Language`,
     ``,
     `Write ALL output content in **${langName}**. You MUST:`,
-    `1. Follow the document structure and section order defined in the Japanese template exactly`,
+    `1. Follow the document structure and section order defined in the Vietnamese template exactly`,
     `2. Write all headings, table headers, body text, and comments in ${langName}`,
-    `3. Translate Japanese section headings (e.g., ${headingExamples})`,
+    `3. Translate Vietnamese template section headings into ${langName} (e.g., ${headingExamples})`,
     `4. Keep technical identifiers as-is (e.g., REQ-001, SCR-001, F-001, TBL-001)`,
     `5. Keep cross-reference IDs, status values, and format codes unchanged`,
-    `6. Do NOT output any Japanese text in the final document`,
-  ];
-  if (lang === "vi") {
-    lines.push(
-      `7. Vietnamese text MUST include proper diacritical marks (dấu). CORRECT: "Yêu cầu", "Thiết kế", "Chức năng", "Kiểm thử". WRONG: "Yeu cau", "Thiet ke", "Chuc nang", "Kiem thu". Never strip or omit diacritics.`,
-    );
-  }
-  return lines.join("\n");
+  ].join("\n");
 }
 
 /**
- * Build bilingual translation instruction block for non-Japanese input.
- * Injected into generation context when input_lang != "ja".
+ * Build bilingual translation instruction block for non-Vietnamese input.
+ * Injected into generation context when input_lang != "vi".
+ * (Trigger condition is managed by generate.ts; this function only produces the instruction text.)
  */
 export function buildBilingualInstructions(inputLang: string, glossaryTerms: string): string {
   const langName = LANG_DISPLAY_NAMES[inputLang] ?? inputLang;
@@ -543,7 +549,7 @@ export function buildBilingualInstructions(inputLang: string, glossaryTerms: str
     `1. Fully understand the input in ${langName}`,
     `2. Use the glossary terms below for consistent translation of domain terminology`,
     `3. Extract all requirements, features, and constraints from the ${langName} input`,
-    `4. The output language is governed by the ## Output Language section above (or Japanese by default)`,
+    `4. The output language is governed by the ## Output Language section above (default: Vietnamese)`,
   ];
   if (glossaryTerms) {
     lines.push(``, `### Domain Glossary`, ``, glossaryTerms);

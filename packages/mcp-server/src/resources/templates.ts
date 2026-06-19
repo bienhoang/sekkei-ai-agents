@@ -29,7 +29,7 @@ export function registerTemplateResources(server: McpServer, templateDir: string
 
   server.resource("templates", template, async (uri, params) => {
     const rawDocType = params.doc_type as string;
-    const rawLang = (params.language as string) ?? "ja";
+    const rawLang = (params.language as string) ?? "vi";
 
     if (!DOC_TYPES.includes(rawDocType as DocType)) {
       throw new Error(`Invalid doc_type: ${rawDocType}`);

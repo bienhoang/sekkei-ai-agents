@@ -34,15 +34,15 @@ export async function resolveTemplatePath(
     }
   }
 
-  // Try language-specific path first, fall back to ja/
+  // Try language-specific path first, fall back to vi/ (primary template base)
   const langPath = resolve(defaultDir, language, `${docType}.md`);
-  if (language !== "ja") {
+  if (language !== "vi") {
     try {
       await access(langPath, constants.R_OK);
       return langPath;
     } catch {
-      const fallbackPath = resolve(defaultDir, "ja", `${docType}.md`);
-      logger.debug({ docType, language, fallbackPath }, "Language-specific template not found, falling back to ja/");
+      const fallbackPath = resolve(defaultDir, "vi", `${docType}.md`);
+      logger.debug({ docType, language, fallbackPath }, "Language-specific template not found, falling back to vi/");
       return fallbackPath;
     }
   }

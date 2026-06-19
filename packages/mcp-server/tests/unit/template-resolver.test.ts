@@ -13,18 +13,26 @@ const DEFAULT_DIR = resolve(TMP_DIR, "default");
 const OVERRIDE_DIR = resolve(TMP_DIR, "override");
 
 const EN_DIR = resolve(DEFAULT_DIR, "en");
+const VI_DIR = resolve(DEFAULT_DIR, "vi");
 
 beforeAll(() => {
   mkdirSync(resolve(DEFAULT_DIR, "ja"), { recursive: true });
   mkdirSync(resolve(OVERRIDE_DIR, "ja"), { recursive: true });
   mkdirSync(EN_DIR, { recursive: true });
-  writeFileSync(resolve(DEFAULT_DIR, "ja/functions-list.md"), "default");
+  mkdirSync(VI_DIR, { recursive: true });
+  writeFileSync(resolve(DEFAULT_DIR, "ja/functions-list.md"), "default-ja");
   writeFileSync(resolve(OVERRIDE_DIR, "ja/functions-list.md"), "override");
   writeFileSync(resolve(DEFAULT_DIR, "ja/requirements.md"), "default-req");
   writeFileSync(resolve(DEFAULT_DIR, "ja/project-plan.md"), "default-pp");
   writeFileSync(resolve(DEFAULT_DIR, "ja/test-plan.md"), "default-tp");
   writeFileSync(resolve(DEFAULT_DIR, "ja/migration-design.md"), "default-md");
-  // en/ only has one template — others fall back to ja/
+  // vi/ is the canonical fallback base
+  writeFileSync(resolve(VI_DIR, "functions-list.md"), "vi-default");
+  writeFileSync(resolve(VI_DIR, "requirements.md"), "vi-req");
+  writeFileSync(resolve(VI_DIR, "project-plan.md"), "vi-pp");
+  writeFileSync(resolve(VI_DIR, "test-plan.md"), "vi-tp");
+  writeFileSync(resolve(VI_DIR, "migration-design.md"), "vi-md");
+  // en/ only has one template — others fall back to vi/
   writeFileSync(resolve(EN_DIR, "functions-list.md"), "en-default");
 });
 
@@ -69,34 +77,35 @@ describe("resolveTemplatePath: path traversal protection", () => {
   });
 });
 
-describe("resolveTemplatePath: language fallback to ja/", () => {
+describe("resolveTemplatePath: language fallback to vi/", () => {
   it("returns en/ template when it exists for that language", async () => {
     const result = await resolveTemplatePath(DEFAULT_DIR, "functions-list", "en");
     expect(result).toBe(resolve(EN_DIR, "functions-list.md"));
   });
 
-  it("falls back to ja/ when en/ template is missing for that doc_type", async () => {
+  it("falls back to vi/ when en/ template is missing for that doc_type", async () => {
     const result = await resolveTemplatePath(DEFAULT_DIR, "requirements", "en");
-    expect(result).toBe(resolve(DEFAULT_DIR, "ja/requirements.md"));
+    expect(result).toBe(resolve(DEFAULT_DIR, "vi/requirements.md"));
   });
 
-  it("falls back to ja/ for project-plan when non-ja language has no template", async () => {
+  it("falls back to vi/ for project-plan when non-vi language has no template", async () => {
     const result = await resolveTemplatePath(DEFAULT_DIR, "project-plan", "en");
-    expect(result).toBe(resolve(DEFAULT_DIR, "ja/project-plan.md"));
+    expect(result).toBe(resolve(DEFAULT_DIR, "vi/project-plan.md"));
   });
 
-  it("falls back to ja/ for test-plan when non-ja language has no template", async () => {
+  it("falls back to vi/ for test-plan when non-vi language has no template", async () => {
     const result = await resolveTemplatePath(DEFAULT_DIR, "test-plan", "en");
-    expect(result).toBe(resolve(DEFAULT_DIR, "ja/test-plan.md"));
+    expect(result).toBe(resolve(DEFAULT_DIR, "vi/test-plan.md"));
   });
 
-  it("falls back to ja/ for migration-design when non-ja language has no template", async () => {
+  it("falls back to vi/ for migration-design when non-vi language has no template", async () => {
     const result = await resolveTemplatePath(DEFAULT_DIR, "migration-design", "en");
-    expect(result).toBe(resolve(DEFAULT_DIR, "ja/migration-design.md"));
+    expect(result).toBe(resolve(DEFAULT_DIR, "vi/migration-design.md"));
   });
 
-  it("returns ja/ path directly when language is ja (no fallback needed)", async () => {
+  it("returns ja/ path directly when language is ja (ja dir exists)", async () => {
     const result = await resolveTemplatePath(DEFAULT_DIR, "project-plan", "ja");
     expect(result).toBe(resolve(DEFAULT_DIR, "ja/project-plan.md"));
   });
+
 });

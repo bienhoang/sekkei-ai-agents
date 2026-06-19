@@ -10,7 +10,7 @@ import { logger } from "../lib/logger.js";
 
 const inputSchema = {
   doc_type: z.enum(DOC_TYPES).describe("Document type to retrieve template for"),
-  language: z.enum(LANGUAGES).default("ja").describe("Template language"),
+  language: z.enum(LANGUAGES).default("vi").describe("Template language"),
 };
 
 export function registerGetTemplateTool(server: McpServer, templateDir: string, overrideDir?: string): void {

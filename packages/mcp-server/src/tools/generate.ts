@@ -40,8 +40,8 @@ const inputSchema = {
   doc_type: z.enum(DOC_TYPES).describe("Type of document to generate"),
   input_content: z.string().max(500_000).describe("RFP text or upstream document content"),
   project_name: z.string().optional().describe("Project name for document header"),
-  language: z.enum(LANGUAGES).default("ja").describe("Output language: ja, en, or vi"),
-  input_lang: z.enum(INPUT_LANGUAGES).default("ja").optional()
+  language: z.enum(LANGUAGES).default("vi").describe("Output language: ja, en, or vi"),
+  input_lang: z.enum(INPUT_LANGUAGES).default("vi").optional()
     .describe("Language of the input content"),
   keigo_override: z.enum(KEIGO_LEVELS).optional()
     .describe("Override default keigo level for this doc type"),
@@ -89,13 +89,16 @@ const inputSchema = {
     .describe("Template mode: full content or skeleton (headings only)"),
 };
 
-/** Extract existing 改訂履歴 section from document content */
+/** Extract existing revision-history section from document content.
+ * Matches both Vietnamese heading "Lịch sử sửa đổi" (primary) and
+ * legacy Japanese heading "改訂履歴" for backward compatibility with
+ * documents generated before the vi-primary migration. */
 export function extractRevisionHistory(content: string): string {
   const lines = content.split("\n");
   let capturing = false;
   const captured: string[] = [];
   for (const line of lines) {
-    if (/^#{1,4}\s+改訂履歴/.test(line)) {
+    if (/^#{1,4}\s+(Lịch sử sửa đổi|改訂履歴)/.test(line)) {
       capturing = true;
       captured.push(line);
       continue;
@@ -183,13 +186,15 @@ function buildPerFeatureInstructions(
   ].join("\n");
 }
 
-/** Insert a new row at the end of the 改訂履歴 table */
+/** Insert a new row at the end of the revision-history table.
+ * Matches both Vietnamese "Lịch sử sửa đổi" (primary) and legacy
+ * Japanese "改訂履歴" for backward compatibility. */
 export function insertChangelogRow(content: string, newRow: string): string {
   const lines = content.split("\n");
   let lastDataRowIdx = -1;
   let inSection = false;
   for (let i = 0; i < lines.length; i++) {
-    if (/^#{1,4}\s+改訂履歴/.test(lines[i])) { inSection = true; continue; }
+    if (/^#{1,4}\s+(Lịch sử sửa đổi|改訂履歴)/.test(lines[i])) { inSection = true; continue; }
     if (inSection && /^#{1,4}\s/.test(lines[i])) break;
     if (inSection && /^\|\s*v?\d+\.\d+\s*\|/.test(lines[i])) {
       lastDataRowIdx = i;
@@ -249,7 +254,7 @@ export async function handleGenerateDocument(
     const { loadConfig } = await import("../config.js");
     const cfg = loadConfig();
     const resolvedTemplateDir = tDir ?? cfg.templateDir;
-    const template = await loadTemplate(resolvedTemplateDir, doc_type, language ?? "ja", overrideDir);
+    const template = await loadTemplate(resolvedTemplateDir, doc_type, language ?? "vi", overrideDir);
 
     // Single config read (Phase 03: dedup)
     let projectCfg: ProjectConfig | null = null;
@@ -372,7 +377,7 @@ export async function handleGenerateDocument(
     logger.info({ doc_type, language, input_lang, keigo: effectiveKeigo, project_type, project_name: name, scope, feature_name }, "Generating document context");
 
     let bilingualBlock = "";
-    if (input_lang && input_lang !== "ja") {
+    if (input_lang && input_lang !== "vi") {
       let glossaryTerms = "";
       try {
         const glossary = loadGlossary("glossary.yaml");
@@ -383,7 +388,7 @@ export async function handleGenerateDocument(
       bilingualBlock = buildBilingualInstructions(input_lang as Parameters<typeof buildBilingualInstructions>[0], glossaryTerms);
     }
 
-    const effectiveLang = language ?? "ja";
+    const effectiveLang = language ?? "vi";
     // Skip output lang block when it matches the template-declared default (Phase 02: consolidation)
     const outputLangBlock = (effectiveLang === template.metadata.output_language)
       ? ""
@@ -395,7 +400,7 @@ export async function handleGenerateDocument(
       `**Type:** ${doc_type}`,
       `**Project:** ${name}`,
       `**Language:** ${language}`,
-      ...(input_lang && input_lang !== "ja" ? [`**Input Language:** ${input_lang}`] : []),
+      ...(input_lang && input_lang !== "vi" ? [`**Input Language:** ${input_lang}`] : []),
       ``,
       `## AI Instructions`,
       ``,

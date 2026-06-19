@@ -3,20 +3,37 @@
  * Splits markdown by h2 headings and keeps only sections relevant to a feature.
  */
 
-/** Header patterns that should always be included regardless of feature filtering */
+/**
+ * Header patterns that should always be included regardless of feature filtering.
+ * Covers ja, vi, and English/regex variants so vi docs' structural sections
+ * are never stripped during upstream content filtering.
+ */
 const HEADER_PATTERNS = [
+  // Revision history (ja + vi)
   /改訂履歴/,
+  /Lịch sử sửa đổi/,
+  // Approval / review-seal (ja + vi)
   /承認欄/,
+  /Phê duyệt/,
   /検印欄/,
+  /Kiểm duyệt/,
+  // Distribution (ja + vi)
   /配布先/,
+  /Nơi phân phối/,
+  // Glossary (ja + vi + English)
   /用語集/,
+  /Thuật ngữ/,
   /glossary/i,
+  // Overview / purpose / scope (ja + vi + English)
   /概要/,
+  /Tổng quan/,
   /overview/i,
   /目的/,
+  /Mục đích/,
   /purpose/i,
   /scope/i,
   /適用範囲/,
+  /Phạm vi áp dụng/,
 ];
 
 /**

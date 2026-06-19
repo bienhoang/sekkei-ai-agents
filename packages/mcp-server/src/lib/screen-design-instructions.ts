@@ -62,7 +62,7 @@ const TABLE_HEADERS: Record<string, Record<string, string>> = {
  */
 export function buildInlineYamlLayoutHint(): string {
   return [
-    "For each screen in 画面一覧, provide a structured YAML layout block inside a ```yaml code fence.",
+    "For each screen in Danh sách màn hình, provide a structured YAML layout block inside a ```yaml code fence.",
     "This YAML describes the screen layout structure. For visual HTML mockups, use `/sekkei:mockup` command.",
     "",
     "YAML format:",
@@ -73,15 +73,15 @@ export function buildInlineYamlLayoutHint(): string {
     "regions:",
     "  header:",
     "    components:",
-    "      - {n: 1, type: logo, label: \"ロゴ\"}",
-    "      - {n: 2, type: nav, label: \"ナビゲーション\"}",
+    "      - {n: 1, type: logo, label: \"Logo\"}",
+    "      - {n: 2, type: nav, label: \"Điều hướng\"}",
     "  main:",
     "    components:",
-    "      - {n: 3, type: text-input, label: \"フィールド名\", required: true}",
-    "      - {n: 4, type: button, label: \"送信\", variant: primary}",
+    "      - {n: 3, type: text-input, label: \"Tên trường\", required: true}",
+    "      - {n: 4, type: button, label: \"Gửi\", variant: primary}",
     "  footer:",
     "    components:",
-    "      - {n: 5, type: text, label: \"フッターテキスト\"}",
+    "      - {n: 5, type: text, label: \"Văn bản chân trang\"}",
     "```",
     "",
     "Rules:",
@@ -99,7 +99,7 @@ export function buildInlineYamlLayoutHint(): string {
  * Instructs AI to generate a dedicated screen-design.md with 6 standard sections.
  * Called by SKILL.md; prepended to input_content for the generation call.
  */
-export function buildScreenDesignInstruction(featureId: string, language = "ja"): string {
+export function buildScreenDesignInstruction(featureId: string, language = "vi"): string {
   const h = SECTION_HEADINGS[language] ?? SECTION_HEADINGS.ja;
   const t = TABLE_HEADERS[language] ?? TABLE_HEADERS.ja;
   const docTitle = language === "ja" ? "画面設計書" : language === "vi" ? "Thiết kế Màn hình" : "Screen Design Document";
@@ -129,16 +129,16 @@ export function buildScreenDesignInstruction(featureId: string, language = "ja")
     `regions:`,
     `  header:`,
     `    components:`,
-    `      - {n: 1, type: logo, label: "ロゴ"}`,
-    `      - {n: 2, type: nav, label: "ナビゲーション"}`,
+    `      - {n: 1, type: logo, label: "Logo"}`,
+    `      - {n: 2, type: nav, label: "Điều hướng"}`,
     `  main:`,
     `    style: centered-form   # optional layout hint`,
     `    components:`,
-    `      - {n: 3, type: text-input, label: "フィールド名", required: true}`,
-    `      - {n: 4, type: button, label: "送信", variant: primary}`,
+    `      - {n: 3, type: text-input, label: "Tên trường", required: true}`,
+    `      - {n: 4, type: button, label: "Gửi", variant: primary}`,
     `  footer:`,
     `    components:`,
-    `      - {n: 5, type: text, label: "フッターテキスト"}`,
+    `      - {n: 5, type: text, label: "Văn bản chân trang"}`,
     `\`\`\``,
     ``,
     `**Rules:**`,

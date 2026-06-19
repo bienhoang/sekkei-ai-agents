@@ -787,7 +787,8 @@ describe("test spec: shared pipeline features", () => {
     const text = result.content[0].text;
     expect(text).toContain("Output Language");
     expect(text).toContain("English");
-    expect(text).toContain("Translate Japanese section headings");
+    // vi is the primary template base; English instruction translates FROM Vietnamese
+    expect(text).toContain("Translate Vietnamese template section headings");
   });
 });
 

@@ -24,6 +24,9 @@ describe("validate_document tool", () => {
 
   it("validates a complete functions-list as valid", async () => {
     const content = [
+      "---",
+      "language: ja",
+      "---",
       "# 機能一覧",
       "## 改訂履歴",
       "| 版数 | 日付 | 変更内容 | 変更者 |",
@@ -88,6 +91,9 @@ describe("validate_document tool", () => {
 
   it("validates test-plan required sections", async () => {
     const content = [
+      "---",
+      "language: ja",
+      "---",
       "# テスト計画書",
       "## 改訂履歴",
       "| 版数 | 日付 | 変更内容 | 変更者 |",

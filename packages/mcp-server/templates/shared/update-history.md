@@ -1,14 +1,14 @@
 ---
 type: shared
 name: update-history
-language: ja
+language: vi
 ---
 
-# 更新履歴
+# Lịch sử cập nhật
 
-<!-- AI: Maintain version history for this document.
-     Add a new row for each revision. -->
+<!-- AI: Duy trì lịch sử phiên bản cho tài liệu này.
+     Thêm một hàng mới cho mỗi lần sửa đổi. -->
 
-| バージョン | 更新日 | 更新者 | 変更内容 |
-|-----------|--------|--------|---------|
-| 1.0 | <!-- AI: YYYY-MM-DD --> | <!-- AI: author --> | 初版作成 |
+| Phiên bản | Ngày cập nhật | Người cập nhật | Nội dung thay đổi |
+|-----------|-------------|--------------|-----------------|
+| 1.0 | <!-- AI: YYYY-MM-DD --> | <!-- AI: tác giả --> | Tạo phiên bản đầu |

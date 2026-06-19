@@ -1,5 +1,6 @@
 /**
  * Document validation logic: section completeness, cross-references, table structure.
+ * Language-aware: picks heading/column sets by document language (ja|vi|en).
  */
 import { readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
@@ -12,6 +13,20 @@ import { isSubPath } from "./platform.js";
 import { validateKeigoComprehensive } from "./keigo-validator.js";
 import { CONTENT_DEPTH_RULES } from "./completeness-rules.js";
 import { validateMermaidBlocks } from "./mermaid-validator.js";
+import { parseFrontmatter } from "./frontmatter-parser.js";
+import {
+  type Lang,
+  resolveLang,
+  STRUCTURAL_SECTIONS_BY_LANG,
+  REQUIRED_SECTIONS_BY_LANG,
+  REVISION_HISTORY_COLUMNS_BY_LANG,
+  REQUIRED_COLUMNS_BY_LANG,
+  SHARED_SECTION_HEADINGS_BY_LANG,
+  FEATURE_SECTION_HEADINGS_BY_LANG,
+  REVISION_HEADING_BY_LANG,
+} from "./validator-section-maps.js";
+
+export type { Lang };
 
 export interface ValidationIssue {
   type: "missing_section" | "missing_id" | "orphaned_id" | "missing_column" | "keigo_violation" | "completeness" | "staleness" | "changelog_preservation";
@@ -32,114 +47,6 @@ export interface ValidationResult {
   issues: ValidationIssue[];
   cross_ref_report?: CrossRefReport;
 }
-
-/** Required markdown heading sections per document type */
-/** Structural sections required in ALL document types */
-const STRUCTURAL_SECTIONS = ["改訂履歴", "承認欄", "配布先", "用語集"];
-
-const REQUIRED_SECTIONS: Record<DocType, string[]> = {
-  "functions-list": [...STRUCTURAL_SECTIONS, "機能一覧"],
-  requirements: [...STRUCTURAL_SECTIONS, "概要", "機能要件", "非機能要件"],
-  nfr: [
-    ...STRUCTURAL_SECTIONS,
-    "非機能要件概要", "可用性", "性能・拡張性",
-    "運用・保守性", "移行性", "セキュリティ", "システム環境",
-  ],
-  "project-plan": [
-    ...STRUCTURAL_SECTIONS,
-    "プロジェクト概要", "WBS", "体制", "リスク管理",
-  ],
-  "architecture-design": [
-    ...STRUCTURAL_SECTIONS,
-    "システム方式", "開発方式", "運用方式", "ハードウェア", "技術選定",
-  ],
-  "basic-design": [
-    ...STRUCTURAL_SECTIONS,
-    "概要", "システム構成", "業務フロー", "画面設計",
-    "DB設計", "外部インターフェース",
-  ],
-  "security-design": [
-    ...STRUCTURAL_SECTIONS,
-    "セキュリティ方針", "セキュリティ対策一覧", "認証・認可設計", "データ保護",
-    "通信セキュリティ", "脆弱性対策", "監査ログ", "インシデント対応",
-  ],
-  "detail-design": [
-    ...STRUCTURAL_SECTIONS,
-    "概要", "モジュール設計", "クラス設計", "画面設計詳細",
-    "DB詳細設計", "API詳細仕様", "処理フロー", "エラーハンドリング",
-    "セキュリティ実装", "パフォーマンス考慮",
-  ],
-  "db-design": [
-    ...STRUCTURAL_SECTIONS,
-    "DB設計方針", "ER図", "テーブル", "インデックス設計",
-  ],
-  "report-design": [
-    ...STRUCTURAL_SECTIONS,
-    "帳票概要", "帳票一覧", "帳票レイアウト",
-  ],
-  "batch-design": [
-    ...STRUCTURAL_SECTIONS,
-    "バッチ概要", "ジョブ一覧", "ジョブフロー",
-  ],
-  "test-plan": [
-    ...STRUCTURAL_SECTIONS,
-    "テスト方針", "テスト戦略", "テスト環境", "完了基準",
-  ],
-  "ut-spec": [
-    ...STRUCTURAL_SECTIONS,
-    "テスト設計", "単体テストケース", "トレーサビリティ", "デフェクト報告",
-  ],
-  "it-spec": [
-    ...STRUCTURAL_SECTIONS,
-    "テスト設計", "結合テストケース", "トレーサビリティ", "デフェクト報告",
-  ],
-  "st-spec": [
-    ...STRUCTURAL_SECTIONS,
-    "テスト設計", "システムテストケース", "トレーサビリティ", "デフェクト報告",
-  ],
-  "uat-spec": [
-    ...STRUCTURAL_SECTIONS,
-    "テスト設計", "受入テストケース", "トレーサビリティ", "デフェクト報告",
-  ],
-  "test-result-report": [
-    ...STRUCTURAL_SECTIONS,
-    "テスト概要", "テスト実施結果", "不具合サマリー", "品質判定",
-  ],
-  "crud-matrix": [],
-  "traceability-matrix": [],
-  "operation-design": [
-    ...STRUCTURAL_SECTIONS,
-    "運用体制", "バックアップ・リストア方針", "監視・アラート定義",
-    "障害対応手順", "ジョブ管理", "SLA定義",
-  ],
-  "migration-design": [
-    ...STRUCTURAL_SECTIONS,
-    "移行方針", "データ移行計画", "システム切替手順",
-    "ロールバック計画", "移行テスト計画",
-  ],
-  "sitemap": [],
-  "test-evidence": [
-    "改訂履歴", "承認欄",
-    "単体テスト (UT) エビデンス", "テストエビデンスサマリー",
-  ],
-  "meeting-minutes": [
-    "改訂履歴",
-    "会議情報", "出席者", "議題", "決定事項", "アクション項目",
-  ],
-  "decision-record": [
-    "改訂履歴",
-    "コンテキスト", "検討事項", "決定内容", "影響範囲",
-  ],
-  "interface-spec": [
-    "改訂履歴", "承認欄",
-    "インターフェース概要", "データフォーマット", "プロトコル",
-    "エラーハンドリング", "SLA定義",
-  ],
-  "screen-design": [
-    "改訂履歴", "承認欄",
-    "画面一覧", "画面遷移図",
-  ],
-};
 
 /**
  * Edge-case overrides where pure derivation from CHAIN_PAIRS is wrong:
@@ -166,47 +73,14 @@ const UPSTREAM_ID_TYPES: Record<DocType, string[]> = Object.fromEntries(
   ])
 ) as Record<DocType, string[]>;
 
-/** Required table columns (partial match) per doc type */
-/** 改訂履歴 table columns required in ALL document types */
-const REVISION_HISTORY_COLUMNS = ["版数", "日付", "変更内容", "変更者"];
-
-const REQUIRED_COLUMNS: Record<DocType, string[][]> = {
-  "functions-list": [REVISION_HISTORY_COLUMNS, ["大分類", "中分類", "機能ID", "機能名", "関連要件ID", "処理分類", "優先度"]],
-  requirements: [REVISION_HISTORY_COLUMNS, ["要件ID", "要件名"], ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
-  nfr: [REVISION_HISTORY_COLUMNS, ["NFR-ID", "カテゴリ", "目標値", "測定方法"]],
-  "project-plan": [REVISION_HISTORY_COLUMNS, ["PP-ID"]],
-  "architecture-design": [REVISION_HISTORY_COLUMNS, ["ARCH-ID"]],
-  "basic-design": [REVISION_HISTORY_COLUMNS, ["画面ID"], ["テーブルID"], ["API"]],
-  "security-design": [REVISION_HISTORY_COLUMNS, ["SEC-ID", "対策項目", "対策内容", "優先度"]],
-  "detail-design": [REVISION_HISTORY_COLUMNS, ["クラスID"], ["エラーコード"]],
-  "db-design": [REVISION_HISTORY_COLUMNS, ["DB-ID"], ["テーブル名", "カラム名"]],
-  "report-design": [REVISION_HISTORY_COLUMNS, ["RPT-ID", "帳票名", "出力形式"]],
-  "batch-design": [REVISION_HISTORY_COLUMNS, ["BATCH-ID", "ジョブ名"]],
-  "test-plan": [REVISION_HISTORY_COLUMNS, ["TP-ID"]],
-  "ut-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
-  "it-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
-  "st-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
-  "uat-spec": [REVISION_HISTORY_COLUMNS, ["テストケースID", "テスト対象"]],
-  "test-result-report": [REVISION_HISTORY_COLUMNS, ["テストレベル", "総件数", "合格", "合格率"]],
-  "crud-matrix": [["機能ID", "機能名"]],
-  "traceability-matrix": [["要件ID"]],
-  "operation-design": [REVISION_HISTORY_COLUMNS, ["OP-ID", "手順名", "障害レベル", "手順内容", "担当者", "想定時間"]],
-  "migration-design": [REVISION_HISTORY_COLUMNS, ["MIG-ID", "対象データ", "移行方法"]],
-  "sitemap": [["ページID", "ページ名"]],
-  "test-evidence": [REVISION_HISTORY_COLUMNS, ["エビデンスID", "テストケースID"]],
-  "meeting-minutes": [REVISION_HISTORY_COLUMNS],
-  "decision-record": [REVISION_HISTORY_COLUMNS],
-  "interface-spec": [REVISION_HISTORY_COLUMNS, ["IF-ID"]],
-  "screen-design": [REVISION_HISTORY_COLUMNS, ["画面ID"]],
-};
-
 /** Check that all required sections exist as headings in the content */
 export function validateCompleteness(
   content: string,
-  docType: DocType
+  docType: DocType,
+  lang: Lang = "vi"
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
-  const required = REQUIRED_SECTIONS[docType];
+  const required = REQUIRED_SECTIONS_BY_LANG[lang][docType];
 
   for (const section of required) {
     // Match heading (## or ###) containing the section name
@@ -274,10 +148,11 @@ export function validateCrossRefs(
 /** Check that required table columns exist in the content */
 export function validateTableStructure(
   content: string,
-  docType: DocType
+  docType: DocType,
+  lang: Lang = "vi"
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
-  const columnSets = REQUIRED_COLUMNS[docType];
+  const columnSets = REQUIRED_COLUMNS_BY_LANG[lang][docType];
 
   for (const columns of columnSets) {
     // Check if at least one table row/header contains all required columns
@@ -320,13 +195,18 @@ export function validateContentDepth(
   return issues;
 }
 
-/** Extract lines between 改訂履歴 heading and next heading */
-export function extractRevisionSection(content: string): string[] {
+/**
+ * Extract lines between the revision-history heading and the next heading.
+ * Uses the heading resolved from the document language so vi docs find
+ * "Lịch sử sửa đổi" and ja docs find "改訂履歴".
+ */
+export function extractRevisionSection(content: string, lang: Lang = "vi"): string[] {
+  const heading = REVISION_HEADING_BY_LANG[lang];
   const lines = content.split("\n");
   let capturing = false;
   const captured: string[] = [];
   for (const line of lines) {
-    if (/^#{1,4}\s+改訂履歴/.test(line)) {
+    if (new RegExp(`^#{1,4}\\s+${escapeRegex(heading)}`).test(line)) {
       capturing = true;
       continue;
     }
@@ -336,13 +216,15 @@ export function extractRevisionSection(content: string): string[] {
   return captured;
 }
 
-/** Validate 改訂履歴 content quality (warnings only) */
+/** Validate revision-history content quality (warnings only) */
 export function validateRevisionHistoryContent(
   content: string,
+  lang: Lang = "vi"
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
+  const heading = REVISION_HEADING_BY_LANG[lang];
 
-  const sectionLines = extractRevisionSection(content);
+  const sectionLines = extractRevisionSection(content, lang);
   if (sectionLines.length === 0) return issues;
 
   const dataRows = sectionLines
@@ -352,7 +234,7 @@ export function validateRevisionHistoryContent(
     issues.push({
       type: "completeness",
       severity: "warning",
-      message: "改訂履歴 table has no data rows",
+      message: `${heading} table has no data rows`,
     });
     return issues;
   }
@@ -371,19 +253,19 @@ export function validateRevisionHistoryContent(
       issues.push({
         type: "completeness",
         severity: "warning",
-        message: `改訂履歴 版数 not ascending: ${versions[i - 1]} → ${versions[i]}`,
+        message: `${heading} version not ascending: ${versions[i - 1]} → ${versions[i]}`,
       });
     }
   }
 
-  // Check for empty 変更内容 cells
+  // Check for empty change-description cells (column index 2)
   for (const row of dataRows) {
     const cells = row.split("|").map((c) => c.trim()).filter(Boolean);
     if (cells.length >= 3 && cells[2] === "") {
       issues.push({
         type: "completeness",
         severity: "warning",
-        message: `改訂履歴 row ${cells[0]}: empty 変更内容`,
+        message: `${heading} row ${cells[0]}: empty change description`,
       });
     }
   }
@@ -391,9 +273,9 @@ export function validateRevisionHistoryContent(
   return issues;
 }
 
-/** Extract the date from the last 改訂履歴 row */
-export function extractLastRevisionDate(content: string): string | null {
-  const sectionLines = extractRevisionSection(content);
+/** Extract the date from the last revision-history row */
+export function extractLastRevisionDate(content: string, lang: Lang = "vi"): string | null {
+  const sectionLines = extractRevisionSection(content, lang);
   const dates = sectionLines
     .map((line) => line.match(/\|\s*\d+\.\d+\s*\|\s*(\d{4}-\d{2}-\d{2})\s*\|/))
     .filter((m): m is RegExpMatchArray => m !== null)
@@ -406,14 +288,16 @@ export function parseRevisionDataRows(lines: string[]): string[] {
   return lines.filter((line) => /^\|\s*\d+\.\d+\s*\|/.test(line));
 }
 
-/** Compare 改訂履歴 rows before/after regeneration to detect silent data loss */
+/** Compare revision-history rows before/after regeneration to detect silent data loss */
 export function validateChangelogPreservation(
   previousContent: string,
   newContent: string,
+  lang: Lang = "vi"
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
-  const oldLines = extractRevisionSection(previousContent);
-  const newLines = extractRevisionSection(newContent);
+  const heading = REVISION_HEADING_BY_LANG[lang];
+  const oldLines = extractRevisionSection(previousContent, lang);
+  const newLines = extractRevisionSection(newContent, lang);
   const oldRows = parseRevisionDataRows(oldLines);
   const newRows = parseRevisionDataRows(newLines);
 
@@ -425,7 +309,7 @@ export function validateChangelogPreservation(
     issues.push({
       type: "changelog_preservation",
       severity: "error",
-      message: `改訂履歴 rows decreased: ${oldRows.length} → ${newRows.length}`,
+      message: `${heading} rows decreased: ${oldRows.length} → ${newRows.length}`,
     });
   }
 
@@ -439,7 +323,7 @@ export function validateChangelogPreservation(
       issues.push({
         type: "changelog_preservation",
         severity: "error",
-        message: `改訂履歴 row missing or modified: ${oldRow.length > 60 ? oldRow.slice(0, 60) + "..." : oldRow}`,
+        message: `${heading} row missing or modified: ${oldRow.length > 60 ? oldRow.slice(0, 60) + "..." : oldRow}`,
       });
     }
   }
@@ -449,7 +333,7 @@ export function validateChangelogPreservation(
     issues.push({
       type: "changelog_preservation",
       severity: "warning",
-      message: `Expected exactly 1 new 改訂履歴 row, got ${newRows.length - oldRows.length}`,
+      message: `Expected exactly 1 new ${heading} row, got ${newRows.length - oldRows.length}`,
     });
   }
 
@@ -597,18 +481,20 @@ export function validateDocument(
   content: string,
   docType: DocType,
   upstreamContent?: string,
-  options?: { check_completeness?: boolean }
+  options?: { check_completeness?: boolean },
+  lang: Lang = "vi"
 ): ValidationResult {
   const issues: ValidationIssue[] = [
     ...validateFrontmatterStatus(content),
-    ...validateCompleteness(content, docType),
-    ...validateTableStructure(content, docType),
-    ...validateKeigo(content, docType),
+    ...validateCompleteness(content, docType, lang),
+    ...validateTableStructure(content, docType, lang),
+    // Keigo is Japanese-only — skip for vi/en to avoid false positives
+    ...(lang === "ja" ? validateKeigo(content, docType) : []),
   ];
 
   if (options?.check_completeness === true) {
     issues.push(...validateContentDepth(content, docType));
-    issues.push(...validateRevisionHistoryContent(content));
+    issues.push(...validateRevisionHistoryContent(content, lang));
     // Mermaid diagram validation
     const mermaidIssues = validateMermaidBlocks(content);
     for (const mi of mermaidIssues) {
@@ -658,23 +544,6 @@ export function validateDocument(
   };
 }
 
-/** Required headings for shared section files */
-const SHARED_SECTION_HEADINGS: Record<string, string> = {
-  "system-architecture": "システム構成",
-  "database-design": "DB設計",
-  "external-interface": "外部インターフェース",
-  "non-functional-design": "非機能",
-  "technology-rationale": "技術選定",
-};
-
-/** Required headings for per-feature files */
-const FEATURE_SECTION_HEADINGS: Partial<Record<DocType, string[]>> = {
-  "basic-design": ["概要", "業務フロー", "画面設計"],
-  "detail-design": ["概要", "モジュール設計", "クラス設計", "画面設計詳細", "API詳細仕様"],
-  "ut-spec": ["単体テストケース"],
-  "it-spec": ["結合テストケース"],
-};
-
 export interface PerFeatureValidationResult {
   valid: boolean;
   per_file: { file: string; issues: ValidationIssue[] }[];
@@ -686,7 +555,8 @@ export async function validatePerFeatureDocument(
   manifestPath: string,
   manifest: Manifest,
   docType: DocType,
-  upstreamContent?: string
+  upstreamContent?: string,
+  lang?: Lang
 ): Promise<PerFeatureValidationResult> {
   const baseDir = dirname(manifestPath);
   const doc = manifest.documents[docType];
@@ -697,12 +567,32 @@ export async function validatePerFeatureDocument(
   const perFile: { file: string; issues: ValidationIssue[] }[] = [];
   const allContent: string[] = [];
 
+  // Per-feature files carry their own language; derive it from the first
+  // file's frontmatter so ja and vi docs each validate against their own
+  // headings. An explicit lang arg, when given, overrides the derived value.
+  let effectiveLang: Lang = lang ?? "vi";
+  if (!lang) {
+    const firstFile = doc.shared[0]?.file ?? doc.features[0]?.file;
+    if (firstFile && isSubPath(resolve(baseDir, firstFile), resolve(baseDir))) {
+      try {
+        const fc = await readFile(resolve(baseDir, firstFile), "utf-8");
+        const fm = parseFrontmatter(fc).meta.language;
+        effectiveLang = resolveLang(typeof fm === "string" ? fm : undefined);
+      } catch {
+        // keep default when the first file is unreadable
+      }
+    }
+  }
+
+  const sharedHeadings = SHARED_SECTION_HEADINGS_BY_LANG[effectiveLang];
+  const featureHeadings = FEATURE_SECTION_HEADINGS_BY_LANG[effectiveLang];
+
   // Validate shared files
   for (const shared of doc.shared) {
     assertContained(baseDir, shared.file);
     const content = await readFile(resolve(baseDir, shared.file), "utf-8");
     allContent.push(content);
-    const heading = SHARED_SECTION_HEADINGS[shared.section];
+    const heading = sharedHeadings[shared.section];
     const issues: ValidationIssue[] = [];
     if (heading && !new RegExp(`^#{1,4}\\s+.*${escapeRegex(heading)}`, "m").test(content)) {
       issues.push({ type: "missing_section", message: `[${shared.file}] Missing: ${heading}` });
@@ -715,7 +605,7 @@ export async function validatePerFeatureDocument(
     assertContained(baseDir, feature.file);
     const content = await readFile(resolve(baseDir, feature.file), "utf-8");
     allContent.push(content);
-    const requiredSections = FEATURE_SECTION_HEADINGS[docType] ?? [];
+    const requiredSections = featureHeadings[docType] ?? [];
     const issues: ValidationIssue[] = [];
     for (const section of requiredSections) {
       if (!new RegExp(`^#{1,4}\\s+.*${escapeRegex(section)}`, "m").test(content)) {
@@ -727,7 +617,7 @@ export async function validatePerFeatureDocument(
 
   // Aggregate cross-ref validation
   const merged = allContent.join("\n\n");
-  const aggregateIssues = validateTableStructure(merged, docType);
+  const aggregateIssues = validateTableStructure(merged, docType, effectiveLang);
   let crossRefReport: CrossRefReport | undefined;
   if (upstreamContent) {
     crossRefReport = validateCrossRefs(merged, upstreamContent, docType);
@@ -779,3 +669,7 @@ function assertContained(baseDir: string, filePath: string): void {
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
+// Re-export the structural-sections array for callers that need it at runtime
+// (e.g. generate.ts uses the ja revision heading directly via REVISION_HEADING_BY_LANG)
+export { REVISION_HEADING_BY_LANG, STRUCTURAL_SECTIONS_BY_LANG };
