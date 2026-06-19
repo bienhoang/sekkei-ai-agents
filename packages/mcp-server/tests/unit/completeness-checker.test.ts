@@ -204,6 +204,49 @@ describe("validateContentDepth — test-plan", () => {
   });
 });
 
+describe("validateContentDepth — it-spec", () => {
+  // Complete enriched IT spec satisfying all rules (3 existing + 4 new).
+  const COMPLETE = [
+    "## 結合テストケース",
+    "| No. | テストケースID | モジュール/サブモジュール | テストケース名 | テスト対象 | テスト観点 | 前提条件 | テスト手順 | テストデータ | 期待結果 | 優先度 | リスクレベル | 実行結果 | 判定 | デフェクトID | 備考 |",
+    "| 1 | IT-001 | 認証 | ログイン正常系 | API-001 | 正常系/API契約検証 | 前提 | 1.手順 | メール: test_user_01@domain.com | 1.成功 | 高 | 高 | | | | |",
+    "| 2 | IT-002 | 認証 | 不正入力 | API-001 | 異常系/同値分割 | 前提 | 1.手順 | 顧客コード: KH-2026-0012 | エラー | 中 | 中 | | | | |",
+    "| 3 | IT-003 | 注文 | 境界値 | API-002 | 境界値/エッジ | 前提 | 1.手順 | パスワード: 5文字 | 結果 | 低 | 低 | | | | |",
+  ].join("\n");
+
+  it("returns no issues for a complete enriched IT spec", () => {
+    const issues = validateContentDepth(COMPLETE, "it-spec");
+    expect(issues).toHaveLength(0);
+  });
+
+  it("warns when リスクレベル missing", () => {
+    const issues = validateContentDepth(COMPLETE.replace("リスクレベル", ""), "it-spec");
+    expect(issues.some((i) => i.message.includes("リスクレベル"))).toBe(true);
+  });
+
+  it("warns when 優先度 missing", () => {
+    const issues = validateContentDepth(COMPLETE.replace("優先度", ""), "it-spec");
+    expect(issues.some((i) => i.message.includes("優先度"))).toBe(true);
+  });
+
+  it("warns when coverage variety insufficient (only 正常系)", () => {
+    const oneKind = COMPLETE.replace(/異常系|境界値|エッジ/g, "正常系");
+    const issues = validateContentDepth(oneKind, "it-spec");
+    expect(issues.some((i) => i.message.includes("網羅性"))).toBe(true);
+  });
+
+  it("warns when テストデータ is generic (no concrete values)", () => {
+    const generic = [
+      "## 結合テストケース",
+      "| No. | テストケースID | テスト観点 | テストデータ | 優先度 | リスクレベル |",
+      "| 1 | IT-001 | 正常系/異常系 | 有効なメール | 高 | 高 |",
+      "| 2 | IT-002 | 境界値 | 正しいコード | 中 | 中 |",
+    ].join("\n");
+    const issues = validateContentDepth(generic, "it-spec");
+    expect(issues.some((i) => i.message.includes("具体"))).toBe(true);
+  });
+});
+
 describe("validateContentDepth — doc type with no rules", () => {
   it("returns warnings for crud-matrix missing F-xxx and TBL-xxx", () => {
     const issues = validateContentDepth("any content", "crud-matrix");

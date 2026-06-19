@@ -142,9 +142,14 @@ export const GENERATION_INSTRUCTIONS: Record<DocType, string> = {
 
   "it-spec": [
     "Generate a 結合テスト仕様書 (Integration Test Specification) from basic-design.",
-    "Sections: テスト設計, 結合テストケース, トレーサビリティ, デフェクト報告.",
-    "Same 12-column table structure as ut-spec.",
-    "ID format: IT-001. Focus on API integration, screen transitions, data flow.",
+    "Sections: テスト設計 (リスクアセスメント含む), 結合テストケース, トレーサビリティ, デフェクト報告.",
+    "IT covers BOTH interface tests (API integration, screen transitions, data flow) AND functional black-box cases.",
+    "Test case 16-column table: No., テストケースID, モジュール/サブモジュール, テストケース名, テスト対象, テスト観点, 前提条件, テスト手順, テストデータ, 期待結果, 優先度, リスクレベル, 実行結果, 判定, デフェクトID, 備考.",
+    "ID format: IT-001. テスト手順 and 期待結果 are numbered (1. 2. 3.).",
+    "Risk-based volume: per モジュール/サブモジュール assign リスクレベル 高/中/低. 高(中核業務・金銭・セキュリティ) → many+deep cases; 中 → moderate; 低 → happy path only. 優先度 also 高/中/低.",
+    "テストデータ MUST be concrete values (具体的な値). Use real samples e.g. test_customer_01@domain.com, KH-2026-0012; never generic descriptions like 「有効なメール」.",
+    "Coverage variety required across cases: 正常系 / 異常系 / 境界値 / エッジ (timeout/接続断/同時実行).",
+    "Apply test-design techniques where applicable: 同値分割 (Equivalence Partitioning), 境界値分析 (Boundary Value Analysis), デシジョンテーブル (multi-condition logic), 状態遷移 (workflow/status transitions).",
     "Cross-reference API-xxx, SCR-xxx, TBL-xxx IDs from basic-design.",
     "Traceability: API-xxx → SCR-xxx → IT-xxx.",
     "Generate at least 5 integration test cases.",

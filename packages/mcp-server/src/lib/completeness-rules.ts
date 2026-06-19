@@ -197,6 +197,38 @@ export const CONTENT_DEPTH_RULES: Partial<Record<DocType, DepthRule[]>> = {
       test: (c: string) => /正常系|異常系|タイムアウト|リトライ/.test(c),
       message: "結合テスト仕様書: 結合テストパターンの記載が必要です（正常系/異常系/タイムアウト等）",
     },
+    {
+      check: "risk level",
+      test: (c: string) => /リスクレベル/.test(c) && /(高|中|低|High|Medium|Low)/.test(c),
+      message: "結合テスト仕様書: 各テストケースにリスクレベル(高/中/低)の記載が必要です",
+    },
+    {
+      check: "priority",
+      test: (c: string) => /優先度/.test(c),
+      message: "結合テスト仕様書: 優先度(高/中/低)の記載が必要です",
+    },
+    {
+      check: "coverage variety",
+      test: (c: string) =>
+        [/正常系/, /異常系/, /境界値/, /エッジ/].filter((re) => re.test(c)).length >= 2,
+      message:
+        "結合テスト仕様書: テスト網羅性(正常系/異常系/境界値/エッジ)が2種類以上必要です",
+    },
+    {
+      // Heuristic: test data must contain concrete tokens (email / 4+ digit values like
+      // codes). Scoped to test-case rows (lines carrying an IT-xxx ID) so unrelated
+      // 4-digit tokens elsewhere (e.g. revision-history dates) don't produce false passes.
+      // IT-/API- IDs only carry 3 digits, so the row ID alone never satisfies this.
+      check: "concrete test data",
+      test: (c: string) => {
+        if (!/テストデータ/.test(c)) return false;
+        const caseRows = c.split("\n").filter((l) => /IT-\d{3}/.test(l));
+        if (caseRows.length === 0) return true; // IT-case count rule handles the empty case
+        return caseRows.some((l) => /@/.test(l) || /\d{4}/.test(l));
+      },
+      message:
+        "結合テスト仕様書: テストデータは具体的な値が必要です(例: test_user_01@domain.com, KH-2026-0012)",
+    },
   ],
   "st-spec": [
     {

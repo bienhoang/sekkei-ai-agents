@@ -478,6 +478,8 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
 **Interview questions (ask before generating):**
 - Integration scope? (API-to-API, screen-to-API, DB integration, external services)
 - Test doubles strategy? (mocks, stubs, contract tests)
+- Risk tolerance — which modules are 高リスク (中核業務・金銭・セキュリティ・多数の利用者が依存)?
+- Key business/functional validations beyond interfaces?
 
 1. Use `upstream_content` prepared in prerequisite check above
 2. Load `sekkei.config.yaml` — get `output.directory` and `language`
@@ -486,6 +488,12 @@ End-to-end presales workflow. Resumable. Deterministic. File-based state.
    - ID format: `IT-001`
    - Cross-reference API-xxx, SCR-xxx, TBL-xxx IDs from 基本設計書
    - Cross-reference TP-xxx IDs from テスト計画書 (if loaded)
+   - IT covers BOTH interface tests (API契約/画面遷移/データ整合性) AND functional black-box cases
+   - 16-column table: No., テストケースID, モジュール/サブモジュール, テストケース名, テスト対象, テスト観点, 前提条件, テスト手順, テストデータ, 期待結果, 優先度, リスクレベル, 実行結果, 判定, デフェクトID, 備考
+   - リスクアセスメント: rate each モジュール/サブモジュール 高/中/低; scale case volume (高→many+deep, 中→moderate, 低→happy path). 優先度 also 高/中/低
+   - テストデータ MUST be concrete (例: test_customer_01@domain.com, KH-2026-0012); never generic (「有効なメール」)
+   - Coverage variety: 正常系 / 異常系 / 境界値 / エッジ
+   - Test-design techniques: 同値分割 / 境界値分析 / デシジョンテーブル / 状態遷移
    - Verify interface contracts: request/response schemas, error codes
 5. Save output:
    - Default: `{output.directory}/08-test/it-spec.md`
