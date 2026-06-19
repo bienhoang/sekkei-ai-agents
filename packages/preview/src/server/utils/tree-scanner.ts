@@ -1,6 +1,6 @@
 import { readdir } from 'node:fs/promises'
 import { Dirent } from 'node:fs'
-import { join, extname, relative } from 'node:path'
+import { join, extname, relative, sep } from 'node:path'
 
 export interface TreeNode {
   name: string
@@ -47,7 +47,9 @@ export async function scanTree(docsRoot: string, dir = docsRoot): Promise<TreeNo
   const nodes: TreeNode[] = []
   for (const entry of ordered) {
     const fullPath = join(dir, entry.name)
-    const relPath = relative(docsRoot, fullPath)
+    // Emit web-style forward-slash paths so client URLs and the default-page
+    // resolver (which splits on '/') stay consistent across Windows and POSIX.
+    const relPath = relative(docsRoot, fullPath).split(sep).join('/')
 
     if (entry.isDirectory()) {
       const children = await scanTree(docsRoot, fullPath)
