@@ -4,6 +4,16 @@ All notable changes to Sekkei are documented here. Follows [Keep a Changelog](ht
 
 ---
 
+## [2.12.0] — 2026-06-20
+
+### Added
+- **Agent consumption index** — `validate_chain` gains two tool-only handoff actions for downstream coding agents:
+  - `emit_agent_index` — writes `<project-root>/.sekkei-agent/` with `llms.txt` (doc map + 4-step reading protocol) and `spec-index.md` (ID-keyed projection of the traceability matrix: ID, Type, Title-JA, Source-file, Status, Traced), so an agent can navigate a JP V-model spec-set without reading every document
+  - `reconcile` — rebuilds `spec-index.md` and reports ID drift (added/removed/duplicate) plus advisory next-free-ID per numbering space, with a PARTIAL banner when chain docs are missing/pending
+- Reuses existing `loadChainDocs` + `buildTraceabilityMatrix`; no new MCP tool, `chain_status` untouched; `reconcile` is read-only with respect to source docs
+
+---
+
 ## [2.11.2] — 2026-03-02
 
 ### Fixed
