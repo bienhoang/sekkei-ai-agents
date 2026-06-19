@@ -10,10 +10,14 @@ dist/
 .idea/
 packages/mcp-server/coverage/
 .agent/
+agent/
 __pycache__/
 .turbo/
 plans/
 packages/mcp-server/plans/
 packages/skills/plans/
 packages/preview/plans/
-packages/mcp-server/tests/fixtures
+packages/mcp-server/tests/fixturesagents
+
+# Tool-only Sekkei agent consumption artifacts (validate_chain emit_agent_index)
+.sekkei-agent/

@@ -62,6 +62,7 @@ Each document type has: a Markdown template (`templates/ja/`, 22 templates), gen
 - **Translation Pipeline** (`tools/translate.ts`, `lib/translation-validator.ts`, `lib/translation-tracker.ts`) — bidirectional glossary mapping (ja↔en↔vi), post-translation structural validation (ID preservation, table rows, heading count), and SHA-256 hash-based incremental tracking for delta-only retranslation
 - **Mockup System** — replaced by AI-gen-HTML via `/sekkei:mockup` skill command; 9 shell CSS files at `templates/wireframe/*-shell.css` (admin, auth, error, onboarding, public, email, print, blank, mobile)
 - **Code Analysis** (`lib/code-analyzer.ts`, `lib/code-context-formatter.ts`) — analyze source code for detail-design generation
+- **Agent Consumption Index** (`lib/consumption-index.ts`, `lib/consumption-doc-purpose.ts`, `lib/spec-index-builder.ts`, `lib/spec-index-render.ts`) — tool-only handoff artifacts for downstream coding agents. `validate_chain` `emit_agent_index:true` writes `<project-root>/.sekkei-agent/` (`llms.txt` doc map + `spec-index.md` ID→file index); `reconcile:true` rebuilds + reports ID drift (added/removed/duplicate) + advisory next-free-ID + PARTIAL banner. Convention-excluded from human deliverables (suggest `.gitignore`). No new MCP tool.
 
 ### Config
 

@@ -68,6 +68,7 @@ Templates at `templates/{lang}/{doc-type}.md` (relative to `packages/mcp-server/
 - **Translation Pipeline** (`tools/translate.ts`, `lib/translation-validator.ts`, `lib/translation-tracker.ts`) — bidirectional glossary mapping (ja↔en↔vi), post-translation structural validation (ID preservation, table rows, heading count), and SHA-256 hash-based incremental tracking for delta-only retranslation
 - **Mockup System** — replaced by AI-gen-HTML via `/sekkei:mockup` skill command; 9 shell CSS files at `templates/wireframe/*-shell.css` (admin, auth, error, onboarding, public, email, print, blank, mobile)
 - **Code Analysis** (`lib/code-analyzer.ts`, `lib/code-context-formatter.ts`) — analyze source code for detail-design generation
+- **Agent Consumption Index** (`lib/consumption-index.ts`, `lib/spec-index-builder.ts`, `lib/spec-index-render.ts`) — tool-only handoff for downstream coding agents: `validate_chain` `emit_agent_index` writes `.sekkei-agent/` (`llms.txt` + ID-keyed `spec-index.md`); `reconcile` reports ID drift + advisory next-free-ID. No new MCP tool
 
 ### Cross-Platform
 

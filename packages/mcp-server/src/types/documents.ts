@@ -330,6 +330,10 @@ export interface TraceabilityEntry {
   id: string;
   doc_type: string;
   downstream_refs: string[];
+  // Optional enrichment for the agent spec-index (populated by spec-index-builder).
+  source?: string;   // owning file relpath from config.chain[].output
+  status?: string;   // owning doc's doc-level status (inherited by its IDs)
+  titleJa?: string;  // owning doc's JA title
 }
 
 export interface ChainLinkReport {

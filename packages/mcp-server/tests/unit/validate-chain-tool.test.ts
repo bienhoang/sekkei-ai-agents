@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll } from "@jest/globals";
-import { writeFile, mkdir, rm } from "node:fs/promises";
+import { writeFile, mkdir, rm, readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -118,5 +118,34 @@ describe("validate_chain tool", () => {
     expect(text).toContain("Traceability Matrix");
     expect(text).toContain("REQ-001");
     expect(text).toContain("Defined In");
+  });
+
+  it("emit_agent_index writes llms.txt + spec-index.md and reports the dir", async () => {
+    const configPath = resolve(TMP_DIR, "chain.yaml");
+    const result = await callTool(server, "validate_chain", {
+      config_path: configPath,
+      emit_agent_index: true,
+    });
+    const text = result.content[0].text;
+    expect(text).toContain("Agent Index");
+    expect(text).toContain("llms.txt");
+    expect(text).toContain("spec-index.md");
+    expect(text).toContain(".sekkei-agent");
+
+    const idx = await readFile(resolve(TMP_DIR, ".sekkei-agent/spec-index.md"), "utf-8");
+    expect(idx).toContain("# Spec Index");
+  });
+
+  it("reconcile reports drift + advisory next-free-ID", async () => {
+    const configPath = resolve(TMP_DIR, "chain.yaml");
+    const result = await callTool(server, "validate_chain", {
+      config_path: configPath,
+      reconcile: true,
+    });
+    const text = result.content[0].text;
+    expect(text).toContain("Agent Index — Reconcile");
+    expect(text).toContain("Added IDs:");
+    expect(text).toContain("Advisory next-free-ID");
+    expect(text).toMatch(/REQ-\d{3}/); // a next-free suggestion for REQ
   });
 });
