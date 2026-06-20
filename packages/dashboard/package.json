@@ -51,5 +51,10 @@
     "registry": "https://npm.pkg.github.com",
     "access": "restricted"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bienhoang/sekkei-ai-agents.git",
+    "directory": "packages/dashboard"
+  },
   "license": "MIT"
 }
